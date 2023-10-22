@@ -30,5 +30,21 @@ gradlePlugin {
             id = "comlib.android.application"
             implementationClass = "AndroidApplicationConventionPlugin"
         }
+        register("androidLibrary") {
+            id = "comlib.android.library"
+            implementationClass = "AndroidLibraryConventionPlugin"
+        }
+        register("androidLint") {
+            id = "comlib.android.lint"
+            implementationClass = "AndroidLintConventionPlugin"
+        }
+        register("androidApplicationCompose") {
+            id = "comlib.android.application.compose"
+            implementationClass = "AndroidApplicationComposeConventionPlugin"
+        }
+        register("androidLibraryCompose") {
+            id = "comlib.android.library.compose"
+            implementationClass = "AndroidLibraryComposeConventionPlugin"
+        }
     }
 }
