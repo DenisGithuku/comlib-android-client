@@ -46,5 +46,21 @@ gradlePlugin {
             id = "comlib.android.library.compose"
             implementationClass = "AndroidLibraryComposeConventionPlugin"
         }
+        register("androidApplicationFirebase") {
+            id = "comlib.android.application.firebase"
+            implementationClass = "AndroidApplicationFirebaseConventionPlugin"
+        }
+        register("androidHilt") {
+            id = "comlib.android.hilt"
+            implementationClass = "AndroidHiltConventionPlugin"
+        }
+        register("androidTest") {
+            id = "comlib.android.test"
+            implementationClass = "AndroidTestConventionPlugin"
+        }
+        register("androidRoom") {
+            id = "comlib.android.room"
+            implementationClass = "AndroidRoomConventionPlugin"
+        }
     }
 }
