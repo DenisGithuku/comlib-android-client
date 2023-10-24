@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "874262339862",
+    "project_id": "comlib-96117",
+    "storage_bucket": "comlib-96117.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:874262339862:android:b7056bbb906822cb39b037",
+        "android_client_info": {
+          "package_name": "com.githukudenis.comlib"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALGJuse0IYFx0YuZoJHbdRxOcL_cIp7KY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
