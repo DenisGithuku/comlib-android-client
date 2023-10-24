@@ -11,10 +11,16 @@ class AndroidHiltConventionPlugin: Plugin<Project> {
                 apply("org.jetbrains.kotlin.kapt")
             }
             dependencies{
-                "implementation"(libs.findLibrary("hilt.android").get())
-                "kapt"(libs.findLibrary("hilt.compiler").get())
-                "kaptAndroidTest"(libs.findLibrary("hilt.compiler").get())
-                "kaptTest"(libs.findLibrary("hilt.compiler").get())
+                "implementation"(libs.findLibrary("android.hilt").get())
+                "implementation"(libs.findLibrary("android.hilt.navigation.compose").get())
+                "implementation"(libs.findLibrary("hilt.work").get())
+                "implementation"(libs.findLibrary("hilt.common").get())
+                "kapt"(libs.findLibrary("android.hilt.androidx.compiler").get())
+                "kapt"(libs.findLibrary("android.hilt.compiler").get())
+                "kaptAndroidTest"(libs.findLibrary("android.hilt.compiler").get())
+                "kaptTest"(libs.findLibrary("android.hilt.compiler").get())
+                "androidTestImplementation"(libs.findLibrary("android.hilt.testing").get())
+                "testImplementation"(libs.findLibrary("android.hilt.compiler").get())
             }
         }
     }

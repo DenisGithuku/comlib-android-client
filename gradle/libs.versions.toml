@@ -1,5 +1,5 @@
 [versions]
-androidGradlePlugin = "8.3.0-alpha09"
+androidGradlePlugin = "8.1.2"
 androidDesugarJdkLibs = "2.0.3"
 androidxComposeCompiler = "1.5.3"
 androidx-test-ext-junit = "1.1.5"
@@ -9,16 +9,24 @@ compose-bom = "2023.10.01"
 core-ktx = "1.12.0"
 espresso-core = "3.5.1"
 firebaseCrashlyticsPlugin = "2.9.9"
+firebasePerfPlugin = "1.4.2"
 firebaseBom = "32.4.0"
+gmsPlugin = "4.4.0"
+googleServices = "4.4.0"
 hilt = "2.48.1"
+hiltAndroidGradlePlugin = "2.48.1"
 hiltExt = "1.0.0"
 junit = "4.13.2"
 kotlin = "1.9.10"
 ksp = "1.9.10-1.0.13"
 lifecycle-runtime-ktx = "2.6.2"
+perfPlugin = "1.4.2"
+room = "2.6.0"
+ktor = "1.5.0"
+kotlinx-serialization = "1.0.1"
 material = "1.10.0"
-room = "2.5.2"
-
+timber = "5.0.1"
+work = "2.8.1"
 
 [libraries]
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
@@ -39,26 +47,49 @@ espresso-core = { group = "androidx.test.espresso", name = "espresso-core", vers
 firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics-ktx" }
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+google-services = { module = "com.google.gms:google-services", version.ref = "googleServices" }
+hilt-android-gradle-plugin = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "hiltAndroidGradlePlugin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt" }
-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt" }
+android-hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }
+android-hilt-compiler = { module = "com.google.dagger:hilt-android-compiler", version.ref = "hilt" }
+android-hilt-navigation-compose = "androidx.hilt:hilt-navigation-compose:1.1.0-rc01"
+android-hilt-androidx-compiler = "androidx.hilt:hilt-compiler:1.0.0"
+android-hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "hilt" }
+firebase-performance = { group = "com.google.firebase", name = "firebase-perf-ktx" }
+firebase-performance-gradle = { group = "com.google.firebase", name = "perf-plugin", version.ref = "firebasePerfPlugin" }
+hilt-work = "androidx.hilt:hilt-work:1.0.0"
+hilt-common = "androidx.hilt:hilt-common:1.0.0"
 hilt-ext-compiler = { group = "androidx.hilt", name = "hilt-compiler", version.ref = "hiltExt" }
 hilt-ext-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "hiltExt" }
+kotlix-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization", version.ref = "kotlinx-serialization"}
+ktor-client = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor"}
+ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor"}
+ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor"}
+perf-plugin = { module = "com.google.firebase:perf-plugin", version.ref = "perfPlugin" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
 room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+work-runtime = { group = "androidx.work", name = "work-runtime", version.ref = "work"}
 
 #build-logic dependencies
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
 kotlin-gradlePlugin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 ksp-gradlePlugin = { group = "com.google.devtools.ksp", name = "com.google.devtools.ksp.gradle.plugin", version.ref = "ksp" }
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
-kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 androidLibrary = { id = "com.android.library", version.ref = "androidGradlePlugin" }
+android-test = { id = "com.android.test", version.ref = "androidGradlePlugin"}
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "firebaseCrashlyticsPlugin"}
+firebase-perf = { id = "com.google.firebase.firebase-perf", version.ref = "firebasePerfPlugin" }
+gms = { id = "com.google.gms.google-services", version.ref = "gmsPlugin"}
+hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin"}
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 
 # plugins defined in this project
 comlib-android-application = { id = "comlib.android.application", version = "unspecified" }
@@ -66,5 +97,6 @@ comlib-android-application-compose = { id = "comlib.android.application.compose"
 comlib-android-application-firebase = { id = "comlib.android.application.firebase", version = "unspecified" }
 comlib-android-hilt = { id = "comlib.android.hilt", version = "unspecified" }
 comlib-android-library-compose = { id = "comlib.android.library.compose", version = "unspecified" }
+comlib-android-library = { id = "comlib.android.library", version = "unspecified" }
 comlib-android-room = { id = "comlib.android.room", version = "unspecified" }
 comlib-android-test = { id = "comlib.android.test", version = "unspecified" }

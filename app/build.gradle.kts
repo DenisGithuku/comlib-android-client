@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.comlib.android.application)
     alias(libs.plugins.comlib.android.application.compose)
+    alias(libs.plugins.comlib.android.hilt)
+    alias(libs.plugins.comlib.android.application.firebase)
 }
 
 android {
@@ -17,20 +19,31 @@ android {
         }
     }
 
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("../keystore/comlibdebug.keystore")
+            keyAlias = "comlib"
+            keyPassword = "comlibdroid"
+            storePassword = "comlibdroid"
+        }
+    }
     buildTypes {
+        debug {
+            isDebuggable = true
+            signingConfig = signingConfigs.getByName("debug")
+        }
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
     }
+
     buildFeatures {
         compose = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.3"
+        buildConfig = true
     }
     packaging {
         resources {
@@ -49,6 +62,11 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.timber)
+    implementation(libs.work.runtime)
+
+    coreLibraryDesugaring(libs.android.desugarJdkLibs)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
