@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.data.utils
+package com.githukudenis.comlib.core.common
 
 import timber.log.Timber
 

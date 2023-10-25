@@ -10,13 +10,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        // Enable support for SplashScreen API
+        // for proper Android+ support
+        installSplashScreen()
+
         super.onCreate(savedInstanceState)
+
         setContent {
-            com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme {
+            ComLibTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -40,7 +49,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme {
+    ComLibTheme {
         Greeting("Android")
     }
 }

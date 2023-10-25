@@ -24,7 +24,7 @@ android {
             storeFile = file("../keystore/comlibdebug.keystore")
             keyAlias = "comlib"
             keyPassword = "comlibdroid"
-            storePassword = "comlibdroid"
+            storePassword = "04uth50ft!5f4"
         }
     }
     buildTypes {
@@ -56,6 +56,7 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":core:designsystem"))
 
+    implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)

@@ -1,9 +1,8 @@
-package com.githukudenis.comlib.core.network.repository
+package com.githukudenis.comlib.data.repository
 
+import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.User
 import com.githukudenis.comlib.core.network.UserApi
-import com.githukudenis.comlib.data.di.ComlibCoroutineDispatchers
-import com.githukudenis.comlib.data.repository.UserRepository
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 

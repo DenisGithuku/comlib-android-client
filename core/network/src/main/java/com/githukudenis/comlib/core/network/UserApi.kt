@@ -1,7 +1,7 @@
 package com.githukudenis.comlib.core.network
 
 import com.githukudenis.comlib.core.model.User
-import com.githukudenis.comlib.data.common.Constants
+import com.githukudenis.comlib.core.network.common.Constants
 import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get

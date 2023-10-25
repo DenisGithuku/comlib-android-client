@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.data.di
+package com.githukudenis.comlib.core.common.di
 
 import dagger.Module
 import dagger.Provides
