@@ -10,13 +10,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.githukudenis.comlib.ui.theme.ComLibTheme
+import com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComLibTheme {
+            com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
@@ -40,7 +40,7 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
-    ComLibTheme {
+    com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme {
         Greeting("Android")
     }
 }

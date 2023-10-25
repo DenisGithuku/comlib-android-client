@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.comlib.data"
+    namespace = "com.githukudenis.comlib.core.data"
 
 
     defaultConfig {
@@ -27,14 +27,17 @@ android {
 
 dependencies {
 
+    implementation(project(":core:model"))
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
+    implementation(libs.timber)
 
     implementation(libs.ktor.serialization)
     implementation(libs.ktor.client)
     implementation(libs.ktor.logging)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
 
 }

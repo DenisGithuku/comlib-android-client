@@ -18,6 +18,7 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import javax.inject.Singleton
+import kotlinx.serialization.json.Json
 
 private const val TIMEOUT = 60_000
 
@@ -31,7 +32,7 @@ object NetworkModule {
         val httpClient = HttpClient(Android) {
 
             install(JsonFeature) {
-                serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
+                serializer = KotlinxSerializer(Json {
                     prettyPrint = true
                     isLenient = true
                     ignoreUnknownKeys = true
