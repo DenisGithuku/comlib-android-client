@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_header_title">Login</string>
+    <string name="login_header_description">Welcome back</string>
+    <string name="login_button_txt">Login</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="forgot_pass_btn_txt">Forgot password?</string>
+    <string name="login_footer_separator">Or</string>
+    <string name="no_account_txt">Don\'t have an account?</string>
+    <string name="sign_in_txt">Register</string>
+    <string name="toggle_password_visibility_txt">Toggle password</string>
+    <string name="web_client_id">874262339862-k4vpa87okv8m0ui2icv1kkdl6h4t090i.apps.googleusercontent.com</string>
+</resources>
