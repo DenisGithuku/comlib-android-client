@@ -52,6 +52,7 @@ private fun Project.configureKotlin() {
                 "-opt-in=kotlin.RequiresOptIn",
                 // Enable experimental coroutines APIs, including Flow
                 "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi",
+                "-opt-in=kotlinx.coroutines.ExperimentalLayoutApi",
                 "-opt-in=kotlinx.coroutines.FlowPreview",
             )
         }

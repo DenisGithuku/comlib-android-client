@@ -10,7 +10,7 @@ class AndroidLibraryFirebaseConventionPlugin: Plugin<Project> {
                 val bom = libs.findLibrary("firebase-bom").get()
                 add("implementation", platform(bom))
                 "implementation"(libs.findLibrary("firebase-auth").get())
-
+                "implementation"(libs.findLibrary("gms-play-services-auth").get())
             }
         }
     }
