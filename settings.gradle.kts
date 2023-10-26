@@ -23,3 +23,10 @@ dependencyResolutionManagement {
 rootProject.name = "ComLib"
 include(":app")
 include(":core:data")
+include(":core:auth")
+include(":core:model")
+include(":core:network")
+include(":feature:auth")
+include(":core:testing")
+include(":core:common")
+include(":core:designsystem")

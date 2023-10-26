@@ -50,6 +50,10 @@ gradlePlugin {
             id = "comlib.android.application.firebase"
             implementationClass = "AndroidApplicationFirebaseConventionPlugin"
         }
+        register("androidLibraryFirebase") {
+            id = "comlib.android.library.firebase"
+            implementationClass = "AndroidLibraryFirebaseConventionPlugin"
+        }
         register("androidHilt") {
             id = "comlib.android.hilt"
             implementationClass = "AndroidHiltConventionPlugin"
@@ -61,6 +65,10 @@ gradlePlugin {
         register("androidRoom") {
             id = "comlib.android.room"
             implementationClass = "AndroidRoomConventionPlugin"
+        }
+        register("androidFeature") {
+            id = "comlib.android.feature"
+            implementationClass = "AndroidFeatureConventionPlugin"
         }
     }
 }

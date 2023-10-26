@@ -53,6 +53,8 @@ android {
 }
 
 dependencies {
+    implementation(project(":feature:auth"))
+    implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -67,7 +69,7 @@ dependencies {
 
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
 
-    testImplementation(libs.junit)
+    testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
