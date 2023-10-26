@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ComLib</string>
+    <string name="onboarding_text">Share the magic of reading, one page at  time. Join %s today.</string>
+    <string name="get_started_btn_text">Get started</string>
 </resources>

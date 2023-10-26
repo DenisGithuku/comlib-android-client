@@ -56,6 +56,9 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":core:designsystem"))
 
+    implementation(libs.androidx.compose.ui.tooling)
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
