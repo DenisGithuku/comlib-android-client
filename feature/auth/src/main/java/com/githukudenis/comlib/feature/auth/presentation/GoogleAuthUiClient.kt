@@ -20,7 +20,6 @@ class GoogleAuthUiClient(
         FirebaseAuth.getInstance()
     }
 
-
     suspend fun signInWithIntent(intent: Intent): SignInResult? {
         val credential = oneTapClient.getSignInCredentialFromIntent(intent)
         val googleIdToken = credential.googleIdToken

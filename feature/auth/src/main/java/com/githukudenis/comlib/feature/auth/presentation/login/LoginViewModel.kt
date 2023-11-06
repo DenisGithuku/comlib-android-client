@@ -2,9 +2,10 @@ package com.githukudenis.comlib.feature.auth.presentation.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.MessageType
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.core.model.User
-import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.feature.auth.presentation.SignInResult
@@ -28,31 +29,15 @@ class LoginViewModel @Inject constructor(
 
     fun onEvent(event: LoginUiEvent) {
         when (event) {
-            is LoginUiEvent.ChangeAge -> {
-                changeAge(event.age)
-            }
-
             is LoginUiEvent.ChangeEmail -> {
                 changeEmail(event.email)
-            }
-
-            is LoginUiEvent.ChangeFirstname -> {
-                changeFirstname(event.firstname)
-            }
-
-            is LoginUiEvent.ChangeLastname -> {
-                changeLastname(event.lastname)
             }
 
             is LoginUiEvent.ChangePassword -> {
                 changePassword(event.password)
             }
 
-            is LoginUiEvent.ChangeConfirmPassword -> {
-                changeConfirmPassword(event.confirm)
-            }
-
-            is LoginUiEvent.SignIn -> {
+            is LoginUiEvent.GoogleSignIn -> {
                 onSignInResult(event.signInResult)
             }
 
@@ -65,12 +50,7 @@ class LoginViewModel @Inject constructor(
             }
 
             is LoginUiEvent.TogglePassword -> {
-                _state.update { prevState ->
-                    val formState = prevState.formState.copy(
-                        passwordIsVisible = event.isVisible
-                    )
-                    prevState.copy(formState = formState)
-                }
+                togglePassword(event.isVisible)
             }
         }
     }
@@ -78,33 +58,6 @@ class LoginViewModel @Inject constructor(
     private fun changeEmail(value: String) {
         _state.update { prevState ->
             val formState = prevState.formState.copy(email = value)
-            prevState.copy(
-                formState = formState
-            )
-        }
-    }
-
-    private fun changeFirstname(value: String) {
-        _state.update { prevState ->
-            val formState = prevState.formState.copy(firstname = value)
-            prevState.copy(
-                formState = formState
-            )
-        }
-    }
-
-    private fun changeLastname(value: String) {
-        _state.update { prevState ->
-            val formState = prevState.formState.copy(lastname = value)
-            prevState.copy(
-                formState = formState
-            )
-        }
-    }
-
-    private fun changeAge(value: Int) {
-        _state.update { prevState ->
-            val formState = prevState.formState.copy(age = value)
             prevState.copy(
                 formState = formState
             )
@@ -126,13 +79,13 @@ class LoginViewModel @Inject constructor(
             prevState.copy(userMessages = messages)
         }
     }
-
-    private fun changeConfirmPassword(value: String) {
+    
+    private fun togglePassword(isVisible: Boolean) {
         _state.update { prevState ->
-            val formState = prevState.formState.copy(confirmPassword = value)
-            prevState.copy(
-                formState = formState
+            val formState = prevState.formState.copy(
+                passwordIsVisible = isVisible
             )
+            prevState.copy(formState = formState)
         }
     }
 
@@ -140,6 +93,18 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _state.update { prevState ->
                 prevState.copy(isLoading = true)
+            }
+            if (signInResult.errorMessage != null) {
+                _state.update { prevState ->
+                    val userMessages = prevState.userMessages.toMutableList()
+                    userMessages.add(UserMessage(message = signInResult.errorMessage))
+                    prevState.copy(
+                        isLoading = false,
+                        loginSuccess = true,
+                        userMessages = userMessages
+                    )
+                }
+                return@launch
             }
             val user = signInResult.userData?.run {
                 User(
@@ -153,7 +118,7 @@ class LoginViewModel @Inject constructor(
             )
             _state.update { prevState ->
                 val userMessages = prevState.userMessages.toMutableList()
-                userMessages.add(UserMessage(message = signInResult.errorMessage))
+                userMessages.add(UserMessage(message = "Signed in successfully"))
                 prevState.copy(
                     isLoading = false,
                     loginSuccess = true,
@@ -165,17 +130,18 @@ class LoginViewModel @Inject constructor(
 
     private fun login() {
         viewModelScope.launch {
-            val (email, firstname, lastname, age, password, confirm) = _state.value.formState
+            val (email, password) = _state.value.formState
             if (email.isEmpty() ||
-                firstname.isEmpty() ||
-                lastname.isEmpty() ||
-                age == null ||
-                password.isEmpty() ||
-                confirm.isEmpty()
+                password.isEmpty()
             ) {
                 _state.update { prevState ->
                     val userMessages = prevState.userMessages.toMutableList()
-                    userMessages.add(UserMessage(message = "Please check your details"))
+                    userMessages.add(
+                        UserMessage(
+                            message = "Please check your details",
+                            messageType = MessageType.ERROR
+                        )
+                    )
                     prevState.copy(
                         userMessages = userMessages
                     )
@@ -183,13 +149,32 @@ class LoginViewModel @Inject constructor(
                 return@launch
             }
 
-            val userAuthData = UserAuthData(email, firstname, lastname, age, password)
             _state.update { prevState ->
                 prevState.copy(isLoading = true)
             }
-            val result = authRepository.login(userAuthData)
-            _state.update { prevState ->
-                prevState.copy(isLoading = false, loginSuccess = result != null)
+            authRepository.login(email, password) { result ->
+                when (result) {
+                    is ResponseResult.Failure -> {
+                        val userMessages = _state.value.userMessages.toMutableList()
+                        userMessages.add(UserMessage(message = result.error.message))
+                        _state.update { prevState ->
+                            prevState.copy(
+                                isLoading = false,
+                                loginSuccess = false,
+                                userMessages = userMessages
+                            )
+                        }
+                    }
+
+                    is ResponseResult.Success -> {
+                        _state.update { prevState ->
+                            prevState.copy(
+                                isLoading = false,
+                                loginSuccess = true
+                            )
+                        }
+                    }
+                }
             }
         }
     }

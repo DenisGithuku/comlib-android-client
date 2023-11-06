@@ -5,10 +5,16 @@ import android.content.Context
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -25,13 +31,19 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
@@ -43,10 +55,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.feature.auth.R
@@ -58,7 +72,7 @@ import kotlinx.coroutines.launch
 fun LoginRoute(
     viewModel: LoginViewModel = hiltViewModel(),
     onForgotPassword: () -> Unit,
-    onSignInInstead: () -> Unit,
+    onSignUpInstead: () -> Unit,
     onLoginComplete: () -> Unit
 ) {
     val context = LocalContext.current
@@ -88,7 +102,7 @@ fun LoginRoute(
                     val signInResult = googleAuthUiClient.signInWithIntent(
                         activityResult.data ?: return@launch
                     )
-                    viewModel.onEvent(LoginUiEvent.SignIn(signInResult ?: return@launch))
+                    viewModel.onEvent(LoginUiEvent.GoogleSignIn(signInResult ?: return@launch))
                 }
             }
         }
@@ -100,7 +114,7 @@ fun LoginRoute(
         onEmailChange = { email -> viewModel.onEvent(LoginUiEvent.ChangeEmail(email)) },
         onPasswordChange = { password -> viewModel.onEvent(LoginUiEvent.ChangePassword(password)) },
         onForgotPassword = onForgotPassword,
-        onSignInInstead = onSignInInstead,
+        onSignInInstead = onSignUpInstead,
         onGoogleSignIn = {
             scope.launch {
                 val intentSender = googleAuthUiClient.signIn()
@@ -117,6 +131,11 @@ fun LoginRoute(
                 LoginUiEvent.TogglePassword(
                     isVisible
                 )
+            )
+        },
+        onDismissUserMessage = { id ->
+            viewModel.onEvent(
+                LoginUiEvent.DismissUserMessage(id)
             )
         },
         onSubmit = {
@@ -136,127 +155,178 @@ private fun LoginScreen(
     onSignInInstead: () -> Unit,
     onGoogleSignIn: () -> Unit,
     onTogglePasswordVisibility: (Boolean) -> Unit,
+    onDismissUserMessage: (Int) -> Unit,
     onSubmit: () -> Unit
 ) {
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .safeDrawingPadding()
-            .imePadding()
-            .imeNestedScroll()
-            .padding(
-                horizontal = 16.dp,
-            )
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Image(
-            painter = painterResource(R.drawable.comliblogo),
-            modifier = Modifier.size(80.dp),
-            contentDescription = null
-        )
-        Text(
-            text = stringResource(id = R.string.login_header_title),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            )
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Text(
-            text = stringResource(id = R.string.login_header_description),
-            style = MaterialTheme.typography.labelMedium,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
+    val snackbarHostState = remember { SnackbarHostState() }
 
-        CLibOutlinedTextField(
-            value = state.formState.email,
-            onValueChange = onEmailChange,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.email_hint)
-                )
-            },
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        CLibOutlinedTextField(
-            value = state.formState.password,
-            onValueChange = onPasswordChange,
-            label = {
-                Text(
-                    text = stringResource(id = R.string.password_hint)
-                )
-            },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Password
-            ),
-            trailingIcon = {
-                IconButton(
-                    onClick = { onTogglePasswordVisibility(!state.formState.passwordIsVisible) }
-                ) {
-                    Icon(
-                        imageVector = if (state.formState.passwordIsVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
-                        contentDescription = context.getString(R.string.toggle_password_visibility_txt)
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        }
+    ) { paddingValues ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .safeDrawingPadding()
+                .imePadding()
+                .imeNestedScroll()
+                .padding(
+                    PaddingValues(
+                        top = paddingValues.calculateTopPadding(),
+                        bottom = paddingValues.calculateBottomPadding(),
+                        start = 16.dp,
+                        end = 16.dp,
                     )
+                )
+                .verticalScroll(rememberScrollState()),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+
+            LaunchedEffect(snackbarHostState, state.userMessages) {
+                if (state.userMessages.isNotEmpty()) {
+                    val userMessage = state.userMessages.first()
+                    snackbarHostState.showSnackbar(
+                        message = userMessage.message ?: return@LaunchedEffect,
+                        duration = SnackbarDuration.Short
+                    )
+                    onDismissUserMessage(userMessage.id)
                 }
-            },
-            visualTransformation = if (state.formState.passwordIsVisible) PasswordVisualTransformation() else VisualTransformation.None,
-            modifier = Modifier.fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        CLibButton(
-            onClick = onSubmit,
-            enabled = state.formState.formIsValid,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(
-                text = stringResource(id = R.string.login_button_txt),
-                style = MaterialTheme.typography.titleMedium
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        CLibTextButton(onClick = onForgotPassword) {
-            Text(
-                text = stringResource(id = R.string.forgot_pass_btn_txt)
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Text(
-            text = stringResource(id = R.string.login_footer_separator)
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        CLibTextButton(
-            onClick = onGoogleSignIn,
-            shape = MaterialTheme.shapes.small,
-            modifier = Modifier.fillMaxWidth()
-        ) {
+            }
+            AnimatedVisibility(
+                visible = state.isLoading,
+                enter = fadeIn() + slideInVertically(),
+                exit = fadeOut() + slideOutVertically()
+            ) {
+                CircularProgressIndicator()
+            }
             Image(
-                modifier = Modifier.size(24.dp),
-                painter = painterResource(id = R.drawable.ic_google),
+                painter = painterResource(R.drawable.comliblogo),
+                modifier = Modifier.size(80.dp),
                 contentDescription = null
             )
-            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "Login with google"
+                text = stringResource(id = R.string.login_header_title),
+                style = MaterialTheme.typography.titleMedium.copy(
+                    fontWeight = FontWeight.Bold
+                )
             )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(id = R.string.login_header_description),
+                style = MaterialTheme.typography.labelMedium,
+            )
+            Spacer(modifier = Modifier.height(8.dp))
 
-        Text(
-            text = stringResource(id = R.string.no_account_txt)
-        )
-        CLibTextButton(onClick = onSignInInstead) {
+                CLibOutlinedTextField(
+                    value = state.formState.email,
+                    onValueChange = onEmailChange,
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.email_hint)
+                        )
+                    },
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CLibOutlinedTextField(
+                    value = state.formState.password,
+                    onValueChange = onPasswordChange,
+                    label = {
+                        Text(
+                            text = stringResource(id = R.string.password_hint)
+                        )
+                    },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Password
+                    ),
+                    trailingIcon = {
+                        IconButton(
+                            onClick = { onTogglePasswordVisibility(!state.formState.passwordIsVisible) }
+                        ) {
+                            Icon(
+                                imageVector = if (state.formState.passwordIsVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                                contentDescription = context.getString(R.string.toggle_password_visibility_txt)
+                            )
+                        }
+                    },
+                    visualTransformation = if (state.formState.passwordIsVisible) PasswordVisualTransformation() else VisualTransformation.None,
+                    modifier = Modifier.fillMaxWidth()
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+
+                CLibButton(
+                    onClick = onSubmit,
+                    enabled = state.formState.formIsValid,
+                    shape = MaterialTheme.shapes.small,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        text = stringResource(id = R.string.login_button_txt),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                }
+                Spacer(modifier = Modifier.height(8.dp))
+
+            CLibTextButton(onClick = onForgotPassword) {
+                Text(
+                    text = stringResource(id = R.string.forgot_pass_btn_txt)
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
             Text(
-                text = stringResource(id = R.string.sign_in_txt)
+                text = stringResource(id = R.string.login_footer_separator)
             )
+            Spacer(modifier = Modifier.height(8.dp))
+
+            CLibOutlinedButton(
+                onClick = onGoogleSignIn,
+                shape = MaterialTheme.shapes.small,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Image(
+                    modifier = Modifier.size(24.dp),
+                    painter = painterResource(id = R.drawable.ic_google),
+                    contentDescription = null
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Text(
+                    text = "Login with google"
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+
+            Text(
+                text = stringResource(id = R.string.no_account_txt)
+            )
+            CLibTextButton(onClick = onSignInInstead) {
+                Text(
+                    text = stringResource(id = R.string.sign_in_txt)
+                )
+            }
         }
     }
+}
+
+@Preview
+@Composable
+fun LoginScreenPreview() {
+    LoginScreen(
+        state = LoginUiState(
+            isLoading = true,
+        ),
+        context = LocalContext.current,
+        onEmailChange = {},
+        onPasswordChange = {},
+        onForgotPassword = { /*TODO*/ },
+        onSignInInstead = { /*TODO*/ },
+        onGoogleSignIn = { /*TODO*/ },
+        onTogglePasswordVisibility = {},
+        onDismissUserMessage = {},
+        onSubmit = {}
+    )
 }

@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:874262339862:android:b7056bbb906822cb39b037",
+        "mobilesdk_app_id": "1:874262339862:android:5ffafcf46a88fb7239b037",
         "android_client_info": {
           "package_name": "com.githukudenis.comlib"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "874262339862-csc16392vffqdnlpbglhat0a346tg2mc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.githukudenis.comlib",
+            "certificate_hash": "3c956de20f890565b97dba13edc2631eaab931df"
+          }
+        },
+        {
+          "client_id": "874262339862-k4vpa87okv8m0ui2icv1kkdl6h4t090i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyALGJuse0IYFx0YuZoJHbdRxOcL_cIp7KY"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "874262339862-k4vpa87okv8m0ui2icv1kkdl6h4t090i.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

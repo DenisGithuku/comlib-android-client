@@ -11,11 +11,7 @@ data class LoginUiState (
 
 data class FormState(
     val email: String = "",
-    val firstname: String = "",
-    val lastname: String = "",
-    val age: Int = 10,
     val password: String = "",
-    val confirmPassword: String = "",
     val passwordIsVisible: Boolean = true,
 ) {
     val formIsValid: Boolean

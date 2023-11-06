@@ -24,8 +24,8 @@ fun CLibOutlinedTextField(
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     colors: TextFieldColors = OutlinedTextFieldDefaults.colors(
-        unfocusedBorderColor = MaterialTheme.colorScheme.background.copy(alpha = 0.8f),
-        focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.9f)
+        unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+        focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
     ),
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {

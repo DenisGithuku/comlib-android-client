@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="home_header_title">Good %s %s</string>
+    <string name="home_header_subtitle">Find your next perfect read</string>
+    <string name="already_read_separator">Already read</string>
+    <string name="retry">Retry</string>
+    <string name="available_books_separator" tools:ignore="ExtraTranslation">Available</string>
+</resources>

@@ -1,25 +1,32 @@
 package com.githukudenis.comlib.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.githukudenis.comlib.feature.auth.presentation.login.LoginRoute
+import com.githukudenis.comlib.feature.auth.presentation.signup.SignUpRoute
 
 fun NavGraphBuilder.authGraph(
-    onLoginComplete: () -> Unit
+    onSignUpInstead: () -> Unit, onLoginComplete: () -> Unit
 ) {
-        navigation(startDestination = AuthDestination.Login.route, route = ComlibDestination.Auth.route) {
-            composable(route = AuthDestination.Login.route) {
-                LoginRoute(onLoginComplete = onLoginComplete)
-            }
+    navigation(
+        startDestination = AuthDestination.Login.route, route = ComlibDestination.AuthGraph.route
+    ) {
+        composable(route = AuthDestination.Login.route) {
+            LoginRoute(
+                onLoginComplete = onLoginComplete,
+                onForgotPassword = {},
+                onSignUpInstead = onSignUpInstead
+            )
+        }
+        composable(route = AuthDestination.SignUp.route) {
+            SignUpRoute(onSignUpComplete = {})
+        }
     }
 }
 
 sealed class AuthDestination(val route: String) {
-    data object Login: AuthDestination("login")
-    data object SignUp: AuthDestination("login")
-    data object ForgotPassword: AuthDestination("forgot_password")
+    data object Login : AuthDestination("login")
+    data object SignUp : AuthDestination("signup")
+    data object ForgotPassword : AuthDestination("forgot_password")
 }

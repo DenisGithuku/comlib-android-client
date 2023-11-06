@@ -30,7 +30,9 @@ data class AppState(
         popUpTo: String? = null,
     ) {
         navController.navigate(route) {
-            popUpTo(route = popUpTo ?: route) {
+            popUpTo(
+                route = popUpTo ?: navController.graph.startDestinationRoute ?: return@navigate
+            ) {
                 inclusive = true
             }
         }

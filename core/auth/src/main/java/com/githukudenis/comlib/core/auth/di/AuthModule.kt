@@ -1,6 +1,9 @@
 package com.githukudenis.comlib.core.auth.di
 
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.auth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +17,6 @@ object AuthModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
-        return FirebaseAuth.getInstance()
+        return Firebase.auth
     }
 }

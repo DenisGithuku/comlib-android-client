@@ -54,6 +54,7 @@ android {
 
 dependencies {
     implementation(project(":feature:auth"))
+    implementation(project(":feature:home"))
     implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.compose.ui.tooling)
@@ -61,7 +62,9 @@ dependencies {
     implementation(libs.androidx.compose.material.iconsExtended)
     implementation(libs.androidx.core.splashscreen)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.firebase.auth)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtimeCompose)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.ui)

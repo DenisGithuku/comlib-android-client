@@ -1,13 +1,16 @@
 package com.githukudenis.comlib.core.auth
 
-import com.githukudenis.comlib.core.model.User
-import com.githukudenis.comlib.core.model.UserAuthData
-import com.githukudenis.comlib.core.network.UserApi
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.common.safeApiCall
+import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.core.network.UserApi
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthDataSource @Inject constructor(
@@ -15,42 +18,61 @@ class AuthDataSource @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
     private val dispatcher: ComlibCoroutineDispatchers
 ) {
-    suspend fun signInWithEmail(
+    suspend fun signUpWithEmail(
         userAuthData: UserAuthData
-    ): String? {
+    ): ResponseResult<String?> {
         return withContext(dispatcher.io) {
             safeApiCall {
                 val result = firebaseAuth.createUserWithEmailAndPassword(
                     userAuthData.email,
                     userAuthData.password
-                ).await()
+                )
 
-                if (result.user != null) {
-                    val (email, firstname, lastname, age) = userAuthData
-                    userApi.addUser(
-                        User(
-                            email = email,
-                            firstname = firstname,
-                            lastname = lastname,
-                            age = age
-                        )
+                if (result.exception != null) {
+                    ResponseResult.Failure(
+                        error = result.exception
+                            ?: Throwable(message = "An error occurred. Couldn't sign up")
                     )
+                } else {
+                    ResponseResult.Success(data = result.await().user?.uid)
                 }
-                result.user?.uid
             }
         }
     }
 
-    suspend fun login(userAuthData: UserAuthData): String? {
+    suspend fun login(
+        email: String,
+        password: String,
+        onResult: (ResponseResult<String?>) -> Unit
+    ) {
         return withContext(dispatcher.io) {
-            safeApiCall {
-                val result =
-                    firebaseAuth.signInWithEmailAndPassword(
-                        userAuthData.email,
-                        userAuthData.password
-                    )
-                        .await()
-                result.user?.uid
+            firebaseAuth.signInWithEmailAndPassword(
+                email,
+                password
+            ).addOnCompleteListener { authResultTask ->
+                if (!authResultTask.isSuccessful) {
+                    Timber.tag("login error").d(authResultTask.exception)
+                    val responseResult: ResponseResult<String?> = when (authResultTask.exception) {
+                        is FirebaseAuthInvalidCredentialsException -> {
+                            ResponseResult.Failure(
+                                Throwable(message = "Invalid email or password.")
+                            )
+                        }
+
+                        is FirebaseAuthInvalidUserException -> {
+                            ResponseResult.Failure(
+                                Throwable(message = "User doesn't exist. Create an account first!")
+                            )
+                        }
+
+                        else -> ResponseResult.Failure(
+                            Throwable(message = authResultTask.exception?.message ?: "An unknown error occurred")
+                        )
+                    }
+                    onResult(responseResult)
+                } else {
+                    onResult(ResponseResult.Success(data = authResultTask.result.user?.uid))
+                }
             }
         }
     }

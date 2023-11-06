@@ -11,4 +11,11 @@
     <string name="sign_in_txt">Register</string>
     <string name="toggle_password_visibility_txt">Toggle password</string>
     <string name="web_client_id">874262339862-k4vpa87okv8m0ui2icv1kkdl6h4t090i.apps.googleusercontent.com</string>
+    <string name="firstname_hint">Firstname</string>
+    <string name="lastname_hint">Lastname</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="age_hint">Age</string>
+    <string name="signup_header_title">Registration</string>
+    <string name="signup_header_description">Create account</string>
+    <string name="signup_button_txt">Signup</string>
 </resources>

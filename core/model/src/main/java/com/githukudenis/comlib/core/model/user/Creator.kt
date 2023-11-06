@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.core.model
+package com.githukudenis.comlib.core.model.user
 
 import kotlinx.serialization.Serializable
 
