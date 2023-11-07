@@ -34,8 +34,11 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButto
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.feature.home.components.BookCard
+import com.githukudenis.comlib.feature.home.components.EmptyDataCard
+import com.githukudenis.comlib.feature.home.components.ErrorCard
 import com.githukudenis.comlib.feature.home.components.GoalCard
 import com.githukudenis.comlib.feature.home.components.HomeHeader
+import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 
 @Composable
 fun HomeRoute(
@@ -67,19 +70,17 @@ fun LoadedScreen(
 ) {
     LazyColumn(
         modifier = Modifier
-            .consumeWindowInsets(
+            .fillMaxSize()
+            .padding(
                 paddingValues = PaddingValues(
                     top = WindowInsets.systemBars
                         .asPaddingValues()
                         .calculateTopPadding(),
                     bottom = WindowInsets.systemBars
                         .asPaddingValues()
-                        .calculateBottomPadding() + WindowInsets.navigationBars
-                        .asPaddingValues()
-                        .calculateBottomPadding()
+                        .calculateBottomPadding() + 80.dp
                 )
-            )
-            .fillMaxSize(),
+            ),
         verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
@@ -117,17 +118,29 @@ fun LoadedScreen(
                     is BooksState.Error -> "0"
                     BooksState.Loading -> "0"
                     is BooksState.Success -> "${booksState.readBooks.size - 1}"
+                    BooksState.Empty -> "0"
                 },
                 onViewAll = {})
         }
 
         item {
             when (booksState) {
-                is BooksState.Error -> Unit
-                BooksState.Loading -> CircularProgressIndicator()
+                BooksState.Empty -> EmptyDataCard(content = "read books")
+                is BooksState.Error -> ErrorCard(content = "Could not find read books")
+                BooksState.Loading -> {
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        items(4) {
+                            LoadingBookCard()
+                        }
+                    }
+                }
                 is BooksState.Success -> {
                     LazyRow(
-                        contentPadding = PaddingValues(16.dp)
+                        contentPadding = PaddingValues(16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
                     ) {
                         items(booksState.readBooks, key = { book -> book._id }) { book ->
                             BookCard(book = book)
@@ -143,23 +156,36 @@ fun LoadedScreen(
                     is BooksState.Error -> "0"
                     BooksState.Loading -> "0"
                     is BooksState.Success -> "${booksState.available.size - 1}"
+                    BooksState.Empty -> "0"
                 },
                 onViewAll = {})
         }
 
         item {
             when (booksState) {
-                is BooksState.Error -> Unit
-                BooksState.Loading -> CircularProgressIndicator()
+                is BooksState.Error -> ErrorCard(content = "Could not fetch books")
+                BooksState.Loading -> {
+                    LazyRow(
+                        contentPadding = PaddingValues(horizontal = 16.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                        items(4) {
+                            LoadingBookCard()
+                        }
+                    }
+                }
+
                 is BooksState.Success -> {
                     LazyRow(
                         contentPadding = PaddingValues(16.dp)
                     ) {
-                        items(booksState.readBooks, key = { book -> book._id }) { book ->
+                        items(booksState.available, key = { book -> book._id }) { book ->
                             BookCard(book = book)
                         }
                     }
                 }
+
+                BooksState.Empty -> EmptyDataCard(content = "books")
             }
         }
     }

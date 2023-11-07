@@ -31,7 +31,8 @@ fun SectionSeparator(
         )
         Row(
             modifier = Modifier.clickable { onViewAll() },
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
                 text = "View all", style = MaterialTheme.typography.labelLarge

@@ -35,5 +35,6 @@ sealed interface BooksState {
     ) : BooksState
 
     data class Error(val message: String) : BooksState
+    data object Empty : BooksState
 
 }

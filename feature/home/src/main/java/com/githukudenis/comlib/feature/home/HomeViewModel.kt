@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
@@ -10,12 +11,15 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,15 +27,16 @@ class HomeViewModel @Inject constructor(
     private val comlibUseCases: ComlibUseCases
 ) : ViewModel() {
 
-    private val userProfileState: MutableStateFlow<UserProfileState> =
+    private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
 
-    private val booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
+    private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
 
     val state: StateFlow<HomeUiState>
         get() = combine(
             userProfileState, booksState
         ) { profile, books ->
+            Log.d("bookState", books.toString())
             HomeUiState.Success(
                 booksState = books,
                 userProfileState = profile,
@@ -50,26 +55,31 @@ class HomeViewModel @Inject constructor(
 
     private fun setupData() {
         viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase.invoke().mapLatest { prefs ->
-                prefs.userId?.let { userId ->
-                    getUserProfile(userId)
-                }
+            comlibUseCases.getUserPrefsUseCase.invoke().distinctUntilChanged()
+                .collectLatest { prefs ->
+                    Log.d("prefs", prefs.toString())
+                    prefs.userId?.let { userId ->
+                        getUserProfile(userId)
+                    }
 
-                getBooks(
-                    readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
-                )
-            }
+                    getBooks(
+                        readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
+                    )
+                }
         }
     }
 
-    private fun getBooks(readBooks: Set<String>, bookmarkedBooks: Set<String>) {
-        viewModelScope.launch {
-            comlibUseCases.getAllBooksUseCase().collect { result ->
+    private suspend fun getBooks(readBooks: Set<String>, bookmarkedBooks: Set<String>) {
+            comlibUseCases.getAllBooksUseCase().collectLatest { result ->
                 when (result) {
                     is DataResult.Error -> {
                         booksState.update {
                             BooksState.Error(message = result.message)
                         }
+                    }
+
+                    is DataResult.Empty -> {
+                        booksState.update { BooksState.Empty }
                     }
 
                     is DataResult.Loading -> {
@@ -87,7 +97,6 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
-        }
     }
 
     fun onEvent(event: HomeUiEvent) {
