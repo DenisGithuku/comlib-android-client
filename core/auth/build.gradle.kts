@@ -29,12 +29,13 @@ android {
 dependencies {
 
     implementation(project(":core:network"))
-    implementation(project(":core:data"))
+    implementation(project(":core:common"))
     implementation(project(":core:model"))
 
     implementation(libs.firebase.bom)
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.auth)
+    implementation(libs.timber)
     implementation(libs.ktor.serialization)
 
     implementation(libs.androidx.activity.compose)

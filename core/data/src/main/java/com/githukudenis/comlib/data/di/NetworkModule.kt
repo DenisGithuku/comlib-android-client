@@ -1,6 +1,9 @@
 package com.githukudenis.comlib.data.di
 
 import android.util.Log
+import com.githukudenis.comlib.core.network.UserApi
+import com.githukudenis.comlib.data.repository.AuthRepository
+import com.githukudenis.comlib.data.repository.AuthRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,6 +22,7 @@ import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import javax.inject.Singleton
 import kotlinx.serialization.json.Json
+import timber.log.Timber
 
 private const val TIMEOUT = 60_000
 
@@ -47,7 +51,7 @@ object NetworkModule {
             install(Logging) {
                 logger = object : Logger {
                     override fun log(message: String) {
-                        Log.v("Logger Ktor => ", message)
+                        Timber.tag("Logger Ktor => ").v(message)
                     }
                 }
                 level = LogLevel.ALL
@@ -55,7 +59,7 @@ object NetworkModule {
 
             install(ResponseObserver) {
                 onResponse { response ->
-                    Log.d("HTTP status: ", "${response.status.value}")
+                    Timber.tag("HTTP status: ").d("${response.status.value}")
                 }
             }
 

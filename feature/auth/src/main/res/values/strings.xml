@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="login_header_title">Login</string>
+    <string name="login_header_description">Welcome back</string>
+    <string name="login_button_txt">Login</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="forgot_pass_btn_txt">Forgot password?</string>
+    <string name="login_footer_separator">Or</string>
+    <string name="no_account_txt">Don\'t have an account?</string>
+    <string name="sign_in_txt">Register</string>
+    <string name="toggle_password_visibility_txt">Toggle password</string>
+    <string name="web_client_id">874262339862-k4vpa87okv8m0ui2icv1kkdl6h4t090i.apps.googleusercontent.com</string>
+    <string name="firstname_hint">Firstname</string>
+    <string name="lastname_hint">Lastname</string>
+    <string name="confirm_password_hint">Confirm password</string>
+    <string name="age_hint">Age</string>
+    <string name="signup_header_title">Registration</string>
+    <string name="signup_header_description">Create account</string>
+    <string name="signup_button_txt">Signup</string>
+    <string name="reset_header_title">Reset password</string>
+    <string name="reset_header_description">Recover your account</string>
+    <string name="reset_button_text">Reset</string>
+</resources>

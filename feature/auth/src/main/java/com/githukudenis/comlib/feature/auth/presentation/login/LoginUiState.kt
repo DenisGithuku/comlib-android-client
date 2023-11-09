@@ -10,10 +10,10 @@ data class LoginUiState (
 )
 
 data class FormState(
-    val email: String? = null,
-    val firstname: String? = null,
-    val lastname: String? = null,
-    val age: Int? = null,
-    val password: String? = null,
-    val confirmPassword: String? = null,
-)
+    val email: String = "",
+    val password: String = "",
+    val passwordIsVisible: Boolean = true,
+) {
+    val formIsValid: Boolean
+        get() = email.isNotEmpty() && password.isNotEmpty()
+}
