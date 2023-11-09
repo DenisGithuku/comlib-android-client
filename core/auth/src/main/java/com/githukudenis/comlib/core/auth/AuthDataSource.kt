@@ -24,8 +24,7 @@ class AuthDataSource @Inject constructor(
         return withContext(dispatcher.io) {
             safeApiCall {
                 val result = firebaseAuth.createUserWithEmailAndPassword(
-                    userAuthData.email,
-                    userAuthData.password
+                    userAuthData.email, userAuthData.password
                 )
 
                 if (result.exception != null) {
@@ -41,14 +40,11 @@ class AuthDataSource @Inject constructor(
     }
 
     suspend fun login(
-        email: String,
-        password: String,
-        onResult: (ResponseResult<String?>) -> Unit
+        email: String, password: String, onResult: (ResponseResult<String?>) -> Unit
     ) {
         return withContext(dispatcher.io) {
             firebaseAuth.signInWithEmailAndPassword(
-                email,
-                password
+                email, password
             ).addOnCompleteListener { authResultTask ->
                 if (!authResultTask.isSuccessful) {
                     Timber.tag("login error").d(authResultTask.exception)
@@ -66,7 +62,10 @@ class AuthDataSource @Inject constructor(
                         }
 
                         else -> ResponseResult.Failure(
-                            Throwable(message = authResultTask.exception?.message ?: "An unknown error occurred")
+                            Throwable(
+                                message = authResultTask.exception?.message
+                                    ?: "An unknown error occurred"
+                            )
                         )
                     }
                     onResult(responseResult)
@@ -78,4 +77,10 @@ class AuthDataSource @Inject constructor(
     }
 
     suspend fun signOut() = withContext(dispatcher.io) { firebaseAuth.signOut() }
+    suspend fun resetPassword(email: String): Boolean {
+        return withContext(dispatcher.io) {
+            val result = firebaseAuth.sendPasswordResetEmail(email)
+            result.isSuccessful
+        }
+    }
 }

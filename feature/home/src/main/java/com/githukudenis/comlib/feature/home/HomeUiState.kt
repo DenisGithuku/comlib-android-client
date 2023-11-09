@@ -8,7 +8,6 @@ import com.githukudenis.comlib.core.model.user.User
 sealed class HomeUiState {
     data class Success(
         val booksState: BooksState = BooksState.Loading,
-        val user: User? = null,
         val timePeriod: TimePeriod = TimePeriod.MORNING,
         val userMessages: List<UserMessage> = emptyList(),
         val userProfileState: UserProfileState = UserProfileState.Loading

@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -57,7 +58,9 @@ private fun HomeScreen(
         is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
         HomeUiState.Loading -> LoadingScreen()
         is HomeUiState.Success -> LoadedScreen(
-            booksState = state.booksState, profile = state.user, timePeriod = state.timePeriod
+            booksState = state.booksState,
+            userProfileState = state.userProfileState,
+            timePeriod = state.timePeriod
         )
     }
 
@@ -66,7 +69,7 @@ private fun HomeScreen(
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LoadedScreen(
-    timePeriod: TimePeriod, booksState: BooksState, profile: User?
+    timePeriod: TimePeriod, booksState: BooksState, userProfileState: UserProfileState
 ) {
     LazyColumn(
         modifier = Modifier
@@ -86,21 +89,38 @@ fun LoadedScreen(
         item {
             HomeHeader(modifier = Modifier.padding(16.dp), title = {
                 Text(
-                    text = stringResource(id = R.string.home_header_title,
-                        timePeriod.name.lowercase().replaceFirstChar { char -> char.uppercase() },
-                        (profile?.firstname
-                            ?: "stranger").replaceFirstChar { char -> char.uppercase() }),
-                    style = MaterialTheme.typography.titleMedium
+                    text = buildString {
+                        append("Good")
+                        append(" ")
+                        append(timePeriod.name.lowercase()
+                            .replaceFirstChar { char -> char.uppercase() })
+                        append(" ")
+                        append(
+                            when (userProfileState) {
+                                is UserProfileState.Error -> "Stranger"
+                                UserProfileState.Loading -> "Stranger"
+                                is UserProfileState.Success -> {
+                                    Log.d("profile", userProfileState.user?.firstname.toString())
+                                    (userProfileState.user?.firstname
+                                        ?: "stranger").replaceFirstChar { char -> char.uppercase() }
+                            }
+                            }
+                        )
+                    }, style = MaterialTheme.typography.titleMedium
                 )
             }, subtitle = {
-                // TODO("Fetch name and time")
                 Text(
                     text = stringResource(id = R.string.home_header_subtitle),
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }, profileImage = {
-                "https://comlib-api.onrender.com/img/users/${profile?.image}"
+                when (userProfileState) {
+                    is UserProfileState.Error -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
+                    UserProfileState.Loading -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
+                    is UserProfileState.Success -> "https://comlib-api.onrender.com/img/users/${userProfileState.user?.image}"
+                }
+
             })
         }
         item {
@@ -137,6 +157,7 @@ fun LoadedScreen(
                         }
                     }
                 }
+
                 is BooksState.Success -> {
                     LazyRow(
                         contentPadding = PaddingValues(16.dp),
@@ -168,7 +189,7 @@ fun LoadedScreen(
                     LazyRow(
                         contentPadding = PaddingValues(horizontal = 16.dp),
                         horizontalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
+                    ) {
                         items(4) {
                             LoadingBookCard()
                         }

@@ -174,7 +174,8 @@ class SignUpViewModel @Inject constructor(
                 User(
                     email = email,
                     username = username,
-                    image = profilePictureUrl
+                    image = profilePictureUrl,
+                    authId = authId
                 )
             }
             userRepository.addNewUser(

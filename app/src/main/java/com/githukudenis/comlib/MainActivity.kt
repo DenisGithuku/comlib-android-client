@@ -41,25 +41,29 @@ class MainActivity : ComponentActivity() {
 
             ComLibTheme(darkTheme = false) {
                 Scaffold(bottomBar = {
-                    NavigationBar {
-                        val homeGraphDestinations = listOf(
-                            HomeDestination.Home, HomeDestination.Books, HomeDestination.Clubs
-                        )
-                        homeGraphDestinations.forEach { destination ->
-                            NavigationBarItem(onClick = { appState.navigate(destination.route) },
-                                selected = appState.currentDestination?.route == destination.route,
-                                icon = {
-                                    Icon(
-                                        imageVector = if (destination.route == appState.currentDestination?.route) {
-                                            destination.selectedIcon
-                                        } else destination.unselectedIcon, contentDescription = null
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        text = destination.label
-                                    )
-                                })
+                    // Only show bottom bar on routes in home graph
+                    if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
+                        NavigationBar {
+                            val homeGraphDestinations = listOf(
+                                HomeDestination.Home, HomeDestination.Books, HomeDestination.Clubs
+                            )
+                            homeGraphDestinations.forEach { destination ->
+                                NavigationBarItem(onClick = { appState.navigate(destination.route) },
+                                    selected = appState.currentDestination?.route == destination.route,
+                                    icon = {
+                                        Icon(
+                                            imageVector = if (destination.route == appState.currentDestination?.route) {
+                                                destination.selectedIcon
+                                            } else destination.unselectedIcon,
+                                            contentDescription = null
+                                        )
+                                    },
+                                    label = {
+                                        Text(
+                                            text = destination.label
+                                        )
+                                    })
+                            }
                         }
                     }
                 }) { paddingValues ->

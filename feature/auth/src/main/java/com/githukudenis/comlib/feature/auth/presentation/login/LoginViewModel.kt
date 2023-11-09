@@ -7,6 +7,7 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.AuthRepository
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.feature.auth.presentation.SignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,7 +21,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userPrefsRepository: UserPrefsRepository
 ) : ViewModel() {
 
     private var _state: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
@@ -79,7 +81,7 @@ class LoginViewModel @Inject constructor(
             prevState.copy(userMessages = messages)
         }
     }
-    
+
     private fun togglePassword(isVisible: Boolean) {
         _state.update { prevState ->
             val formState = prevState.formState.copy(
@@ -99,30 +101,31 @@ class LoginViewModel @Inject constructor(
                     val userMessages = prevState.userMessages.toMutableList()
                     userMessages.add(UserMessage(message = signInResult.errorMessage))
                     prevState.copy(
-                        isLoading = false,
-                        loginSuccess = true,
-                        userMessages = userMessages
+                        isLoading = false, loginSuccess = true, userMessages = userMessages
                     )
                 }
                 return@launch
             }
             val user = signInResult.userData?.run {
                 User(
-                    email = email,
-                    username = username,
-                    image = profilePictureUrl
+                    email = email, username = username, image = profilePictureUrl, authId = authId
                 )
             }
-            userRepository.addNewUser(
+            val result = userRepository.addNewUser(
                 user = user ?: return@launch
             )
+            when (result) {
+                is ResponseResult.Failure -> Unit
+                is ResponseResult.Success -> {
+                    user.authId?.let { userPrefsRepository.setUserId(it) }
+                }
+            }
+
             _state.update { prevState ->
                 val userMessages = prevState.userMessages.toMutableList()
                 userMessages.add(UserMessage(message = "Signed in successfully"))
                 prevState.copy(
-                    isLoading = false,
-                    loginSuccess = true,
-                    userMessages = userMessages
+                    isLoading = false, loginSuccess = true, userMessages = userMessages
                 )
             }
         }
@@ -131,15 +134,12 @@ class LoginViewModel @Inject constructor(
     private fun login() {
         viewModelScope.launch {
             val (email, password) = _state.value.formState
-            if (email.isEmpty() ||
-                password.isEmpty()
-            ) {
+            if (email.isEmpty() || password.isEmpty()) {
                 _state.update { prevState ->
                     val userMessages = prevState.userMessages.toMutableList()
                     userMessages.add(
                         UserMessage(
-                            message = "Please check your details",
-                            messageType = MessageType.ERROR
+                            message = "Please check your details", messageType = MessageType.ERROR
                         )
                     )
                     prevState.copy(
@@ -159,9 +159,7 @@ class LoginViewModel @Inject constructor(
                         userMessages.add(UserMessage(message = result.error.message))
                         _state.update { prevState ->
                             prevState.copy(
-                                isLoading = false,
-                                loginSuccess = false,
-                                userMessages = userMessages
+                                isLoading = false, loginSuccess = false, userMessages = userMessages
                             )
                         }
                     }
@@ -169,8 +167,7 @@ class LoginViewModel @Inject constructor(
                     is ResponseResult.Success -> {
                         _state.update { prevState ->
                             prevState.copy(
-                                isLoading = false,
-                                loginSuccess = true
+                                isLoading = false, loginSuccess = true
                             )
                         }
                     }

@@ -12,11 +12,27 @@ fun ComlibNavGraph(
     appState: AppState, startDestination: String
 ) {
     NavHost(navController = appState.navController, startDestination = startDestination) {
-        authGraph(onLoginComplete = {
-            appState.navigate(ComlibDestination.HomeGraph.route, popUpTo = ComlibDestination.AuthGraph.route)
-        }, onSignUpInstead = {
-            appState.navigate(route = AuthDestination.SignUp.route)
-        })
+        authGraph(
+            onLoginComplete = {
+                appState.navigate(
+                    ComlibDestination.HomeGraph.route,
+                    popUpTo = ComlibDestination.AuthGraph.route
+                )
+            },
+            onSignUpInstead = {
+                appState.navigate(route = AuthDestination.SignUp.route)
+            },
+            onResetComplete = {
+                appState.navigate(route = AuthDestination.Login.route)
+            },
+            onForgotPassword = {
+                appState.navigate(route = AuthDestination.ForgotPassword.route)
+            },
+            onSignUpComplete = {
+                appState.navigate(route = AuthDestination.Login.route)
+            },
+
+            )
         composable(route = ComlibDestination.GetStarted.route) {
             OnBoardingScreen {
                 appState.navigate(

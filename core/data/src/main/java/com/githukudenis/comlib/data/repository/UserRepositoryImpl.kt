@@ -30,7 +30,7 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun addNewUser(user: User): ResponseResult<String> {
         return withContext(dispatchers.io) {
             try {
-                val users = userApi.addUser(user)
+                userApi.addUser(user)
                 ResponseResult.Success("User added successfully")
             } catch (e: Exception) {
                 Timber.e(e)

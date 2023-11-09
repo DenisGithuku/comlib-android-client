@@ -23,7 +23,8 @@ class AuthRepositoryImpl @Inject constructor(
                             email = email,
                             firstname = firstname,
                             lastname = lastname,
-                            age = age
+                            age = age,
+                            authId = result.data
                         )
                     )
             }
@@ -35,4 +36,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signOut() = authDataSource.signOut()
+    override suspend fun resetPassword(email: String): Boolean = authDataSource.resetPassword(email)
+
 }

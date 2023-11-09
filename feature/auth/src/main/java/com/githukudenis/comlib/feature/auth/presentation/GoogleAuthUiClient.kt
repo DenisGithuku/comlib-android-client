@@ -29,7 +29,7 @@ class GoogleAuthUiClient(
             SignInResult(
                 userData = user?.run {
                     UserData(
-                        id = uid,
+                        authId = uid,
                         username = displayName,
                         profilePictureUrl = photoUrl?.toString(),
                         email = email
@@ -56,7 +56,7 @@ class GoogleAuthUiClient(
 
     fun getSignedInUser(): UserData? = firebaseAuth.currentUser?.run {
         UserData(
-            id = uid,
+            authId = uid,
             username = displayName,
             profilePictureUrl = photoUrl?.toString(),
             email = email

@@ -9,6 +9,7 @@ data class User(
     val clubs: List<Club> = emptyList(),
     val currentBooks: List<String> = emptyList(),
     val email: String? = null,
+    val authId: String? = null,
     val firstname: String? = null,
     val id: String? = null,
     val image: String? = null,
