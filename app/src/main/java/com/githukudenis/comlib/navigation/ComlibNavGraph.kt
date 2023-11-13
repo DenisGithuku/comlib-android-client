@@ -13,6 +13,7 @@ fun ComlibNavGraph(
 ) {
     NavHost(navController = appState.navController, startDestination = startDestination) {
         authGraph(
+            snackbarHostState = appState.snackbarHostState,
             onLoginComplete = {
                 appState.navigate(
                     ComlibDestination.HomeGraph.route,

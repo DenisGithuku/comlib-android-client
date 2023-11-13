@@ -31,11 +31,11 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(email: String, password: String, onResult: (ResponseResult<String?>) -> Unit) {
-        return authDataSource.login(email, password, onResult)
+    override suspend fun login(email: String, password: String, onResult: (Throwable?) -> Unit) {
+        authDataSource.login(email, password, onResult)
     }
 
     override suspend fun signOut() = authDataSource.signOut()
-    override suspend fun resetPassword(email: String): Boolean = authDataSource.resetPassword(email)
+    override suspend fun resetPassword(email: String) { authDataSource.resetPassword(email) }
 
 }

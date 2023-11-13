@@ -40,47 +40,19 @@ class AuthDataSource @Inject constructor(
     }
 
     suspend fun login(
-        email: String, password: String, onResult: (ResponseResult<String?>) -> Unit
+        email: String, password: String, onResult: (Throwable?) -> Unit
     ) {
         return withContext(dispatcher.io) {
             firebaseAuth.signInWithEmailAndPassword(
                 email, password
-            ).addOnCompleteListener { authResultTask ->
-                if (!authResultTask.isSuccessful) {
-                    Timber.tag("login error").d(authResultTask.exception)
-                    val responseResult: ResponseResult<String?> = when (authResultTask.exception) {
-                        is FirebaseAuthInvalidCredentialsException -> {
-                            ResponseResult.Failure(
-                                Throwable(message = "Invalid email or password.")
-                            )
-                        }
-
-                        is FirebaseAuthInvalidUserException -> {
-                            ResponseResult.Failure(
-                                Throwable(message = "User doesn't exist. Create an account first!")
-                            )
-                        }
-
-                        else -> ResponseResult.Failure(
-                            Throwable(
-                                message = authResultTask.exception?.message
-                                    ?: "An unknown error occurred"
-                            )
-                        )
-                    }
-                    onResult(responseResult)
-                } else {
-                    onResult(ResponseResult.Success(data = authResultTask.result.user?.uid))
-                }
-            }
+            ).addOnCompleteListener { onResult(it.exception) }
         }
     }
 
     suspend fun signOut() = withContext(dispatcher.io) { firebaseAuth.signOut() }
-    suspend fun resetPassword(email: String): Boolean {
-        return withContext(dispatcher.io) {
-            val result = firebaseAuth.sendPasswordResetEmail(email)
-            result.isSuccessful
+    suspend fun resetPassword(email: String) {
+        withContext(dispatcher.io) {
+            firebaseAuth.sendPasswordResetEmail(email)
         }
     }
 }

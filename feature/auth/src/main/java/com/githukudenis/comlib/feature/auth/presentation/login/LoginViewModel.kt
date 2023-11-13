@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.auth.presentation.login
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
@@ -10,7 +11,9 @@ import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.feature.auth.presentation.SignInResult
+import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -22,7 +25,8 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
-    private val userPrefsRepository: UserPrefsRepository
+    private val userPrefsRepository: UserPrefsRepository,
+    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private var _state: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
@@ -152,25 +156,29 @@ class LoginViewModel @Inject constructor(
             _state.update { prevState ->
                 prevState.copy(isLoading = true)
             }
-            authRepository.login(email, password) { result ->
-                when (result) {
-                    is ResponseResult.Failure -> {
+
+            val authIdDeferred = viewModelScope.async {
+                authRepository.login(email, password) { result ->
+                    if (result != null) {
                         val userMessages = _state.value.userMessages.toMutableList()
-                        userMessages.add(UserMessage(message = result.error.message))
+                        userMessages.add(UserMessage(message = result.message))
                         _state.update { prevState ->
                             prevState.copy(
                                 isLoading = false, loginSuccess = false, userMessages = userMessages
                             )
                         }
                     }
-
-                    is ResponseResult.Success -> {
-                        _state.update { prevState ->
-                            prevState.copy(
-                                isLoading = false, loginSuccess = true
-                            )
-                        }
-                    }
+                }
+                firebaseAuth.currentUser?.uid
+            }
+            val authId = authIdDeferred.await()
+            authId?.let {
+                userPrefsRepository.setUserId(it)
+                _state.update { prevState ->
+                    prevState.copy(
+                        isLoading = false,
+                        loginSuccess = true
+                    )
                 }
             }
         }

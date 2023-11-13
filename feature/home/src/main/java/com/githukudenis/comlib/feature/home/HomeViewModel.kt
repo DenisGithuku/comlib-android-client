@@ -55,48 +55,52 @@ class HomeViewModel @Inject constructor(
 
     private fun setupData() {
         viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase.invoke().distinctUntilChanged()
-                .collectLatest { prefs ->
-                    Log.d("prefs", prefs.toString())
-                    prefs.userId?.let { userId ->
-                        getUserProfile(userId)
+            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
+                    try {
+                        Log.d("prefs", prefs.toString())
+                        prefs.userId?.let { userId ->
+                            getUserProfile(userId)
+                        }
+
+                        getBooks(
+                            readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
+                        )
+                    } catch (e: Exception) {
+                        Timber.tag("prefs").d(e.message.toString())
                     }
 
-                    getBooks(
-                        readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
-                    )
                 }
         }
     }
 
     private suspend fun getBooks(readBooks: Set<String>, bookmarkedBooks: Set<String>) {
-            comlibUseCases.getAllBooksUseCase().collectLatest { result ->
-                when (result) {
-                    is DataResult.Error -> {
-                        booksState.update {
-                            BooksState.Error(message = result.message)
-                        }
+        comlibUseCases.getAllBooksUseCase().collectLatest { result ->
+            when (result) {
+                is DataResult.Error -> {
+                    booksState.update {
+                        BooksState.Error(message = result.message)
                     }
+                }
 
-                    is DataResult.Empty -> {
-                        booksState.update { BooksState.Empty }
-                    }
+                is DataResult.Empty -> {
+                    booksState.update { BooksState.Empty }
+                }
 
-                    is DataResult.Loading -> {
-                        booksState.update { BooksState.Loading }
-                    }
+                is DataResult.Loading -> {
+                    booksState.update { BooksState.Loading }
+                }
 
-                    is DataResult.Success -> {
-                        booksState.update {
-                            BooksState.Success(available = result.data,
-                                readBooks = result.data.filter { book ->
-                                    book.id in readBooks
-                                },
-                                bookmarkedBooks = result.data.filter { book -> book.id in bookmarkedBooks })
-                        }
+                is DataResult.Success -> {
+                    booksState.update {
+                        BooksState.Success(available = result.data,
+                            readBooks = result.data.filter { book ->
+                                book.id in readBooks
+                            },
+                            bookmarkedBooks = result.data.filter { book -> book.id in bookmarkedBooks })
                     }
                 }
             }
+        }
     }
 
     fun onEvent(event: HomeUiEvent) {

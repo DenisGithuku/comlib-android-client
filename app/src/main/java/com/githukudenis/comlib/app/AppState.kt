@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.app
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.remember
@@ -11,16 +12,19 @@ import androidx.navigation.compose.rememberNavController
 
 @Composable
 fun rememberAppState(
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
 ): AppState = remember(navController) {
     AppState(
+        snackbarHostState = snackbarHostState,
         navController = navController
     )
 }
 
 @Stable
 data class AppState(
-    val navController: NavHostController
+    val navController: NavHostController,
+    val snackbarHostState: SnackbarHostState
 ) {
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination

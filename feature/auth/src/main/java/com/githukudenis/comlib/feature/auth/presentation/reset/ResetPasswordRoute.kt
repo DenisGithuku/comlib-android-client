@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -24,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -33,15 +35,24 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.feature.auth.R
+import kotlinx.coroutines.delay
 
 @Composable
 fun ResetPasswordRoute(
+    snackbarHostState: SnackbarHostState,
     viewModel: ResetPasswordViewModel = hiltViewModel(), onReset: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onPasswordReset by rememberUpdatedState(onReset)
+    val context = LocalContext.current
+
+
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
+            snackbarHostState.showSnackbar(
+                message = context.getString(R.string.email_reset)
+            )
+            delay(2000)
             onPasswordReset()
         }
     }
