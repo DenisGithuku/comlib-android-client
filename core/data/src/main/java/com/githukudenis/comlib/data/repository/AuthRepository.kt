@@ -6,8 +6,8 @@ import com.githukudenis.comlib.core.model.UserAuthData
 interface AuthRepository {
     suspend fun signUpWithEmail(userAuthData: UserAuthData): ResponseResult<String?>
 
-    suspend fun login(email: String, password: String, onResult: (ResponseResult<String?>) -> Unit)
+    suspend fun login(email: String, password: String, onSuccess: suspend (String) -> Unit, onError: (Throwable?) -> Unit)
 
     suspend fun signOut()
-    suspend fun resetPassword(email: String): Boolean
+    suspend fun resetPassword(email: String)
 }

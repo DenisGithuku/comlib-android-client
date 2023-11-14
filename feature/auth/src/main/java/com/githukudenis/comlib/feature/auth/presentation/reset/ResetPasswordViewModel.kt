@@ -29,7 +29,7 @@ class ResetPasswordViewModel @Inject constructor(
             val result = authRepository.resetPassword(email)
             state.update { prevState ->
                 prevState.copy(
-                    isLoading = false, isSuccess = result
+                    isLoading = false, isSuccess = true
                 )
             }
         }

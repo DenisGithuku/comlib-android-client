@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.navigation
 
+import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
@@ -8,6 +9,7 @@ import com.githukudenis.comlib.feature.auth.presentation.reset.ResetPasswordRout
 import com.githukudenis.comlib.feature.auth.presentation.signup.SignUpRoute
 
 fun NavGraphBuilder.authGraph(
+    snackbarHostState: SnackbarHostState,
     onSignUpInstead: () -> Unit,
     onLoginComplete: () -> Unit,
     onSignUpComplete: () -> Unit,
@@ -28,7 +30,7 @@ fun NavGraphBuilder.authGraph(
             SignUpRoute(onSignUpComplete = onSignUpComplete)
         }
         composable(route = AuthDestination.ForgotPassword.route) {
-            ResetPasswordRoute(onReset = onResetComplete)
+            ResetPasswordRoute(snackbarHostState = snackbarHostState, onReset = onResetComplete)
         }
     }
 }

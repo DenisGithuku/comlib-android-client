@@ -12,7 +12,8 @@ class GetUserProfileUseCase @Inject constructor(
 ) {
     suspend operator fun invoke(userId: String): User? {
         return try {
-            when(val result = userRepository.getUserById(userId)) {
+            val result = userRepository.getUserById(userId)
+            when (result) {
                 is ResponseResult.Failure -> null
                 is ResponseResult.Success -> result.data
             }

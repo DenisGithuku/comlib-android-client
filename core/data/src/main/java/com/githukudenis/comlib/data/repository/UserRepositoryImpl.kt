@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.data.repository
 
+import android.util.Log
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.user.User
@@ -56,7 +57,8 @@ class UserRepositoryImpl @Inject constructor(
     override suspend fun getUserById(userId: String): ResponseResult<User> {
         return withContext(dispatchers.io) {
             try {
-                val user = userApi.getUserById(userId)
+                val user = userApi.getUserById(userId).data.user
+                Log.d("user", user.toString())
                 ResponseResult.Success(user)
             } catch (e: Exception) {
                 Timber.e(e)

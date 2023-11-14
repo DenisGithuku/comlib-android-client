@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -40,33 +41,36 @@ class MainActivity : ComponentActivity() {
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             ComLibTheme(darkTheme = false) {
-                Scaffold(bottomBar = {
-                    // Only show bottom bar on routes in home graph
-                    if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
-                        NavigationBar {
-                            val homeGraphDestinations = listOf(
-                                HomeDestination.Home, HomeDestination.Books, HomeDestination.Clubs
-                            )
-                            homeGraphDestinations.forEach { destination ->
-                                NavigationBarItem(onClick = { appState.navigate(destination.route) },
-                                    selected = appState.currentDestination?.route == destination.route,
-                                    icon = {
-                                        Icon(
-                                            imageVector = if (destination.route == appState.currentDestination?.route) {
-                                                destination.selectedIcon
-                                            } else destination.unselectedIcon,
-                                            contentDescription = null
-                                        )
-                                    },
-                                    label = {
-                                        Text(
-                                            text = destination.label
-                                        )
-                                    })
+                Scaffold(snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
+                    bottomBar = {
+                        // Only show bottom bar on routes in home graph
+                        if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
+                            NavigationBar {
+                                val homeGraphDestinations = listOf(
+                                    HomeDestination.Home,
+                                    HomeDestination.Books,
+                                    HomeDestination.Clubs
+                                )
+                                homeGraphDestinations.forEach { destination ->
+                                    NavigationBarItem(onClick = { appState.navigate(destination.route) },
+                                        selected = appState.currentDestination?.route == destination.route,
+                                        icon = {
+                                            Icon(
+                                                imageVector = if (destination.route == appState.currentDestination?.route) {
+                                                    destination.selectedIcon
+                                                } else destination.unselectedIcon,
+                                                contentDescription = null
+                                            )
+                                        },
+                                        label = {
+                                            Text(
+                                                text = destination.label
+                                            )
+                                        })
+                                }
                             }
                         }
-                    }
-                }) { paddingValues ->
+                    }) { paddingValues ->
                     ComlibNavGraph(
                         appState = appState,
                         startDestination = if (state.isLoggedIn) ComlibDestination.HomeGraph.route else ComlibDestination.GetStarted.route
