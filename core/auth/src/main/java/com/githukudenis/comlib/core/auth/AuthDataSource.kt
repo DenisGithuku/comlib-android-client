@@ -6,11 +6,8 @@ import com.githukudenis.comlib.core.common.safeApiCall
 import com.githukudenis.comlib.core.model.UserAuthData
 import com.githukudenis.comlib.core.network.UserApi
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
-import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import timber.log.Timber
 import javax.inject.Inject
 
 class AuthDataSource @Inject constructor(
@@ -40,12 +37,20 @@ class AuthDataSource @Inject constructor(
     }
 
     suspend fun login(
-        email: String, password: String, onResult: (Throwable?) -> Unit
+        email: String,
+        password: String,
+        onSuccess: suspend (String) -> Unit,
+        onError: (Throwable?) -> Unit
     ) {
-        return withContext(dispatcher.io) {
-            firebaseAuth.signInWithEmailAndPassword(
-                email, password
-            ).addOnCompleteListener { onResult(it.exception) }
+        withContext(dispatcher.io) {
+            try {
+                val result = firebaseAuth.signInWithEmailAndPassword(
+                    email, password
+                ).await()
+                onSuccess(result?.user?.uid!!)
+            } catch (e: Exception) {
+                onError(e)
+            }
         }
     }
 

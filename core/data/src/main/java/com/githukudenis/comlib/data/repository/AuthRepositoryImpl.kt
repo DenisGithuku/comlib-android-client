@@ -31,8 +31,12 @@ class AuthRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun login(email: String, password: String, onResult: (Throwable?) -> Unit) {
-        authDataSource.login(email, password, onResult)
+    override suspend fun login(
+        email: String,
+        password: String,
+        onSuccess: suspend (String) -> Unit,
+        onError: (Throwable?) -> Unit) {
+        authDataSource.login(email, password, onSuccess, onError)
     }
 
     override suspend fun signOut() = authDataSource.signOut()

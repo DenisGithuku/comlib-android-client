@@ -16,7 +16,9 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): UserApi = UserApi(httpClient, dispatchers)
+    fun provideUserApi(
+        httpClient: HttpClient,
+        dispatchers: ComlibCoroutineDispatchers): UserApi = UserApi(httpClient, dispatchers)
 
     @Provides
     @Singleton

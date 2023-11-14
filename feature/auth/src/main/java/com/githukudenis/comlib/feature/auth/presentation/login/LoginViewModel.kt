@@ -26,7 +26,6 @@ class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository,
     private val userRepository: UserRepository,
     private val userPrefsRepository: UserPrefsRepository,
-    private val firebaseAuth: FirebaseAuth
 ) : ViewModel() {
 
     private var _state: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
@@ -157,30 +156,26 @@ class LoginViewModel @Inject constructor(
                 prevState.copy(isLoading = true)
             }
 
-            val authIdDeferred = viewModelScope.async {
-                authRepository.login(email, password) { result ->
-                    if (result != null) {
-                        val userMessages = _state.value.userMessages.toMutableList()
-                        userMessages.add(UserMessage(message = result.message))
-                        _state.update { prevState ->
-                            prevState.copy(
-                                isLoading = false, loginSuccess = false, userMessages = userMessages
-                            )
-                        }
-                    }
-                }
-                firebaseAuth.currentUser?.uid
-            }
-            val authId = authIdDeferred.await()
-            authId?.let {
-                userPrefsRepository.setUserId(it)
+
+            authRepository.login(email, password, onSuccess = { authId ->
+                userPrefsRepository.setUserId(authId)
                 _state.update { prevState ->
                     prevState.copy(
-                        isLoading = false,
-                        loginSuccess = true
+                        isLoading = false, loginSuccess = true
                     )
                 }
-            }
+            }, onError = { error ->
+                if (error != null) {
+                    val userMessages = _state.value.userMessages.toMutableList()
+                    userMessages.add(UserMessage(message = error.message))
+                    _state.update { prevState ->
+                        prevState.copy(
+                            isLoading = false, loginSuccess = false, userMessages = userMessages
+                        )
+                    }
+                }
+            })
+
         }
     }
 

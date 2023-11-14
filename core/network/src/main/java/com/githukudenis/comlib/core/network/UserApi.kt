@@ -1,6 +1,7 @@
 package com.githukudenis.comlib.core.network
 
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
+import com.githukudenis.comlib.core.model.user.SingleUserResponse
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.common.Constants
 import io.ktor.client.HttpClient
@@ -34,7 +35,7 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun getUserById(userId: String): User {
+    suspend fun getUserById(userId: String): SingleUserResponse {
         return withContext(dispatchers.io) {
             httpClient.get(
                 urlString = "${Constants.BASE_URL}/api/v1/users/$userId"

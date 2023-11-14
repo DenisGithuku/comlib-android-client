@@ -17,7 +17,6 @@ class GetAllBooksUseCase @Inject constructor(
     operator fun invoke(): Flow<DataResult<List<Book>>> = flow {
         val result = dataResultSafeApiCall {
             val books = booksRepository.getAllBooks()
-            Log.d("books", books.toString())
             books.data.books
         }
         emit(result)

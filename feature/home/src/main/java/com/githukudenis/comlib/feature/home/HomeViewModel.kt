@@ -36,7 +36,6 @@ class HomeViewModel @Inject constructor(
         get() = combine(
             userProfileState, booksState
         ) { profile, books ->
-            Log.d("bookState", books.toString())
             HomeUiState.Success(
                 booksState = books,
                 userProfileState = profile,
@@ -57,7 +56,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
                     try {
-                        Log.d("prefs", prefs.toString())
                         prefs.userId?.let { userId ->
                             getUserProfile(userId)
                         }
@@ -73,7 +71,10 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getBooks(readBooks: Set<String>, bookmarkedBooks: Set<String>) {
+    private suspend fun getBooks(
+        readBooks: Set<String>,
+        bookmarkedBooks: Set<String>
+    ) {
         comlibUseCases.getAllBooksUseCase().collectLatest { result ->
             when (result) {
                 is DataResult.Error -> {
