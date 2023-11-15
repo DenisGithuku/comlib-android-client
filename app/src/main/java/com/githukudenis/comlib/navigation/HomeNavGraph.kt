@@ -28,8 +28,8 @@ fun NavGraphBuilder.homeNavGraph(
         composable(route = HomeDestination.Home.route) {
             HomeRoute(onOpenBookDetails = { bookId ->
                 appState.navigate(
-                    route = "${HomeDestination.BookDetails.route}/$bookId",
-                    popUpTo = "${HomeDestination.BookDetails.route}/$bookId"
+                    route = "${ComlibDestination.BookDetail.route}/$bookId",
+                    popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
                 )
             })
         }

@@ -88,10 +88,10 @@ fun LoadedScreen(
                         .calculateBottomPadding() + 80.dp
                 )
             ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
-            HomeHeader(modifier = Modifier.padding(16.dp), title = {
+            HomeHeader(modifier = Modifier.padding(horizontal = 16.dp), title = {
                 Text(
                     text = buildString {
                         append("Good")
@@ -133,7 +133,7 @@ fun LoadedScreen(
         }
         item {
             GoalCard(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 dateRange = "Aug 29 - Sep 23",
                 currentBook = "Philosopher's Stone",
                 progress = 0.45f
@@ -186,7 +186,7 @@ fun LoadedScreen(
             }
         }
         item {
-            SectionSeparator(modifier = Modifier.padding(16.dp),
+            SectionSeparator(modifier = Modifier.padding(horizontal = 16.dp),
                 title = stringResource(id = R.string.available_books_separator),
                 count = when (booksState) {
                     is BooksState.Error -> "0"
@@ -213,7 +213,7 @@ fun LoadedScreen(
 
                 is BooksState.Success -> {
                     LazyRow(
-                        contentPadding = PaddingValues(16.dp)
+                        contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
                         items(booksState.available, key = { book -> book._id }) { book ->
                             BookCard(book = book, onClick = onOpenBookDetails)

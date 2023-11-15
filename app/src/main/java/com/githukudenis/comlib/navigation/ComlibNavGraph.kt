@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.githukudenis.comlib.app.AppState
+import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
 import com.githukudenis.comlib.feature.home.HomeRoute
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
 
@@ -16,8 +17,7 @@ fun ComlibNavGraph(
             snackbarHostState = appState.snackbarHostState,
             onLoginComplete = {
                 appState.navigate(
-                    ComlibDestination.HomeGraph.route,
-                    popUpTo = ComlibDestination.AuthGraph.route
+                    ComlibDestination.HomeGraph.route, popUpTo = ComlibDestination.AuthGraph.route
                 )
             },
             onSignUpInstead = {
@@ -42,6 +42,11 @@ fun ComlibNavGraph(
             }
         }
         homeNavGraph(appState = appState)
+        composable(route = "${ComlibDestination.BookDetail.route}/{bookId}") {
+            BookDetailRoute(onBackPressed = {
+                appState.popBackStack()
+            })
+        }
     }
 }
 
@@ -51,6 +56,10 @@ sealed class ComlibDestination(
     data object AuthGraph : ComlibDestination(route = "auth_graph")
     data object HomeGraph : ComlibDestination(
         route = "home_graph"
+    )
+
+    data object BookDetail : ComlibDestination(
+        route = "book_detail"
     )
 
     data object GetStarted : ComlibDestination(route = "get_started")

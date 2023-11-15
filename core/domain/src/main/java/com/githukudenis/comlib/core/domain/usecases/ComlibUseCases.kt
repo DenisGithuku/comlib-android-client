@@ -5,4 +5,7 @@ data class ComlibUseCases(
     val getUserProfileUseCase: GetUserProfileUseCase,
     val getUserPrefsUseCase: GetUserPrefsUseCase,
     val getTimePeriodUseCase: GetTimePeriodUseCase,
+    val getBookDetailsUseCase: GetBookDetailsUseCase,
+    val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
+    val getReadBooksUseCase: GetReadBooksUseCase,
 )
