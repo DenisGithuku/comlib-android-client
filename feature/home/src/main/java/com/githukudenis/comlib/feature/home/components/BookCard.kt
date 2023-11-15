@@ -5,8 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.sizeIn
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -25,12 +23,9 @@ import com.githukudenis.comlib.feature.home.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookCard(
-    book: Book,
-    onClick: (String) -> Unit
+    book: Book, onClick: (String) -> Unit
 ) {
-    Card(
-        onClick = { onClick(book.id) }
-    ) {
+    Card(onClick = { onClick(book.id) }) {
         Column(
             modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {

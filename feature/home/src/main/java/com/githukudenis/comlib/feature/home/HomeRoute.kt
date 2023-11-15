@@ -1,21 +1,16 @@
 package com.githukudenis.comlib.feature.home
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,7 +33,6 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
-import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
 import com.githukudenis.comlib.feature.home.components.ErrorCard
@@ -48,15 +42,12 @@ import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 
 @Composable
 fun HomeRoute(
-    viewModel: HomeViewModel = hiltViewModel(),
-    onOpenBookDetails: (String) -> Unit
+    viewModel: HomeViewModel = hiltViewModel(), onOpenBookDetails: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
     HomeScreen(
-        state = state,
-        onRefresh = onRefresh,
-        onOpenBookDetails = onOpenBookDetails
+        state = state, onRefresh = onRefresh, onOpenBookDetails = onOpenBookDetails
     )
 }
 
