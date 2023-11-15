@@ -6,7 +6,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,17 +22,22 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.feature.home.R
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookCard(
     book: Book,
+    onClick: (String) -> Unit
 ) {
-    Card {
+    Card(
+        onClick = { onClick(book.id) }
+    ) {
         Column(
             modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             AsyncImage(
                 modifier = Modifier
-                    .sizeIn(maxWidth = 120.dp, maxHeight = 120.dp)
+                    .fillMaxWidth()
+                    .heightIn(max = 120.dp)
                     .clip(MaterialTheme.shapes.medium),
                 model = "https://comlib-api.onrender.com/img/books/${book.image}",
                 contentDescription = null,

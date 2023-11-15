@@ -48,16 +48,21 @@ import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 
 @Composable
 fun HomeRoute(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    onOpenBookDetails: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
-    HomeScreen(state = state, onRefresh = onRefresh)
+    HomeScreen(
+        state = state,
+        onRefresh = onRefresh,
+        onOpenBookDetails = onOpenBookDetails
+    )
 }
 
 @Composable
 private fun HomeScreen(
-    state: HomeUiState, onRefresh: () -> Unit
+    state: HomeUiState, onRefresh: () -> Unit, onOpenBookDetails: (String) -> Unit
 ) {
     when (state) {
         is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
@@ -65,7 +70,8 @@ private fun HomeScreen(
         is HomeUiState.Success -> LoadedScreen(
             booksState = state.booksState,
             userProfileState = state.userProfileState,
-            timePeriod = state.timePeriod
+            timePeriod = state.timePeriod,
+            onOpenBookDetails = onOpenBookDetails
         )
     }
 
@@ -73,7 +79,10 @@ private fun HomeScreen(
 
 @Composable
 fun LoadedScreen(
-    timePeriod: TimePeriod, booksState: BooksState, userProfileState: UserProfileState
+    timePeriod: TimePeriod,
+    booksState: BooksState,
+    userProfileState: UserProfileState,
+    onOpenBookDetails: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -178,7 +187,7 @@ fun LoadedScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             items(booksState.readBooks, key = { book -> book._id }) { book ->
-                                BookCard(book = book)
+                                BookCard(book = book, onClick = onOpenBookDetails)
                             }
                         }
                     }
@@ -216,7 +225,7 @@ fun LoadedScreen(
                         contentPadding = PaddingValues(16.dp)
                     ) {
                         items(booksState.available, key = { book -> book._id }) { book ->
-                            BookCard(book = book)
+                            BookCard(book = book, onClick = onOpenBookDetails)
                         }
                     }
                 }

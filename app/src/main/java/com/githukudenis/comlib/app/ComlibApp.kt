@@ -20,6 +20,7 @@ class ComlibApp: Application(), Configuration.Provider {
 
     override fun onCreate() {
         super.onCreate()
+        initTimber()
     }
 
     override fun getWorkManagerConfiguration(): Configuration {

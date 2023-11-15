@@ -34,7 +34,12 @@ fun NavGraphBuilder.homeNavGraph(
 ) {
     navigation(startDestination = startDestination, route = ComlibDestination.HomeGraph.route) {
         composable(route = HomeDestination.Home.route) {
-            HomeRoute()
+            HomeRoute(onOpenBookDetails = { bookId ->
+                appState.navigate(
+                    route = "${HomeDestination.BookDetails.route}/$bookId",
+                    popUpTo = "${HomeDestination.BookDetails.route}/$bookId"
+                )
+            })
         }
         composable(route = HomeDestination.Books.route) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -50,15 +55,27 @@ fun NavGraphBuilder.homeNavGraph(
                 )
             }
         }
+        composable(
+            route = "${HomeDestination.BookDetails.route}/{bookId}",
+        ) {
+            val bookId = it.arguments?.getString("bookId")
+            Box(
+                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Book id: $bookId"
+                )
+            }
+        }
     }
 }
 
 
 sealed class HomeDestination(
     val route: String,
-    val label: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector,
+    val label: String? = null,
+    val selectedIcon: ImageVector? = null,
+    val unselectedIcon: ImageVector? = null,
 ) {
     data object Home : HomeDestination(
         route = "home",
@@ -79,6 +96,10 @@ sealed class HomeDestination(
         label = "Clubs",
         selectedIcon = Icons.Filled.People,
         unselectedIcon = Icons.Outlined.People,
+    )
+
+    data object BookDetails : HomeDestination(
+        route = "book_details",
     )
 
 }
