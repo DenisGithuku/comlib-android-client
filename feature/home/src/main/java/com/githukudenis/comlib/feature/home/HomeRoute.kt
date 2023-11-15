@@ -1,21 +1,16 @@
 package com.githukudenis.comlib.feature.home
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.lazy.LazyColumn
@@ -38,7 +33,6 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
-import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
 import com.githukudenis.comlib.feature.home.components.ErrorCard
@@ -48,16 +42,18 @@ import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 
 @Composable
 fun HomeRoute(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(), onOpenBookDetails: (String) -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
-    HomeScreen(state = state, onRefresh = onRefresh)
+    HomeScreen(
+        state = state, onRefresh = onRefresh, onOpenBookDetails = onOpenBookDetails
+    )
 }
 
 @Composable
 private fun HomeScreen(
-    state: HomeUiState, onRefresh: () -> Unit
+    state: HomeUiState, onRefresh: () -> Unit, onOpenBookDetails: (String) -> Unit
 ) {
     when (state) {
         is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
@@ -65,7 +61,8 @@ private fun HomeScreen(
         is HomeUiState.Success -> LoadedScreen(
             booksState = state.booksState,
             userProfileState = state.userProfileState,
-            timePeriod = state.timePeriod
+            timePeriod = state.timePeriod,
+            onOpenBookDetails = onOpenBookDetails
         )
     }
 
@@ -73,7 +70,10 @@ private fun HomeScreen(
 
 @Composable
 fun LoadedScreen(
-    timePeriod: TimePeriod, booksState: BooksState, userProfileState: UserProfileState
+    timePeriod: TimePeriod,
+    booksState: BooksState,
+    userProfileState: UserProfileState,
+    onOpenBookDetails: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -88,10 +88,10 @@ fun LoadedScreen(
                         .calculateBottomPadding() + 80.dp
                 )
             ),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         item {
-            HomeHeader(modifier = Modifier.padding(16.dp), title = {
+            HomeHeader(modifier = Modifier.padding(horizontal = 16.dp), title = {
                 Text(
                     text = buildString {
                         append("Good")
@@ -133,7 +133,7 @@ fun LoadedScreen(
         }
         item {
             GoalCard(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 dateRange = "Aug 29 - Sep 23",
                 currentBook = "Philosopher's Stone",
                 progress = 0.45f
@@ -178,7 +178,7 @@ fun LoadedScreen(
                             horizontalArrangement = Arrangement.spacedBy(12.dp)
                         ) {
                             items(booksState.readBooks, key = { book -> book._id }) { book ->
-                                BookCard(book = book)
+                                BookCard(book = book, onClick = onOpenBookDetails)
                             }
                         }
                     }
@@ -186,7 +186,7 @@ fun LoadedScreen(
             }
         }
         item {
-            SectionSeparator(modifier = Modifier.padding(16.dp),
+            SectionSeparator(modifier = Modifier.padding(horizontal = 16.dp),
                 title = stringResource(id = R.string.available_books_separator),
                 count = when (booksState) {
                     is BooksState.Error -> "0"
@@ -213,10 +213,10 @@ fun LoadedScreen(
 
                 is BooksState.Success -> {
                     LazyRow(
-                        contentPadding = PaddingValues(16.dp)
+                        contentPadding = PaddingValues(horizontal = 16.dp)
                     ) {
                         items(booksState.available, key = { book -> book._id }) { book ->
-                            BookCard(book = book)
+                            BookCard(book = book, onClick = onOpenBookDetails)
                         }
                     }
                 }

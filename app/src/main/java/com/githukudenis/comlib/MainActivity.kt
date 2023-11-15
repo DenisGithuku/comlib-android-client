@@ -4,14 +4,15 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.text.font.FontWeight
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -55,17 +56,22 @@ class MainActivity : ComponentActivity() {
                                     NavigationBarItem(onClick = { appState.navigate(destination.route) },
                                         selected = appState.currentDestination?.route == destination.route,
                                         icon = {
-                                            Icon(
-                                                imageVector = if (destination.route == appState.currentDestination?.route) {
-                                                    destination.selectedIcon
-                                                } else destination.unselectedIcon,
-                                                contentDescription = null
-                                            )
+                                            (if (destination.route == appState.currentDestination?.route) {
+                                                destination.selectedIcon
+                                            } else destination.unselectedIcon)?.let {
+                                                Icon(
+                                                    imageVector = it, contentDescription = null
+                                                )
+                                            }
                                         },
                                         label = {
-                                            Text(
-                                                text = destination.label
-                                            )
+                                            destination.label?.let {
+                                                Text(
+                                                    text = it,
+                                                    style = MaterialTheme.typography.labelMedium,
+                                                    fontWeight = FontWeight.Medium
+                                                )
+                                            }
                                         })
                                 }
                             }
