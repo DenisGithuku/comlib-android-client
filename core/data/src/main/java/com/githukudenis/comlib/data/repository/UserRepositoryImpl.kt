@@ -58,7 +58,6 @@ class UserRepositoryImpl @Inject constructor(
         return withContext(dispatchers.io) {
             try {
                 val user = userApi.getUserById(userId).data.user
-                Log.d("user", user.toString())
                 ResponseResult.Success(user)
             } catch (e: Exception) {
                 Timber.e(e)

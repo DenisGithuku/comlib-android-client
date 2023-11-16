@@ -36,7 +36,7 @@ class BookDetailViewModel @Inject constructor(
 
     private fun getBook(bookId: String) {
         viewModelScope.launch {
-            comlibUseCases.getBookDetailsUseCase(bookId).collect { result ->
+            comlibUseCases.getBookDetailsUseCase.invoke(bookId).collect { result ->
                 when (result) {
                     DataResult.Empty -> Unit
                     is DataResult.Error -> _state.update {
