@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetUserPrefsUseCase @Inject constructor(
     private val userPrefsRepository: UserPrefsRepository
 ) {
-    suspend operator fun invoke(): Flow<UserPrefs> {
+    operator fun invoke(): Flow<UserPrefs> {
         return userPrefsRepository.userPrefs
     }
 }

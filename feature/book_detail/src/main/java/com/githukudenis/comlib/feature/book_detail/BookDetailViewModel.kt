@@ -5,12 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
+import com.githukudenis.comlib.core.model.genre.Genre
 import com.githukudenis.comlib.data.repository.BooksRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -51,9 +53,13 @@ class BookDetailViewModel @Inject constructor(
                         val isFavourite = comlibUseCases.getFavouriteBooksUseCase().first()
                             .contains(result.data.id)
                         _state.update {
-                            val bookUiModel = result.data.toBookUiModel(
-                                isFavourite = isFavourite, isRead = isRead
-                            )
+                            val bookUiModel = result.data.toBookUiModel(isFavourite = isFavourite,
+                                isRead = isRead,
+                                getGenre = { genreId ->
+                                    fetchGenreById(genreId) ?: Genre(
+                                        _id = genreId, id = genreId, name = "Unknown"
+                                    )
+                                })
                             BookDetailUiState.Success(
                                 bookUiModel = bookUiModel,
                             )
@@ -70,4 +76,9 @@ class BookDetailViewModel @Inject constructor(
         }
     }
 
+    private suspend fun fetchGenreById(
+        genreId: String
+    ): Genre? {
+        return comlibUseCases.getGenreByIdUseCase(genreId)
+    }
 }

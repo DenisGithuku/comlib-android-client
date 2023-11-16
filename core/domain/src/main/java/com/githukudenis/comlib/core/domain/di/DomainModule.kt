@@ -4,6 +4,8 @@ import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetTimePeriodUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
@@ -31,7 +33,9 @@ object DomainModule {
             getTimePeriodUseCase = GetTimePeriodUseCase(),
             getBookDetailsUseCase = GetBookDetailsUseCase(booksRepository = booksRepository),
             getFavouriteBooksUseCase = GetFavouriteBooksUseCase(userPrefsRepository = userPrefsRepository),
-            getReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository = userPrefsRepository)
+            getReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository = userPrefsRepository),
+            getGenresUseCase = GetGenresUseCase(booksRepository = booksRepository),
+            getGenreByIdUseCase = GetGenreByIdUseCase(booksRepository = booksRepository)
         )
     }
 }

@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetReadBooksUseCase @Inject constructor(
     private val userPrefsRepository: UserPrefsRepository
 ){
-    suspend operator fun invoke(): Flow<Set<String>> = userPrefsRepository.userPrefs.mapLatest { prefs ->
+    operator fun invoke(): Flow<Set<String>> = userPrefsRepository.userPrefs.mapLatest { prefs ->
         prefs.readBooks
     }
 }
