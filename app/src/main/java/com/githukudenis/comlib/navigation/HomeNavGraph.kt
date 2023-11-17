@@ -17,6 +17,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.githukudenis.comlib.app.AppState
+import com.githukudenis.comlib.feature.books.BooksRoute
 import com.githukudenis.comlib.feature.home.HomeRoute
 
 
@@ -26,12 +27,19 @@ fun NavGraphBuilder.homeNavGraph(
 ) {
     navigation(startDestination = startDestination, route = ComlibDestination.HomeGraph.route) {
         composable(route = HomeDestination.Home.route) {
-            HomeRoute(onOpenBookDetails = { bookId ->
-                appState.navigate(
-                    route = "${ComlibDestination.BookDetail.route}/$bookId",
-                    popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
-                )
-            })
+            HomeRoute(
+                onOpenBookDetails = { bookId ->
+                    appState.navigate(
+                        route = "${ComlibDestination.BookDetail.route}/$bookId",
+                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
+                    )
+                }, onOpenBookList = {
+                    appState.navigate(
+                        route = HomeDestination.Books.route,
+                        popUpTo = HomeDestination.Books.route
+                    )
+                }
+            )
         }
         composable(route = HomeDestination.Books.route) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -48,16 +56,14 @@ fun NavGraphBuilder.homeNavGraph(
             }
         }
         composable(
-            route = "${HomeDestination.BookDetails.route}/{bookId}",
+            route = HomeDestination.Books.route,
         ) {
-            val bookId = it.arguments?.getString("bookId")
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = "Book id: $bookId"
+            BooksRoute(onOpenBook = { bookId ->
+                appState.navigate(
+                    route = "${ComlibDestination.BookDetail.route}/$bookId",
+                    popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
                 )
-            }
+            })
         }
     }
 }

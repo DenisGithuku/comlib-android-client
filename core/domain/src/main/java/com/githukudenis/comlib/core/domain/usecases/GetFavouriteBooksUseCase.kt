@@ -8,7 +8,7 @@ import javax.inject.Inject
 class GetFavouriteBooksUseCase @Inject constructor(
     private val userPrefsRepository: UserPrefsRepository
 ) {
-    suspend operator fun invoke(): Flow<Set<String>> =
+    operator fun invoke(): Flow<Set<String>> =
         userPrefsRepository.userPrefs.mapLatest { prefs ->
             prefs.bookmarkedBooks
         }

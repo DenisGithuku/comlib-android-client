@@ -5,6 +5,8 @@ import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
+import com.githukudenis.comlib.core.model.genre.AllGenresResponse
+import com.githukudenis.comlib.core.model.genre.SingleGenreResponse
 import com.githukudenis.comlib.core.network.common.Constants
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
@@ -36,6 +38,18 @@ class BooksApi @Inject constructor(
             httpClient.post<String>(urlString = Constants.BASE_URL + "/api/v1/books") {
                 body = book
             }
+        }
+    }
+
+    suspend fun getGenres(): AllGenresResponse {
+        return withContext(dispatchers.io) {
+            httpClient.get<AllGenresResponse>(Constants.BASE_URL + "/api/v1/genres")
+        }
+    }
+
+    suspend fun getGenreById(genreId: String): SingleGenreResponse {
+        return withContext(dispatchers.io) {
+            httpClient.get<SingleGenreResponse>(Constants.BASE_URL + "/api/v1/genres/${genreId}")
         }
     }
 }

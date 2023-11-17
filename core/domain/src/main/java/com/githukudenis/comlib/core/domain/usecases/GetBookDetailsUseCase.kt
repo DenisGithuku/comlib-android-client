@@ -10,7 +10,7 @@ import javax.inject.Inject
 class GetBookDetailsUseCase @Inject constructor(
     private val booksRepository: BooksRepository,
 ) {
-    suspend operator fun invoke(bookId: String): Flow<DataResult<Book>> = flow {
+    operator fun invoke(bookId: String): Flow<DataResult<Book>> = flow {
         try {
             emit(DataResult.Loading(null))
             val book = booksRepository.getBookById(bookId).data.book

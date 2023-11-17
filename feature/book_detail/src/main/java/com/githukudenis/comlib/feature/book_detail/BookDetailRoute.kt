@@ -1,20 +1,28 @@
 package com.githukudenis.comlib.feature.book_detail
 
+import androidx.compose.animation.animateColor
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.consumeWindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.foundation.layout.safeDrawingPadding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
@@ -24,7 +32,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
-import androidx.compose.material3.AssistChip
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
@@ -36,13 +43,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.githukudenis.comlib.core.common.untangle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.components.loadingBrush
 
 @Composable
 fun BookDetailRoute(
@@ -61,7 +72,7 @@ fun BookDetailScreen(
 ) {
     when (state) {
         is BookDetailUiState.Loading -> {
-            LoadingScreen()
+            LoadingScreen(onBackPressed = onBackPressed)
         }
 
         is BookDetailUiState.Success -> {
@@ -77,10 +88,106 @@ fun BookDetailScreen(
 }
 
 @Composable
-fun LoadingScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
-        Text(text = "Fetching book details...")
+fun LoadingScreen(onBackPressed: () -> Unit) {
+    Column(
+        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(250.dp)
+                .background(brush = loadingBrush())
+        ) {
+            Box(
+                modifier = Modifier
+                    .safeDrawingPadding()
+                    .padding(horizontal = 16.dp)
+                    .clip(CircleShape)
+                    .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
+                    .clickable {
+                        onBackPressed()
+                    },
+            ) {
+                Icon(
+                    modifier = Modifier.padding(8.dp),
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = "Back",
+                    tint = MaterialTheme.colorScheme.onBackground
+                )
+            }
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                modifier = Modifier
+                    .height(16.dp)
+                    .fillMaxWidth(0.4f)
+                    .clip(CircleShape)
+                    .background(brush = loadingBrush())
+            )
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(brush = loadingBrush())
+            )
+        }
+        Box(
+            modifier = Modifier
+                .height(16.dp)
+                .fillMaxWidth(0.6f)
+                .padding(horizontal = 16.dp)
+                .clip(CircleShape)
+                .background(brush = loadingBrush())
+        )
+
+        Row(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            (0..2).map {
+                Box(
+                    modifier = Modifier
+                        .height(40.dp)
+                        .width(70.dp)
+                        .clip(CircleShape)
+                        .background(brush = loadingBrush())
+                )
+            }
+        }
+        Divider(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp), color = Color.LightGray, thickness = 1.dp
+        )
+        Box(
+            modifier = Modifier
+                .height(16.dp)
+                .fillMaxWidth(0.4f)
+                .clip(CircleShape)
+                .padding(horizontal = 16.dp)
+                .background(brush = loadingBrush())
+        )
+        Column(
+            modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
+        ) {
+            (0..5).map {
+                Box(
+                    modifier = Modifier
+                        .height(16.dp)
+                        .fillMaxWidth()
+                        .clip(CircleShape)
+                        .background(brush = loadingBrush())
+                )
+            }
+        }
     }
 }
 
@@ -151,13 +258,12 @@ fun LoadedScreen(
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
         )
         LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth(),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(items = bookUiModel.genreIds) { genre ->
+            items(items = bookUiModel.genres, key = { genre -> genre.id }) { genre ->
                 Box(
                     modifier = Modifier
                         .clip(MaterialTheme.shapes.extraLarge)
@@ -169,7 +275,7 @@ fun LoadedScreen(
                 ) {
                     Text(
                         modifier = Modifier.padding(8.dp),
-                        text = genre,
+                        text = genre.name.untangle("-"),
                         style = MaterialTheme.typography.labelSmall
                     )
                 }
@@ -197,6 +303,7 @@ fun LoadedScreen(
 fun ErrorScreen(
     message: String, onRetry: () -> Unit
 ) {
+
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
         Column(modifier = Modifier.padding(start = 24.dp)) {
             Text(

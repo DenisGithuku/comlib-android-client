@@ -35,7 +35,7 @@ fun SectionSeparator(
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(
-                text = "View all", style = MaterialTheme.typography.labelLarge
+                text = "View all", style = MaterialTheme.typography.labelSmall
             )
             Box(
                 modifier = Modifier
@@ -47,7 +47,7 @@ fun SectionSeparator(
                 Text(
                     modifier = Modifier.padding(
                         horizontal = 8.dp, vertical = 4.dp
-                    ), text = "+ $count", style = MaterialTheme.typography.labelLarge
+                    ), text = "+ $count", style = MaterialTheme.typography.labelSmall
                 )
             }
         }
