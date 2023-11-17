@@ -54,22 +54,22 @@ class BooksViewModel @Inject constructor(
         comlibUseCases.getGenresUseCase().collect { result ->
             when (result) {
                 DataResult.Empty -> {
-                    genreListUiState.value = GenreListUiState.Error(message = "No genres found")
+                    genreListUiState.update { GenreListUiState.Error(message = "No genres found") }
                 }
 
                 is DataResult.Loading -> {
-                    genreListUiState.value = GenreListUiState.Loading
+                    genreListUiState.update { GenreListUiState.Loading }
                 }
 
                 is DataResult.Success -> {/*
                     map genre to genre ui model
                      */
                     val genres = result.data.map { genre -> genre.toGenreUiModel() }
-                    genreListUiState.value = GenreListUiState.Success(genres)
+                    genreListUiState.update { GenreListUiState.Success(genres) }
                 }
 
                 is DataResult.Error -> {
-                    genreListUiState.value = GenreListUiState.Error(result.message)
+                    genreListUiState.update { GenreListUiState.Error(result.message) }
                 }
             }
         }
@@ -79,22 +79,22 @@ class BooksViewModel @Inject constructor(
         comlibUseCases.getAllBooksUseCase().collect { result ->
             when (result) {
                 DataResult.Empty -> {
-                    bookListUiState.value = BookListUiState.Error(message = "No books found")
+                    bookListUiState.update { BookListUiState.Error(message = "No books found") }
                 }
 
                 is DataResult.Loading -> {
-                    bookListUiState.value = BookListUiState.Loading
+                    bookListUiState.update { BookListUiState.Loading }
                 }
 
                 is DataResult.Success -> {/*
                     map book to book ui model
                      */
                     val books = result.data.map { book -> book.toBookItemUiModel() }
-                    bookListUiState.value = BookListUiState.Success(books)
+                    bookListUiState.update { BookListUiState.Success(books) }
                 }
 
                 is DataResult.Error -> {
-                    bookListUiState.value = BookListUiState.Error(result.message)
+                    bookListUiState.update { BookListUiState.Error(result.message) }
                 }
             }
         }

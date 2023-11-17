@@ -27,12 +27,19 @@ fun NavGraphBuilder.homeNavGraph(
 ) {
     navigation(startDestination = startDestination, route = ComlibDestination.HomeGraph.route) {
         composable(route = HomeDestination.Home.route) {
-            HomeRoute(onOpenBookDetails = { bookId ->
-                appState.navigate(
-                    route = "${ComlibDestination.BookDetail.route}/$bookId",
-                    popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
-                )
-            })
+            HomeRoute(
+                onOpenBookDetails = { bookId ->
+                    appState.navigate(
+                        route = "${ComlibDestination.BookDetail.route}/$bookId",
+                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
+                    )
+                }, onOpenBookList = {
+                    appState.navigate(
+                        route = HomeDestination.Books.route,
+                        popUpTo = HomeDestination.Books.route
+                    )
+                }
+            )
         }
         composable(route = HomeDestination.Books.route) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
@@ -51,7 +58,12 @@ fun NavGraphBuilder.homeNavGraph(
         composable(
             route = HomeDestination.Books.route,
         ) {
-            BooksRoute()
+            BooksRoute(onOpenBook = { bookId ->
+                appState.navigate(
+                    route = "${ComlibDestination.BookDetail.route}/$bookId",
+                    popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
+                )
+            })
         }
     }
 }

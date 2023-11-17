@@ -42,18 +42,20 @@ import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 
 @Composable
 fun HomeRoute(
-    viewModel: HomeViewModel = hiltViewModel(), onOpenBookDetails: (String) -> Unit
+    viewModel: HomeViewModel = hiltViewModel(),
+    onOpenBookDetails: (String) -> Unit,
+    onOpenBookList: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
     HomeScreen(
-        state = state, onRefresh = onRefresh, onOpenBookDetails = onOpenBookDetails
+        state = state, onRefresh = onRefresh, onOpenBookDetails = onOpenBookDetails, onOpenBookList = onOpenBookList
     )
 }
 
 @Composable
 private fun HomeScreen(
-    state: HomeUiState, onRefresh: () -> Unit, onOpenBookDetails: (String) -> Unit
+    state: HomeUiState, onRefresh: () -> Unit, onOpenBookDetails: (String) -> Unit, onOpenBookList: () -> Unit
 ) {
     when (state) {
         is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
@@ -62,10 +64,10 @@ private fun HomeScreen(
             booksState = state.booksState,
             userProfileState = state.userProfileState,
             timePeriod = state.timePeriod,
-            onOpenBookDetails = onOpenBookDetails
+            onOpenBookDetails = onOpenBookDetails,
+            onOpenBookList = onOpenBookList
         )
     }
-
 }
 
 @Composable
@@ -73,7 +75,8 @@ fun LoadedScreen(
     timePeriod: TimePeriod,
     booksState: BooksState,
     userProfileState: UserProfileState,
-    onOpenBookDetails: (String) -> Unit
+    onOpenBookDetails: (String) -> Unit,
+    onOpenBookList: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -127,8 +130,6 @@ fun LoadedScreen(
                     },
                     contentDescription = "User profile"
                 )
-
-
             })
         }
         item {
@@ -194,7 +195,7 @@ fun LoadedScreen(
                     is BooksState.Success -> "${booksState.available.size - 1}"
                     BooksState.Empty -> "0"
                 },
-                onViewAll = {})
+                onViewAll = onOpenBookList)
         }
 
         item {

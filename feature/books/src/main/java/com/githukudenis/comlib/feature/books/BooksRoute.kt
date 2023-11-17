@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,22 +31,24 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.githukudenis.comlib.core.common.untangle
 import com.githukudenis.comlib.core.designsystem.ui.components.loadingBrush
+import com.githukudenis.comlib.feature.books.components.BookComponent
 
 @Composable
 fun BooksRoute(
-    viewModel: BooksViewModel = hiltViewModel(),
+    viewModel: BooksViewModel = hiltViewModel(), onOpenBook: (String) -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     BooksScreen(
-        state = state, onChangeGenre = viewModel::onChangeGenre
+        state = state, onChangeGenre = viewModel::onChangeGenre, onOpenBook = onOpenBook
     )
 }
 
 @Composable
 fun BooksScreen(
-    state: BooksUiState, onChangeGenre: (GenreUiModel) -> Unit
+    state: BooksUiState, onChangeGenre: (GenreUiModel) -> Unit, onOpenBook: (String) -> Unit
 ) {
     when (state) {
         is BooksUiState.Loading -> LoadingScreen()
@@ -125,7 +128,12 @@ private fun LoadedScreen(
     bookListUiState: BookListUiState,
     onChangeGenre: (GenreUiModel) -> Unit
 ) {
-    LazyColumn {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .safeDrawingPadding(),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
+    ) {
         item {
             when (genreListUiState) {
                 is GenreListUiState.Error -> {
@@ -143,8 +151,8 @@ private fun LoadedScreen(
                         (0..4).map {
                             Box(
                                 modifier = Modifier
-                                    .height(24.dp)
-                                    .width(36.dp)
+                                    .height(32.dp)
+                                    .width(56.dp)
                                     .clip(CircleShape)
                                     .background(brush = loadingBrush())
                             )
@@ -153,7 +161,10 @@ private fun LoadedScreen(
                 }
 
                 is GenreListUiState.Success -> {
-                    LazyRow {
+                    LazyRow(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp),
+                        contentPadding = PaddingValues(horizontal = 16.dp)
+                    ) {
                         items(items = genreListUiState.genres, key = { it.id }) { genre ->
                             Box(modifier = Modifier
                                 .clip(CircleShape)
@@ -162,9 +173,10 @@ private fun LoadedScreen(
                                 )
                                 .clickable { onChangeGenre(genre) }) {
                                 Text(
-                                    text = genre.name, modifier = Modifier.padding(
-                                            horizontal = 16.dp, vertical = 8.dp
-                                        )
+                                    text = genre.name.untangle("-"), modifier = Modifier.padding(
+                                        horizontal = 16.dp, vertical = 8.dp
+                                    ),
+                                    style = MaterialTheme.typography.titleMedium
                                 )
                             }
                         }
@@ -176,6 +188,60 @@ private fun LoadedScreen(
             Divider(modifier = Modifier, color = Color.Black.copy(alpha = 0.1f))
         }
 
+        when (bookListUiState) {
+            is BookListUiState.Error -> {
+                item {
+                    Text(
+                        text = bookListUiState.message, style = MaterialTheme.typography.titleMedium
+                    )
+                }
+            }
+
+            BookListUiState.Loading -> {
+                item {
+                    Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                        (0..6).map {
+                            Row(
+                                modifier = Modifier.fillMaxWidth().padding(
+                                    vertical = 12.dp,
+                                    horizontal = 8.dp
+                                ),
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .size(56.dp)
+                                        .clip(CircleShape)
+                                        .background(brush = loadingBrush())
+                                )
+                                Spacer(modifier = Modifier.width(16.dp))
+                                Column {
+                                    Box(
+                                        modifier = Modifier
+                                            .height(16.dp)
+                                            .fillMaxWidth(0.6f)
+                                            .background(brush = loadingBrush())
+                                    )
+                                    Spacer(modifier = Modifier.height(8.dp))
+                                    Box(
+                                        modifier = Modifier
+                                            .height(16.dp)
+                                            .fillMaxWidth(0.4f)
+                                            .background(brush = loadingBrush())
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            is BookListUiState.Success -> {
+                items(bookListUiState.books) { bookModel ->
+                    BookComponent(bookItemUiModel = bookModel, onOpenBookDetails = { bookId ->
+                    })
+                }
+            }
+        }
     }
 }
 
