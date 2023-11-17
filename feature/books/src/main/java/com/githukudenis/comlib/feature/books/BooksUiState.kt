@@ -6,6 +6,7 @@ import com.githukudenis.comlib.core.model.genre.Genre
 sealed class BooksUiState {
     data object Loading : BooksUiState()
     data class Success(
+        val selectedGenre: GenreUiModel,
         val bookListUiState: BookListUiState, val genreListUiState: GenreListUiState
     ) : BooksUiState()
 

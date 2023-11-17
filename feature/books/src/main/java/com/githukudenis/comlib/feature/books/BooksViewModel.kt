@@ -4,15 +4,18 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class BookViewModel @Inject constructor(
+@HiltViewModel
+class BooksViewModel @Inject constructor(
     private val comlibUseCases: ComlibUseCases
 ) : ViewModel() {
 
@@ -22,11 +25,17 @@ class BookViewModel @Inject constructor(
     private val bookListUiState: MutableStateFlow<BookListUiState> =
         MutableStateFlow(BookListUiState.Loading)
 
+    private val selectedGenre: MutableStateFlow<GenreUiModel> =
+        MutableStateFlow(GenreUiModel("", ""))
+
+
     val uiState: StateFlow<BooksUiState> = combine(
-        genreListUiState, bookListUiState
-    ) { genreState, bookListState ->
+        selectedGenre, genreListUiState, bookListUiState
+    ) { selectedGenre, genreState, bookListState ->
         BooksUiState.Success(
-            genreListUiState = genreState, bookListUiState = bookListState
+            selectedGenre = selectedGenre,
+            genreListUiState = genreState,
+            bookListUiState = bookListState
         )
     }.stateIn(
         scope = viewModelScope,
@@ -89,5 +98,9 @@ class BookViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun onChangeGenre(genreUiModel: GenreUiModel) {
+        selectedGenre.update { genreUiModel  }
     }
 }
