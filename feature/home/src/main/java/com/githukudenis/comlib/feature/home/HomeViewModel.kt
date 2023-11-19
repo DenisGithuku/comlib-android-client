@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
@@ -54,26 +55,23 @@ class HomeViewModel @Inject constructor(
 
     private fun setupData() {
         viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
-                    try {
-                        prefs.userId?.let { userId ->
-                            getUserProfile(userId)
-                        }
-
-                        getBooks(
-                            readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
-                        )
-                    } catch (e: Exception) {
-                        Timber.tag("prefs").d(e.message.toString())
+            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().catch { error ->
+                    Timber.tag("prefs").d(error.message.toString())
+                }.collectLatest { prefs ->
+                    prefs.userId?.let { userId ->
+                        getUserProfile(userId)
                     }
+
+                    getBooks(
+                        readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
+                    )
 
                 }
         }
     }
 
     private suspend fun getBooks(
-        readBooks: Set<String>,
-        bookmarkedBooks: Set<String>
+        readBooks: Set<String>, bookmarkedBooks: Set<String>
     ) {
         comlibUseCases.getAllBooksUseCase().collectLatest { result ->
             when (result) {
