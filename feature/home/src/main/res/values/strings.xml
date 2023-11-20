@@ -5,4 +5,5 @@
     <string name="already_read_separator">Already read</string>
     <string name="retry">Retry</string>
     <string name="available_books_separator" tools:ignore="ExtraTranslation">Available</string>
+    <string name="reserve">Reserve</string>
 </resources>

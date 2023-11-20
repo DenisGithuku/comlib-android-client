@@ -52,9 +52,10 @@ fun SectionSeparator(
                     ), contentAlignment = Alignment.Center
             ) {
                 Text(
+                    color = MaterialTheme.colorScheme.secondary,
                     modifier = Modifier.padding(
                         horizontal = 8.dp, vertical = 4.dp
-                    ), text = "+ $count", style = MaterialTheme.typography.labelSmall
+                    ), text = "+$count", style = MaterialTheme.typography.labelSmall
                 )
             }
         }

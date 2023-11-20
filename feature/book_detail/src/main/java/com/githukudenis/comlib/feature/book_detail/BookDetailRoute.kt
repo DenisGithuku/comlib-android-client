@@ -47,11 +47,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.untangle
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.components.loadingBrush
 
@@ -147,7 +149,8 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
         )
 
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
@@ -162,7 +165,8 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
             }
         }
         Divider(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp), color = Color.LightGray, thickness = 1.dp
         )
         Box(
@@ -174,7 +178,8 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
                 .background(brush = loadingBrush())
         )
         Column(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(horizontal = 16.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
@@ -193,109 +198,129 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
 
 @Composable
 fun LoadedScreen(
-    bookUiModel: BookUiModel, onBackPressed: () -> Unit, onToggleFavourite: (String) -> Unit
+    bookUiModel: BookUiModel, onBackPressed: () -> Unit, onToggleFavourite: (String) -> Unit, onReserve: (String) -> Unit = {}
 ) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Box(modifier = Modifier) {
-            AsyncImage(
-                model = "https://comlib-api.onrender.com/img/books/${bookUiModel.imageUrl}",
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentScale = ContentScale.FillWidth
-            )
-            Box(
-                modifier = Modifier
-                    .safeDrawingPadding()
-                    .padding(horizontal = 16.dp)
-                    .clip(CircleShape)
-                    .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
-                    .clickable {
-                        onBackPressed()
-                    },
-            ) {
-                Icon(
-                    modifier = Modifier.padding(8.dp),
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Back",
-                    tint = MaterialTheme.colorScheme.background
-                )
-            }
-        }
-        Row(
+    Box(modifier = Modifier.fillMaxSize()) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = bookUiModel.title, style = MaterialTheme.typography.titleMedium
-            )
-            IconButton(onClick = { onToggleFavourite(bookUiModel.id) }) {
-                Icon(
-                    imageVector = if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                    tint = if (bookUiModel.isFavourite) Color.Yellow.copy(green = 0.7f) else MaterialTheme.colorScheme.onBackground,
-                    contentDescription = "Favourite"
+            Box(modifier = Modifier) {
+                AsyncImage(
+                    model = "https://comlib-api.onrender.com/img/books/${bookUiModel.imageUrl}",
+                    contentDescription = null,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp),
+                    contentScale = ContentScale.FillWidth
                 )
-            }
-        }
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = buildString {
-                if (bookUiModel.authors.size == 1) append("Author: ") else append("Authors: ")
-                bookUiModel.authors.map { author ->
-                    append(author)
-                }
-            },
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-        )
-        LazyRow(
-            modifier = Modifier.fillMaxWidth(),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(items = bookUiModel.genres, key = { genre -> genre.id }) { genre ->
                 Box(
                     modifier = Modifier
-                        .clip(MaterialTheme.shapes.extraLarge)
-                        .border(
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                            width = 1.dp,
-                            shape = MaterialTheme.shapes.extraLarge
-                        ), contentAlignment = Alignment.Center
+                        .safeDrawingPadding()
+                        .padding(horizontal = 16.dp)
+                        .clip(CircleShape)
+                        .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
+                        .clickable {
+                            onBackPressed()
+                        },
                 ) {
-                    Text(
+                    Icon(
                         modifier = Modifier.padding(8.dp),
-                        text = genre.name.untangle("-"),
-                        style = MaterialTheme.typography.labelSmall
+                        imageVector = Icons.Default.ArrowBack,
+                        contentDescription = "Back",
+                        tint = MaterialTheme.colorScheme.background
                     )
                 }
             }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = bookUiModel.title, style = MaterialTheme.typography.titleMedium
+                )
+                IconButton(onClick = { onToggleFavourite(bookUiModel.id) }) {
+                    Icon(
+                        imageVector = if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        tint = if (bookUiModel.isFavourite) Color.Yellow.copy(green = 0.7f) else MaterialTheme.colorScheme.onBackground,
+                        contentDescription = "Favourite"
+                    )
+                }
+            }
+            Text(
+                text = "${bookUiModel.pages} pages",
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                modifier = Modifier.padding(horizontal = 16.dp)
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = buildString {
+                    if (bookUiModel.authors.size == 1) append("Author: ") else append("Authors: ")
+                    bookUiModel.authors.map { author ->
+                        append(author)
+                    }
+                },
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
+            LazyRow(
+                modifier = Modifier.fillMaxWidth(),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(items = bookUiModel.genres, key = { genre -> genre.id }) { genre ->
+                    Box(
+                        modifier = Modifier
+                            .clip(MaterialTheme.shapes.extraLarge)
+                            .border(
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                                width = 1.dp,
+                                shape = MaterialTheme.shapes.extraLarge
+                            ), contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(8.dp),
+                            text = genre.name.untangle("-"),
+                            style = MaterialTheme.typography.labelSmall
+                        )
+                    }
+                }
+            }
+            Divider(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Description",
+                style = MaterialTheme.typography.titleMedium
+            )
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = bookUiModel.description,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
         }
-        Divider(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f)
-        )
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = "Description",
-            style = MaterialTheme.typography.titleMedium
-        )
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = bookUiModel.description,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-        )
+        CLibButton(
+            modifier = Modifier
+                .fillMaxWidth()
+                .align(Alignment.BottomCenter)
+                .padding(16.dp),
+            onClick = { onReserve(bookUiModel.id) }
+        ) {
+            Text(
+                text = stringResource(id = R.string.reserve_now),
+                style = MaterialTheme.typography.labelMedium
+            )
+        }
     }
 }
 
@@ -303,7 +328,6 @@ fun LoadedScreen(
 fun ErrorScreen(
     message: String, onRetry: () -> Unit
 ) {
-
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
         Column(modifier = Modifier.padding(start = 24.dp)) {
             Text(
