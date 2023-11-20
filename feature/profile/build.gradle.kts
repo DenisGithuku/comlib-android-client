@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.comlib.feature.home"
+    namespace = "com.githukudenis.comlib.feature.profile"
 
     defaultConfig {
 
@@ -43,14 +43,4 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.timber)
-    implementation(libs.work.runtime)
-
-    coreLibraryDesugaring(libs.android.desugarJdkLibs)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 }
