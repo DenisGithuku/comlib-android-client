@@ -2,9 +2,15 @@ package com.githukudenis.comlib.feature.home.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CornerSize
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -15,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.model.book.Book
@@ -25,25 +32,31 @@ import com.githukudenis.comlib.feature.home.R
 fun BookCard(
     book: Book, onClick: (String) -> Unit
 ) {
-    Card(onClick = { onClick(book.id) }) {
-        Column(
-            modifier = Modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            AsyncImage(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = 120.dp)
-                    .clip(MaterialTheme.shapes.medium),
-                model = "https://comlib-api.onrender.com/img/books/${book.image}",
-                contentDescription = null,
-                contentScale = ContentScale.Crop,
-                error = painterResource(id = R.drawable.ic_broken_image),
-                placeholder = painterResource(id = R.drawable.loading_img)
-            )
+    Card(
+        modifier = Modifier.width(IntrinsicSize.Min),
+        onClick = { onClick(book.id) }) {
+        AsyncImage(
+            modifier = Modifier
+                .sizeIn(
+                    maxWidth = 200.dp,
+                    minWidth = 200.dp,
+                    maxHeight = 150.dp,
+                    minHeight = 150.dp
+                )
+                .clip(MaterialTheme.shapes.medium),
+            model = "https://comlib-api.onrender.com/img/books/${book.image}",
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            error = painterResource(id = R.drawable.ic_broken_image),
+            placeholder = painterResource(id = R.drawable.loading_img)
+        )
+        Column(modifier = Modifier.padding(12.dp)) {
             Text(
                 text = book.title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = buildString {
@@ -54,7 +67,9 @@ fun BookCard(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(
                     alpha = 0.6f
-                )
+                ),
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

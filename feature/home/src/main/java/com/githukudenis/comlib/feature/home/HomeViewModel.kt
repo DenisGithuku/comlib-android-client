@@ -65,7 +65,6 @@ class HomeViewModel @Inject constructor(
                     getBooks(
                         readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
                     )
-
                 }
         }
     }
@@ -73,7 +72,13 @@ class HomeViewModel @Inject constructor(
     private suspend fun getBooks(
         readBooks: Set<String>, bookmarkedBooks: Set<String>
     ) {
-        comlibUseCases.getAllBooksUseCase().collectLatest { result ->
+        comlibUseCases.getAllBooksUseCase()
+            .catch { err ->
+                booksState.update {
+                    BooksState.Error(message = err.message ?: "Could not fetch books.")
+                }
+            }
+            .collectLatest { result ->
             when (result) {
                 is DataResult.Error -> {
                     booksState.update {

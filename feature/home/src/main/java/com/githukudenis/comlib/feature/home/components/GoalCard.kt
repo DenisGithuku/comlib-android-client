@@ -3,6 +3,7 @@ package com.githukudenis.comlib.feature.home.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -32,11 +33,11 @@ fun GoalCard(
         ) {
             Text(
                 text = "Current streak: $dateRange",
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleSmall
             )
             Text(
                 text = currentBook,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(
                     alpha = 0.8f
                 )
@@ -48,11 +49,12 @@ fun GoalCard(
                     alpha = 0.2f
                 ),
                 strokeCap = StrokeCap.Round,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().height(8.dp)
             )
             Text(
-                text = "Progress ${progress * 100}%",
-                style = MaterialTheme.typography.bodyMedium,
+                text = "${progress * 100}%",
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.secondary
             )
         }
     }

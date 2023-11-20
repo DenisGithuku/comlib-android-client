@@ -48,7 +48,6 @@ fun BookComponent(bookItemUiModel: BookItemUiModel, onOpenBookDetails: (String) 
                 Text(
                     text = bookItemUiModel.title,
                     style = MaterialTheme.typography.titleMedium,
-                    modifier = Modifier.fillMaxWidth()
                 )
                 Text(
                     text = buildString {

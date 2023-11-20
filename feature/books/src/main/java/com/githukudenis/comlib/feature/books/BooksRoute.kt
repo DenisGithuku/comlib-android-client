@@ -56,7 +56,8 @@ fun BooksScreen(
             LoadedScreen(
                 genreListUiState = state.genreListUiState,
                 bookListUiState = state.bookListUiState,
-                onChangeGenre = onChangeGenre
+                onChangeGenre = onChangeGenre,
+                onOpenBook = onOpenBook
             )
         }
 
@@ -126,13 +127,13 @@ private fun LoadingScreen() {
 private fun LoadedScreen(
     genreListUiState: GenreListUiState,
     bookListUiState: BookListUiState,
-    onChangeGenre: (GenreUiModel) -> Unit
+    onChangeGenre: (GenreUiModel) -> Unit,
+    onOpenBook: (String) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .safeDrawingPadding(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         item {
             when (genreListUiState) {
@@ -145,7 +146,7 @@ private fun LoadedScreen(
 
                 GenreListUiState.Loading -> {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = 12.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         (0..4).map {
@@ -238,6 +239,7 @@ private fun LoadedScreen(
             is BookListUiState.Success -> {
                 items(bookListUiState.books) { bookModel ->
                     BookComponent(bookItemUiModel = bookModel, onOpenBookDetails = { bookId ->
+                        onOpenBook(bookId)
                     })
                 }
             }
