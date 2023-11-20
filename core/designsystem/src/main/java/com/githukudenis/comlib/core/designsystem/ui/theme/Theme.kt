@@ -31,7 +31,7 @@ private val DarkColorScheme = darkColorScheme(
 
 private val LightColorScheme = lightColorScheme(
     primary = CLibPurple50,
-    secondary = CLibPurple50,
+    secondary = CLibPink50,
     tertiary = CLibPink30,
     background = Color(0xFFFFFFFF),
     surface = Color(0xFFF5F5F5),
