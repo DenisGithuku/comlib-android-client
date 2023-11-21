@@ -22,10 +22,8 @@ dependencies {
 
     debugApi(libs.androidx.compose.ui.test.manifest)
 
-//    implementation(projects.core.common)
     implementation(project(":core:data"))
-//    implementation(projects.core.designsystem)
-//    implementation(projects.core.domain)
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
     implementation(libs.kotlinx.datetime)
 }
