@@ -1,5 +1,7 @@
 package com.githukudenis.comlib.core.data_test
 
+import com.githukudenis.comlib.data.repository.AuthRepository
+import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -9,7 +11,9 @@ import dagger.hilt.components.SingletonComponent
 @InstallIn(
     SingletonComponent::class
 )
-object TestModule {
+abstract class TestModule {
     @Binds
-
+    abstract fun bindAuthRepository(
+        authRepository: FakeAuthRepository
+    ): AuthRepository
 }
