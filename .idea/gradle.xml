@@ -28,6 +28,7 @@
             <option value="$PROJECT_DIR$/core/auth" />
             <option value="$PROJECT_DIR$/core/common" />
             <option value="$PROJECT_DIR$/core/data" />
+            <option value="$PROJECT_DIR$/core/data-test" />
             <option value="$PROJECT_DIR$/core/datastore" />
             <option value="$PROJECT_DIR$/core/designsystem" />
             <option value="$PROJECT_DIR$/core/domain" />
@@ -39,6 +40,7 @@
             <option value="$PROJECT_DIR$/feature/book_detail" />
             <option value="$PROJECT_DIR$/feature/books" />
             <option value="$PROJECT_DIR$/feature/home" />
+            <option value="$PROJECT_DIR$/feature/profile" />
           </set>
         </option>
         <option name="resolveExternalAnnotations" value="false" />

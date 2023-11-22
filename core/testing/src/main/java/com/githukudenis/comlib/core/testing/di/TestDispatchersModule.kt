@@ -15,6 +15,5 @@ object TestDispatchersModule {
     fun provideIODispatcher(testDispatcher: TestDispatcher): CoroutineDispatcher = testDispatcher
 
     @Provides
-    fun provideDefaultDispatcher(testDispatcher: TestDispatcher): CoroutineDispatcher =
-        testDispatcher
+    fun provideDefaultDispatcher(testDispatcher: TestDispatcher): CoroutineDispatcher = testDispatcher
 }

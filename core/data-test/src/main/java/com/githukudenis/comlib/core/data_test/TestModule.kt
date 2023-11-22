@@ -1,0 +1,15 @@
+package com.githukudenis.comlib.core.data_test
+
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+
+@Module
+@InstallIn(
+    SingletonComponent::class
+)
+object TestModule {
+    @Binds
+
+}
