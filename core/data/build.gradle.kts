@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:testing"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -40,8 +41,5 @@ dependencies {
     implementation(libs.ktor.serialization)
     implementation(libs.ktor.client)
     implementation(libs.ktor.logging)
-
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.test.ext.junit)
 
 }
