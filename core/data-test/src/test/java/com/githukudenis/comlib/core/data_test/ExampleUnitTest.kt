@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.core.auth
+package com.githukudenis.comlib.core.data_test
 
 import org.junit.Test
 

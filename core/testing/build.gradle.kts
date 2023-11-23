@@ -17,15 +17,14 @@ dependencies {
     api(libs.androidx.test.rules)
     api(libs.androidx.test.runner)
     api(libs.hilt.android.testing)
+    api(libs.turbine)
     api(libs.junit4)
     api(libs.kotlinx.coroutines.test)
 
     debugApi(libs.androidx.compose.ui.test.manifest)
 
-//    implementation(projects.core.common)
-    implementation(project(":core:data"))
-//    implementation(projects.core.designsystem)
-//    implementation(projects.core.domain)
+//    implementation(project(":core:data"))
     implementation(project(":core:model"))
+    implementation(project(":core:common"))
     implementation(libs.kotlinx.datetime)
 }

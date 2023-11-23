@@ -27,10 +27,9 @@ android {
 dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:common"))
+    implementation(project(":core:testing"))
 
     implementation(libs.ktor.client)
 
     implementation(libs.androidx.core.ktx)
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.test.ext.junit)
 }

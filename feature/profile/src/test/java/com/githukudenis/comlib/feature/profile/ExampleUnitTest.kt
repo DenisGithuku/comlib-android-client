@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.core.network
+package com.githukudenis.comlib.feature.profile
 
 import org.junit.Test
 

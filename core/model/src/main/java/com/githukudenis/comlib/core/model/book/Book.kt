@@ -13,6 +13,7 @@ data class Book(
     val id: String,
     val image: String,
     val owner: String,
+    val pages: Int,
     val reserved: List<String> = emptyList(),
     val title: String
 )
