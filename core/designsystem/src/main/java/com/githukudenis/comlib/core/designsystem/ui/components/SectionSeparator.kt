@@ -31,8 +31,8 @@ fun SectionSeparator(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         )
         Row(
             modifier = Modifier.clickable(
@@ -41,7 +41,7 @@ fun SectionSeparator(
                 indication = null,
                 onClick = { onViewAll() }),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
                 text = stringResource(id = R.string.view_all), style = MaterialTheme.typography.labelSmall

@@ -95,8 +95,4 @@ sealed class HomeDestination(
         unselectedIcon = Icons.Outlined.People,
     )
 
-    data object BookDetails : HomeDestination(
-        route = "book_details",
-    )
-
 }

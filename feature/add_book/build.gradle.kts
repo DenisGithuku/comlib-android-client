@@ -6,10 +6,9 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.comlib.feature.book_detail"
+    namespace = "com.githukudenis.comlib.feature.add_book"
 
     defaultConfig {
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }

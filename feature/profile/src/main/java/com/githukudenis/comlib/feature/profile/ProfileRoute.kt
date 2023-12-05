@@ -16,10 +16,10 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.CircularProgressIndicator
@@ -43,17 +43,19 @@ import com.githukudenis.comlib.feature.profile.components.ProfileListItem
 
 @Composable
 fun ProfileRoute(
-    viewModel: ProfileViewModel = hiltViewModel(), onBackPressed: () -> Unit
+    viewModel: ProfileViewModel = hiltViewModel(), onBackPressed: () -> Unit, onOpenMyBooks: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     ProfileScreen(
-        state = state, onBackPressed = onBackPressed
+        state = state, onBackPressed = onBackPressed,
+        onOpenMyBooks = onOpenMyBooks
     )
 }
 
 @Composable
-private fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
+private fun ProfileScreen(
+    state: ProfileUiState, onBackPressed: () -> Unit, onOpenMyBooks: () -> Unit) {
     if (state.isLoading) {
         Box(
             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -73,8 +75,6 @@ private fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
                     bottom = WindowInsets.statusBars
                         .asPaddingValues()
                         .calculateBottomPadding(),
-                    start = 16.dp,
-                    end = 16.dp
                 )
             ),
     ) {
@@ -96,15 +96,17 @@ private fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
         }
         Row(
             modifier = Modifier.fillMaxWidth()
+                .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
         ) {
-            ProfileImage(imageUrl = state.profile?.imageUrl, onChangeImage = {})
+            ProfileImage(imageUrl = "https://comlib-api.onrender.com/img/users/${state.profile?.imageUrl}",
+                onChangeImage = {})
             Spacer(modifier = Modifier.width(16.dp))
             Column(
                 modifier = Modifier
             ) {
                 Text(
                     text = "${state.profile?.firstname?.capitalize()} ${state.profile?.lastname?.capitalize()}",
-                    style = MaterialTheme.typography.titleLarge
+                    style = MaterialTheme.typography.titleSmall
                 )
                 state.profile?.email?.let {
                     Text(
@@ -113,82 +115,40 @@ private fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
                 }
                 CLibButton(onClick = { /*TODO*/ }) {
                     Text(
-                        text = "Edit"
+                        text = "Edit",
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        ProfileListItem(leading = {
-            Icon(
-                imageVector = Icons.Default.FavoriteBorder, contentDescription = null
-            )
-        }, title = {
-            Text(
-                text = stringResource(R.string.favourites)
-            )
-        }, trailing = {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = stringResource(R.string.open)
-            )
-        })
-        ProfileListItem(leading = {
-            Icon(
-                imageVector = Icons.Default.WbSunny, contentDescription = null
-            )
-        }, title = {
-            Text(
-                text = stringResource(R.string.display)
-            )
-        }, trailing = {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = stringResource(R.string.open)
-            )
-        })
-        ProfileListItem(leading = {
-            Icon(
-                imageVector = Icons.Default.NotificationsNone, contentDescription = null
-            )
-        }, title = {
-            Text(
-                text = stringResource(R.string.notifications)
-            )
-        }, trailing = {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = stringResource(R.string.open)
-            )
-        })
-        Divider(
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-        )
-        ProfileListItem(leading = {
-            Icon(
-                imageVector = Icons.Default.DeleteOutline, contentDescription = null
-            )
-        }, title = {
-            Text(
-                text = stringResource(R.string.clear_cache)
-            )
-        }, trailing = {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = stringResource(R.string.open)
-            )
-        })
         ProfileListItem(
-            leading = {
-                Icon(
-                    imageVector = Icons.Default.Logout, contentDescription = null
-                )
-            },
-            title = {
-                Text(
-                    text = stringResource(R.string.logout)
-                )
-            },
+            leading = Icons.Default.MenuBook,
+            onClick = onOpenMyBooks,
+            title = stringResource(R.string.my_books),
         )
+        ProfileListItem(
+            leading = Icons.Default.FavoriteBorder,
+            onClick = {},
+            title = stringResource(R.string.favourites)
+        )
+        ProfileListItem(
+            leading = Icons.Default.WbSunny, onClick = {}, title = stringResource(R.string.display)
+        )
+        ProfileListItem(
+            leading = Icons.Default.NotificationsNone,
+            onClick = {},
+            title = stringResource(R.string.notifications)
+        )
+        Divider(
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
+            modifier = Modifier.padding(horizontal = 16.dp)
+        )
+        ProfileListItem(leading = Icons.Default.DeleteOutline,
+            title = stringResource(R.string.clear_cache),
+            onClick = {})
+        ProfileListItem(leading = Icons.Default.Logout, title = stringResource(R.string.logout),
+
+            onClick = {})
     }
 }

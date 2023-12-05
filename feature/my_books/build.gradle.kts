@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.comlib.feature.book_detail"
+    namespace = "com.githukudenis.comlib.feature.my_books"
 
     defaultConfig {
 

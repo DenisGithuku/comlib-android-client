@@ -7,4 +7,5 @@
     <string name="display">Display</string>
     <string name="clear_cache">Clear cache</string>
     <string name="logout">Logout</string>
+    <string name="my_books">My books</string>
 </resources>

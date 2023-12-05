@@ -7,42 +7,52 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
 @Composable
 fun ProfileListItem(
     clickable: Boolean = true,
-    onClick: (() -> Unit)? = null,
-    leading: @Composable (() -> Unit)? = null,
-    title: @Composable () -> Unit,
-    subtitle: @Composable (() -> Unit)? = null,
-    trailing: @Composable (() -> Unit)? = null
+    onClick: () -> Unit,
+    leading: ImageVector,
+    title: String,
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable(clickable) {
-                onClick?.invoke()
-            }
-            .padding(vertical = 12.dp)
-        , verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
+    Row(modifier = Modifier
+        .fillMaxWidth()
+        .clickable(clickable) {
+            onClick.invoke()
+        }
+        .padding(vertical = 4.dp, horizontal = 16.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween) {
         Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
-            if (leading != null) {
-                leading()
-            }
+            Icon(
+                imageVector = leading,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+            )
             Spacer(modifier = Modifier.width(12.dp))
-            title()
+            Text(
+                text = title,
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+            )
         }
-        if (subtitle != null) {
-            subtitle()
-        }
-        if (trailing != null) {
-            trailing()
+        IconButton(onClick = onClick) {
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
         }
     }
 }
