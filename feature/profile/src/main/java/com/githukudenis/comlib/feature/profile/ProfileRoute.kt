@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.navigationBars
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBars
@@ -22,18 +21,28 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
-fun ProfileRoute() {
+fun ProfileRoute(
+    viewModel: ProfileViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    ProfileScreen(
+        state = state,
+        onBackPressed = onBackPressed
+    )
 }
 
 @Composable
-fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
+private fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
     if (state.isLoading) {
         Box(
             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -42,18 +51,24 @@ fun ProfileScreen(state: ProfileUiState, onBackPressed: () -> Unit) {
         }
     }
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .padding(
                 PaddingValues(
-                    top = WindowInsets.statusBars.asPaddingValues().calculateTopPadding(),
-                    bottom = WindowInsets.statusBars.asPaddingValues().calculateBottomPadding(),
+                    top = WindowInsets.statusBars
+                        .asPaddingValues()
+                        .calculateTopPadding(),
+                    bottom = WindowInsets.statusBars
+                        .asPaddingValues()
+                        .calculateBottomPadding(),
                     start = 16.dp,
-                    end=  16.dp
+                    end = 16.dp
                 )
             ),
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
                 .padding(16.dp)
         ) {
             IconButton(

@@ -5,7 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.githukudenis.comlib.app.AppState
 import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
-import com.githukudenis.comlib.feature.home.HomeRoute
+import com.githukudenis.comlib.feature.profile.ProfileRoute
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
 
 @Composable
@@ -47,6 +47,11 @@ fun ComlibNavGraph(
                 appState.popBackStack()
             })
         }
+        composable(route = ComlibDestination.Profile.route) {
+            ProfileRoute(onBackPressed = {
+                appState.popBackStack()
+            })
+        }
     }
 }
 
@@ -63,4 +68,5 @@ sealed class ComlibDestination(
     )
 
     data object GetStarted : ComlibDestination(route = "get_started")
+    data object Profile : ComlibDestination(route = "profile")
 }

@@ -57,6 +57,7 @@ dependencies {
     implementation(project(":feature:home"))
     implementation(project(":feature:book_detail"))
     implementation(project(":feature:books"))
+    implementation(project(":feature:profile"))
     implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.compose.ui.tooling)
