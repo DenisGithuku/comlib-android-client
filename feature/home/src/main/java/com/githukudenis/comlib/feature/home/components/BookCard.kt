@@ -36,10 +36,10 @@ fun BookCard(
             AsyncImage(
                 modifier = Modifier
                     .sizeIn(
-                        maxWidth = 170.dp,
-                        minWidth = 170.dp,
-                        maxHeight = 120.dp,
-                        minHeight = 120.dp
+                        maxWidth = 150.dp,
+                        minWidth = 150.dp,
+                        maxHeight = 100.dp,
+                        minHeight = 100.dp
                     )
                     .clip(MaterialTheme.shapes.large),
                 model = "https://comlib-api.onrender.com/img/books/${book.image}",

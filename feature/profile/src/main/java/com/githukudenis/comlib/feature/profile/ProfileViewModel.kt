@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -20,15 +20,16 @@ class ProfileViewModel @Inject constructor(
         private set
 
     init {
-        comlibUseCases.getUserPrefsUseCase()
-            .distinctUntilChanged()
-            .mapLatest { prefs ->
-                getProfileDetails(prefs.userId ?: return@mapLatest)
-            }
+        viewModelScope.launch {
+            comlibUseCases.getUserPrefsUseCase()
+                .distinctUntilChanged()
+                .collectLatest { prefs ->
+                    getProfileDetails(prefs.userId ?: return@collectLatest)
+                }
+        }
     }
 
-    private fun getProfileDetails(userId: String) {
-        viewModelScope.launch {
+    private suspend fun getProfileDetails(userId: String) {
             uiState.update {
                 ProfileUiState(isLoading = true)
             }
@@ -41,5 +42,4 @@ class ProfileViewModel @Inject constructor(
                 }
             }
         }
-    }
 }

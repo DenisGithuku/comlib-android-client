@@ -38,6 +38,12 @@ fun NavGraphBuilder.homeNavGraph(
                         route = HomeDestination.Books.route,
                         popUpTo = HomeDestination.Books.route
                     )
+                },
+                onOpenProfile = {
+                    appState.navigate(
+                        route = ComlibDestination.Profile.route,
+                        popUpTo = ComlibDestination.Profile.route
+                    )
                 }
             )
         }

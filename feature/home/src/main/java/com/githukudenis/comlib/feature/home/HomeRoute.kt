@@ -1,6 +1,7 @@
 package com.githukudenis.comlib.feature.home
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,18 +45,27 @@ import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
     onOpenBookDetails: (String) -> Unit,
-    onOpenBookList: () -> Unit
+    onOpenBookList: () -> Unit,
+    onOpenProfile: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
     HomeScreen(
-        state = state, onRefresh = onRefresh, onOpenBookDetails = onOpenBookDetails, onOpenBookList = onOpenBookList
+        state = state,
+        onRefresh = onRefresh,
+        onOpenBookDetails = onOpenBookDetails,
+        onOpenBookList = onOpenBookList,
+        onOpenProfile = onOpenProfile
     )
 }
 
 @Composable
 private fun HomeScreen(
-    state: HomeUiState, onRefresh: () -> Unit, onOpenBookDetails: (String) -> Unit, onOpenBookList: () -> Unit
+    state: HomeUiState,
+    onRefresh: () -> Unit,
+    onOpenBookDetails: (String) -> Unit,
+    onOpenBookList: () -> Unit,
+    onOpenProfile: () -> Unit
 ) {
     when (state) {
         is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
@@ -65,7 +75,8 @@ private fun HomeScreen(
             userProfileState = state.userProfileState,
             timePeriod = state.timePeriod,
             onOpenBookDetails = onOpenBookDetails,
-            onOpenBookList = onOpenBookList
+            onOpenBookList = onOpenBookList,
+            onOpenProfile = onOpenProfile
         )
     }
 }
@@ -76,7 +87,8 @@ fun LoadedScreen(
     booksState: BooksState,
     userProfileState: UserProfileState,
     onOpenBookDetails: (String) -> Unit,
-    onOpenBookList: () -> Unit
+    onOpenBookList: () -> Unit,
+    onOpenProfile: () -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -120,22 +132,19 @@ fun LoadedScreen(
                 )
             }, profileImage = {
                 AsyncImage(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .clip(CircleShape),
-                    model = when (userProfileState) {
+                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable {
+                            onOpenProfile()
+                        }, model = when (userProfileState) {
                         is UserProfileState.Error -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
                         UserProfileState.Loading -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
                         is UserProfileState.Success -> "https://comlib-api.onrender.com/img/users/${userProfileState.user?.image}"
-                    },
-                    contentDescription = "User profile"
+                    }, contentDescription = "User profile"
                 )
             })
         }
         item {
             GoalCard(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.padding(horizontal = 16.dp),
                 dateRange = "Aug 29 - Sep 23",
                 currentBook = "Philosopher's Stone",
                 progress = 0.45f
@@ -152,12 +161,6 @@ fun LoadedScreen(
             ) {
                 SectionSeparator(modifier = Modifier.padding(16.dp),
                     title = stringResource(id = R.string.already_read_separator),
-                    count = when (booksState) {
-                        is BooksState.Error -> "0"
-                        BooksState.Loading -> "0"
-                        is BooksState.Success -> "${booksState.readBooks.size - 1}"
-                        BooksState.Empty -> "0"
-                    },
                     onViewAll = {})
                 Spacer(modifier = Modifier.height(8.dp))
                 when (booksState) {
@@ -188,15 +191,11 @@ fun LoadedScreen(
             }
         }
         item {
-            SectionSeparator(modifier = Modifier.padding(horizontal = 16.dp),
+            SectionSeparator(
+                modifier = Modifier.padding(horizontal = 16.dp),
                 title = stringResource(id = R.string.available_books_separator),
-                count = when (booksState) {
-                    is BooksState.Error -> "0"
-                    BooksState.Loading -> "0"
-                    is BooksState.Success -> "${booksState.available.size - 1}"
-                    BooksState.Empty -> "0"
-                },
-                onViewAll = onOpenBookList)
+                onViewAll = onOpenBookList
+            )
         }
 
         item {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="change_image">Change image</string>
+    <string name="favourites">Favourites</string>
+    <string name="open">Open</string>
+    <string name="notifications">Notifications</string>
+    <string name="display">Display</string>
+    <string name="clear_cache">Clear cache</string>
+    <string name="logout">Logout</string>
+</resources>

@@ -46,7 +46,9 @@ class MainActivity : ComponentActivity() {
                     bottomBar = {
                         // Only show bottom bar on routes in home graph
                         if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
-                            NavigationBar {
+                            NavigationBar(
+                                containerColor = MaterialTheme.colorScheme.background
+                            ) {
                                 val homeGraphDestinations = listOf(
                                     HomeDestination.Home,
                                     HomeDestination.Books,
