@@ -8,9 +8,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +30,7 @@ fun ProfileListItem(
         .clickable(clickable) {
             onClick.invoke()
         }
-        .padding(vertical = 4.dp, horizontal = 16.dp),
+        .padding(vertical = 12.dp, horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween) {
         Row(modifier = Modifier, verticalAlignment = Alignment.CenterVertically) {
@@ -47,12 +46,10 @@ fun ProfileListItem(
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
             )
         }
-        IconButton(onClick = onClick) {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = null,
-                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-            )
-        }
+        Icon(
+            imageVector = Icons.Default.ArrowForwardIos,
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+        )
     }
 }

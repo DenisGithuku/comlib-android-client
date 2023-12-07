@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,8 +34,7 @@ fun SectionSeparator(
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         )
         Row(
-            modifier = Modifier.clickable(
-                interactionSource = interactionSource,
+            modifier = Modifier.clickable(interactionSource = interactionSource,
                 enabled = true,
                 indication = null,
                 onClick = { onViewAll() }),
@@ -44,17 +42,14 @@ fun SectionSeparator(
             horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = stringResource(id = R.string.view_all), style = MaterialTheme.typography.labelSmall
+                text = stringResource(id = R.string.view_all),
+                style = MaterialTheme.typography.labelSmall
             )
-            IconButton(
-                onClick = onViewAll
-            ) {
-                Icon(
-                    imageVector = Icons.Default.KeyboardArrowRight,
-                    contentDescription = stringResource(R.string.view_all),
-                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                )
-            }
+            Icon(
+                imageVector = Icons.Default.KeyboardArrowRight,
+                contentDescription = stringResource(R.string.view_all),
+                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
         }
     }
 }

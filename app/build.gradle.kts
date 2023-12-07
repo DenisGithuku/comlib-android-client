@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId = "com.githukudenis.comlib"
         versionCode = 1
-        versionName = "1.0"
+        versionName = "1.0-alpha01"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
@@ -26,26 +27,30 @@ fun NavGraphBuilder.homeNavGraph(
     startDestination: String = HomeDestination.Home.route,
 ) {
     navigation(startDestination = startDestination, route = ComlibDestination.HomeGraph.route) {
-        composable(route = HomeDestination.Home.route) {
-            HomeRoute(
-                onOpenBookDetails = { bookId ->
-                    appState.navigate(
-                        route = "${ComlibDestination.BookDetail.route}/$bookId",
-                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
-                    )
-                }, onOpenBookList = {
-                    appState.navigate(
-                        route = HomeDestination.Books.route,
-                        popUpTo = HomeDestination.Books.route
-                    )
-                },
-                onOpenProfile = {
-                    appState.navigate(
-                        route = ComlibDestination.Profile.route,
-                        popUpTo = ComlibDestination.Profile.route
-                    )
-                }
+        composable(enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right
             )
+        }, popEnterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        }, route = HomeDestination.Home.route) {
+            HomeRoute(onOpenBookDetails = { bookId ->
+                appState.navigate(
+                    route = "${ComlibDestination.BookDetail.route}/$bookId",
+                    popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
+                )
+            }, onOpenBookList = {
+                appState.navigate(
+                    route = HomeDestination.Books.route, popUpTo = HomeDestination.Books.route
+                )
+            }, onOpenProfile = {
+                appState.navigate(
+                    route = ComlibDestination.Profile.route,
+                    popUpTo = ComlibDestination.Profile.route
+                )
+            })
         }
         composable(route = HomeDestination.Clubs.route) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {

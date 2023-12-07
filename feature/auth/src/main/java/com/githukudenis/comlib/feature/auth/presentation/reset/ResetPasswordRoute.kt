@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
@@ -32,6 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.feature.auth.R
@@ -40,7 +40,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun ResetPasswordRoute(
     snackbarHostState: SnackbarHostState,
-    viewModel: ResetPasswordViewModel = hiltViewModel(), onReset: () -> Unit
+    viewModel: ResetPasswordViewModel = hiltViewModel(),
+    onReset: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val onPasswordReset by rememberUpdatedState(onReset)
@@ -86,7 +87,7 @@ fun ResetPasswordScreen(
             enter = fadeIn() + slideInVertically(),
             exit = fadeOut() + slideOutVertically()
         ) {
-            CircularProgressIndicator()
+            CLibLoadingSpinner()
         }
         Image(
             painter = painterResource(R.drawable.comliblogo),
