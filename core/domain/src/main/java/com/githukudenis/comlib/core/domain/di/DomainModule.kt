@@ -10,6 +10,8 @@ import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetTimePeriodUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
+import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
+import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
@@ -25,7 +27,7 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(booksRepository: BooksRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository): ComlibUseCases {
+    fun provideUseCases(booksRepository: BooksRepository, authRepository: AuthRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository): ComlibUseCases {
         return ComlibUseCases(
             getAllBooksUseCase = GetAllBooksUseCase(booksRepository = booksRepository),
             getUserProfileUseCase = GetUserProfileUseCase(userRepository = userRepository),
@@ -35,7 +37,8 @@ object DomainModule {
             getFavouriteBooksUseCase = GetFavouriteBooksUseCase(userPrefsRepository = userPrefsRepository),
             getReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository = userPrefsRepository),
             getGenresUseCase = GetGenresUseCase(booksRepository = booksRepository),
-            getGenreByIdUseCase = GetGenreByIdUseCase(booksRepository = booksRepository)
+            getGenreByIdUseCase = GetGenreByIdUseCase(booksRepository = booksRepository),
+            signOutUseCase = SignOutUseCase(authRepository = authRepository)
         )
     }
 }

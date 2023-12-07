@@ -29,7 +29,7 @@ fun GoalCard(
             modifier = Modifier
                 .padding(12.dp)
                 .fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Text(
                 text = "Current streak: $dateRange",

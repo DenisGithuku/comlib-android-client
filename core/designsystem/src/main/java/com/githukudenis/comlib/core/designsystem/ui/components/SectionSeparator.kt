@@ -1,25 +1,27 @@
 package com.githukudenis.comlib.core.designsystem.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.githukudenis.comlib.core.designsystem.R
 
 @Composable
 fun SectionSeparator(
-    modifier: Modifier = Modifier, title: String, count: String, onViewAll: () -> Unit
+    modifier: Modifier = Modifier, title: String, onViewAll: () -> Unit
 ) {
     val interactionSource = remember { MutableInteractionSource() }
     Row(
@@ -29,8 +31,8 @@ fun SectionSeparator(
     ) {
         Text(
             text = title,
-            style = MaterialTheme.typography.labelLarge,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
         )
         Row(
             modifier = Modifier.clickable(
@@ -39,23 +41,18 @@ fun SectionSeparator(
                 indication = null,
                 onClick = { onViewAll() }),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
             Text(
-                text = "View all", style = MaterialTheme.typography.labelSmall
+                text = stringResource(id = R.string.view_all), style = MaterialTheme.typography.labelSmall
             )
-            Box(
-                modifier = Modifier
-                    .clip(MaterialTheme.shapes.extraLarge)
-                    .background(
-                        MaterialTheme.colorScheme.surfaceVariant
-                    ), contentAlignment = Alignment.Center
+            IconButton(
+                onClick = onViewAll
             ) {
-                Text(
-                    color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.padding(
-                        horizontal = 8.dp, vertical = 4.dp
-                    ), text = "+$count", style = MaterialTheme.typography.labelSmall
+                Icon(
+                    imageVector = Icons.Default.KeyboardArrowRight,
+                    contentDescription = stringResource(R.string.view_all),
+                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
             }
         }

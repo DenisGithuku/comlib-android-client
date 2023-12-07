@@ -15,7 +15,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
@@ -36,10 +35,10 @@ fun BookCard(
             AsyncImage(
                 modifier = Modifier
                     .sizeIn(
-                        maxWidth = 170.dp,
-                        minWidth = 170.dp,
-                        maxHeight = 120.dp,
-                        minHeight = 120.dp
+                        maxWidth = 150.dp,
+                        minWidth = 150.dp,
+                        maxHeight = 100.dp,
+                        minHeight = 100.dp
                     )
                     .clip(MaterialTheme.shapes.large),
                 model = "https://comlib-api.onrender.com/img/books/${book.image}",
@@ -50,8 +49,7 @@ fun BookCard(
             )
                 Text(
                     text = book.title,
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleSmall,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -61,7 +59,7 @@ fun BookCard(
                             append(author)
                         }
                     },
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(
                         alpha = 0.6f
                     ),

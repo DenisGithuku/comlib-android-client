@@ -10,4 +10,5 @@ data class ComlibUseCases(
     val getReadBooksUseCase: GetReadBooksUseCase,
     val getGenresUseCase: GetGenresUseCase,
     val getGenreByIdUseCase: GetGenreByIdUseCase,
+    val signOutUseCase: SignOutUseCase,
 )

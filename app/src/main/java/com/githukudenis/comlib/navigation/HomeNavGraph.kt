@@ -38,6 +38,12 @@ fun NavGraphBuilder.homeNavGraph(
                         route = HomeDestination.Books.route,
                         popUpTo = HomeDestination.Books.route
                     )
+                },
+                onOpenProfile = {
+                    appState.navigate(
+                        route = ComlibDestination.Profile.route,
+                        popUpTo = ComlibDestination.Profile.route
+                    )
                 }
             )
         }
@@ -87,10 +93,6 @@ sealed class HomeDestination(
         label = "Clubs",
         selectedIcon = Icons.Filled.People,
         unselectedIcon = Icons.Outlined.People,
-    )
-
-    data object BookDetails : HomeDestination(
-        route = "book_details",
     )
 
 }
