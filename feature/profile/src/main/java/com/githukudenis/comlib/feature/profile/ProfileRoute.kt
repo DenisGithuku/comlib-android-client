@@ -1,5 +1,7 @@
 package com.githukudenis.comlib.feature.profile
 
+import android.widget.Toast
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,12 +36,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
 import com.githukudenis.comlib.feature.profile.components.ProfileImage
 import com.githukudenis.comlib.feature.profile.components.ProfileListItem
 
@@ -53,18 +57,25 @@ fun ProfileRoute(
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
     val onSignedOut by rememberUpdatedState(newValue = onSignOut)
-
+    val context = LocalContext.current
     LaunchedEffect(key1 = state.isSignedOut) {
         if (state.isSignedOut) {
             onSignedOut()
         }
     }
-    ProfileScreen(
-        state = state,
+    ProfileScreen(state = state,
         onBackPressed = onBackPressed,
         onOpenMyBooks = onOpenMyBooks,
-        onSignOut = viewModel::onSignOut
-    )
+        onSignOut = viewModel::onSignOut,
+        onToggleCacheDialog = viewModel::toggleDialog,
+        onClearCache = {
+            if (context.cacheDir.deleteRecursively()) {
+                Toast.makeText(context, "Cache cleared", Toast.LENGTH_SHORT).show()
+                viewModel.toggleDialog(false)
+            } else {
+                Toast.makeText(context, "Failed to clear cache", Toast.LENGTH_SHORT).show()
+            }
+        })
 }
 
 @Composable
@@ -72,7 +83,9 @@ private fun ProfileScreen(
     state: ProfileUiState,
     onBackPressed: () -> Unit,
     onOpenMyBooks: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    onToggleCacheDialog: (Boolean) -> Unit,
+    onClearCache: () -> Unit
 ) {
     if (state.isLoading) {
         Box(
@@ -82,9 +95,22 @@ private fun ProfileScreen(
         }
         return
     }
+
+    if (state.isDialogVisible) {
+        CLibAlertDialog(title = stringResource(id = R.string.clear_cache_dialog_title),
+            text = stringResource(
+                id = R.string.clear_cache_dialog_text
+            ),
+            onDismiss = { onToggleCacheDialog(false) },
+            onConfirm = {
+                onClearCache()
+            })
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background.copy(alpha = 0.8f))
             .padding(
                 PaddingValues(
                     top = WindowInsets.statusBars
@@ -165,10 +191,10 @@ private fun ProfileScreen(
         )
         ProfileListItem(leading = Icons.Default.DeleteOutline,
             title = stringResource(R.string.clear_cache),
-            onClick = {})
+            onClick = { onToggleCacheDialog(true) })
         ProfileListItem(
-            leading = Icons.Default.Logout, title = stringResource(R.string.logout),
-
+            leading = Icons.Default.Logout,
+            title = stringResource(R.string.logout),
             onClick = onSignOut
         )
     }

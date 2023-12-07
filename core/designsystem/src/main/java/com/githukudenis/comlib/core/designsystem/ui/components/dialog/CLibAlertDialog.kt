@@ -12,7 +12,6 @@ import androidx.compose.ui.res.stringResource
 import com.githukudenis.comlib.core.designsystem.R
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CLibAlertDialog(
     title: String, text: String, onDismiss: () -> Unit, onConfirm: () -> Unit

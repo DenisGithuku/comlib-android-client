@@ -61,7 +61,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
-import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibAlertDialog
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
@@ -271,7 +271,7 @@ private fun LoginScreen(
                 }
                 Spacer(modifier = Modifier.height(8.dp))
 
-            CLibAlertDialog(onClick = onForgotPassword) {
+            CLibTextButton(onClick = onForgotPassword) {
                 Text(
                     text = stringResource(id = R.string.forgot_pass_btn_txt)
                 )
@@ -303,7 +303,7 @@ private fun LoginScreen(
             Text(
                 text = stringResource(id = R.string.no_account_txt)
             )
-            CLibAlertDialog(onClick = onSignInInstead) {
+            CLibTextButton(onClick = onSignInInstead) {
                 Text(
                     text = stringResource(id = R.string.sign_in_txt)
                 )

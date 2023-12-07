@@ -48,4 +48,10 @@ class ProfileViewModel @Inject constructor(
             uiState.update { ProfileUiState(isLoading = false, isSignedOut = true) }
         }
     }
+
+    fun toggleDialog(isVisible: Boolean) {
+        uiState.update {
+            it.copy(isDialogVisible = isVisible)
+        }
+    }
 }
