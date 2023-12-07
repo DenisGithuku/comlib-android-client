@@ -5,7 +5,8 @@ import com.githukudenis.comlib.core.model.user.User
 data class ProfileUiState(
     val isLoading: Boolean = false,
     val profile: Profile? = null,
-    val error: String? = null
+    val error: String? = null,
+    val isSignedOut: Boolean = false
 )
 
 data class Profile(

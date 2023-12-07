@@ -21,25 +21,31 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase()
-                .distinctUntilChanged()
-                .collectLatest { prefs ->
+            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
                     getProfileDetails(prefs.userId ?: return@collectLatest)
                 }
         }
     }
 
     private suspend fun getProfileDetails(userId: String) {
+        uiState.update {
+            ProfileUiState(isLoading = true)
+        }
+        val user = comlibUseCases.getUserProfileUseCase(userId)
+        user?.toProfile()?.run {
             uiState.update {
-                ProfileUiState(isLoading = true)
-            }
-            val user = comlibUseCases.getUserProfileUseCase(userId)
-            user?.toProfile()?.run {
-                uiState.update {
-                    ProfileUiState(
-                        profile = this, isLoading = false
-                    )
-                }
+                ProfileUiState(
+                    profile = this, isLoading = false
+                )
             }
         }
+    }
+
+    fun onSignOut() {
+        viewModelScope.launch {
+            uiState.update { ProfileUiState(isLoading = true) }
+            comlibUseCases.signOutUseCase()
+            uiState.update { ProfileUiState(isLoading = false, isSignedOut = true) }
+        }
+    }
 }

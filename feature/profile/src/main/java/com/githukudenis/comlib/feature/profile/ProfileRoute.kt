@@ -29,7 +29,9 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -43,19 +45,35 @@ import com.githukudenis.comlib.feature.profile.components.ProfileListItem
 
 @Composable
 fun ProfileRoute(
-    viewModel: ProfileViewModel = hiltViewModel(), onBackPressed: () -> Unit, onOpenMyBooks: () -> Unit
+    viewModel: ProfileViewModel = hiltViewModel(),
+    onBackPressed: () -> Unit,
+    onOpenMyBooks: () -> Unit,
+    onSignOut: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
+    val onSignedOut by rememberUpdatedState(newValue = onSignOut)
+
+    LaunchedEffect(key1 = state.isSignedOut) {
+        if (state.isSignedOut) {
+            onSignedOut()
+        }
+    }
     ProfileScreen(
-        state = state, onBackPressed = onBackPressed,
-        onOpenMyBooks = onOpenMyBooks
+        state = state,
+        onBackPressed = onBackPressed,
+        onOpenMyBooks = onOpenMyBooks,
+        onSignOut = viewModel::onSignOut
     )
 }
 
 @Composable
 private fun ProfileScreen(
-    state: ProfileUiState, onBackPressed: () -> Unit, onOpenMyBooks: () -> Unit) {
+    state: ProfileUiState,
+    onBackPressed: () -> Unit,
+    onOpenMyBooks: () -> Unit,
+    onSignOut: () -> Unit
+) {
     if (state.isLoading) {
         Box(
             modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
@@ -95,8 +113,10 @@ private fun ProfileScreen(
             )
         }
         Row(
-            modifier = Modifier.fillMaxWidth()
-                .padding(horizontal = 16.dp), verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             ProfileImage(imageUrl = "https://comlib-api.onrender.com/img/users/${state.profile?.imageUrl}",
                 onChangeImage = {})
@@ -115,8 +135,7 @@ private fun ProfileScreen(
                 }
                 CLibButton(onClick = { /*TODO*/ }) {
                     Text(
-                        text = "Edit",
-                        style = MaterialTheme.typography.bodySmall
+                        text = "Edit", style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
@@ -147,8 +166,10 @@ private fun ProfileScreen(
         ProfileListItem(leading = Icons.Default.DeleteOutline,
             title = stringResource(R.string.clear_cache),
             onClick = {})
-        ProfileListItem(leading = Icons.Default.Logout, title = stringResource(R.string.logout),
+        ProfileListItem(
+            leading = Icons.Default.Logout, title = stringResource(R.string.logout),
 
-            onClick = {})
+            onClick = onSignOut
+        )
     }
 }

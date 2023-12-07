@@ -64,6 +64,8 @@ fun ComlibNavGraph(
                     route = ComlibDestination.MyBooks.route,
                     popUpTo = ComlibDestination.MyBooks.route
                 )
+            }, onSignOut = {
+                appState.navigate(route = ComlibDestination.AuthGraph.route)
             })
         }
         composable(enterTransition = {

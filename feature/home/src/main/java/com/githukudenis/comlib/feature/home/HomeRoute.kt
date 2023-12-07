@@ -122,12 +122,12 @@ fun LoadedScreen(
                                     ?: "stranger").replaceFirstChar { char -> char.uppercase() }
                             }
                         })
-                    }, style = MaterialTheme.typography.titleMedium
+                    }, style = MaterialTheme.typography.titleSmall
                 )
             }, subtitle = {
                 Text(
                     text = stringResource(id = R.string.home_header_subtitle),
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }, profileImage = {
