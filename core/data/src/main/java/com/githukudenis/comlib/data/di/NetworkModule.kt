@@ -1,9 +1,5 @@
 package com.githukudenis.comlib.data.di
 
-import android.util.Log
-import com.githukudenis.comlib.core.network.UserApi
-import com.githukudenis.comlib.data.repository.AuthRepository
-import com.githukudenis.comlib.data.repository.AuthRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,9 +16,9 @@ import io.ktor.client.features.observer.ResponseObserver
 import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-import javax.inject.Singleton
 import kotlinx.serialization.json.Json
 import timber.log.Timber
+import javax.inject.Singleton
 
 private const val TIMEOUT = 60_000
 
@@ -54,7 +50,7 @@ object NetworkModule {
                         Timber.tag("Logger Ktor => ").v(message)
                     }
                 }
-                level = LogLevel.NONE
+                level = LogLevel.BODY
             }
 
             install(ResponseObserver) {
