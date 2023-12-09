@@ -1,11 +1,13 @@
 package com.githukudenis.comlib.core.domain.di
 
+import com.githukudenis.comlib.core.common.ComlibConnectivityManager
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetNetworkConnectivityUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetTimePeriodUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
@@ -27,7 +29,7 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(booksRepository: BooksRepository, authRepository: AuthRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository): ComlibUseCases {
+    fun provideUseCases(booksRepository: BooksRepository, authRepository: AuthRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository, comlibConnectivityManager: ComlibConnectivityManager): ComlibUseCases {
         return ComlibUseCases(
             getAllBooksUseCase = GetAllBooksUseCase(booksRepository = booksRepository),
             getUserProfileUseCase = GetUserProfileUseCase(userRepository = userRepository),
@@ -38,7 +40,8 @@ object DomainModule {
             getReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository = userPrefsRepository),
             getGenresUseCase = GetGenresUseCase(booksRepository = booksRepository),
             getGenreByIdUseCase = GetGenreByIdUseCase(booksRepository = booksRepository),
-            signOutUseCase = SignOutUseCase(authRepository = authRepository)
+            signOutUseCase = SignOutUseCase(authRepository = authRepository),
+            getNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(comlibConnectivityManager = comlibConnectivityManager)
         )
     }
 }

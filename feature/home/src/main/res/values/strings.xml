@@ -6,4 +6,6 @@
     <string name="retry">Retry</string>
     <string name="available_books_separator" tools:ignore="ExtraTranslation">Available</string>
     <string name="reserve">Reserve</string>
+    <string name="no_network_title">Not connected</string>
+    <string name="no_network_desc">For a smooth experience on Comlib, you need to be online.</string>
 </resources>

@@ -19,3 +19,14 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+-dontwarn org.slf4j.impl.StaticLoggerBinder
+-dontwarn kotlinx.serialization.KSerializer
+-dontwarn kotlinx.serialization.Serializable
+-keep, allowobfuscation, allowoptimization class io.ktor.util.reflect.** { *; }
+ -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+-keep public class io.ktor.client.** {
+    public <methods>;
+    private <methods>;
+}
+-keep class com.githukudenis.comlib.core.model.** { <fields>; }
+

@@ -24,8 +24,8 @@ import kotlinx.coroutines.delay
 @Composable
 fun CLibLoadingSpinner(
     color: Color = MaterialTheme.colorScheme.secondary,
-    circleSize: Dp = 50.dp,
-    animationDelay: Int = 2000
+    circleSize: Dp = 70.dp,
+    animationDelay: Int = 3000
 ) {
     val circles = remember {
         listOf(
