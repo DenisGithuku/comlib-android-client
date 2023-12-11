@@ -18,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,8 +30,10 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
@@ -49,7 +50,20 @@ fun HomeRoute(
     onOpenProfile: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isNetworkConnected by viewModel.isNetworkConnected.collectAsStateWithLifecycle()
+
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
+
+
+    if (!isNetworkConnected) {
+        CLibAlertDialog(title = stringResource(id = R.string.no_network_title),
+            text = stringResource(id = R.string.no_network_desc),
+            onDismiss = { },
+            onConfirm = { viewModel.onEvent(HomeUiEvent.NetworkRefresh) })
+        return
+    }
+
+
     HomeScreen(
         state = state,
         onRefresh = onRefresh,
@@ -132,7 +146,10 @@ fun LoadedScreen(
                 )
             }, profileImage = {
                 AsyncImage(
-                    modifier = Modifier.size(48.dp).clip(CircleShape).clickable {
+                    modifier = Modifier
+                        .size(48.dp)
+                        .clip(CircleShape)
+                        .clickable {
                             onOpenProfile()
                         }, model = when (userProfileState) {
                         is UserProfileState.Error -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
@@ -231,7 +248,7 @@ fun LoadedScreen(
 @Composable
 fun LoadingScreen() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator()
+        CLibLoadingSpinner()
     }
 }
 

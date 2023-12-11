@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -30,21 +31,22 @@ fun ProfileImage(
         AsyncImage(
             model = imageUrl,
             modifier = Modifier
-                .size(120.dp)
+                .size(100.dp)
                 .clip(CircleShape),
+            contentScale = ContentScale.Crop,
             contentDescription = null,
             placeholder = painterResource(id = R.drawable.ic_profile_placeholder),
         )
         Box(
             modifier = Modifier
                 .align(alignment = Alignment.BottomEnd)
+                .clip(CircleShape)
                 .background(color = MaterialTheme.colorScheme.background, shape = CircleShape)
-                .padding(2.dp)
-                .clickable { onChangeImage() }
                 .border(
-                    width = 1.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f), shape = CircleShape
+                    width = 0.5.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f), shape = CircleShape
                 )
                 .background(MaterialTheme.colorScheme.background, shape = CircleShape)
+                .clickable { onChangeImage() }
                 , contentAlignment = Alignment.Center
         ) {
             Icon(

@@ -11,4 +11,5 @@ data class ComlibUseCases(
     val getGenresUseCase: GetGenresUseCase,
     val getGenreByIdUseCase: GetGenreByIdUseCase,
     val signOutUseCase: SignOutUseCase,
+    val getNetworkConnectivityUseCase: GetNetworkConnectivityUseCase
 )
