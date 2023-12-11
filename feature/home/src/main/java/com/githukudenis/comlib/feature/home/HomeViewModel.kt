@@ -2,6 +2,7 @@ package com.githukudenis.comlib.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,21 +27,26 @@ class HomeViewModel @Inject constructor(
     private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
 
-    val isNetworkConnected: StateFlow<Boolean> =
-        comlibUseCases.getNetworkConnectivityUseCase.isConnected
+    val networkStatus: StateFlow<NetworkStatus> =
+        comlibUseCases.getNetworkConnectivityUseCase.networkStatus
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = false
+                initialValue = NetworkStatus.DISCONNECTED
             )
 
     private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
 
     val state: StateFlow<HomeUiState>
         get() = combine(
-            userProfileState, booksState
-        ) { profile, books ->
+            userProfileState, booksState, networkStatus
+        ) { profile, books, networkStatus, ->
+            if (networkStatus == NetworkStatus.DISCONNECTED) {
+                HomeUiState.Error(
+                    message = "Could not connect. Please try again."
+                )
+            }
             HomeUiState.Success(
                 booksState = books,
                 userProfileState = profile,

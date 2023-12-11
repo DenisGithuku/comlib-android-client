@@ -33,7 +33,7 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
-import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibMinimalDialog
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
@@ -51,15 +51,15 @@ fun HomeRoute(
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isNetworkConnected by viewModel.isNetworkConnected.collectAsStateWithLifecycle()
-
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
 
-
     if (!isNetworkConnected) {
-        CLibAlertDialog(title = stringResource(id = R.string.no_network_title),
+        CLibMinimalDialog(
+            title = stringResource(id = R.string.no_network_title),
             text = stringResource(id = R.string.no_network_desc),
-            onDismiss = { },
-            onConfirm = { viewModel.onEvent(HomeUiEvent.NetworkRefresh) })
+            onDismissRequest = {
+
+            })
         return
     }
 
