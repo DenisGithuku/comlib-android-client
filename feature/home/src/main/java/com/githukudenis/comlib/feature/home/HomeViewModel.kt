@@ -44,14 +44,15 @@ class HomeViewModel @Inject constructor(
         ) { profile, books, networkStatus, ->
             if (networkStatus == NetworkStatus.DISCONNECTED) {
                 HomeUiState.Error(
-                    message = "Could not connect. Please try again."
+                    message = "Could not connect. Please check your internet connection."
+                )
+            } else {
+                HomeUiState.Success(
+                    booksState = books,
+                    userProfileState = profile,
+                    timePeriod = comlibUseCases.getTimePeriodUseCase()
                 )
             }
-            HomeUiState.Success(
-                booksState = books,
-                userProfileState = profile,
-                timePeriod = comlibUseCases.getTimePeriodUseCase()
-            )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
