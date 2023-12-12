@@ -1,6 +1,7 @@
 package com.githukudenis.comlib.core.model
 
 import timber.log.Timber
+import java.net.UnknownHostException
 
 sealed interface DataResult<out T : Any> {
     data class Loading<out T : Any>(val data: T?) : DataResult<T>
@@ -16,7 +17,11 @@ suspend fun <T : Any> dataResultSafeApiCall(
 //        DataResult.Loading(data = null)
         val result = apiCall.invoke()
         DataResult.Success(result)
-    } catch (t: Throwable) {
+    } catch(e: UnknownHostException) {
+        Timber.e(e)
+        DataResult.Error(message = "Could not connect to service. Please check your internet connection!", e)
+    }
+    catch (t: Throwable) {
         Timber.e(t)
         DataResult.Error(t.message ?: "An unknown error occurred", t)
     }

@@ -1,6 +1,7 @@
 package com.githukudenis.comlib.core.domain.di
 
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
+import com.githukudenis.comlib.core.common.ComlibConnectivityManagerImpl
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase

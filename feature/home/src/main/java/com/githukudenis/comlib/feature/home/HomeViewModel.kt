@@ -2,9 +2,11 @@ package com.githukudenis.comlib.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -26,26 +28,38 @@ class HomeViewModel @Inject constructor(
     private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
 
-    val isNetworkConnected: StateFlow<Boolean> =
-        comlibUseCases.getNetworkConnectivityUseCase.isConnected
+    val networkStatus: StateFlow<NetworkStatus> =
+        comlibUseCases.getNetworkConnectivityUseCase.networkStatus
             .distinctUntilChanged()
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = false
+                initialValue = NetworkStatus.Unknown
             )
+
+    private var _showNetworkDialog = MutableStateFlow(
+        networkStatus.value == NetworkStatus.Lost || networkStatus.value == NetworkStatus.Unavailable
+    )
+    val showNetworkDialog: StateFlow<Boolean>
+        get() = _showNetworkDialog
+
 
     private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
 
     val state: StateFlow<HomeUiState>
         get() = combine(
-            userProfileState, booksState
-        ) { profile, books ->
-            HomeUiState.Success(
-                booksState = books,
-                userProfileState = profile,
-                timePeriod = comlibUseCases.getTimePeriodUseCase()
-            )
+            userProfileState, booksState, networkStatus
+        ) { profile, books, networkStatus, ->
+            if (networkStatus == NetworkStatus.Unavailable) {
+                HomeUiState.Error(
+                    message = "Could not connect. Please check your internet connection."
+                )
+            }
+                HomeUiState.Success(
+                    booksState = books,
+                    userProfileState = profile,
+                    timePeriod = comlibUseCases.getTimePeriodUseCase()
+                )
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -56,9 +70,11 @@ class HomeViewModel @Inject constructor(
     init {
         setupData()
     }
-
+    
+    private var bookJob: Job? = null
     private fun setupData() {
-        viewModelScope.launch {
+        bookJob?.cancel()
+        bookJob = viewModelScope.launch {
             comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().catch { error ->
                 Timber.tag("prefs").d(error.message.toString())
             }.collectLatest { prefs ->
@@ -129,6 +145,10 @@ class HomeViewModel @Inject constructor(
         } else {
             userProfileState.update { UserProfileState.Success(user = profile) }
         }
+    }
+
+    fun onDismissDialog() {
+        _showNetworkDialog.update { false }
     }
 
 }

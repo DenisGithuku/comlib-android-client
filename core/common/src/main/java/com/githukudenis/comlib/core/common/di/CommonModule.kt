@@ -2,6 +2,7 @@ package com.githukudenis.comlib.core.common.di
 
 import android.content.Context
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
+import com.githukudenis.comlib.core.common.ComlibConnectivityManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +31,7 @@ object CommonModule {
     fun provideConnectivityManager(
         @ApplicationContext context: Context
     ): ComlibConnectivityManager {
-        return ComlibConnectivityManager(context = context)
+        return ComlibConnectivityManagerImpl(context = context)
     }
 }
 
