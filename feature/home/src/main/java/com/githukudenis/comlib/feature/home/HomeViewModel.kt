@@ -6,6 +6,8 @@ import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +35,7 @@ class HomeViewModel @Inject constructor(
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = NetworkStatus.DISCONNECTED
+                initialValue = NetworkStatus.UNKNOWN
             )
 
     private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
@@ -46,13 +48,12 @@ class HomeViewModel @Inject constructor(
                 HomeUiState.Error(
                     message = "Could not connect. Please check your internet connection."
                 )
-            } else {
+            }
                 HomeUiState.Success(
                     booksState = books,
                     userProfileState = profile,
                     timePeriod = comlibUseCases.getTimePeriodUseCase()
                 )
-            }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -63,9 +64,12 @@ class HomeViewModel @Inject constructor(
     init {
         setupData()
     }
+    
+    private var bookJob: Job = SupervisorJob()
 
     private fun setupData() {
-        viewModelScope.launch {
+        bookJob.cancel()
+        bookJob = viewModelScope.launch {
             comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().catch { error ->
                 Timber.tag("prefs").d(error.message.toString())
             }.collectLatest { prefs ->
