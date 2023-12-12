@@ -30,7 +30,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
-import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
@@ -51,16 +50,15 @@ fun HomeRoute(
     onOpenProfile: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val networkStatus by viewModel.networkStatus.collectAsStateWithLifecycle()
+    val showNetworkDialog by viewModel.showNetworkDialog.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
 
-    if (networkStatus == NetworkStatus.DISCONNECTED) {
+    if (!showNetworkDialog) {
         CLibMinimalDialog(
             title = stringResource(id = R.string.no_network_title),
             text = stringResource(id = R.string.no_network_desc),
-            onDismissRequest = {
-
-            })
+            onDismissRequest = viewModel::onDismissDialog
+        )
         return
     }
 
@@ -258,9 +256,10 @@ fun ErrorScreen(error: String, onRetry: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart
     ) {
-        Column(modifier = Modifier.padding(horizontal = 24.dp)) {
+        Column(modifier = Modifier.padding(24.dp)) {
             Text(
-                text = error, style = MaterialTheme.typography.titleMedium
+                text = error,
+                style = MaterialTheme.typography.titleMedium,
             )
             Spacer(modifier = Modifier.height(16.dp))
             CLibButton(onClick = onRetry) {

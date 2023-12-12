@@ -4,6 +4,7 @@ import com.githukudenis.comlib.core.common.ComlibConnectivityManager
 import com.githukudenis.comlib.core.common.NetworkStatus
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
+import timber.log.Timber
 import javax.inject.Inject
 
 class GetNetworkConnectivityUseCase @Inject constructor(
@@ -11,5 +12,8 @@ class GetNetworkConnectivityUseCase @Inject constructor(
 ) {
     val  networkStatus: Flow<NetworkStatus> = comlibConnectivityManager
         .networkStatus
-        .mapLatest { it }
+        .mapLatest {
+            Timber.tag("netstatus").d("networkStatus: $it")
+            it
+        }
 }
