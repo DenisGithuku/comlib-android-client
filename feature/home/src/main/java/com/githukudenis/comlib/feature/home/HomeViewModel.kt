@@ -14,6 +14,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -28,7 +29,7 @@ class HomeViewModel @Inject constructor(
     private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
 
-    val networkStatus: StateFlow<NetworkStatus> =
+    private val networkStatus: StateFlow<NetworkStatus> =
         comlibUseCases.getNetworkConnectivityUseCase.networkStatus
             .distinctUntilChanged()
             .stateIn(
@@ -37,11 +38,16 @@ class HomeViewModel @Inject constructor(
                 initialValue = NetworkStatus.Unknown
             )
 
-    private var _showNetworkDialog = MutableStateFlow(
-        networkStatus.value == NetworkStatus.Lost || networkStatus.value == NetworkStatus.Unavailable
-    )
-    val showNetworkDialog: StateFlow<Boolean>
-        get() = _showNetworkDialog
+    var showNetworkDialog: StateFlow<Boolean> =
+        networkStatus.mapLatest {
+            it == NetworkStatus.Unavailable ||
+                    it == NetworkStatus.Lost
+        }.stateIn(
+            viewModelScope,
+            SharingStarted.WhileSubscribed(5_000),
+            false
+        )
+
 
 
     private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
@@ -50,16 +56,17 @@ class HomeViewModel @Inject constructor(
         get() = combine(
             userProfileState, booksState, networkStatus
         ) { profile, books, networkStatus, ->
-            if (networkStatus == NetworkStatus.Unavailable) {
+            if (networkStatus == NetworkStatus.Unavailable || networkStatus == NetworkStatus.Lost) {
                 HomeUiState.Error(
                     message = "Could not connect. Please check your internet connection."
                 )
-            }
+            } else {
                 HomeUiState.Success(
                     booksState = books,
                     userProfileState = profile,
                     timePeriod = comlibUseCases.getTimePeriodUseCase()
                 )
+            }
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
@@ -145,10 +152,6 @@ class HomeViewModel @Inject constructor(
         } else {
             userProfileState.update { UserProfileState.Success(user = profile) }
         }
-    }
-
-    fun onDismissDialog() {
-        _showNetworkDialog.update { false }
     }
 
 }
