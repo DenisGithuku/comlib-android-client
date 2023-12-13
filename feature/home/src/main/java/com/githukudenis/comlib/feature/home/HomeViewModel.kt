@@ -10,11 +10,12 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -30,24 +31,21 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(UserProfileState.Loading)
 
     private val networkStatus: StateFlow<NetworkStatus> =
-        comlibUseCases.getNetworkConnectivityUseCase.networkStatus
-            .distinctUntilChanged()
-            .stateIn(
+        comlibUseCases.getNetworkConnectivityUseCase.networkStatus.distinctUntilChanged()
+            .onEach { netStatus ->
+                _showNetworkDialog.update {
+                    netStatus == NetworkStatus.Unavailable || netStatus == NetworkStatus.Lost
+                }
+            }.stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = NetworkStatus.Unknown
             )
 
-    var showNetworkDialog: StateFlow<Boolean> =
-        networkStatus.mapLatest {
-            it == NetworkStatus.Unavailable ||
-                    it == NetworkStatus.Lost
-        }.stateIn(
-            viewModelScope,
-            SharingStarted.WhileSubscribed(5_000),
-            false
-        )
-
+    private var _showNetworkDialog: MutableStateFlow<Boolean> = MutableStateFlow(
+        false
+    )
+    val showNetworkDialog: StateFlow<Boolean> = _showNetworkDialog.asStateFlow()
 
 
     private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
@@ -55,7 +53,7 @@ class HomeViewModel @Inject constructor(
     val state: StateFlow<HomeUiState>
         get() = combine(
             userProfileState, booksState, networkStatus
-        ) { profile, books, networkStatus, ->
+        ) { profile, books, networkStatus ->
             if (networkStatus == NetworkStatus.Unavailable || networkStatus == NetworkStatus.Lost) {
                 HomeUiState.Error(
                     message = "Could not connect. Please check your internet connection."
@@ -77,7 +75,7 @@ class HomeViewModel @Inject constructor(
     init {
         setupData()
     }
-    
+
     private var bookJob: Job? = null
     private fun setupData() {
         bookJob?.cancel()
@@ -100,36 +98,36 @@ class HomeViewModel @Inject constructor(
         readBooks: Set<String>, bookmarkedBooks: Set<String>
     ) {
         comlibUseCases.getAllBooksUseCase().catch { err ->
-                booksState.update {
-                    BooksState.Error(message = err.message ?: "Could not fetch books.")
+            booksState.update {
+                BooksState.Error(message = err.message ?: "Could not fetch books.")
+            }
+        }.collectLatest { result ->
+            when (result) {
+                is DataResult.Error -> {
+                    booksState.update {
+                        BooksState.Error(message = result.message)
+                    }
                 }
-            }.collectLatest { result ->
-                when (result) {
-                    is DataResult.Error -> {
-                        booksState.update {
-                            BooksState.Error(message = result.message)
-                        }
-                    }
 
-                    is DataResult.Empty -> {
-                        booksState.update { BooksState.Empty }
-                    }
+                is DataResult.Empty -> {
+                    booksState.update { BooksState.Empty }
+                }
 
-                    is DataResult.Loading -> {
-                        booksState.update { BooksState.Loading }
-                    }
+                is DataResult.Loading -> {
+                    booksState.update { BooksState.Loading }
+                }
 
-                    is DataResult.Success -> {
-                        booksState.update {
-                            BooksState.Success(available = result.data,
-                                readBooks = result.data.filter { book ->
-                                    book.id in readBooks
-                                },
-                                bookmarkedBooks = result.data.filter { book -> book.id in bookmarkedBooks })
-                        }
+                is DataResult.Success -> {
+                    booksState.update {
+                        BooksState.Success(available = result.data,
+                            readBooks = result.data.filter { book ->
+                                book.id in readBooks
+                            },
+                            bookmarkedBooks = result.data.filter { book -> book.id in bookmarkedBooks })
                     }
                 }
             }
+        }
     }
 
     fun onEvent(event: HomeUiEvent) {
@@ -154,4 +152,7 @@ class HomeViewModel @Inject constructor(
         }
     }
 
+    fun onDismissNetworkDialog() {
+        _showNetworkDialog.update { false }
+    }
 }

@@ -57,7 +57,7 @@ fun HomeRoute(
         CLibMinimalDialog(
             title = stringResource(id = R.string.no_network_title),
             text = stringResource(id = R.string.no_network_desc),
-            onDismissRequest = { viewModel.onDismissDialog() }
+            onDismissRequest = { viewModel.onDismissNetworkDialog() }
         )
         return
     }
