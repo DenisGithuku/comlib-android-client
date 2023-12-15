@@ -22,4 +22,6 @@
     <string name="reset_header_description">Recover your account</string>
     <string name="reset_button_text">Reset</string>
     <string name="email_reset" tools:ignore="ExtraTranslation">Password reset link sent to your email.</string>
+    <string name="no_network_title">Not connected</string>
+    <string name="no_network_desc">An internet connection is required during first time setup.</string>
 </resources>

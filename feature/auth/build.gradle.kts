@@ -30,6 +30,7 @@ android {
 dependencies {
     implementation(project(":core:data"))
     implementation(project(":core:common"))
+    implementation(project(":core:domain"))
 
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.navigation.compose)

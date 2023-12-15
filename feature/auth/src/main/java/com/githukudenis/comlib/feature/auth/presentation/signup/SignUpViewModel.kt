@@ -2,28 +2,49 @@ package com.githukudenis.comlib.feature.auth.presentation.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.feature.auth.presentation.SignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val userRepository: UserRepository, private val authRepository: AuthRepository
+    private val userRepository: UserRepository, private val authRepository: AuthRepository,
+    private val comlibUseCases: ComlibUseCases
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
     val state: StateFlow<SignUpUiState> get() = _state.asStateFlow()
+
+    private val _showNetworkDialog = MutableStateFlow(false)
+    val showNetworkDialog: StateFlow<Boolean> get() = _showNetworkDialog.asStateFlow()
+
+    private val networkStatus = comlibUseCases
+        .getNetworkConnectivityUseCase
+        .networkStatus
+        .onEach { netStatus ->
+            _showNetworkDialog.update { netStatus == NetworkStatus.Lost || netStatus == NetworkStatus.Unavailable }
+        }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = NetworkStatus.Unknown
+        )
 
     fun onEvent(event: SignUpUiEvent) {
         when (event) {
@@ -193,4 +214,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
+    fun onDismissNetworkDialog() {
+        _showNetworkDialog.update { false }
+    }
 }
