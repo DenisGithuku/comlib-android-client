@@ -31,7 +31,7 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(UserProfileState.Loading)
 
     private val networkStatus: StateFlow<NetworkStatus> =
-        comlibUseCases.getNetworkConnectivityUseCase.networkStatus.distinctUntilChanged()
+        comlibUseCases.getNetworkConnectivityUseCase.networkStatus
             .onEach { netStatus ->
                 _showNetworkDialog.update {
                     netStatus == NetworkStatus.Unavailable || netStatus == NetworkStatus.Lost
@@ -56,7 +56,7 @@ class HomeViewModel @Inject constructor(
         ) { profile, books, networkStatus ->
             if (networkStatus == NetworkStatus.Unavailable || networkStatus == NetworkStatus.Lost) {
                 HomeUiState.Error(
-                    message = "Could not connect. Please check your internet connection."
+                    message = "Could not connect. Please check your internet connection then try again."
                 )
             } else {
                 HomeUiState.Success(
