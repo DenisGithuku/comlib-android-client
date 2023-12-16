@@ -53,11 +53,11 @@ fun HomeRoute(
     val showNetworkDialog by viewModel.showNetworkDialog.collectAsStateWithLifecycle()
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
 
-    if (!showNetworkDialog) {
+    if (showNetworkDialog) {
         CLibMinimalDialog(
             title = stringResource(id = R.string.no_network_title),
             text = stringResource(id = R.string.no_network_desc),
-            onDismissRequest = viewModel::onDismissDialog
+            onDismissRequest = { viewModel.onDismissNetworkDialog() }
         )
         return
     }

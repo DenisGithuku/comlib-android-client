@@ -211,7 +211,7 @@ fun LoadedScreen(
                         .safeDrawingPadding()
                         .padding(horizontal = 16.dp)
                         .clip(CircleShape)
-                        .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
+                        .background(color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f))
                         .clickable {
                             onBackPressed()
                         },

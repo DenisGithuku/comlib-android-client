@@ -60,6 +60,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibMinimalDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
@@ -73,13 +74,22 @@ fun SignUpRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
-
+    val showNetworkDialog by viewModel.showNetworkDialog.collectAsStateWithLifecycle()
     val signUpComplete by rememberUpdatedState(onSignUpComplete)
 
     LaunchedEffect(state.signUpSuccess) {
         if (state.signUpSuccess) {
             signUpComplete()
         }
+    }
+
+    if (showNetworkDialog) {
+        CLibMinimalDialog(
+            title = stringResource(id = R.string.no_network_title),
+            text = stringResource(id = R.string.no_network_desc),
+            onDismissRequest = { viewModel.onDismissNetworkDialog() }
+        )
+        return
     }
 
     val googleAuthUiClient: GoogleAuthUiClient by lazy {
