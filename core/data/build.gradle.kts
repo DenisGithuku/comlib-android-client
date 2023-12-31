@@ -32,6 +32,7 @@ dependencies {
     implementation(project(":core:model"))
     implementation(project(":core:network"))
     implementation(project(":core:datastore"))
+    implementation(project(":core:database"))
     implementation(project(":core:testing"))
 
     implementation(libs.androidx.core.ktx)
