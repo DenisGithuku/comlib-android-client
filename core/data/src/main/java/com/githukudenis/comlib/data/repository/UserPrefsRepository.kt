@@ -11,5 +11,6 @@ interface UserPrefsRepository {
     suspend fun setUserId(userId: String)
 
     suspend fun setThemeConfig(themeConfig: ThemeConfig)
+    suspend fun setBookMarks(bookMarks: Set<String>)
 
 }

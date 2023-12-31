@@ -52,15 +52,25 @@ fun BookDetailRoute(
     viewModel: BookDetailViewModel = hiltViewModel(), onBackPressed: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
+    val isFavourite by viewModel.isFavourite.collectAsStateWithLifecycle()
 
     BookDetailScreen(
-        state = state, onRetry = { viewModel.onRetry() }, onBackPressed = onBackPressed
+        state = state,
+        isFavourite = isFavourite,
+        onToggleFavourite = { bookId ->
+        viewModel.toggleBookmark(bookId)
+    }, onRetry = { viewModel.onRetry() },
+        onBackPressed = onBackPressed
     )
 }
 
 @Composable
 fun BookDetailScreen(
-    state: BookDetailUiState, onRetry: () -> Unit, onBackPressed: () -> Unit
+    state: BookDetailUiState,
+    isFavourite: Boolean,
+    onToggleFavourite: (String) -> Unit,
+    onRetry: () -> Unit,
+    onBackPressed: () -> Unit
 ) {
     when (state) {
         is BookDetailUiState.Loading -> {
@@ -68,9 +78,13 @@ fun BookDetailScreen(
         }
 
         is BookDetailUiState.Success -> {
-            LoadedScreen(bookUiModel = state.bookUiModel,
+            LoadedScreen(
+                bookUiModel = state.bookUiModel.copy(
+                    isFavourite = isFavourite
+                ),
                 onBackPressed = onBackPressed,
-                onToggleFavourite = {})
+                onToggleFavourite = onToggleFavourite
+            )
         }
 
         is BookDetailUiState.Error -> {
@@ -157,7 +171,9 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
         Divider(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp), color = Color.LightGray, thickness = 1.dp
+                .padding(horizontal = 16.dp),
+            color = Color.LightGray,
+            thickness = 1.dp
         )
         Box(
             modifier = Modifier
@@ -188,7 +204,10 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
 
 @Composable
 fun LoadedScreen(
-    bookUiModel: BookUiModel, onBackPressed: () -> Unit, onToggleFavourite: (String) -> Unit, onReserve: (String) -> Unit = {}
+    bookUiModel: BookUiModel,
+    onBackPressed: () -> Unit,
+    onToggleFavourite: (String) -> Unit,
+    onReserve: (String) -> Unit = {}
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
@@ -299,13 +318,11 @@ fun LoadedScreen(
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
         }
-        CLibButton(
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.BottomCenter)
-                .padding(16.dp),
-            onClick = { onReserve(bookUiModel.id) }
-        ) {
+        CLibButton(modifier = Modifier
+            .fillMaxWidth()
+            .align(Alignment.BottomCenter)
+            .padding(16.dp),
+            onClick = { onReserve(bookUiModel.id) }) {
             Text(
                 text = stringResource(id = R.string.reserve_now),
                 style = MaterialTheme.typography.labelMedium
