@@ -18,4 +18,8 @@ class UserPrefsRepositoryImpl @Inject constructor(
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
         userPrefsDataSource.setThemeConfig(themeConfig)
     }
+
+    override suspend fun setBookMarks(bookMarks: Set<String>) {
+        userPrefsDataSource.setBookmarkedBooks(bookMarks)
+    }
 }

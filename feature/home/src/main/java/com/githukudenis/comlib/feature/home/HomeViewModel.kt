@@ -5,7 +5,10 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
+import com.githukudenis.comlib.core.model.book.BookMilestone
+import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -15,6 +18,7 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -24,11 +28,23 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val comlibUseCases: ComlibUseCases
+    private val comlibUseCases: ComlibUseCases,
+    private val bookMilestoneRepository: BookMilestoneRepository
 ) : ViewModel() {
 
     private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
+
+    val currentMilestone: StateFlow<BookMilestone>
+        get() = bookMilestoneRepository.bookMilestone
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = BookMilestone()
+            )
+
 
     private val networkStatus: StateFlow<NetworkStatus> =
         comlibUseCases.getNetworkConnectivityUseCase.networkStatus
