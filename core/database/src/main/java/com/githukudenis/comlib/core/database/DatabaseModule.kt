@@ -2,6 +2,7 @@ package com.githukudenis.comlib.core.database
 
 import android.content.Context
 import androidx.room.Room
+import com.githukudenis.comlib.core.database.dao.BookMilestoneDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -23,5 +24,13 @@ internal object DatabaseModule {
             context, ComlibDatabase::class.java, "comlib"
         )
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideBookMilestoneDao(
+        database: ComlibDatabase
+    ): BookMilestoneDao {
+        return database.bookMilestoneDao()
     }
 }

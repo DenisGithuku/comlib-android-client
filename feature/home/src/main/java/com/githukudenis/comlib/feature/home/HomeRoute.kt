@@ -163,7 +163,9 @@ fun LoadedScreen(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 dateRange = "Aug 29 - Sep 23",
                 currentBook = "Philosopher's Stone",
-                progress = 0.45f
+                progress = 0.45f,
+                hasStreak = false,
+                onSetStreak = {}
             )
         }
         item {

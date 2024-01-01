@@ -6,7 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -16,8 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -54,13 +53,9 @@ fun BookDetailRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isFavourite by viewModel.isFavourite.collectAsStateWithLifecycle()
 
-    BookDetailScreen(
-        state = state,
-        isFavourite = isFavourite,
-        onToggleFavourite = { bookId ->
+    BookDetailScreen(state = state, isFavourite = isFavourite, onToggleFavourite = { bookId ->
         viewModel.toggleBookmark(bookId)
-    }, onRetry = { viewModel.onRetry() },
-        onBackPressed = onBackPressed
+    }, onRetry = { viewModel.onRetry() }, onBackPressed = onBackPressed
     )
 }
 
@@ -81,9 +76,7 @@ fun BookDetailScreen(
             LoadedScreen(
                 bookUiModel = state.bookUiModel.copy(
                     isFavourite = isFavourite
-                ),
-                onBackPressed = onBackPressed,
-                onToggleFavourite = onToggleFavourite
+                ), onBackPressed = onBackPressed, onToggleFavourite = onToggleFavourite
             )
         }
 
@@ -202,6 +195,7 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LoadedScreen(
     bookUiModel: BookUiModel,
@@ -251,7 +245,8 @@ fun LoadedScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = bookUiModel.title, style = MaterialTheme.typography.titleMedium
+                    text = bookUiModel.title,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 IconButton(onClick = { onToggleFavourite(bookUiModel.id) }) {
                     Icon(
@@ -275,21 +270,25 @@ fun LoadedScreen(
                         append(author)
                     }
                 },
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
-            LazyRow(
-                modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Genre",
+                style = MaterialTheme.typography.titleMedium
+            )
+            FlowRow(
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(items = bookUiModel.genres, key = { genre -> genre.id }) { genre ->
+                for (genre in bookUiModel.genres) {
                     Box(
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraLarge)
                             .border(
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
                                 width = 1.dp,
                                 shape = MaterialTheme.shapes.extraLarge
                             ), contentAlignment = Alignment.Center
@@ -314,7 +313,7 @@ fun LoadedScreen(
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = bookUiModel.description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
         }
