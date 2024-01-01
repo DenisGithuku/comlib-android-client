@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,8 +17,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -248,7 +245,8 @@ fun LoadedScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = bookUiModel.title, style = MaterialTheme.typography.titleMedium
+                    text = bookUiModel.title,
+                    style = MaterialTheme.typography.titleMedium
                 )
                 IconButton(onClick = { onToggleFavourite(bookUiModel.id) }) {
                     Icon(
@@ -272,7 +270,7 @@ fun LoadedScreen(
                         append(author)
                     }
                 },
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
             Text(
@@ -281,8 +279,8 @@ fun LoadedScreen(
                 style = MaterialTheme.typography.titleMedium
             )
             FlowRow(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 for (genre in bookUiModel.genres) {
@@ -290,7 +288,7 @@ fun LoadedScreen(
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraLarge)
                             .border(
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
                                 width = 1.dp,
                                 shape = MaterialTheme.shapes.extraLarge
                             ), contentAlignment = Alignment.Center
@@ -315,7 +313,7 @@ fun LoadedScreen(
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
                 text = bookUiModel.description,
-                style = MaterialTheme.typography.bodyMedium,
+                style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
         }

@@ -3,6 +3,7 @@ package com.githukudenis.comlib.data.di
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.AuthRepositoryImpl
 import com.githukudenis.comlib.data.repository.BookMilestoneRepository
+import com.githukudenis.comlib.data.repository.BookMilestoneRepositoryImpl
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.BooksRepositoryImpl
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
@@ -37,6 +38,9 @@ interface DataModule {
     fun bindUserPrefsRepository(
         userPrefsRepositoryImpl: UserPrefsRepositoryImpl
     ): UserPrefsRepository
+
     @Binds
-    fun bindBookMilestoneRepository(booksRepositoryImpl: BooksRepositoryImpl): BookMilestoneRepository
+    fun bindBookMilestoneRepository(
+        bookMilestoneRepositoryImpl: BookMilestoneRepositoryImpl
+    ): BookMilestoneRepository
 }
