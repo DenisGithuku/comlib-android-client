@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -54,13 +56,9 @@ fun BookDetailRoute(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isFavourite by viewModel.isFavourite.collectAsStateWithLifecycle()
 
-    BookDetailScreen(
-        state = state,
-        isFavourite = isFavourite,
-        onToggleFavourite = { bookId ->
+    BookDetailScreen(state = state, isFavourite = isFavourite, onToggleFavourite = { bookId ->
         viewModel.toggleBookmark(bookId)
-    }, onRetry = { viewModel.onRetry() },
-        onBackPressed = onBackPressed
+    }, onRetry = { viewModel.onRetry() }, onBackPressed = onBackPressed
     )
 }
 
@@ -81,9 +79,7 @@ fun BookDetailScreen(
             LoadedScreen(
                 bookUiModel = state.bookUiModel.copy(
                     isFavourite = isFavourite
-                ),
-                onBackPressed = onBackPressed,
-                onToggleFavourite = onToggleFavourite
+                ), onBackPressed = onBackPressed, onToggleFavourite = onToggleFavourite
             )
         }
 
@@ -202,6 +198,7 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun LoadedScreen(
     bookUiModel: BookUiModel,
@@ -278,13 +275,17 @@ fun LoadedScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
-            LazyRow(
+            Text(
+                modifier = Modifier.padding(horizontal = 16.dp),
+                text = "Genre",
+                style = MaterialTheme.typography.titleMedium
+            )
+            FlowRow(
                 modifier = Modifier.fillMaxWidth(),
-                contentPadding = PaddingValues(horizontal = 16.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                verticalArrangement = Arrangement.Center,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(items = bookUiModel.genres, key = { genre -> genre.id }) { genre ->
+                for (genre in bookUiModel.genres) {
                     Box(
                         modifier = Modifier
                             .clip(MaterialTheme.shapes.extraLarge)
