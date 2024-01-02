@@ -12,5 +12,6 @@ data class ComlibUseCases(
     val getGenreByIdUseCase: GetGenreByIdUseCase,
     val signOutUseCase: SignOutUseCase,
     val getNetworkConnectivityUseCase: GetNetworkConnectivityUseCase,
-    val toggleBookMarkUseCase: ToggleBookMarkUseCase
+    val toggleBookMarkUseCase: ToggleBookMarkUseCase,
+    val formatDateUseCase: FormatDateUseCase
 )

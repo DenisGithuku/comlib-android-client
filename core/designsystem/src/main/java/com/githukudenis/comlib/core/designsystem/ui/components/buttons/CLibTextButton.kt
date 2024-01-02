@@ -15,6 +15,7 @@ fun CLibTextButton(
     onClick: () -> Unit,
     colors: ButtonColors = ButtonDefaults.textButtonColors(),
     shape: Shape = MaterialTheme.shapes.extraLarge,
+    enabled: Boolean = true,
     content: @Composable RowScope.() -> Unit
 ) {
     TextButton(
@@ -22,6 +23,7 @@ fun CLibTextButton(
         modifier = modifier,
         colors = colors,
         shape = shape,
-        content = content
+        content = content,
+        enabled = enabled
     )
 }
