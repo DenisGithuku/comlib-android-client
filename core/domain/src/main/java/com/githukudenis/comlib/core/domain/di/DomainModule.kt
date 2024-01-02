@@ -2,6 +2,7 @@ package com.githukudenis.comlib.core.domain.di
 
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.FormatDateUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
@@ -43,7 +44,8 @@ object DomainModule {
             getGenreByIdUseCase = GetGenreByIdUseCase(booksRepository = booksRepository),
             signOutUseCase = SignOutUseCase(authRepository = authRepository),
             getNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(comlibConnectivityManager = comlibConnectivityManager),
-            toggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository = userPrefsRepository)
+            toggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository = userPrefsRepository),
+            formatDateUseCase = FormatDateUseCase()
         )
     }
 }
