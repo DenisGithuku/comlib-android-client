@@ -10,6 +10,7 @@ import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,6 +20,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
@@ -35,28 +37,23 @@ class HomeViewModel @Inject constructor(
     private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
 
-    val currentMilestone: StateFlow<BookMilestone>
-        get() = bookMilestoneRepository.bookMilestone
-            .distinctUntilChanged()
-            .flowOn(Dispatchers.IO)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = BookMilestone()
-            )
+    val streakState: Flow<StreakState>
+        get() = bookMilestoneRepository.bookMilestone.distinctUntilChanged().flowOn(Dispatchers.IO)
+            .mapLatest {
+                StreakState(it)
+            }
 
 
     private val networkStatus: StateFlow<NetworkStatus> =
-        comlibUseCases.getNetworkConnectivityUseCase.networkStatus
-            .onEach { netStatus ->
-                _showNetworkDialog.update {
-                    netStatus == NetworkStatus.Unavailable || netStatus == NetworkStatus.Lost
-                }
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = NetworkStatus.Unknown
-            )
+        comlibUseCases.getNetworkConnectivityUseCase.networkStatus.onEach { netStatus ->
+            _showNetworkDialog.update {
+                netStatus == NetworkStatus.Unavailable || netStatus == NetworkStatus.Lost
+            }
+        }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = NetworkStatus.Unknown
+        )
 
     private var _showNetworkDialog: MutableStateFlow<Boolean> = MutableStateFlow(
         false
@@ -68,8 +65,8 @@ class HomeViewModel @Inject constructor(
 
     val state: StateFlow<HomeUiState>
         get() = combine(
-            userProfileState, booksState, networkStatus
-        ) { profile, books, networkStatus ->
+            userProfileState, booksState, networkStatus, streakState
+        ) { profile, books, networkStatus, streakState ->
             if (networkStatus == NetworkStatus.Unavailable || networkStatus == NetworkStatus.Lost) {
                 HomeUiState.Error(
                     message = "Could not connect. Please check your internet connection then try again."
@@ -78,6 +75,7 @@ class HomeViewModel @Inject constructor(
                 HomeUiState.Success(
                     booksState = books,
                     userProfileState = profile,
+                    streakState = streakState,
                     timePeriod = comlibUseCases.getTimePeriodUseCase()
                 )
             }
@@ -155,6 +153,16 @@ class HomeViewModel @Inject constructor(
             HomeUiEvent.NetworkRefresh -> {
                 //TODO Implement network refresh
             }
+
+            is HomeUiEvent.SaveStreak -> {
+                saveMilestone(event.bookMilestone)
+            }
+        }
+    }
+
+    private fun saveMilestone(bookMilestone: BookMilestone) {
+        viewModelScope.launch {
+            comlibUseCases.saveStreakUseCase(bookMilestone)
         }
     }
 

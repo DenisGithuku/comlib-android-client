@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.home
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +44,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -53,10 +55,12 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibMinimalDialog
 import com.githukudenis.comlib.core.domain.usecases.FormatDateUseCase
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
+import com.githukudenis.comlib.core.model.book.BookMilestone
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
 import com.githukudenis.comlib.feature.home.components.ErrorCard
@@ -88,13 +92,12 @@ fun HomeRoute(
     }
 
 
-    HomeScreen(
-        state = state,
+    HomeScreen(state = state,
         onRefresh = onRefresh,
         onOpenBookDetails = onOpenBookDetails,
         onOpenBookList = onOpenBookList,
-        onOpenProfile = onOpenProfile
-    )
+        onOpenProfile = onOpenProfile,
+        onSaveStreak = { book -> viewModel.onEvent(HomeUiEvent.SaveStreak(book)) })
 }
 
 @Composable
@@ -103,7 +106,8 @@ private fun HomeScreen(
     onRefresh: () -> Unit,
     onOpenBookDetails: (String) -> Unit,
     onOpenBookList: () -> Unit,
-    onOpenProfile: () -> Unit
+    onOpenProfile: () -> Unit,
+    onSaveStreak: (BookMilestone) -> Unit
 ) {
     when (state) {
         is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
@@ -112,9 +116,11 @@ private fun HomeScreen(
             booksState = state.booksState,
             userProfileState = state.userProfileState,
             timePeriod = state.timePeriod,
+            streakState = state.streakState,
             onOpenBookDetails = onOpenBookDetails,
             onOpenBookList = onOpenBookList,
-            onOpenProfile = onOpenProfile
+            onOpenProfile = onOpenProfile,
+            onSaveStreak = onSaveStreak
         )
     }
 }
@@ -124,10 +130,12 @@ private fun HomeScreen(
 fun LoadedScreen(
     timePeriod: TimePeriod,
     booksState: BooksState,
+    streakState: StreakState,
     userProfileState: UserProfileState,
     onOpenBookDetails: (String) -> Unit,
     onOpenBookList: () -> Unit,
-    onOpenProfile: () -> Unit
+    onOpenProfile: () -> Unit,
+    onSaveStreak: (BookMilestone) -> Unit
 ) {
     var showBottomSheet by remember { mutableStateOf(false) }
     val modalBottomSheetState = rememberModalBottomSheetState()
@@ -138,6 +146,7 @@ fun LoadedScreen(
             OffsetDateTime.now().plusDays(8).toInstant().toEpochMilli()
         )
     }
+    val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     if (showBottomSheet) {
@@ -147,7 +156,8 @@ fun LoadedScreen(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 12.dp, start = 12.dp, end = 12.dp)
+                    .padding(bottom = 12.dp, start = 12.dp, end = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 IconButton(modifier = Modifier.align(Alignment.End), onClick = {
                     coroutineScope.launch {
@@ -169,7 +179,7 @@ fun LoadedScreen(
                 ) {
                     Column {
                         Text(
-                            text = "Start date",
+                            text = "Start",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -183,7 +193,7 @@ fun LoadedScreen(
                     }
                     Column {
                         Text(
-                            text = "End date",
+                            text = "End",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.Bold
                         )
@@ -196,6 +206,14 @@ fun LoadedScreen(
                             )
                         }
                     }
+                    CLibOutlinedButton(
+                        onClick = { showDateRangePickerDialog = true },
+                        shape = MaterialTheme.shapes.extraLarge,
+                    ) {
+                        Text(
+                            text = "Change"
+                        )
+                    }
                 }
                 when (booksState) {
                     is BooksState.Loading -> {
@@ -203,17 +221,43 @@ fun LoadedScreen(
                     }
 
                     is BooksState.Success -> {
-                        var selectedBookInStreak by remember { mutableStateOf(booksState.available.first().id) }
+                        var selectedBookInStreak by remember { mutableStateOf(booksState.available.first()) }
 
-                        LazyColumn {
+                        LazyRow {
                             items(booksState.available, key = { it.id }) { book ->
-                                SelectableBookItem(
-                                    book = book,
-                                    isSelected = book.id == selectedBookInStreak,
+                                SelectableBookItem(book = book,
+                                    isSelected = book.id == selectedBookInStreak.id,
                                     onSelected = {
-                                        selectedBookInStreak = book.id
+                                        selectedBookInStreak = book
                                     })
                             }
+                        }
+                        CLibButton(modifier = Modifier.fillMaxWidth(), onClick = {
+                            onSaveStreak(
+                                BookMilestone(
+                                    bookId = selectedBookInStreak.id,
+                                    startDate = streakStartDate ?: Date().toInstant()
+                                        .toEpochMilli(),
+                                    endDate = streakEndDate ?: OffsetDateTime.now().plusDays(8)
+                                        .toInstant().toEpochMilli(),
+                                    bookName = selectedBookInStreak.title,
+                                )
+                            ).also {
+                                Toast.makeText(
+                                    context,
+                                    "Streak saved",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                coroutineScope.launch {
+                                    modalBottomSheetState.hide()
+                                }.invokeOnCompletion {
+                                    showBottomSheet = false
+                                }
+                            }
+                        }) {
+                            Text(
+                                text = "Save"
+                            )
                         }
                     }
 
@@ -320,9 +364,9 @@ fun LoadedScreen(
         item {
             GoalCard(modifier = Modifier.padding(horizontal = 16.dp),
                 dateRange = "Aug 29 - Sep 23",
-                currentBook = "Philosopher's Stone",
+                currentBook = streakState.bookMilestone.bookName,
                 progress = 0.45f,
-                hasStreak = false,
+                hasStreak = streakState == StreakState(),
                 onSetStreak = { showBottomSheet = true })
         }
         item {
