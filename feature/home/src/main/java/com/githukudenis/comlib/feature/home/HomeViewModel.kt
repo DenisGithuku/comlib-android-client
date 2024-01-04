@@ -6,7 +6,6 @@ import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
 import com.githukudenis.comlib.core.model.book.BookMilestone
-import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -31,14 +30,15 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val comlibUseCases: ComlibUseCases,
-    private val bookMilestoneRepository: BookMilestoneRepository
 ) : ViewModel() {
 
     private var userProfileState: MutableStateFlow<UserProfileState> =
         MutableStateFlow(UserProfileState.Loading)
 
-    val streakState: Flow<StreakState>
-        get() = bookMilestoneRepository.bookMilestone.distinctUntilChanged().flowOn(Dispatchers.IO)
+    private val streakState: Flow<StreakState>
+        get() = comlibUseCases.getStreakUseCase()
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.IO)
             .mapLatest {
                 StreakState(it)
             }

@@ -14,5 +14,6 @@ data class ComlibUseCases(
     val getNetworkConnectivityUseCase: GetNetworkConnectivityUseCase,
     val toggleBookMarkUseCase: ToggleBookMarkUseCase,
     val formatDateUseCase: FormatDateUseCase,
-    val saveStreakUseCase: SaveStreakUseCase
+    val saveStreakUseCase: SaveStreakUseCase,
+    val getStreakUseCase: GetStreakUseCase
 )

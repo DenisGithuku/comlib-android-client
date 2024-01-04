@@ -4,7 +4,7 @@ import com.githukudenis.comlib.core.model.book.BookMilestone
 import kotlinx.coroutines.flow.Flow
 
 interface BookMilestoneRepository {
-    val bookMilestone: Flow<BookMilestone>
+    val bookMilestone: Flow<BookMilestone?>
 
     suspend fun deleteBookMilestone(bookMilestone: BookMilestone)
 

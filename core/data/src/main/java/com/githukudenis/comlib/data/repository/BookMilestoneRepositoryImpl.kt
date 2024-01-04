@@ -10,7 +10,7 @@ import javax.inject.Inject
 class BookMilestoneRepositoryImpl @Inject constructor(
     private val bookMilestoneDao: BookMilestoneDao
 ) : BookMilestoneRepository {
-    override val bookMilestone: Flow<BookMilestone> get() = flow {
+    override val bookMilestone: Flow<BookMilestone?> get() = flow {
         val book = bookMilestoneDao.getMilestone()
         emit(
             BookMilestone(
@@ -30,11 +30,10 @@ class BookMilestoneRepositoryImpl @Inject constructor(
 
     override suspend fun insertBookMilestone(bookMilestone: BookMilestone) =
         bookMilestoneDao.setMilestone(bookMilestone.asBookMilestoneEntity())
-
 }
 
 fun BookMilestone.asBookMilestoneEntity(): BookMilestoneEntity {
     return BookMilestoneEntity(
-        bookId, bookName, startDate, endDate
+        bookId = bookId, bookName = bookName, startDate = startDate, endDate = endDate
     )
 }

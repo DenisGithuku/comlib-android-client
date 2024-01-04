@@ -10,6 +10,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetNetworkConnectivityUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetTimePeriodUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
@@ -48,6 +49,7 @@ object DomainModule {
             getNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(comlibConnectivityManager = comlibConnectivityManager),
             toggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository = userPrefsRepository),
             formatDateUseCase = FormatDateUseCase(),
+            getStreakUseCase = GetStreakUseCase(bookMilestoneRepository = bookMilestoneRepository),
             saveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository = bookMilestoneRepository)
         )
     }

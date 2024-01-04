@@ -5,9 +5,10 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class BookMilestoneEntity(
-    @PrimaryKey(autoGenerate = false)
-    val bookId: String,
-    val bookName: String,
-    val startDate: Long,
-    val endDate: Long
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0L,
+    val bookId: String? = null,
+    val bookName: String? = null,
+    val startDate: Long? = null,
+    val endDate: Long? = null
 )

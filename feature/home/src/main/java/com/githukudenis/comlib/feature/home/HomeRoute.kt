@@ -364,10 +364,12 @@ fun LoadedScreen(
         item {
             GoalCard(modifier = Modifier.padding(horizontal = 16.dp),
                 dateRange = "Aug 29 - Sep 23",
-                currentBook = streakState.bookMilestone.bookName,
+                currentBook = streakState.bookMilestone?.bookName,
                 progress = 0.45f,
-                hasStreak = streakState == StreakState(),
-                onSetStreak = { showBottomSheet = true })
+                hasStreak = streakState.bookMilestone != null,
+                onSetStreak = {
+                    showBottomSheet = true
+                })
         }
         item {
             AnimatedVisibility(

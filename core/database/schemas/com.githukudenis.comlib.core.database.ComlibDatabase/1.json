@@ -2,41 +2,47 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "87e695fb8b2aea0b9f74682a4279be42",
+    "identityHash": "6b8c0502276f488ef4bb399d281d38a7",
     "entities": [
       {
         "tableName": "BookMilestoneEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`bookId` TEXT NOT NULL, `bookName` TEXT NOT NULL, `startDate` INTEGER NOT NULL, `endDate` INTEGER NOT NULL, PRIMARY KEY(`bookId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `bookId` TEXT, `bookName` TEXT, `startDate` INTEGER, `endDate` INTEGER)",
         "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
           {
             "fieldPath": "bookId",
             "columnName": "bookId",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "bookName",
             "columnName": "bookName",
             "affinity": "TEXT",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "startDate",
             "columnName": "startDate",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "endDate",
             "columnName": "endDate",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           }
         ],
         "primaryKey": {
-          "autoGenerate": false,
+          "autoGenerate": true,
           "columnNames": [
-            "bookId"
+            "id"
           ]
         },
         "indices": [],
@@ -46,7 +52,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '87e695fb8b2aea0b9f74682a4279be42')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '6b8c0502276f488ef4bb399d281d38a7')"
     ]
   }
 }

@@ -19,7 +19,7 @@ sealed class HomeUiState {
     data class Error(val message: String) : HomeUiState()
 }
 
-data class StreakState(val bookMilestone: BookMilestone = BookMilestone())
+data class StreakState(val bookMilestone: BookMilestone? = null)
 
 sealed class UserProfileState {
     data object Loading : UserProfileState()
