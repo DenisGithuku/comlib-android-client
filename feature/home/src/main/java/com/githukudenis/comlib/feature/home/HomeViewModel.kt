@@ -18,12 +18,12 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 import javax.inject.Inject
 
@@ -38,7 +38,6 @@ class HomeViewModel @Inject constructor(
     private val streakState: Flow<StreakState>
         get() = comlibUseCases.getStreakUseCase()
             .distinctUntilChanged()
-            .flowOn(Dispatchers.IO)
             .mapLatest {
                 StreakState(it)
             }
@@ -94,7 +93,9 @@ class HomeViewModel @Inject constructor(
     private fun setupData() {
         bookJob?.cancel()
         bookJob = viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().catch { error ->
+            comlibUseCases.getUserPrefsUseCase()
+                .distinctUntilChanged()
+                .catch { error ->
                 Timber.tag("prefs").d(error.message.toString())
             }.collectLatest { prefs ->
                 prefs.userId?.let { userId ->
@@ -162,7 +163,9 @@ class HomeViewModel @Inject constructor(
 
     private fun saveMilestone(bookMilestone: BookMilestone) {
         viewModelScope.launch {
-            comlibUseCases.saveStreakUseCase(bookMilestone)
+            withContext(Dispatchers.IO) {
+                comlibUseCases.saveStreakUseCase(bookMilestone)
+            }
         }
     }
 

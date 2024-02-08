@@ -10,7 +10,7 @@ import com.githukudenis.comlib.core.database.models.BookMilestoneEntity
 
 @Dao
 interface BookMilestoneDao {
-    @Query("SELECT * FROM BookMilestoneEntity")
+    @Query("SELECT * FROM book_on_streak limit 1")
     fun getMilestone(): BookMilestoneEntity
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

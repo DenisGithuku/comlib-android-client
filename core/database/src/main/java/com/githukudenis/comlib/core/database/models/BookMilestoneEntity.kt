@@ -3,7 +3,7 @@ package com.githukudenis.comlib.core.database.models
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "book_on_streak")
 data class BookMilestoneEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,

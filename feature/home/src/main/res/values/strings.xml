@@ -8,4 +8,6 @@
     <string name="reserve">Reserve</string>
     <string name="no_network_title">Not connected</string>
     <string name="no_network_desc">For a smooth experience on Comlib, you need to be online.</string>
+    <string name="streak_save_success">Streak saved</string>
+    <string name="month_date_pattern">MMM d</string>
 </resources>

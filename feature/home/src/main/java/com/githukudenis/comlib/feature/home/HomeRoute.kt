@@ -68,6 +68,7 @@ import com.githukudenis.comlib.feature.home.components.GoalCard
 import com.githukudenis.comlib.feature.home.components.HomeHeader
 import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 import com.githukudenis.comlib.feature.home.components.SelectableBookItem
+import com.githukudenis.comlib.feature.home.util.StreakProgressCalculator
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.OffsetDateTime
@@ -137,6 +138,7 @@ fun LoadedScreen(
     onOpenProfile: () -> Unit,
     onSaveStreak: (BookMilestone) -> Unit
 ) {
+
     var showBottomSheet by remember { mutableStateOf(false) }
     val modalBottomSheetState = rememberModalBottomSheetState()
     var showDateRangePickerDialog by remember { mutableStateOf(false) }
@@ -186,7 +188,8 @@ fun LoadedScreen(
                         if (streakStartDate != null) {
                             Text(
                                 text = FormatDateUseCase().invoke(
-                                    streakStartDate ?: Date().toInstant().toEpochMilli()
+                                    dateLong = streakStartDate ?: Date().toInstant().toEpochMilli(),
+                                    pattern = "dd/MM/yyyy",
                                 ), style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -200,8 +203,10 @@ fun LoadedScreen(
                         if (streakEndDate != null) {
                             Text(
                                 text = FormatDateUseCase().invoke(
-                                    streakEndDate ?: OffsetDateTime.now().plusDays(8).toInstant()
-                                        .toEpochMilli()
+                                    dateLong = streakEndDate ?: OffsetDateTime.now().plusDays(8)
+                                        .toInstant()
+                                        .toEpochMilli(),
+                                    pattern = "dd/MM/yyyy",
                                 ), style = MaterialTheme.typography.bodyMedium
                             )
                         }
@@ -245,7 +250,7 @@ fun LoadedScreen(
                             ).also {
                                 Toast.makeText(
                                     context,
-                                    "Streak saved",
+                                    context.getString(R.string.streak_save_success),
                                     Toast.LENGTH_SHORT
                                 ).show()
                                 coroutineScope.launch {
@@ -363,9 +368,26 @@ fun LoadedScreen(
         }
         item {
             GoalCard(modifier = Modifier.padding(horizontal = 16.dp),
-                dateRange = "Aug 29 - Sep 23",
+                dateRange = buildString {
+                    append(
+                        FormatDateUseCase().invoke(
+                            dateLong = streakState.bookMilestone?.startDate ?: 0L,
+                            pattern = stringResource(R.string.month_date_pattern)
+                        )
+                    )
+                    append(" - ")
+                    append(
+                        FormatDateUseCase().invoke(
+                            dateLong = streakState.bookMilestone?.endDate ?: 0L,
+                            pattern = stringResource(R.string.month_date_pattern)
+                        )
+                    )
+                },
                 currentBook = streakState.bookMilestone?.bookName,
-                progress = 0.45f,
+                progress = StreakProgressCalculator().invoke(
+                    startDate = streakState.bookMilestone?.startDate ?: 0L,
+                    endDate = streakState.bookMilestone?.endDate ?: 0L
+                ),
                 hasStreak = streakState.bookMilestone != null,
                 onSetStreak = {
                     showBottomSheet = true
