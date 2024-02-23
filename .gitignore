@@ -1,18 +1,33 @@
-*.iml
+# Gradle
 .gradle
+/.gradle
+/build-logic/.gradle
+
+# Idea
 .idea
 /.idea
-/local.properties
-/.idea/icon.svg
-/.idea/caches
-/.idea/libraries
-/.idea/modules.xml
-/.idea/workspace.xml
-/.idea/navEditor.xml
-/.idea/assetWizardSettings.xml
-.DS_Store
+
+# Build
 /build
+/build-logic/convention/build
+
+# Properties
+local.properties
+/local.properties
+
+# Mac Specific Files
+.DS_Store
+
+# Apk
+*.apk
+
+# App Bundle
+*.aab
+
+# Other Folders
 /captures
+
+# Other Files
+*.iml
 .externalNativeBuild
 .cxx
-local.properties
