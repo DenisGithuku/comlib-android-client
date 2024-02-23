@@ -36,7 +36,8 @@ fun NavGraphBuilder.homeNavGraph(
                 towards = AnimatedContentTransitionScope.SlideDirection.Left
             )
         }, route = HomeDestination.Home.route) {
-            HomeRoute(onOpenBookDetails = { bookId ->
+            HomeRoute(
+                onOpenBookDetails = { bookId ->
                 appState.navigate(
                     route = "${ComlibDestination.BookDetail.route}/$bookId",
                     popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
