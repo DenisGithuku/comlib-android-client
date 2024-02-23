@@ -31,6 +31,8 @@ If you've found an error in this sample please feel free to file an issue.
 
 Patches are encouraged and maybe submitted by forking this project and submitting a pull request.
 
+The app follows this [design](https://www.figma.com/file/CaFRSEBwwKLT5T3T2Ej1Ac/Comlib?type=design&node-id=0-1&mode=design&t=otpudqSVQV0603CL-0).
+
 #### License
 
 ```
