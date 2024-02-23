@@ -8,15 +8,12 @@ import com.githukudenis.comlib.core.model.user.User
 
 sealed class HomeUiState {
     data class Success(
-        val booksState: BooksState = BooksState.Loading,
         val timePeriod: TimePeriod = TimePeriod.MORNING,
-        val streakState: StreakState = StreakState(),
         val userMessages: List<UserMessage> = emptyList(),
-        val userProfileState: UserProfileState = UserProfileState.Loading
     ) : HomeUiState()
 
     data object Loading : HomeUiState()
-    data class Error(val message: String) : HomeUiState()
+    data class Error(val message: String, val isNetworkError: Boolean = false) : HomeUiState()
 }
 
 data class StreakState(val bookMilestone: BookMilestone? = null)

@@ -43,7 +43,7 @@ class SignUpViewModel @Inject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = NetworkStatus.Unknown
+            initialValue = NetworkStatus.Unavailable
         )
 
     fun onEvent(event: SignUpUiEvent) {

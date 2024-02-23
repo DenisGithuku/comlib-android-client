@@ -2,29 +2,25 @@ package com.githukudenis.comlib.feature.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.model.DataResult
 import com.githukudenis.comlib.core.model.book.BookMilestone
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import timber.log.Timber
+import java.time.Instant
+import java.time.ZoneId
 import javax.inject.Inject
 
 @HiltViewModel
@@ -32,123 +28,95 @@ class HomeViewModel @Inject constructor(
     private val comlibUseCases: ComlibUseCases,
 ) : ViewModel() {
 
-    private var userProfileState: MutableStateFlow<UserProfileState> =
-        MutableStateFlow(UserProfileState.Loading)
-
-    private val streakState: Flow<StreakState>
-        get() = comlibUseCases.getStreakUseCase()
-            .distinctUntilChanged()
-            .mapLatest {
-                StreakState(it)
-            }
-
-
-    private val networkStatus: StateFlow<NetworkStatus> =
-        comlibUseCases.getNetworkConnectivityUseCase.networkStatus.onEach { netStatus ->
-            _showNetworkDialog.update {
-                netStatus == NetworkStatus.Unavailable || netStatus == NetworkStatus.Lost
-            }
+    val userProfileState: StateFlow<UserProfileState> =
+        comlibUseCases.getUserPrefsUseCase().map { prefs ->
+            prefs.userId?.let { userId ->
+                getUserProfile(userId)
+            } ?: UserProfileState.Error(message = "Could not fetch profile")
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = NetworkStatus.Unknown
+            initialValue = UserProfileState.Loading
         )
 
-    private var _showNetworkDialog: MutableStateFlow<Boolean> = MutableStateFlow(
-        false
+    val timePeriodState: StateFlow<TimePeriod> = flow {
+        val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
+        val time = if (currHour < 12) {
+            TimePeriod.MORNING
+        } else if (currHour < 16) {
+            TimePeriod.AFTERNOON
+        } else {
+            TimePeriod.EVENING
+        }
+        emit(time)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_0000),
+        initialValue = TimePeriod.MORNING
     )
-    val showNetworkDialog: StateFlow<Boolean> = _showNetworkDialog.asStateFlow()
 
 
-    private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
-
-    val state: StateFlow<HomeUiState>
-        get() = combine(
-            userProfileState, booksState, networkStatus, streakState
-        ) { profile, books, networkStatus, streakState ->
-            if (networkStatus == NetworkStatus.Unavailable || networkStatus == NetworkStatus.Lost) {
-                HomeUiState.Error(
-                    message = "Could not connect. Please check your internet connection then try again."
-                )
-            } else {
-                HomeUiState.Success(
-                    booksState = books,
-                    userProfileState = profile,
-                    streakState = streakState,
-                    timePeriod = comlibUseCases.getTimePeriodUseCase()
-                )
-            }
+    val streakState: StateFlow<StreakState>
+        get() = comlibUseCases.getStreakUseCase().distinctUntilChanged().mapLatest {
+            StreakState(it)
         }.stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HomeUiState.Loading
+            initialValue = StreakState()
         )
 
+//    val networkStatus: StateFlow<NetworkStatus>
+//        get() = comlibUseCases.getNetworkConnectivityUseCase.networkStatus.map { it }.stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000),
+//            NetworkStatus.Unavailable
+//        )
 
-    init {
-        setupData()
+    private val readBooks: Flow<List<String>> = comlibUseCases.getUserPrefsUseCase().map {
+        it.readBooks.toList()
     }
 
-    private var bookJob: Job? = null
-    private fun setupData() {
-        bookJob?.cancel()
-        bookJob = viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase()
-                .distinctUntilChanged()
-                .catch { error ->
-                Timber.tag("prefs").d(error.message.toString())
-            }.collectLatest { prefs ->
-                prefs.userId?.let { userId ->
-                    getUserProfile(userId)
-                }
+    private val bookMarkedBooks: Flow<List<String>> = comlibUseCases.getUserPrefsUseCase().map {
+        it.bookmarkedBooks.toList()
+    }
 
-                getBooks(
-                    readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
-                )
+    val booksState = combine(
+        readBooks, bookMarkedBooks, comlibUseCases.getAllBooksUseCase()
+    ) { read, bookmarked, available ->
+        when (available) {
+            is DataResult.Error -> {
+                BooksState.Error(message = available.message)
+            }
+
+            is DataResult.Empty -> {
+                BooksState.Empty
+            }
+
+            is DataResult.Loading -> {
+                BooksState.Loading
+            }
+
+            is DataResult.Success -> {
+                BooksState.Success(available = available.data,
+                    readBooks = available.data.filter { book ->
+                        book.id in read
+                    },
+                    bookmarkedBooks = available.data.filter { book -> book.id in bookmarked })
             }
         }
-    }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = BooksState.Empty
+    )
 
-    private suspend fun getBooks(
-        readBooks: Set<String>, bookmarkedBooks: Set<String>
-    ) {
-        comlibUseCases.getAllBooksUseCase().catch { err ->
-            booksState.update {
-                BooksState.Error(message = err.message ?: "Could not fetch books.")
-            }
-        }.collectLatest { result ->
-            when (result) {
-                is DataResult.Error -> {
-                    booksState.update {
-                        BooksState.Error(message = result.message)
-                    }
-                }
-
-                is DataResult.Empty -> {
-                    booksState.update { BooksState.Empty }
-                }
-
-                is DataResult.Loading -> {
-                    booksState.update { BooksState.Loading }
-                }
-
-                is DataResult.Success -> {
-                    booksState.update {
-                        BooksState.Success(available = result.data,
-                            readBooks = result.data.filter { book ->
-                                book.id in readBooks
-                            },
-                            bookmarkedBooks = result.data.filter { book -> book.id in bookmarkedBooks })
-                    }
-                }
-            }
-        }
-    }
 
     fun onEvent(event: HomeUiEvent) {
         when (event) {
             HomeUiEvent.Refresh -> {
-                setupData()
+                viewModelScope.launch {
+//                    setupData()
+                }
             }
 
             HomeUiEvent.NetworkRefresh -> {
@@ -169,17 +137,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUserProfile(userId: String) {
-        userProfileState.update { UserProfileState.Loading }
+    private suspend fun getUserProfile(userId: String): UserProfileState {
         val profile = comlibUseCases.getUserProfileUseCase(userId)
-        if (profile == null) {
-            userProfileState.update { UserProfileState.Error(message = "Could not fetch profile") }
+        return if (profile == null) {
+            UserProfileState.Error(message = "Could not fetch profile")
         } else {
-            userProfileState.update { UserProfileState.Success(user = profile) }
+            UserProfileState.Success(user = profile)
         }
-    }
-
-    fun onDismissNetworkDialog() {
-        _showNetworkDialog.update { false }
     }
 }

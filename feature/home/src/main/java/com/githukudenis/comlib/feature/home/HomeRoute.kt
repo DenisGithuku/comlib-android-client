@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.home
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
@@ -81,19 +82,19 @@ fun HomeRoute(
     onOpenBookList: () -> Unit,
     onOpenProfile: () -> Unit
 ) {
-    val state by viewModel.state.collectAsStateWithLifecycle()
-    val showNetworkDialog by viewModel.showNetworkDialog.collectAsStateWithLifecycle()
+    val userProfileState by viewModel.userProfileState.collectAsStateWithLifecycle()
+    val booksState by viewModel.booksState.collectAsStateWithLifecycle()
+//    val networkState by viewModel.networkStatus.collectAsStateWithLifecycle()
+    val streakState by viewModel.streakState.collectAsStateWithLifecycle()
+    val timePeriodState by viewModel.timePeriodState.collectAsStateWithLifecycle()
+
     val onRefresh = { viewModel.onEvent(HomeUiEvent.Refresh) }
 
-    if (showNetworkDialog) {
-        CLibMinimalDialog(title = stringResource(id = R.string.no_network_title),
-            text = stringResource(id = R.string.no_network_desc),
-            onDismissRequest = { viewModel.onDismissNetworkDialog() })
-        return
-    }
-
-
-    HomeScreen(state = state,
+    HomeScreen(booksState = booksState,
+//        networkState = networkState,
+        userProfileState = userProfileState,
+        streakState = streakState,
+        timePeriodState = timePeriodState,
         onRefresh = onRefresh,
         onOpenBookDetails = onOpenBookDetails,
         onOpenBookList = onOpenBookList,
@@ -103,27 +104,42 @@ fun HomeRoute(
 
 @Composable
 private fun HomeScreen(
-    state: HomeUiState,
+    booksState: BooksState,
+//    networkState: NetworkStatus,
+    userProfileState: UserProfileState,
+    streakState: StreakState,
+    timePeriodState: TimePeriod,
     onRefresh: () -> Unit,
     onOpenBookDetails: (String) -> Unit,
     onOpenBookList: () -> Unit,
     onOpenProfile: () -> Unit,
     onSaveStreak: (BookMilestone) -> Unit
 ) {
-    when (state) {
-        is HomeUiState.Error -> ErrorScreen(error = state.message, onRetry = onRefresh)
-        HomeUiState.Loading -> LoadingScreen()
-        is HomeUiState.Success -> LoadedScreen(
-            booksState = state.booksState,
-            userProfileState = state.userProfileState,
-            timePeriod = state.timePeriod,
-            streakState = state.streakState,
-            onOpenBookDetails = onOpenBookDetails,
-            onOpenBookList = onOpenBookList,
-            onOpenProfile = onOpenProfile,
-            onSaveStreak = onSaveStreak
-        )
-    }
+//    when (networkState) {
+//
+//        NetworkStatus.Lost,
+//        NetworkStatus.Unavailable,
+//        NetworkStatus.Losing, -> Unit
+////        -> {
+////            ErrorScreen(isNetworkError = true,
+////                error = stringResource(id = R.string.no_network_desc),
+////                onRetry = {})
+////        }
+//
+//        NetworkStatus.Available -> {
+            LoadedScreen(
+                booksState = booksState,
+                userProfileState = userProfileState,
+                timePeriod = timePeriodState,
+                streakState = streakState,
+                onOpenBookDetails = onOpenBookDetails,
+                onOpenBookList = onOpenBookList,
+                onOpenProfile = onOpenProfile,
+                onSaveStreak = onSaveStreak
+            )
+//        }
+//    }
+
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -136,7 +152,7 @@ fun LoadedScreen(
     onOpenBookDetails: (String) -> Unit,
     onOpenBookList: () -> Unit,
     onOpenProfile: () -> Unit,
-    onSaveStreak: (BookMilestone) -> Unit
+    onSaveStreak: (BookMilestone) -> Unit,
 ) {
 
     var showBottomSheet by remember { mutableStateOf(false) }
@@ -148,132 +164,48 @@ fun LoadedScreen(
             OffsetDateTime.now().plusDays(8).toInstant().toEpochMilli()
         )
     }
+    var openSheetOnNewStreak: Boolean by remember { mutableStateOf(false) }
+    var openSheetOnStreakDetails: Boolean by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
 
     if (showBottomSheet) {
         ModalBottomSheet(modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
             sheetState = modalBottomSheetState,
-            onDismissRequest = { showBottomSheet = false }) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 12.dp, start = 12.dp, end = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                IconButton(modifier = Modifier.align(Alignment.End), onClick = {
+            onDismissRequest = {
+                showBottomSheet = false
+                openSheetOnNewStreak = false
+                openSheetOnStreakDetails = false
+            }) {
+            if (openSheetOnNewStreak) {
+                NewStreakContent(
+                    onCloseBottomSheet = {
+                        coroutineScope.launch {
+                            modalBottomSheetState.hide()
+                        }.invokeOnCompletion {
+                            showBottomSheet = false
+                            openSheetOnNewStreak = false
+                        }
+                    },
+                    streakStartDate = streakStartDate,
+                    streakEndDate = streakEndDate,
+                    toggleDateRangeDialog = {
+                        showDateRangePickerDialog = true
+                    },
+                    booksState = booksState,
+                    context = context,
+                    onSaveStreak = onSaveStreak
+                )
+            }
+            if (openSheetOnStreakDetails) {
+                StreakDetails(onDismissBottomSheet = {
                     coroutineScope.launch {
                         modalBottomSheetState.hide()
                     }.invokeOnCompletion {
                         showBottomSheet = false
+                        openSheetOnStreakDetails = false
                     }
-                }) {
-                    Icon(
-                        imageVector = Icons.Default.Close,
-                        contentDescription = "Close",
-                        tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
-                    )
-                }
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column {
-                        Text(
-                            text = "Start",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        if (streakStartDate != null) {
-                            Text(
-                                text = FormatDateUseCase().invoke(
-                                    dateLong = streakStartDate ?: Date().toInstant().toEpochMilli(),
-                                    pattern = "dd/MM/yyyy",
-                                ), style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                    Column {
-                        Text(
-                            text = "End",
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        if (streakEndDate != null) {
-                            Text(
-                                text = FormatDateUseCase().invoke(
-                                    dateLong = streakEndDate ?: OffsetDateTime.now().plusDays(8)
-                                        .toInstant()
-                                        .toEpochMilli(),
-                                    pattern = "dd/MM/yyyy",
-                                ), style = MaterialTheme.typography.bodyMedium
-                            )
-                        }
-                    }
-                    CLibOutlinedButton(
-                        onClick = { showDateRangePickerDialog = true },
-                        shape = MaterialTheme.shapes.extraLarge,
-                    ) {
-                        Text(
-                            text = "Change"
-                        )
-                    }
-                }
-                when (booksState) {
-                    is BooksState.Loading -> {
-                        CLibLoadingSpinner()
-                    }
-
-                    is BooksState.Success -> {
-                        var selectedBookInStreak by remember { mutableStateOf(booksState.available.first()) }
-
-                        LazyRow {
-                            items(booksState.available, key = { it.id }) { book ->
-                                SelectableBookItem(book = book,
-                                    isSelected = book.id == selectedBookInStreak.id,
-                                    onSelected = {
-                                        selectedBookInStreak = book
-                                    })
-                            }
-                        }
-                        CLibButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                            onSaveStreak(
-                                BookMilestone(
-                                    bookId = selectedBookInStreak.id,
-                                    startDate = streakStartDate ?: Date().toInstant()
-                                        .toEpochMilli(),
-                                    endDate = streakEndDate ?: OffsetDateTime.now().plusDays(8)
-                                        .toInstant().toEpochMilli(),
-                                    bookName = selectedBookInStreak.title,
-                                )
-                            ).also {
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.streak_save_success),
-                                    Toast.LENGTH_SHORT
-                                ).show()
-                                coroutineScope.launch {
-                                    modalBottomSheetState.hide()
-                                }.invokeOnCompletion {
-                                    showBottomSheet = false
-                                }
-                            }
-                        }) {
-                            Text(
-                                text = "Save"
-                            )
-                        }
-                    }
-
-                    is BooksState.Error -> {
-                        Text(text = booksState.message)
-                    }
-
-                    is BooksState.Empty -> {
-                        Text(text = "No books available")
-                    }
-                }
+                })
             }
         }
     }
@@ -384,13 +316,23 @@ fun LoadedScreen(
                     )
                 },
                 currentBook = streakState.bookMilestone?.bookName,
-                progress = StreakProgressCalculator().invoke(
-                    startDate = streakState.bookMilestone?.startDate ?: 0L,
-                    endDate = streakState.bookMilestone?.endDate ?: 0L
-                ),
+                progress = if (streakState.bookMilestone == null) {
+                    0f
+                } else {
+                    StreakProgressCalculator().invoke(
+                        startDate = streakState.bookMilestone.startDate ?: return@item,
+                        endDate = streakState.bookMilestone.endDate ?: return@item
+                    )
+                },
                 hasStreak = streakState.bookMilestone != null,
                 onSetStreak = {
                     showBottomSheet = true
+                    openSheetOnNewStreak = true
+                },
+                bookId = streakState.bookMilestone?.bookId,
+                onOpenStreakDetails = { bookId ->
+                    showBottomSheet = true
+                    openSheetOnStreakDetails = true
                 })
         }
         item {
@@ -468,6 +410,14 @@ fun LoadedScreen(
                 BooksState.Empty -> EmptyDataCard(content = "books")
             }
         }
+        item {
+            Text(
+                text = "Books",
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(16.dp)
+
+            )
+        }
     }
 }
 
@@ -479,7 +429,17 @@ fun LoadingScreen() {
 }
 
 @Composable
-fun ErrorScreen(error: String, onRetry: () -> Unit) {
+fun ErrorScreen(
+    isNetworkError: Boolean, error: String, onRetry: () -> Unit
+) {
+
+    if (isNetworkError) {
+        CLibMinimalDialog(title = stringResource(id = R.string.no_network_title),
+            text = stringResource(id = R.string.no_network_desc),
+            onDismissRequest = { })
+        return
+    }
+
     Box(
         modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart
     ) {
@@ -495,5 +455,164 @@ fun ErrorScreen(error: String, onRetry: () -> Unit) {
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun NewStreakContent(
+    streakStartDate: Long?,
+    streakEndDate: Long?,
+    context: Context,
+    booksState: BooksState,
+    onCloseBottomSheet: () -> Unit,
+    onSaveStreak: (BookMilestone) -> Unit,
+    toggleDateRangeDialog: (Boolean) -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp, start = 12.dp, end = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        IconButton(modifier = Modifier.align(Alignment.End), onClick = {
+            onCloseBottomSheet()
+        }) {
+            Icon(
+                imageVector = Icons.Default.Close,
+                contentDescription = "Close",
+                tint = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+            )
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Column {
+                Text(
+                    text = "Start",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                if (streakStartDate != null) {
+                    Text(
+                        text = FormatDateUseCase().invoke(
+                            dateLong = streakStartDate,
+                            pattern = "dd/MM/yyyy",
+                        ), style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            Column {
+                Text(
+                    text = "End",
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
+                if (streakEndDate != null) {
+                    Text(
+                        text = FormatDateUseCase().invoke(
+                            dateLong = streakEndDate,
+                            pattern = "dd/MM/yyyy",
+                        ), style = MaterialTheme.typography.bodyMedium
+                    )
+                }
+            }
+            CLibOutlinedButton(
+                onClick = { toggleDateRangeDialog(true) },
+                shape = MaterialTheme.shapes.extraLarge,
+            ) {
+                Text(
+                    text = "Change"
+                )
+            }
+        }
+        when (booksState) {
+            is BooksState.Loading -> {
+                CLibLoadingSpinner()
+            }
+
+            is BooksState.Success -> {
+                var selectedBookInStreak by remember { mutableStateOf(booksState.available.first()) }
+
+                LazyRow {
+                    items(booksState.available, key = { it.id }) { book ->
+                        SelectableBookItem(book = book,
+                            isSelected = book.id == selectedBookInStreak.id,
+                            onSelected = {
+                                selectedBookInStreak = book
+                            })
+                    }
+                }
+                CLibButton(modifier = Modifier.fillMaxWidth(), onClick = {
+                    onSaveStreak(
+                        BookMilestone(
+                            bookId = selectedBookInStreak.id,
+                            startDate = streakStartDate ?: Date().toInstant().toEpochMilli(),
+                            endDate = streakEndDate ?: OffsetDateTime.now().plusDays(8).toInstant()
+                                .toEpochMilli(),
+                            bookName = selectedBookInStreak.title,
+                        )
+                    ).also {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.streak_save_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        onCloseBottomSheet()
+                    }
+                }) {
+                    Text(
+                        text = "Save"
+                    )
+                }
+            }
+
+            is BooksState.Error -> {
+                Text(text = booksState.message)
+            }
+
+            is BooksState.Empty -> {
+                Text(text = "No books available")
+            }
+        }
+    }
+}
+
+@Composable
+private fun StreakDetails(
+    onDismissBottomSheet: () -> Unit
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 12.dp, start = 12.dp, end = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        IconButton(onClick = onDismissBottomSheet) {
+            Icon(
+                imageVector = Icons.Default.Close, contentDescription = "Close"
+            )
+        }
+        Text(
+            text = "Just some test"
+        )
+    }
+}
+
+@Composable
+fun NonFlickeringScreen(
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.Center
+    ) {
+        Text(
+            text = "This is a non-flickering screen",
+            modifier = Modifier.padding(24.dp),
+            style = MaterialTheme.typography.titleMedium
+        )
     }
 }

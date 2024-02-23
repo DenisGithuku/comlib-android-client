@@ -10,6 +10,7 @@ import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.text.font.FontWeight
@@ -42,47 +43,49 @@ class MainActivity : ComponentActivity() {
             val state by viewModel.state.collectAsStateWithLifecycle()
 
             ComLibTheme(darkTheme = false) {
-                Scaffold(snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
-                    bottomBar = {
-                        // Only show bottom bar on routes in home graph
-                        if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
-                            NavigationBar(
-                                containerColor = MaterialTheme.colorScheme.background
-                            ) {
-                                val homeGraphDestinations = listOf(
-                                    HomeDestination.Home,
-                                    HomeDestination.Books,
-                                    HomeDestination.Clubs
-                                )
-                                homeGraphDestinations.forEach { destination ->
-                                    NavigationBarItem(onClick = { appState.navigate(destination.route) },
-                                        selected = appState.currentDestination?.route == destination.route,
-                                        icon = {
-                                            (if (destination.route == appState.currentDestination?.route) {
-                                                destination.selectedIcon
-                                            } else destination.unselectedIcon)?.let {
-                                                Icon(
-                                                    imageVector = it, contentDescription = null
-                                                )
-                                            }
-                                        },
-                                        label = {
-                                            destination.label?.let {
-                                                Text(
-                                                    text = it,
-                                                    style = MaterialTheme.typography.labelMedium,
-                                                    fontWeight = FontWeight.Medium
-                                                )
-                                            }
-                                        })
+                Surface {
+                    Scaffold(snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
+                        bottomBar = {
+                            // Only show bottom bar on routes in home graph
+                            if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
+                                NavigationBar(
+                                    containerColor = MaterialTheme.colorScheme.background
+                                ) {
+                                    val homeGraphDestinations = listOf(
+                                        HomeDestination.Home,
+                                        HomeDestination.Books,
+                                        HomeDestination.Clubs
+                                    )
+                                    homeGraphDestinations.forEach { destination ->
+                                        NavigationBarItem(onClick = { appState.navigate(destination.route) },
+                                            selected = appState.currentDestination?.route == destination.route,
+                                            icon = {
+                                                (if (destination.route == appState.currentDestination?.route) {
+                                                    destination.selectedIcon
+                                                } else destination.unselectedIcon)?.let {
+                                                    Icon(
+                                                        imageVector = it, contentDescription = null
+                                                    )
+                                                }
+                                            },
+                                            label = {
+                                                destination.label?.let {
+                                                    Text(
+                                                        text = it,
+                                                        style = MaterialTheme.typography.labelMedium,
+                                                        fontWeight = FontWeight.Medium
+                                                    )
+                                                }
+                                            })
+                                    }
                                 }
                             }
-                        }
-                    }) { paddingValues ->
-                    ComlibNavGraph(
-                        appState = appState,
-                        startDestination = if (state.isLoggedIn) ComlibDestination.HomeGraph.route else ComlibDestination.GetStarted.route
-                    )
+                        }) { paddingValues ->
+                        ComlibNavGraph(
+                            appState = appState,
+                            startDestination = if (state.isLoggedIn) ComlibDestination.HomeGraph.route else ComlibDestination.GetStarted.route
+                        )
+                    }
                 }
             }
         }
