@@ -12,21 +12,18 @@ val users = listOf(
     UserAuthData(
         email = "william.henry.moody@my-own-personal-domain.com",
         password = "password",
-        age = 20,
         firstname = "William",
         lastname = "Henry"
     ),
     UserAuthData(
         email = "james.wilson@example-pet-store.com",
         password = "password",
-        age = 30,
         firstname = "James",
         lastname = "Wilson"
     ),
     UserAuthData(
         email = "alice.doe@example-pet-store.com",
         password = "password",
-        age = 40,
         firstname = "Alice",
         lastname = "Doe"
     ),

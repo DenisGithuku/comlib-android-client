@@ -19,7 +19,7 @@ class BooksApi @Inject constructor(
 ) {
     suspend fun getBooks(): AllBooksResponse {
         return withContext(dispatchers.io) {
-            val books = httpClient.get<AllBooksResponse>(Constants.BASE_URL + "/api/v1/books")
+            val books = httpClient.get<AllBooksResponse>("${Constants.BASE_URL}/${Constants.BOOKS_ENDPOINT}")
             Log.d("books", books.data.books.toString())
             books
         }
@@ -28,14 +28,14 @@ class BooksApi @Inject constructor(
     suspend fun getBookById(bookId: String): SingleBookResponse {
         return withContext(dispatchers.io) {
             val book =
-                httpClient.get<SingleBookResponse>(Constants.BASE_URL + "/api/v1/books/${bookId}")
+                httpClient.get<SingleBookResponse>("${Constants.BASE_URL}/${Constants.BOOKS_ENDPOINT}/$bookId")
             book
         }
     }
 
     suspend fun addNewBook(book: Book): String {
         return withContext(dispatchers.io) {
-            httpClient.post<String>(urlString = Constants.BASE_URL + "/api/v1/books") {
+            httpClient.post<String>("${Constants.BASE_URL}/${Constants.BOOKS_ENDPOINT}") {
                 body = book
             }
         }
@@ -43,13 +43,13 @@ class BooksApi @Inject constructor(
 
     suspend fun getGenres(): AllGenresResponse {
         return withContext(dispatchers.io) {
-            httpClient.get<AllGenresResponse>(Constants.BASE_URL + "/api/v1/genres")
+            httpClient.get<AllGenresResponse>("${Constants.BASE_URL}/${Constants.GENRES_ENDPOINT}")
         }
     }
 
     suspend fun getGenreById(genreId: String): SingleGenreResponse {
         return withContext(dispatchers.io) {
-            httpClient.get<SingleGenreResponse>(Constants.BASE_URL + "/api/v1/genres/${genreId}")
+            httpClient.get<SingleGenreResponse>("${Constants.BASE_URL}/${Constants.GENRES_ENDPOINT}/$genreId")
         }
     }
 }
