@@ -8,5 +8,6 @@ sealed class LoginUiEvent {
     data class DismissUserMessage(val id: Int): LoginUiEvent()
     data class TogglePassword(val isVisible: Boolean): LoginUiEvent()
     data class GoogleSignIn(val signInResult: SignInResult): LoginUiEvent()
+    data class ToggleRememberMe(val remember: Boolean): LoginUiEvent()
     data object SubmitData: LoginUiEvent()
 }

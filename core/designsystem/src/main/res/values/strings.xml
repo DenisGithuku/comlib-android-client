@@ -4,4 +4,5 @@
     <string name="confirm">Confirm</string>
     <string name="cancel">Cancel</string>
     <string name="minimal_dialog_positive_button">Got it</string>
+    <string name="default_loading_indicator">Just a moment…</string>
 </resources>

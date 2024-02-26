@@ -48,15 +48,6 @@ class SignUpViewModel @Inject constructor(
 
     fun onEvent(event: SignUpUiEvent) {
         when (event) {
-            is SignUpUiEvent.ChangeAge -> {
-                _state.update { prevState ->
-                    val formState = prevState.formState.copy(age = event.age)
-                    prevState.copy(
-                        formState = formState
-                    )
-                }
-            }
-
             is SignUpUiEvent.ChangeConfirmPassword -> {
                 _state.update { prevState ->
                     val formState =
@@ -132,6 +123,13 @@ class SignUpViewModel @Inject constructor(
                     prevState.copy(userMessages = userMessages)
                 }
             }
+
+            is SignUpUiEvent.ToggleTerms -> {
+                _state.update { prevState ->
+                    val formState = prevState.formState.copy(acceptedTerms = event.accepted)
+                    prevState.copy(formState = formState)
+                }
+            }
         }
     }
 
@@ -142,13 +140,12 @@ class SignUpViewModel @Inject constructor(
                     isLoading = true
                 )
             }
-            val (firstname, lastname, email, age, password) = state.value.formState
+            val (firstname, lastname, email, password) = state.value.formState
             val signUpResult = authRepository.signUpWithEmail(
                 UserAuthData(
                     firstname = firstname,
                     lastname = lastname,
                     email = email,
-                    age = age.toInt(),
                     password = password
                 )
             )

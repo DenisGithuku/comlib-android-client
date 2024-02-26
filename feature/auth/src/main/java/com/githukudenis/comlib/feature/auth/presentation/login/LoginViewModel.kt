@@ -1,6 +1,5 @@
 package com.githukudenis.comlib.feature.auth.presentation.login
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
@@ -11,9 +10,7 @@ import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.feature.auth.presentation.SignInResult
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,6 +54,19 @@ class LoginViewModel @Inject constructor(
             is LoginUiEvent.TogglePassword -> {
                 togglePassword(event.isVisible)
             }
+
+            is LoginUiEvent.ToggleRememberMe -> {
+                toggleRememberMe(event.remember)
+            }
+        }
+    }
+
+    private fun toggleRememberMe(value: Boolean) {
+        _state.update { prevState ->
+            val formState = prevState.formState.copy(rememberMe = value)
+            prevState.copy(
+                formState = formState
+            )
         }
     }
 

@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,13 +60,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.githukudenis.comlib.core.designsystem.ui.components.CLibLoadingSpinner
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
-import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
+import com.githukudenis.comlib.feature.auth.presentation.common.AuthProviderButton
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -107,7 +110,8 @@ fun LoginRoute(
                 }
             })
 
-    LoginScreen(state = state,
+    LoginScreen(
+        state = state,
         context = context,
         onEmailChange = { email -> viewModel.onEvent(LoginUiEvent.ChangeEmail(email)) },
         onPasswordChange = { password -> viewModel.onEvent(LoginUiEvent.ChangePassword(password)) },
@@ -135,9 +139,13 @@ fun LoginRoute(
                 LoginUiEvent.DismissUserMessage(id)
             )
         },
+        onToggleRememberMe = {
+                             viewModel.onEvent(LoginUiEvent.ToggleRememberMe(it))
+        },
         onSubmit = {
             viewModel.onEvent(LoginUiEvent.SubmitData)
-        })
+        },
+    )
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -152,7 +160,8 @@ private fun LoginScreen(
     onGoogleSignIn: () -> Unit,
     onTogglePasswordVisibility: (Boolean) -> Unit,
     onDismissUserMessage: (Int) -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit,
+    onToggleRememberMe: ((Boolean) -> Unit)?
 ) {
 
     val snackbarHostState = remember { SnackbarHostState() }
@@ -215,29 +224,23 @@ private fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             CLibOutlinedTextField(
-                value = state.formState.email, onValueChange = onEmailChange, label = {
-                    Text(
-                        text = stringResource(id = R.string.email_hint)
-                    )
-                }, modifier = Modifier.fillMaxWidth()
+                value = state.formState.email, onValueChange = onEmailChange, label =
+
+                stringResource(id = R.string.email_hint), modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             CLibOutlinedTextField(
                 value = state.formState.password,
                 onValueChange = onPasswordChange,
-                label = {
-                    Text(
-                        text = stringResource(id = R.string.password_hint)
-                    )
-                },
+                label = stringResource(id = R.string.password_hint),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Password
                 ),
                 trailingIcon = {
                     IconButton(onClick = { onTogglePasswordVisibility(!state.formState.passwordIsVisible) }) {
                         Icon(
-                            imageVector = if (state.formState.passwordIsVisible) Icons.Default.VisibilityOff else Icons.Default.Visibility,
+                            imageVector = if (state.formState.passwordIsVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
                             contentDescription = context.getString(R.string.toggle_password_visibility_txt)
                         )
                     }
@@ -260,42 +263,50 @@ private fun LoginScreen(
             }
             Spacer(modifier = Modifier.height(8.dp))
 
-            CLibTextButton(onClick = onForgotPassword) {
-                Text(
-                    text = stringResource(id = R.string.forgot_pass_btn_txt)
-                )
-            }
-            Spacer(modifier = Modifier.height(8.dp))
-
-            Text(
-                text = stringResource(id = R.string.login_footer_separator)
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-
-            CLibOutlinedButton(
-                onClick = onGoogleSignIn,
-                shape = MaterialTheme.shapes.small,
-                modifier = Modifier.fillMaxWidth()
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Image(
-                    modifier = Modifier.size(24.dp),
-                    painter = painterResource(id = R.drawable.ic_google),
-                    contentDescription = null
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = "Login with google"
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.small)
+                ) {
+                    Checkbox(checked = state.formState.rememberMe, onCheckedChange = onToggleRememberMe)
+                    Text(
+                        text = stringResource(id = R.string.remember_me),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
+                CLibTextButton(onClick = onForgotPassword) {
+                    Text(
+                        text = stringResource(id = R.string.forgot_pass_btn_txt),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
             }
+
+            AuthProviderButton(
+                icon = R.drawable.ic_google, onClick = onGoogleSignIn
+            )
             Spacer(modifier = Modifier.height(8.dp))
 
-            Text(
-                text = stringResource(id = R.string.no_account_txt)
-            )
-            CLibTextButton(onClick = onSignInInstead) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center
+            ) {
                 Text(
-                    text = stringResource(id = R.string.sign_in_txt)
+                    text = stringResource(id = R.string.no_account_txt),
+                    style = MaterialTheme.typography.labelMedium
                 )
+                Spacer(modifier = Modifier.width(LocalDimens.current.medium))
+                CLibTextButton(onClick = onSignInInstead) {
+                    Text(
+                        text = stringResource(id = R.string.sign_up_txt),
+                        style = MaterialTheme.typography.labelMedium
+                    )
+                }
             }
         }
     }
@@ -304,9 +315,10 @@ private fun LoginScreen(
 @Preview
 @Composable
 fun LoginScreenPreview() {
-    LoginScreen(state = LoginUiState(
-        isLoading = true,
-    ),
+    LoginScreen(
+        state = LoginUiState(
+            isLoading = true,
+        ),
         context = LocalContext.current,
         onEmailChange = {},
         onPasswordChange = {},
@@ -315,5 +327,7 @@ fun LoginScreenPreview() {
         onGoogleSignIn = { /*TODO*/ },
         onTogglePasswordVisibility = {},
         onDismissUserMessage = {},
-        onSubmit = {})
+        onSubmit = {},
+        onToggleRememberMe = {}
+    )
 }
