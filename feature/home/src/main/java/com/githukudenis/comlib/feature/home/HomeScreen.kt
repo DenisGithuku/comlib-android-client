@@ -12,7 +12,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,10 +26,13 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.FetchItemState
-import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
 import com.githukudenis.comlib.feature.home.components.ErrorCard
+import com.githukudenis.comlib.feature.home.components.GoalCard
 import com.githukudenis.comlib.feature.home.components.HomeHeader
 import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 
@@ -45,15 +47,18 @@ import com.githukudenis.comlib.feature.home.components.LoadingBookCard
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
-    onOpenBookDetails: (Int) -> Unit,
-    onOpenBookList: () -> Unit,
+    onOpenBookDetails: (String) -> Unit,
+    onOpenAllBooks: () -> Unit,
     onOpenProfile: () -> Unit,
 ) {
     val state by viewModel.state.collectAsState()
     HomeRouteContent(
         state = state,
+        onOpenProfile = onOpenProfile,
         onClickRetryGetReads = viewModel::onClickRetryGetReads,
-        onClickRetryGetAvailableBooks = viewModel::onClickRetryGetAvailableBooks
+        onClickRetryGetAvailableBooks = viewModel::onClickRetryGetAvailableBooks,
+        onOpenAllBooks = onOpenAllBooks,
+        onOpenBookDetails = onOpenBookDetails
     )
 }
 
@@ -61,16 +66,20 @@ fun HomeRoute(
 fun HomeRouteContent(
     state: HomeScreenState,
     onClickRetryGetReads: () -> Unit,
+    onOpenProfile: () -> Unit,
+    onOpenAllBooks: () -> Unit,
+    onOpenBookDetails: (String) -> Unit,
     onClickRetryGetAvailableBooks: () -> Unit,
 ) {
     Scaffold { values ->
         LazyColumn(
             modifier = Modifier
                 .padding(values)
-                .fillMaxSize()
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
-                HomeHeader(modifier = Modifier.padding(horizontal = 16.dp), title = {
+                HomeHeader(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge), title = {
                     Text(
                         text = buildString {
                             append("Good")
@@ -78,7 +87,7 @@ fun HomeRouteContent(
                             append("Afternoon")
                             append(" ")
                             append("Stranger")
-                        }, style = MaterialTheme.typography.titleSmall
+                        }, style = MaterialTheme.typography.titleMedium
                     )
                 }, subtitle = {
                     Text(
@@ -91,11 +100,26 @@ fun HomeRouteContent(
                         modifier = Modifier
                             .size(48.dp)
                             .clip(CircleShape)
-                            .clickable {},
+                            .clickable(
+                                       onClick = onOpenProfile
+                            ),
                         model = "https://comlib-api.onrender.com/img/users/default_img.jpg",
                         contentDescription = "User profile"
                     )
                 })
+            }
+            item {
+                GoalCard(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
+                    hasStreak = state.streakState.bookMilestone != null,
+                    onSetStreak = { },
+                    onOpenStreakDetails = {})
+            }
+            item {
+                SectionSeparator(
+                    modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
+                    title = stringResource(id = R.string.available_books_separator),
+                    onViewAll = onOpenAllBooks
+                )
             }
             item {
                 when (state.availableState) {
@@ -106,19 +130,19 @@ fun HomeRouteContent(
                             verticalArrangement = Arrangement.Center
                         ) {
                             ErrorCard(content = state.availableState.message)
-                            Button(
-                                modifier = Modifier.padding(top = 8.dp),
+                            CLibOutlinedButton(
+                                modifier = Modifier.padding(top = LocalDimens.current.medium),
                                 onClick = onClickRetryGetAvailableBooks
                             ) {
-                                Text(text = "retry")
+                                Text(text = stringResource(id = R.string.retry))
                             }
                         }
                     }
 
                     FetchItemState.Loading -> {
                         LazyRow(
-                            contentPadding = PaddingValues(horizontal = 16.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                            contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
+                            horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                         ) {
                             items(4) {
                                 LoadingBookCard()
@@ -130,19 +154,17 @@ fun HomeRouteContent(
                         val list = state.availableState.data
                         if (list.isNotEmpty()) {
                             LazyRow(
-                                contentPadding = PaddingValues(horizontal = 16.dp)
+                                contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge)
                             ) {
                                 items(list, key = { book -> book._id }) { book ->
-                                    BookCard(book = book, onClick = { })
+                                    BookCard(book = book, onClick = onOpenBookDetails)
                                 }
                             }
                         } else {
                             EmptyDataCard(content = "books")
                         }
-
                     }
                 }
-
             }
         }
     }

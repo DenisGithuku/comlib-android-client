@@ -44,7 +44,7 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.untangle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
-import com.githukudenis.comlib.core.designsystem.ui.components.loadingBrush
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.loadingBrush
 
 @Composable
 fun BookDetailRoute(

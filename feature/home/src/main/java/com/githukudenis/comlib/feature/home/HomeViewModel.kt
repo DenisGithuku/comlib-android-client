@@ -6,13 +6,17 @@ import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
 import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class HomeScreenState(
+    val user: FetchItemState<User?> = FetchItemState.Loading,
     val reads: List<String> = emptyList(),
+    val bookmarks: List<String> = emptyList(),
+    val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<Book>> = FetchItemState.Loading,
 )
 
@@ -23,7 +27,10 @@ class HomeViewModel @Inject constructor(
 
     init {
         getReadBooks()
+        getUserDetails()
         getAvailableBooks()
+        getBookmarkedBooks()
+        getStreakState()
     }
 
     private fun getReadBooks() {
@@ -48,12 +55,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getUserProfile(userId: String): UserProfileState {
+    private suspend fun getUserProfile(userId: String) {
         val profile = libraryUseCase.getUserProfileUseCase(userId)
-        return if (profile == null) {
-            UserProfileState.Error(message = "Could not fetch profile")
+        if (profile == null) {
+            update { copy(user = FetchItemState.Error(message = "Could not fetch profile")) }
         } else {
-            UserProfileState.Success(user = profile)
+            update { copy(FetchItemState.Success(data = profile)) }
         }
     }
 
@@ -61,8 +68,34 @@ class HomeViewModel @Inject constructor(
         getReadBooks()
     }
 
-    fun onClickRetryGetAvailableBooks(){
+    fun onClickRetryGetAvailableBooks() {
         getAvailableBooks()
+    }
+
+    private fun getStreakState() {
+        viewModelScope.launch {
+            libraryUseCase.getStreakUseCase().collectLatest {
+                update { copy(streakState = StreakState(bookMilestone = it)) }
+            }
+        }
+    }
+
+    private fun getUserDetails() {
+        viewModelScope.launch {
+            libraryUseCase.getUserPrefsUseCase().collectLatest { prefs ->
+                requireNotNull(prefs.userId).also {
+                    getUserProfile(it)
+                }
+            }
+        }
+    }
+
+    private fun getBookmarkedBooks() {
+        viewModelScope.launch {
+            libraryUseCase.getUserPrefsUseCase().collectLatest { prefs ->
+                    update { copy(bookmarks = prefs.bookmarkedBooks.toList()) }
+                }
+        }
     }
 
 //    val userProfileState: StateFlow<UserProfileState> =

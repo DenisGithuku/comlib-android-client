@@ -5,11 +5,11 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 
 @Composable
@@ -17,7 +17,7 @@ fun CLibOutlinedTextField(
     modifier: Modifier = Modifier,
     value: String,
     onValueChange: (String) -> Unit,
-    label: (@Composable () -> Unit)? = null,
+    label: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
     shape: Shape = MaterialTheme.shapes.small,
@@ -34,7 +34,13 @@ fun CLibOutlinedTextField(
         onValueChange = onValueChange,
         shape = shape,
         colors = colors,
-        label = label,
+        label = {
+            if (label != null) {
+                Text(
+                    text = label, style = MaterialTheme.typography.labelMedium
+                )
+            }
+        },
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         leadingIcon = leadingIcon,

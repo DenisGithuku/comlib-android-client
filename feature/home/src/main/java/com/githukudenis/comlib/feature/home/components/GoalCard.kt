@@ -1,6 +1,7 @@
 package com.githukudenis.comlib.feature.home.components
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -111,7 +112,12 @@ fun GoalCard(
                         text = "No book on streak", style = MaterialTheme.typography.titleSmall
                     )
                     Spacer(modifier = Modifier.height(12.dp))
-                    CLibOutlinedButton(onClick = onSetStreak) {
+                    CLibOutlinedButton(
+                        border = BorderStroke(
+                            width = 0.5.dp,
+                            color = MaterialTheme.colorScheme.primary
+                        ),
+                        onClick = onSetStreak) {
                         Text(
                             text = "Start streak",
                         )

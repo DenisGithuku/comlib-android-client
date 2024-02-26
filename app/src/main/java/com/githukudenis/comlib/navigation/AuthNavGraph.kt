@@ -14,7 +14,8 @@ fun NavGraphBuilder.authGraph(
     onLoginComplete: () -> Unit,
     onSignUpComplete: () -> Unit,
     onResetComplete: () -> Unit,
-    onForgotPassword: () -> Unit
+    onForgotPassword: () -> Unit,
+    onSignInInstead: () -> Unit
 ) {
     navigation(
         startDestination = AuthDestination.Login.route, route = ComlibDestination.AuthGraph.route
@@ -27,7 +28,7 @@ fun NavGraphBuilder.authGraph(
             )
         }
         composable(route = AuthDestination.SignUp.route) {
-            SignUpRoute(onSignUpComplete = onSignUpComplete)
+            SignUpRoute(onSignUpComplete = onSignUpComplete, onSignInInstead = onSignInInstead)
         }
         composable(route = AuthDestination.ForgotPassword.route) {
             ResetPasswordRoute(snackbarHostState = snackbarHostState, onReset = onResetComplete)

@@ -1,7 +1,6 @@
-package com.githukudenis.comlib.core.designsystem.ui.components
+package com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators
 
 import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.infiniteRepeatable

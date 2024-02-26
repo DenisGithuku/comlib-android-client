@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.core.designsystem.ui.components
+package com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.LinearEasing

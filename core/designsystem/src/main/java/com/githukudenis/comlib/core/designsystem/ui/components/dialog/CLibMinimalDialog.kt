@@ -15,10 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.githukudenis.comlib.core.designsystem.R
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
 fun CLibMinimalDialog(
@@ -30,23 +30,23 @@ fun CLibMinimalDialog(
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(LocalDimens.current.extraLarge),
             shape = MaterialTheme.shapes.extraLarge
         ) {
-            Column(modifier = Modifier.padding(16.dp)) {
+            Column(modifier = Modifier.padding(LocalDimens.current.extraLarge)) {
                 Icon(
                     imageVector = Icons.Default.Info,
                     contentDescription = null,
                     tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(LocalDimens.current.medium))
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineSmall,
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(LocalDimens.current.medium))
                 Text(
                     text = text,
                     style = MaterialTheme.typography.bodyMedium,
