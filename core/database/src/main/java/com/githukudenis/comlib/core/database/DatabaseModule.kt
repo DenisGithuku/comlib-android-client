@@ -23,6 +23,7 @@ internal object DatabaseModule {
         return Room.databaseBuilder(
             context, ComlibDatabase::class.java, "comlib"
         )
+            .fallbackToDestructiveMigration()
             .build()
     }
 

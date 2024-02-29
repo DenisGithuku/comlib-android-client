@@ -20,7 +20,7 @@ class UserApi @Inject constructor(
     suspend fun addUser(user: User) {
         withContext(dispatchers.io) {
             httpClient.post<User>(
-                urlString = "${Constants.BASE_URL}/api/v1/users"
+                "${Constants.BASE_URL}/${Constants.USERS_ENDPOINT}"
             ) {
                 body = user
             }
@@ -30,7 +30,7 @@ class UserApi @Inject constructor(
     suspend fun getUsersInClub(clubId: String): List<User> {
         return withContext(dispatchers.io) {
             httpClient.get(
-                urlString = "${Constants.BASE_URL}/api/v1/users"
+                "${Constants.BASE_URL}/${Constants.USERS_ENDPOINT}"
             )
         }
     }
@@ -38,7 +38,7 @@ class UserApi @Inject constructor(
     suspend fun getUserById(userId: String): SingleUserResponse {
         return withContext(dispatchers.io) {
             httpClient.get(
-                urlString = "${Constants.BASE_URL}/api/v1/users/$userId"
+                urlString = "${Constants.BASE_URL}/${Constants.USERS_ENDPOINT}/$userId"
             )
         }
     }
@@ -46,7 +46,7 @@ class UserApi @Inject constructor(
     suspend fun updateUser(user: User) {
         withContext(dispatchers.io) {
             httpClient.patch<User>(
-                urlString = "${Constants.BASE_URL}/api/v1/users/${user.id}"
+                urlString = "${Constants.BASE_URL}/${Constants.USERS_ENDPOINT}/${user.id}"
             ) {
                 body = user
             }
@@ -56,7 +56,7 @@ class UserApi @Inject constructor(
     suspend fun deleteUser(userId: String) {
         withContext(dispatchers.io) {
             httpClient.delete<User>(
-                urlString = "${Constants.BASE_URL}/api/v1/users/${userId}"
+                urlString = "${Constants.BASE_URL}/${Constants.USERS_ENDPOINT}/$userId"
             )
         }
     }

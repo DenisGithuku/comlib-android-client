@@ -23,7 +23,6 @@ class AuthRepositoryImpl @Inject constructor(
                             email = email,
                             firstname = firstname,
                             lastname = lastname,
-                            age = age,
                             authId = result.data
                         )
                     )

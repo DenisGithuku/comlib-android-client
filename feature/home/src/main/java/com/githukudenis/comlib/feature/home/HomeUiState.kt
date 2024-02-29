@@ -3,19 +3,20 @@ package com.githukudenis.comlib.feature.home
 import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.BookMilestone
 import com.githukudenis.comlib.core.model.user.User
 
 sealed class HomeUiState {
     data class Success(
-        val booksState: BooksState = BooksState.Loading,
         val timePeriod: TimePeriod = TimePeriod.MORNING,
         val userMessages: List<UserMessage> = emptyList(),
-        val userProfileState: UserProfileState = UserProfileState.Loading
     ) : HomeUiState()
 
     data object Loading : HomeUiState()
-    data class Error(val message: String) : HomeUiState()
+    data class Error(val message: String, val isNetworkError: Boolean = false) : HomeUiState()
 }
+
+data class StreakState(val bookMilestone: BookMilestone? = null)
 
 sealed class UserProfileState {
     data object Loading : UserProfileState()

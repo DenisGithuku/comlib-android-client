@@ -21,7 +21,7 @@ fun CLibOutlinedButton(
         width = 1.dp,
         color = MaterialTheme.colorScheme.onBackground.copy(0.9f)
     ),
-    shape: Shape = MaterialTheme.shapes.small,
+    shape: Shape = MaterialTheme.shapes.extraLarge,
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit,
 ) {

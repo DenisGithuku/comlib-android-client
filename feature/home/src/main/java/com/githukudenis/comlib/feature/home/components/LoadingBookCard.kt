@@ -15,7 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
-import com.githukudenis.comlib.core.designsystem.ui.components.loadingBrush
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.loadingBrush
 
 @Composable
 fun LoadingBookCard() {

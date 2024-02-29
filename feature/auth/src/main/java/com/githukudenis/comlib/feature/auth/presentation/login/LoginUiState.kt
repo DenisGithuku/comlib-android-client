@@ -13,6 +13,7 @@ data class FormState(
     val email: String = "",
     val password: String = "",
     val passwordIsVisible: Boolean = true,
+    val rememberMe: Boolean = false
 ) {
     val formIsValid: Boolean
         get() = email.isNotEmpty() && password.isNotEmpty()

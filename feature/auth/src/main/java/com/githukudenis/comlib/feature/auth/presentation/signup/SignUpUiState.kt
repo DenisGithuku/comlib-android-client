@@ -13,11 +13,11 @@ data class SignUpFormState(
     val firstname: String = "",
     val lastname: String = "",
     val email: String = "",
-    val age: String = "",
     val password: String = "",
     val passwordIsVisible: Boolean = true,
     val confirmPassword: String = "",
     val confirmPasswordIsVisible: Boolean = true,
+    val acceptedTerms: Boolean = false
 ) {
     val formIsValid: Boolean
         get() = firstname.isNotEmpty() &&

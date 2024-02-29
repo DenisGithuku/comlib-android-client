@@ -6,9 +6,9 @@ import java.util.Date
 import java.util.Locale
 
 class FormatDateUseCase {
-    fun invoke(dateLong: Long): String {
+    fun invoke(dateLong: Long, pattern: String): String {
         return try {
-            val dateFormatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val dateFormatter = SimpleDateFormat(pattern, Locale.getDefault())
             val date = Date(dateLong)
             val currentDate = Date()
             val formattedDate =

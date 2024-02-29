@@ -19,27 +19,21 @@ fun ComlibNavGraph(
     appState: AppState, startDestination: String
 ) {
     NavHost(navController = appState.navController, startDestination = startDestination) {
-        authGraph(
-            snackbarHostState = appState.snackbarHostState,
-            onLoginComplete = {
-                appState.navigate(
-                    ComlibDestination.HomeGraph.route, popUpTo = ComlibDestination.AuthGraph.route
-                )
-            },
-            onSignUpInstead = {
-                appState.navigate(route = AuthDestination.SignUp.route)
-            },
-            onResetComplete = {
-                appState.navigate(route = AuthDestination.Login.route)
-            },
-            onForgotPassword = {
-                appState.navigate(route = AuthDestination.ForgotPassword.route)
-            },
-            onSignUpComplete = {
-                appState.navigate(route = AuthDestination.Login.route)
-            },
-
+        authGraph(snackbarHostState = appState.snackbarHostState, onLoginComplete = {
+            appState.navigate(
+                ComlibDestination.HomeGraph.route, popUpTo = ComlibDestination.AuthGraph.route
             )
+        }, onSignUpInstead = {
+            appState.navigate(route = AuthDestination.SignUp.route)
+        }, onResetComplete = {
+            appState.navigate(route = AuthDestination.Login.route)
+        }, onForgotPassword = {
+            appState.navigate(route = AuthDestination.ForgotPassword.route)
+        }, onSignUpComplete = {
+            appState.navigate(route = AuthDestination.Login.route)
+        }, onSignInInstead = {
+            appState.popBackStack()
+        })
         composable(enterTransition = {
             slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeIn()
         }, popEnterTransition = {

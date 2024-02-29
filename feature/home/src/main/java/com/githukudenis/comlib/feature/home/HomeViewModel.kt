@@ -1,174 +1,218 @@
 package com.githukudenis.comlib.feature.home
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.NetworkStatus
+import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.model.DataResult
-import com.githukudenis.comlib.core.model.book.BookMilestone
-import com.githukudenis.comlib.data.repository.BookMilestoneRepository
+import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.flowOn
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
+
+data class HomeScreenState(
+    val user: FetchItemState<User?> = FetchItemState.Loading,
+    val reads: List<String> = emptyList(),
+    val bookmarks: List<String> = emptyList(),
+    val streakState: StreakState = StreakState(),
+    val availableState: FetchItemState<List<Book>> = FetchItemState.Loading,
+)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val comlibUseCases: ComlibUseCases,
-    private val bookMilestoneRepository: BookMilestoneRepository
-) : ViewModel() {
-
-    private var userProfileState: MutableStateFlow<UserProfileState> =
-        MutableStateFlow(UserProfileState.Loading)
-
-    val currentMilestone: StateFlow<BookMilestone>
-        get() = bookMilestoneRepository.bookMilestone
-            .distinctUntilChanged()
-            .flowOn(Dispatchers.IO)
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = BookMilestone()
-            )
-
-
-    private val networkStatus: StateFlow<NetworkStatus> =
-        comlibUseCases.getNetworkConnectivityUseCase.networkStatus
-            .onEach { netStatus ->
-                _showNetworkDialog.update {
-                    netStatus == NetworkStatus.Unavailable || netStatus == NetworkStatus.Lost
-                }
-            }.stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = NetworkStatus.Unknown
-            )
-
-    private var _showNetworkDialog: MutableStateFlow<Boolean> = MutableStateFlow(
-        false
-    )
-    val showNetworkDialog: StateFlow<Boolean> = _showNetworkDialog.asStateFlow()
-
-
-    private var booksState: MutableStateFlow<BooksState> = MutableStateFlow(BooksState.Loading)
-
-    val state: StateFlow<HomeUiState>
-        get() = combine(
-            userProfileState, booksState, networkStatus
-        ) { profile, books, networkStatus ->
-            if (networkStatus == NetworkStatus.Unavailable || networkStatus == NetworkStatus.Lost) {
-                HomeUiState.Error(
-                    message = "Could not connect. Please check your internet connection then try again."
-                )
-            } else {
-                HomeUiState.Success(
-                    booksState = books,
-                    userProfileState = profile,
-                    timePeriod = comlibUseCases.getTimePeriodUseCase()
-                )
-            }
-        }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = HomeUiState.Loading
-        )
-
+    private val libraryUseCase: ComlibUseCases,
+) : StatefulViewModel<HomeScreenState>(HomeScreenState()) {
 
     init {
-        setupData()
+        getReadBooks()
+        getUserDetails()
+        getAvailableBooks()
+        getBookmarkedBooks()
+        getStreakState()
     }
 
-    private var bookJob: Job? = null
-    private fun setupData() {
-        bookJob?.cancel()
-        bookJob = viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().catch { error ->
-                Timber.tag("prefs").d(error.message.toString())
-            }.collectLatest { prefs ->
-                prefs.userId?.let { userId ->
-                    getUserProfile(userId)
-                }
-
-                getBooks(
-                    readBooks = prefs.readBooks, bookmarkedBooks = prefs.bookmarkedBooks
-                )
+    private fun getReadBooks() {
+        viewModelScope.launch {
+            libraryUseCase.getReadBooksUseCase().collectLatest {
+                update { copy(reads = it.toList()) }
             }
         }
     }
 
-    private suspend fun getBooks(
-        readBooks: Set<String>, bookmarkedBooks: Set<String>
-    ) {
-        comlibUseCases.getAllBooksUseCase().catch { err ->
-            booksState.update {
-                BooksState.Error(message = err.message ?: "Could not fetch books.")
-            }
-        }.collectLatest { result ->
-            when (result) {
-                is DataResult.Error -> {
-                    booksState.update {
-                        BooksState.Error(message = result.message)
-                    }
+    private fun getAvailableBooks() {
+        viewModelScope.launch {
+            libraryUseCase.getAllBooksUseCase().collectLatest {
+                val value = when (it) {
+                    DataResult.Empty -> FetchItemState.Success(emptyList())
+                    is DataResult.Error -> FetchItemState.Error(message = it.message)
+                    is DataResult.Loading -> FetchItemState.Loading
+                    is DataResult.Success -> FetchItemState.Success(it.data)
                 }
-
-                is DataResult.Empty -> {
-                    booksState.update { BooksState.Empty }
-                }
-
-                is DataResult.Loading -> {
-                    booksState.update { BooksState.Loading }
-                }
-
-                is DataResult.Success -> {
-                    booksState.update {
-                        BooksState.Success(available = result.data,
-                            readBooks = result.data.filter { book ->
-                                book.id in readBooks
-                            },
-                            bookmarkedBooks = result.data.filter { book -> book.id in bookmarkedBooks })
-                    }
-                }
-            }
-        }
-    }
-
-    fun onEvent(event: HomeUiEvent) {
-        when (event) {
-            HomeUiEvent.Refresh -> {
-                setupData()
-            }
-
-            HomeUiEvent.NetworkRefresh -> {
-                //TODO Implement network refresh
+                update { copy(availableState = value) }
             }
         }
     }
 
     private suspend fun getUserProfile(userId: String) {
-        userProfileState.update { UserProfileState.Loading }
-        val profile = comlibUseCases.getUserProfileUseCase(userId)
+        val profile = libraryUseCase.getUserProfileUseCase(userId)
         if (profile == null) {
-            userProfileState.update { UserProfileState.Error(message = "Could not fetch profile") }
+            update { copy(user = FetchItemState.Error(message = "Could not fetch profile")) }
         } else {
-            userProfileState.update { UserProfileState.Success(user = profile) }
+            update { copy(FetchItemState.Success(data = profile)) }
         }
     }
 
-    fun onDismissNetworkDialog() {
-        _showNetworkDialog.update { false }
+    fun onClickRetryGetReads() {
+        getReadBooks()
     }
+
+    fun onClickRetryGetAvailableBooks() {
+        getAvailableBooks()
+    }
+
+    private fun getStreakState() {
+        viewModelScope.launch {
+            libraryUseCase.getStreakUseCase().collectLatest {
+                update { copy(streakState = StreakState(bookMilestone = it)) }
+            }
+        }
+    }
+
+    private fun getUserDetails() {
+        viewModelScope.launch {
+            libraryUseCase.getUserPrefsUseCase().collectLatest { prefs ->
+                requireNotNull(prefs.userId).also {
+                    getUserProfile(it)
+                }
+            }
+        }
+    }
+
+    private fun getBookmarkedBooks() {
+        viewModelScope.launch {
+            libraryUseCase.getUserPrefsUseCase().collectLatest { prefs ->
+                    update { copy(bookmarks = prefs.bookmarkedBooks.toList()) }
+                }
+        }
+    }
+
+//    val userProfileState: StateFlow<UserProfileState> =
+//        comlibUseCases.getUserPrefsUseCase().map { prefs ->
+//            prefs.userId?.let { userId ->
+//                getUserProfile(userId)
+//            } ?: UserProfileState.Error(message = "Could not fetch profile")
+//        }.stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000),
+//            initialValue = UserProfileState.Loading
+//        )
+//
+//    val timePeriodState: StateFlow<TimePeriod> = flow {
+//        val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
+//        val time = if (currHour < 12) {
+//            TimePeriod.MORNING
+//        } else if (currHour < 16) {
+//            TimePeriod.AFTERNOON
+//        } else {
+//            TimePeriod.EVENING
+//        }
+//        emit(time)
+//    }.stateIn(
+//        scope = viewModelScope,
+//        started = SharingStarted.WhileSubscribed(5_0000),
+//        initialValue = TimePeriod.MORNING
+//    )
+//
+//
+//    val streakState: StateFlow<StreakState>
+//        get() = comlibUseCases.getStreakUseCase().distinctUntilChanged().mapLatest {
+//            StreakState(it)
+//        }.stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000),
+//            initialValue = StreakState()
+//        )
+//
+////    val networkStatus: StateFlow<NetworkStatus>
+////        get() = comlibUseCases.getNetworkConnectivityUseCase.networkStatus.map { it }.stateIn(
+////            scope = viewModelScope,
+////            started = SharingStarted.WhileSubscribed(5_000),
+////            NetworkStatus.Unavailable
+////        )
+//
+//    private val readBooks: Flow<List<String>> = comlibUseCases.getUserPrefsUseCase().map {
+//        it.readBooks.toList()
+//    }
+//
+//    private val bookMarkedBooks: Flow<List<String>> = comlibUseCases.getUserPrefsUseCase().map {
+//        it.bookmarkedBooks.toList()
+//    }
+//
+//    val booksState = combine(
+//        readBooks, bookMarkedBooks, comlibUseCases.getAllBooksUseCase()
+//    ) { read, bookmarked, available ->
+//        when (available) {
+//            is DataResult.Error -> {
+//                BooksState.Error(message = available.message)
+//            }
+//
+//            is DataResult.Empty -> {
+//                BooksState.Empty
+//            }
+//
+//            is DataResult.Loading -> {
+//                BooksState.Loading
+//            }
+//
+//            is DataResult.Success -> {
+//                BooksState.Success(available = available.data,
+//                    readBooks = available.data.filter { book ->
+//                        book.id in read
+//                    },
+//                    bookmarkedBooks = available.data.filter { book -> book.id in bookmarked })
+//            }
+//        }
+//    }.stateIn(
+//        scope = viewModelScope,
+//        started = SharingStarted.WhileSubscribed(5_000),
+//        initialValue = BooksState.Empty
+//    )
+//
+//
+//    fun onEvent(event: HomeUiEvent) {
+//        when (event) {
+//            HomeUiEvent.Refresh -> {
+//                viewModelScope.launch {
+////                    setupData()
+//                }
+//            }
+//
+//            HomeUiEvent.NetworkRefresh -> {
+//                //TODO Implement network refresh
+//            }
+//
+//            is HomeUiEvent.SaveStreak -> {
+//                saveMilestone(event.bookMilestone)
+//            }
+//        }
+//    }
+//
+//    private fun saveMilestone(bookMilestone: BookMilestone) {
+//        viewModelScope.launch {
+//            withContext(Dispatchers.IO) {
+//                comlibUseCases.saveStreakUseCase(bookMilestone)
+//            }
+//        }
+//    }
+//
+//    private suspend fun getUserProfile(userId: String): UserProfileState {
+//        val profile = comlibUseCases.getUserProfileUseCase(userId)
+//        return if (profile == null) {
+//            UserProfileState.Error(message = "Could not fetch profile")
+//        } else {
+//            UserProfileState.Success(user = profile)
+//        }
+//    }
 }

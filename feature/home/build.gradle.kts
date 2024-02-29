@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.timber)
     implementation(libs.work.runtime)
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
 
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
 

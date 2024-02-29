@@ -12,7 +12,7 @@ Comlib attempts use of the latest libraries and tools:
   
 - Uses [Hilt]() for Dependency Injection.
   
-- Uses [Recommended architecture]([Recommendations for Android architecture &nbsp;|&nbsp; Android Developers](https://developer.android.com/topic/architecture/recommendations)) and Architectural components - Room, Lifecycle, Navigation throughout.
+- Uses [Recommended architecture](https://developer.android.com/topic/architecture/recommendations) and Architectural components - Room, Lifecycle, Navigation throughout.
   
 
 #### Development setup
