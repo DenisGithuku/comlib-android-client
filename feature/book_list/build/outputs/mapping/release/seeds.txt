@@ -1,0 +1,5 @@
+com.githukudenis.comlib.feature.books.R
+com.githukudenis.comlib.feature.books.R$string
+com.githukudenis.comlib.feature.books.R$string: int all_books_title
+com.githukudenis.comlib.feature.books.R$string: R$string()
+com.githukudenis.comlib.feature.books.R: R()

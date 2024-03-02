@@ -1,0 +1,38 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.githukudenis.comlib.feature.books.test.books-mergeDebugAndroidTestResources-92:/values-v16/values-v16.xml",
+            "map": [
+                {
+                    "source": "/home/githukudenis/.gradle/caches/transforms-3/5c896e348e87bb2f929ac03c0b9346ae/transformed/core-1.12.0/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endColumns": "65",
+                        "endOffsets": "116"
+                    }
+                },
+                {
+                    "source": "/home/githukudenis/.gradle/caches/transforms-3/81e7d625a2246242ddaae7c2f58385cb/transformed/appcompat-1.6.1/res/values-v16/values-v16.xml",
+                    "from": {
+                        "startLines": "2",
+                        "startColumns": "4",
+                        "startOffsets": "55",
+                        "endLines": "5",
+                        "endColumns": "12",
+                        "endOffsets": "223"
+                    },
+                    "to": {
+                        "startLines": "3",
+                        "startColumns": "4",
+                        "startOffsets": "121",
+                        "endLines": "6",
+                        "endColumns": "12",
+                        "endOffsets": "289"
+                    }
+                }
+            ]
+        }
+    ]
+}

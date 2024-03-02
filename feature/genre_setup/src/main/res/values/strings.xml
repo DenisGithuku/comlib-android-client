@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="retry_btn_label">Retry</string>
+    <string name="selection_indicator">Selection check</string>
+    <string name="genre_setup_title">Curate your reading list.</string>
+    <string name="complete_btn_label">Complete</string>
+    <string name="skip_label">Skip</string>
+</resources>

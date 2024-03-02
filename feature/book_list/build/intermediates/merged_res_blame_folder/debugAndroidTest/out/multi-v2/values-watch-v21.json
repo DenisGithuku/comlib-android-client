@@ -1,0 +1,20 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.githukudenis.comlib.feature.books.test.books-mergeDebugAndroidTestResources-92:/values-watch-v21/values-watch-v21.xml",
+            "map": [
+                {
+                    "source": "/home/githukudenis/.gradle/caches/transforms-3/81e7d625a2246242ddaae7c2f58385cb/transformed/appcompat-1.6.1/res/values-watch-v21/values-watch-v21.xml",
+                    "from": {
+                        "startLines": "2,6,10",
+                        "startColumns": "4,4,4",
+                        "startOffsets": "55,271,499",
+                        "endLines": "5,9,13",
+                        "endColumns": "12,12,12",
+                        "endOffsets": "266,494,724"
+                    }
+                }
+            ]
+        }
+    ]
+}

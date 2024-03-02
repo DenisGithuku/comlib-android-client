@@ -1,0 +1,1 @@
+int string all_books_title 0x0

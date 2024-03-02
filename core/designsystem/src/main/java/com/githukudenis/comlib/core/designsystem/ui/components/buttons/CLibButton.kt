@@ -13,7 +13,7 @@ import androidx.compose.ui.graphics.Shape
 fun CLibButton(
     modifier: Modifier = Modifier,
     colors: ButtonColors = ButtonDefaults.buttonColors(),
-    shape: Shape = MaterialTheme.shapes.extraLarge,
+    shape: Shape = MaterialTheme.shapes.medium,
     enabled: Boolean = true,
     onClick: () -> Unit,
     content: @Composable RowScope.() -> Unit

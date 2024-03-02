@@ -2,6 +2,7 @@
 .gradle
 /.gradle
 /build-logic/.gradle
+/keystore
 
 # Idea
 .idea
