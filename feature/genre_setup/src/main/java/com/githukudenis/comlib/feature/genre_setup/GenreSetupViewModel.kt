@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.genre_setup
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
@@ -20,7 +21,7 @@ data class GenreSetupUiState(
     val genres: List<SelectableGenreItem> = emptyList(),
     val error: String? = null
 ) {
-    val screenIsValid: Boolean get() = genres.map { it.isSelected }.size >= 3
+    val screenIsValid: Boolean get() = genres.filter { it.isSelected }.size >= 3
 }
 
 @HiltViewModel
@@ -49,10 +50,12 @@ class GenreSetupViewModel @Inject constructor(
                         }
 
                         is DataResult.Loading -> update { copy(isLoading = true) }
-                        is DataResult.Success -> update {
-                            copy(
-                                isLoading = false,
-                                genres = result.data.map { SelectableGenreItem(genre = it) })
+                        is DataResult.Success -> {
+                            update {
+                                copy(
+                                    isLoading = false,
+                                    genres = result.data.map { SelectableGenreItem(genre = it) })
+                            }
                         }
                     }
                 }
@@ -61,6 +64,12 @@ class GenreSetupViewModel @Inject constructor(
 
     fun onRefresh() {
         getGenres()
+    }
+
+    fun onCompleteSetup() {
+        viewModelScope.launch {
+            TODO("Implement storing genres in ui")
+        }
     }
 
     fun onToggleGenreSelection(id: String) {
@@ -72,5 +81,6 @@ class GenreSetupViewModel @Inject constructor(
             }
         }
         update { copy(genres = genres) }
+        Log.d("valid", "${state.value.screenIsValid}")
     }
 }

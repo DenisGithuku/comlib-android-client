@@ -2,6 +2,7 @@ package com.githukudenis.comlib.core.datastore
 
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
@@ -22,7 +23,8 @@ class UserPrefsDatasource @Inject constructor(
             ),
             userId = prefs[PreferenceKeys.userIdPreferenceKey],
             readBooks = prefs[PreferenceKeys.readBooks]?.toSet() ?: emptySet(),
-            bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet()
+            bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
+            isSetup = prefs[PreferenceKeys.isSetup] ?: false
         )
     }
 
@@ -51,6 +53,11 @@ class UserPrefsDatasource @Inject constructor(
         }
     }
 
+    suspend fun setSetupState(isComplete: Boolean) {
+        prefsDataStore.edit { prefs ->
+            prefs[PreferenceKeys.isSetup] = isComplete
+        }
+    }
 }
 
 object PreferenceKeys {
@@ -58,4 +65,5 @@ object PreferenceKeys {
     val userIdPreferenceKey = stringPreferencesKey("userId")
     val readBooks = stringSetPreferencesKey("readBooks")
     val bookmarkedBooks = stringSetPreferencesKey("bookmarkedBooks")
+    val isSetup = booleanPreferencesKey("issetup")
 }

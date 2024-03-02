@@ -22,4 +22,8 @@ class UserPrefsRepositoryImpl @Inject constructor(
     override suspend fun setBookMarks(bookMarks: Set<String>) {
         userPrefsDataSource.setBookmarkedBooks(bookMarks)
     }
+
+    override suspend fun setSetupStatus(isComplete: Boolean) {
+        userPrefsDataSource.setSetupState(isComplete)
+    }
 }

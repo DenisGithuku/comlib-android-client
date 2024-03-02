@@ -10,6 +10,7 @@ import com.githukudenis.comlib.BuildConfig
 import com.githukudenis.comlib.app.AppState
 import com.githukudenis.comlib.feature.add_book.AddBookRoute
 import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
+import com.githukudenis.comlib.feature.genre_setup.GenreSetupScreen
 import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
@@ -98,6 +99,11 @@ fun ComlibNavGraph(
 
             }, onBookAdded = {})
         }
+        composable(route = ComlibDestination.GenreSetup.route) {
+            GenreSetupScreen(onSkip = {
+                appState.navigate(route = ComlibDestination.HomeGraph.route, popUpTo = ComlibDestination.GenreSetup.route)
+            })
+        }
     }
 }
 
@@ -117,4 +123,5 @@ sealed class ComlibDestination(
     data object Profile : ComlibDestination(route = "profile")
     data object MyBooks : ComlibDestination(route = "my_books")
     data object AddBook : ComlibDestination(route = "add_book")
+    data object GenreSetup: ComlibDestination(route = "genre_setup")
 }

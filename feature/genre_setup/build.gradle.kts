@@ -2,7 +2,6 @@ plugins {
     alias(libs.plugins.comlib.android.library)
     alias(libs.plugins.comlib.android.library.compose)
     alias(libs.plugins.comlib.android.hilt)
-    alias(libs.plugins.comlib.android.room)
 }
 
 android {
@@ -28,6 +27,7 @@ android {
 
 dependencies {
 
+    implementation(project(":core:designsystem"))
     implementation(project(":core:common"))
     implementation(project(":core:data"))
     implementation(project(":core:model"))

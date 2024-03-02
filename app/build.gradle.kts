@@ -57,11 +57,14 @@ android {
 dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
+    implementation(project(":core:domain"))
+    implementation(project(":core:model"))
     implementation(project(":feature:book_detail"))
     implementation(project(":feature:books"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:add_book"))
     implementation(project(":feature:my_books"))
+    implementation(project(":feature:genre_setup"))
     implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.compose.ui.tooling)
