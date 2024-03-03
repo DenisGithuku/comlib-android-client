@@ -2,6 +2,7 @@ package com.githukudenis.comlib.core.network.di
 
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.network.BooksApi
+import com.githukudenis.comlib.core.network.GenresApi
 import com.githukudenis.comlib.core.network.UserApi
 import dagger.Module
 import dagger.Provides
@@ -23,4 +24,9 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideBooksApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): BooksApi = BooksApi(httpClient, dispatchers)
+
+    @Provides
+    @Singleton
+    fun provideGenresApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): GenresApi = GenresApi(httpClient, dispatchers)
+
 }

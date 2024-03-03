@@ -5,9 +5,7 @@ import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
-import com.githukudenis.comlib.core.model.genre.AllGenresResponse
-import com.githukudenis.comlib.core.model.genre.SingleGenreResponse
-import com.githukudenis.comlib.core.network.common.Constants
+import com.githukudenis.comlib.core.network.common.Books
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -19,7 +17,7 @@ class BooksApi @Inject constructor(
 ) {
     suspend fun getBooks(): AllBooksResponse {
         return withContext(dispatchers.io) {
-            val books = httpClient.get<AllBooksResponse>("${Constants.BASE_URL}/${Constants.BOOKS_ENDPOINT}")
+            val books = httpClient.get<AllBooksResponse>(Books.path())
             Log.d("books", books.data.books.toString())
             books
         }
@@ -28,28 +26,16 @@ class BooksApi @Inject constructor(
     suspend fun getBookById(bookId: String): SingleBookResponse {
         return withContext(dispatchers.io) {
             val book =
-                httpClient.get<SingleBookResponse>("${Constants.BASE_URL}/${Constants.BOOKS_ENDPOINT}/$bookId")
+                httpClient.get<SingleBookResponse>("${Books.path()}/$bookId")
             book
         }
     }
 
     suspend fun addNewBook(book: Book): String {
         return withContext(dispatchers.io) {
-            httpClient.post<String>("${Constants.BASE_URL}/${Constants.BOOKS_ENDPOINT}") {
+            httpClient.post<String>(Books.path()) {
                 body = book
             }
-        }
-    }
-
-    suspend fun getGenres(): AllGenresResponse {
-        return withContext(dispatchers.io) {
-            httpClient.get<AllGenresResponse>("${Constants.BASE_URL}/${Constants.GENRES_ENDPOINT}")
-        }
-    }
-
-    suspend fun getGenreById(genreId: String): SingleGenreResponse {
-        return withContext(dispatchers.io) {
-            httpClient.get<SingleGenreResponse>("${Constants.BASE_URL}/${Constants.GENRES_ENDPOINT}/$genreId")
         }
     }
 }

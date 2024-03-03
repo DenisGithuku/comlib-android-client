@@ -3,7 +3,7 @@ package com.githukudenis.comlib.feature.books
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
-import com.githukudenis.comlib.core.model.DataResult
+import com.githukudenis.comlib.core.common.DataResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

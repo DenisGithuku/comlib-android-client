@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
-import com.githukudenis.comlib.core.model.DataResult
+import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.model.genre.Genre
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.catch

@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
-import com.githukudenis.comlib.core.model.DataResult
+import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
