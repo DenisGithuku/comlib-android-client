@@ -4,33 +4,20 @@ object Constants {
     const val BASE_URL =  "https://comlib-api.onrender.com/"
 }
 
-interface Endpoint {
-    fun path(): String
-}
-
-object Books: Endpoint {
-    override fun path(): String {
-        return buildString {
-            append(Constants.BASE_URL)
-            append("api/v1/books")
+sealed class Endpoints(private val path: String) {
+    val url: String
+        get() {
+            return buildString {
+                append(Constants.BASE_URL)
+                append(path)
+            }
         }
-    }
-}
 
-object Users: Endpoint {
-    override fun path(): String {
-        return buildString {
-            append(Constants.BASE_URL)
-            append("api/v1/users")
-        }
-    }
-}
 
-object Genres: Endpoint {
-    override fun path(): String {
-        return buildString {
-            append(Constants.BASE_URL)
-            append("api/v1/genres")
-        }
-    }
+    data object Books : Endpoints("api/v1/books")
+    data class Book(private val id: String) : Endpoints("api/v1/books/$id")
+    data object Users : Endpoints("api/v1/users")
+    data class User(private val id: String) : Endpoints("api/v1/users/$id")
+    data object Genres : Endpoints("api/v1/genres")
+    data class Genre(private val id: String) : Endpoints("api/v1/genres/$id")
 }

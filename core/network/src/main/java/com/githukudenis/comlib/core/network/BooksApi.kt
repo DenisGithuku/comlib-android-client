@@ -5,7 +5,7 @@ import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
-import com.githukudenis.comlib.core.network.common.Books
+import com.githukudenis.comlib.core.network.common.Endpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
@@ -17,7 +17,7 @@ class BooksApi @Inject constructor(
 ) {
     suspend fun getBooks(): AllBooksResponse {
         return withContext(dispatchers.io) {
-            val books = httpClient.get<AllBooksResponse>(Books.path())
+            val books = httpClient.get<AllBooksResponse>(Endpoints.Books.url)
             Log.d("books", books.data.books.toString())
             books
         }
@@ -26,14 +26,14 @@ class BooksApi @Inject constructor(
     suspend fun getBookById(bookId: String): SingleBookResponse {
         return withContext(dispatchers.io) {
             val book =
-                httpClient.get<SingleBookResponse>("${Books.path()}/$bookId")
+                httpClient.get<SingleBookResponse>(Endpoints.Book(bookId).url)
             book
         }
     }
 
     suspend fun addNewBook(book: Book): String {
         return withContext(dispatchers.io) {
-            httpClient.post<String>(Books.path()) {
+            httpClient.post<String>(Endpoints.Books.url) {
                 body = book
             }
         }
