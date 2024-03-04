@@ -11,4 +11,6 @@
     <string name="clear_cache_dialog_title">Clear app cache</string>
     <string name="clear_cache_dialog_text">Clearing the app cache will free up storage and may improve performance. Proceed with clearing cache?</string>
     <string name="profile_title">Profile</string>
+    <string name="sign_out_dialog_title">Sign out</string>
+    <string name="sign_out_dialog_text">You are about to be signed out.</string>
 </resources>

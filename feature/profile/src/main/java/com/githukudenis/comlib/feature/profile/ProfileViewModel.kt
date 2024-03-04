@@ -44,14 +44,20 @@ class ProfileViewModel @Inject constructor(
     fun onSignOut() {
         viewModelScope.launch {
             uiState.update { ProfileUiState(isLoading = true) }
-            comlibUseCases.signOutUseCase()
-            uiState.update { ProfileUiState(isLoading = false, isSignedOut = true) }
+            comlibUseCases.signOutUseCase().also {
+                uiState.update { ProfileUiState(isLoading = false, isSignedOut = true) }
+            }
         }
     }
 
-    fun toggleDialog(isVisible: Boolean) {
+    fun onToggleCache(isVisible: Boolean) {
         uiState.update {
-            it.copy(isDialogVisible = isVisible)
+            it.copy(isClearCache = isVisible)
+        }
+    }
+    fun onToggleSignOut(isSignOut: Boolean) {
+        uiState.update {
+            it.copy(isSignout = isSignOut)
         }
     }
 }
