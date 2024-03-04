@@ -1,6 +1,6 @@
 package com.githukudenis.comlib.core.domain.usecases
 
-import com.githukudenis.comlib.core.model.DataResult
+import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.data.repository.BooksRepository
 import kotlinx.coroutines.flow.Flow

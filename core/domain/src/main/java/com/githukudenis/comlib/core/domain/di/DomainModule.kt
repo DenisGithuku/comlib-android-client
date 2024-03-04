@@ -20,6 +20,7 @@ import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.data.repository.BooksRepository
+import com.githukudenis.comlib.data.repository.GenresRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.Module
@@ -34,7 +35,7 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(booksRepository: BooksRepository, authRepository: AuthRepository, bookMilestoneRepository: BookMilestoneRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository, comlibConnectivityManager: ComlibConnectivityManager): ComlibUseCases {
+    fun provideUseCases(booksRepository: BooksRepository, authRepository: AuthRepository, bookMilestoneRepository: BookMilestoneRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository, genresRepository: GenresRepository, comlibConnectivityManager: ComlibConnectivityManager): ComlibUseCases {
         return ComlibUseCases(
             getAllBooksUseCase = GetAllBooksUseCase(booksRepository = booksRepository),
             getUserProfileUseCase = GetUserProfileUseCase(userRepository = userRepository),
@@ -43,8 +44,8 @@ object DomainModule {
             getBookDetailsUseCase = GetBookDetailsUseCase(booksRepository = booksRepository),
             getFavouriteBooksUseCase = GetFavouriteBooksUseCase(userPrefsRepository = userPrefsRepository),
             getReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository = userPrefsRepository),
-            getGenresUseCase = GetGenresUseCase(booksRepository = booksRepository),
-            getGenreByIdUseCase = GetGenreByIdUseCase(booksRepository = booksRepository),
+            getGenresUseCase = GetGenresUseCase(genresRepository = genresRepository),
+            getGenreByIdUseCase = GetGenreByIdUseCase(genresRepository = genresRepository),
             signOutUseCase = SignOutUseCase(authRepository = authRepository),
             getNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(comlibConnectivityManager = comlibConnectivityManager),
             toggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository = userPrefsRepository),

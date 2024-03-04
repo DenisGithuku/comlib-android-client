@@ -6,6 +6,8 @@ import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.data.repository.BookMilestoneRepositoryImpl
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.BooksRepositoryImpl
+import com.githukudenis.comlib.data.repository.GenresRepository
+import com.githukudenis.comlib.data.repository.GenresRepositoryImpl
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepositoryImpl
 import com.githukudenis.comlib.data.repository.UserRepository
@@ -43,4 +45,9 @@ interface DataModule {
     fun bindBookMilestoneRepository(
         bookMilestoneRepositoryImpl: BookMilestoneRepositoryImpl
     ): BookMilestoneRepository
+
+    @Binds
+    fun bindGenreRepository(
+        genresRepositoryImpl: GenresRepositoryImpl
+    ): GenresRepository
 }

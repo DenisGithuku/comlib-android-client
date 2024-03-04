@@ -3,7 +3,6 @@ package com.githukudenis.comlib.core.network
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BooksData
-import com.githukudenis.comlib.core.model.genre.Genre
 
 /*
 Fake response data to mimic api response
@@ -46,19 +45,9 @@ val allBooks = mutableListOf(
     )
 )
 
-val genres = listOf(
-    Genre(
-        _id = "1", id = "1", name = "Fiction"
-    ), Genre(
-        _id = "2", id = "2", name = "Non-fiction"
-    )
-)
-
 class FakeBooksRemoteDataSource {
 
     suspend fun getBooks(): AllBooksResponse = response
     suspend fun getBook(id: String) = response.data.books.find { it.id == id }
     suspend fun addNewBook(book: Book) = allBooks.add(book)
-    suspend fun getGenres() = genres
-    suspend fun getGenreById(id: String) = genres.find { it.id == id }
 }

@@ -41,7 +41,8 @@ fun GenreSetupScreen(
         state = state,
         onRefresh = viewModel::onRefresh,
         onCompleteSetup = viewModel::onCompleteSetup,
-        onSkip = onSkip, onToggleGenreSelection = viewModel::onToggleGenreSelection
+        onSkip = onSkip,
+        onToggleGenreSelection = viewModel::onToggleGenreSelection
     )
 }
 
@@ -66,7 +67,7 @@ private fun GenreSetupContent(
         return
     }
 
-    if (state.error?.isEmpty() == true) {
+    if (state.error?.isNotEmpty() == true) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -91,6 +92,7 @@ private fun GenreSetupContent(
                 )
             }
         }
+        return
     }
 
     Box(
@@ -99,8 +101,10 @@ private fun GenreSetupContent(
             .padding(LocalDimens.current.extraLarge)
     ) {
         LazyColumn(
-            modifier = Modifier.padding(top = LocalDimens.current.extraLarge, bottom = LocalDimens.current.extraLarge + LocalDimens.current.extraLarge),
-            verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
+            modifier = Modifier.padding(
+                top = LocalDimens.current.extraLarge,
+                bottom = LocalDimens.current.extraLarge * 3
+            ), verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
         ) {
             item {
                 Row(
@@ -115,15 +119,17 @@ private fun GenreSetupContent(
                     )
                     Box(
                         modifier = Modifier
-                            .clickable(onClick = onSkip)
                             .background(
                                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
                                 shape = CircleShape
-                            ),
-                        contentAlignment = Alignment.Center
+                            )
+                            .clickable(onClick = onSkip), contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            modifier = Modifier.padding(vertical = LocalDimens.current.small, horizontal = LocalDimens.current.medium),
+                            modifier = Modifier.padding(
+                                vertical = LocalDimens.current.small,
+                                horizontal = LocalDimens.current.medium
+                            ),
                             text = stringResource(id = R.string.skip_label),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
@@ -139,8 +145,7 @@ private fun GenreSetupContent(
                 ) {
                     state.genres.map { item ->
                         SelectableGenreComponent(
-                            selectableGenreItem = item,
-                            onToggleSelection = onToggleGenreSelection
+                            selectableGenreItem = item, onToggleSelection = onToggleGenreSelection
                         )
                     }
                 }
@@ -152,8 +157,7 @@ private fun GenreSetupContent(
                 .background(color = MaterialTheme.colorScheme.background)
         ) {
             CLibButton(
-                modifier = Modifier
-                    .fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth(),
                 enabled = state.screenIsValid,
                 onClick = onCompleteSetup,
             ) {
