@@ -2,11 +2,12 @@ package com.githukudenis.comlib.feature.genre_setup
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
-import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.model.genre.Genre
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -29,12 +30,15 @@ class GenreSetupViewModel @Inject constructor(
     private val comlibUseCases: ComlibUseCases
 ) : StatefulViewModel<GenreSetupUiState>(GenreSetupUiState()) {
 
+    private var genresJob: Job? = null
+
     init {
         getGenres()
     }
 
     private fun getGenres() {
-        viewModelScope.launch {
+        genresJob?.cancel()
+        genresJob = viewModelScope.launch {
             comlibUseCases.getGenresUseCase().catch { throwable ->
                     update {
                         copy(

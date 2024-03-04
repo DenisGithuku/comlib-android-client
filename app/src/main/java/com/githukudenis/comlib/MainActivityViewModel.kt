@@ -23,7 +23,7 @@ class MainActivityViewModel @Inject constructor(
 
     init {
         if (firebaseAuth.currentUser != null) {
-            _state.value = _state.value.copy(isLoggedIn = true)
+            _state.update { it.copy(isLoggedIn = true) }
         }
         getSetupState()
     }

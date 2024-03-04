@@ -154,7 +154,8 @@ fun HomeRouteContent(
                         val list = state.availableState.data
                         if (list.isNotEmpty()) {
                             LazyRow(
-                                contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge)
+                                contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
+                                horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                             ) {
                                 items(list, key = { book -> book._id }) { book ->
                                     BookCard(book = book, onClick = onOpenBookDetails)
