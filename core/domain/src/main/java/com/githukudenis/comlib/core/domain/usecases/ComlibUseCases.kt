@@ -15,5 +15,7 @@ data class ComlibUseCases(
     val toggleBookMarkUseCase: ToggleBookMarkUseCase,
     val formatDateUseCase: FormatDateUseCase,
     val saveStreakUseCase: SaveStreakUseCase,
-    val getStreakUseCase: GetStreakUseCase
+    val getStreakUseCase: GetStreakUseCase,
+    val updateUserUseCase: UpdateUserUseCase,
+    val updateAppSetupState: UpdateAppSetupState
 )

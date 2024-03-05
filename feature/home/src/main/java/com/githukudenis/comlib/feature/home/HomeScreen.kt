@@ -56,9 +56,10 @@ fun HomeRoute(
         state = state,
         onOpenProfile = onOpenProfile,
         onClickRetryGetReads = viewModel::onClickRetryGetReads,
-        onClickRetryGetAvailableBooks = viewModel::onClickRetryGetAvailableBooks,
+        onClickRetryGetAvailableBooks = viewModel::onRefreshAvailableBooks,
         onOpenAllBooks = onOpenAllBooks,
-        onOpenBookDetails = onOpenBookDetails
+        onOpenBookDetails = onOpenBookDetails,
+        onToggleFavourite = viewModel::onToggleFavourite
     )
 }
 
@@ -70,6 +71,7 @@ fun HomeRouteContent(
     onOpenAllBooks: () -> Unit,
     onOpenBookDetails: (String) -> Unit,
     onClickRetryGetAvailableBooks: () -> Unit,
+    onToggleFavourite: (String) -> Unit
 ) {
     Scaffold { values ->
         LazyColumn(
@@ -155,10 +157,10 @@ fun HomeRouteContent(
                         if (list.isNotEmpty()) {
                             LazyRow(
                                 contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
-                                horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
+                                horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                             ) {
-                                items(list, key = { book -> book._id }) { book ->
-                                    BookCard(book = book, onClick = onOpenBookDetails)
+                                items(list, key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
+                                    BookCard(bookUiModel = bookUiModel, onClick = onOpenBookDetails, onReserve = {}, onToggleFavourite = onToggleFavourite)
                                 }
                             }
                         } else {

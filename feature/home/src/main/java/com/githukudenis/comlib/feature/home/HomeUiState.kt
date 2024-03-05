@@ -29,7 +29,7 @@ sealed class UserProfileState {
 sealed interface BooksState {
     data object Loading : BooksState
     data class Success(
-        val available: List<Book> = emptyList(),
+        val available: List<BookUiModel> = emptyList(),
         val readBooks: List<Book> = emptyList(),
         val bookmarkedBooks: List<Book> = emptyList()
     ) : BooksState
@@ -38,3 +38,8 @@ sealed interface BooksState {
     data object Empty : BooksState
 
 }
+
+data class BookUiModel(
+    val isFavourite: Boolean = false,
+    val book: Book
+)
