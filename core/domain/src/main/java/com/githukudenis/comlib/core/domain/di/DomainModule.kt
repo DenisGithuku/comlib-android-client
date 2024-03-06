@@ -17,6 +17,8 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
+import com.githukudenis.comlib.core.domain.usecases.UpdateAppSetupState
+import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.data.repository.BooksRepository
@@ -51,7 +53,9 @@ object DomainModule {
             toggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository = userPrefsRepository),
             formatDateUseCase = FormatDateUseCase(),
             getStreakUseCase = GetStreakUseCase(bookMilestoneRepository = bookMilestoneRepository),
-            saveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository = bookMilestoneRepository)
+            saveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository = bookMilestoneRepository),
+            updateUserUseCase = UpdateUserUseCase(userRepository = userRepository),
+            updateAppSetupState = UpdateAppSetupState(userPrefsRepository = userPrefsRepository)
         )
     }
 }

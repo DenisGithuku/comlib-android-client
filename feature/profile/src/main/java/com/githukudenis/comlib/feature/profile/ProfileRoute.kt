@@ -44,9 +44,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.common.capitalize
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.profile.components.ProfileImage
 import com.githukudenis.comlib.feature.profile.components.ProfileListItem
@@ -74,11 +74,12 @@ fun ProfileRoute(
         onNavigateUp = onBackPressed,
         onOpenMyBooks = onOpenMyBooks,
         onSignOut = viewModel::onSignOut,
-        onToggleCacheDialog = viewModel::toggleDialog,
+        onToggleCacheDialog = viewModel::onToggleCache,
+        onToggleSignOutDialog = viewModel::onToggleSignOut,
         onClearCache = {
             if (context.cacheDir.deleteRecursively()) {
                 Toast.makeText(context, "Cache cleared", Toast.LENGTH_SHORT).show()
-                viewModel.toggleDialog(false)
+                viewModel.onToggleCache(false)
             } else {
                 Toast.makeText(context, "Failed to clear cache", Toast.LENGTH_SHORT).show()
             }
@@ -94,7 +95,8 @@ private fun ProfileScreen(
     onOpenMyBooks: () -> Unit,
     onSignOut: () -> Unit,
     onToggleCacheDialog: (Boolean) -> Unit,
-    onClearCache: () -> Unit
+    onClearCache: () -> Unit,
+    onToggleSignOutDialog: (Boolean) -> Unit
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
@@ -118,7 +120,7 @@ private fun ProfileScreen(
             return@Scaffold
         }
 
-        if (state.isDialogVisible) {
+        if (state.isClearCache) {
             CLibAlertDialog(title = stringResource(id = R.string.clear_cache_dialog_title),
                 text = stringResource(
                     id = R.string.clear_cache_dialog_text
@@ -126,6 +128,17 @@ private fun ProfileScreen(
                 onDismiss = { onToggleCacheDialog(false) },
                 onConfirm = {
                     onClearCache()
+                })
+        }
+
+        if (state.isSignout) {
+            CLibAlertDialog(title = stringResource(id = R.string.sign_out_dialog_title),
+                text = stringResource(
+                    id = R.string.sign_out_dialog_text
+                ),
+                onDismiss = { onToggleSignOutDialog(false) },
+                onConfirm = {
+                    onSignOut()
                 })
         }
 
@@ -232,7 +245,7 @@ private fun ProfileScreen(
                     ProfileListItem(
                         leading = Icons.Default.Logout,
                         title = stringResource(R.string.logout),
-                        onClick = onSignOut
+                        onClick = { onToggleSignOutDialog(true) }
                     )
                 }
             }

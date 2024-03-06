@@ -2,8 +2,8 @@ package com.githukudenis.comlib.data.repository
 
 import com.githukudenis.comlib.core.auth.AuthDataSource
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.core.model.user.User
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -17,7 +17,7 @@ class AuthRepositoryImpl @Inject constructor(
         return when (result) {
             is ResponseResult.Failure -> result
             is ResponseResult.Success -> {
-                val (email, firstname, lastname, age) = userAuthData
+                val (email, firstname, lastname) = userAuthData
                 userRepository.addNewUser(
                         User(
                             email = email,

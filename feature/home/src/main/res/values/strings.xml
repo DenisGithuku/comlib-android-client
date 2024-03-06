@@ -11,4 +11,5 @@
     <string name="streak_save_success">Streak saved</string>
     <string name="month_date_pattern">MMM d</string>
     <string name="see_details">See details</string>
+    <string name="toggle_favourite">Toggle favourite</string>
 </resources>

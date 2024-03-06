@@ -1,14 +1,14 @@
 package com.githukudenis.comlib.feature.home
 
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
-import com.githukudenis.comlib.core.common.DataResult
-import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,7 +17,7 @@ data class HomeScreenState(
     val reads: List<String> = emptyList(),
     val bookmarks: List<String> = emptyList(),
     val streakState: StreakState = StreakState(),
-    val availableState: FetchItemState<List<Book>> = FetchItemState.Loading,
+    val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
 )
 
 @HiltViewModel
@@ -26,10 +26,10 @@ class HomeViewModel @Inject constructor(
 ) : StatefulViewModel<HomeScreenState>(HomeScreenState()) {
 
     init {
+        getBookmarkedBooks()
         getReadBooks()
         getUserDetails()
         getAvailableBooks()
-        getBookmarkedBooks()
         getStreakState()
     }
 
@@ -43,12 +43,17 @@ class HomeViewModel @Inject constructor(
 
     private fun getAvailableBooks() {
         viewModelScope.launch {
-            libraryUseCase.getAllBooksUseCase().collectLatest {
-                val value = when (it) {
+            libraryUseCase.getAllBooksUseCase().collectLatest { result ->
+                val value = when (result) {
                     DataResult.Empty -> FetchItemState.Success(emptyList())
-                    is DataResult.Error -> FetchItemState.Error(message = it.message)
+                    is DataResult.Error -> FetchItemState.Error(message = result.message)
                     is DataResult.Loading -> FetchItemState.Loading
-                    is DataResult.Success -> FetchItemState.Success(it.data)
+                    is DataResult.Success -> FetchItemState.Success(result.data.map {
+                        BookUiModel(
+                            book = it,
+                            isFavourite = it.id in state.value.bookmarks
+                        )
+                    })
                 }
                 update { copy(availableState = value) }
             }
@@ -68,8 +73,25 @@ class HomeViewModel @Inject constructor(
         getReadBooks()
     }
 
-    fun onClickRetryGetAvailableBooks() {
+    fun onRefreshAvailableBooks() {
         getAvailableBooks()
+    }
+
+    fun onToggleFavourite(id: String) {
+        viewModelScope.launch {
+            val bookMarks = libraryUseCase.getFavouriteBooksUseCase().first()
+            val updatedBookMarkSet = if (id in bookMarks) {
+                bookMarks.minus(id)
+            } else {
+                bookMarks.plus(id)
+            }
+            libraryUseCase.toggleBookMarkUseCase(
+                updatedBookMarkSet
+            ).also {
+                getBookmarkedBooks()
+                onRefreshAvailableBooks()
+            }
+        }
     }
 
     private fun getStreakState() {
@@ -92,9 +114,9 @@ class HomeViewModel @Inject constructor(
 
     private fun getBookmarkedBooks() {
         viewModelScope.launch {
-            libraryUseCase.getUserPrefsUseCase().collectLatest { prefs ->
-                    update { copy(bookmarks = prefs.bookmarkedBooks.toList()) }
-                }
+            val bookmarks = libraryUseCase.getFavouriteBooksUseCase().first()
+            update { copy(bookmarks = bookmarks.toList()) }
+
         }
     }
 

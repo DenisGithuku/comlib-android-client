@@ -40,7 +40,7 @@ fun GoalCard(
     Surface(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.surface,
+        color = MaterialTheme.colorScheme.primaryContainer,
         shadowElevation = 0.dp,
     ) {
         AnimatedContent(targetState = hasStreak) { hasStreak ->
@@ -58,7 +58,7 @@ fun GoalCard(
                     ) {
                         Text(
                             text = "Current streak: $dateRange",
-                            style = MaterialTheme.typography.titleSmall
+                            style = MaterialTheme.typography.titleSmall,
                         )
                         IconButton(
                             onClick = {
@@ -109,7 +109,8 @@ fun GoalCard(
                         .padding(12.dp)
                 ) {
                     Text(
-                        text = "No book on streak", style = MaterialTheme.typography.titleSmall
+                        text = "No book on streak", style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
                     )
                     Spacer(modifier = Modifier.height(12.dp))
                     CLibOutlinedButton(
