@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.githukudenis.comlib.core.common.ImageEndpoints
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.feature.home.BookUiModel
 import com.githukudenis.comlib.feature.home.R
@@ -68,8 +69,8 @@ fun BookCard(
                     )
                     .clip(CircleShape)
                     .align(Alignment.CenterHorizontally),
-                model = "https://comlib-api.onrender.com/img/books/${bookUiModel.book.image}",
-                contentDescription = null,
+                model = ImageEndpoints.Book(bookUiModel.book.image).url,
+                contentDescription = stringResource(id = R.string.book_image),
                 contentScale = ContentScale.Crop,
                 error = painterResource(id = R.drawable.ic_broken_image),
                 placeholder = painterResource(id = R.drawable.loading_img)

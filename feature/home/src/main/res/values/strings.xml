@@ -14,4 +14,5 @@
     <string name="toggle_favourite">Toggle favourite</string>
     <string name="remove_from_favourites">Removed from favourites</string>
     <string name="add_to_favourites">Added to favourites</string>
+    <string name="book_image">Book image</string>
 </resources>

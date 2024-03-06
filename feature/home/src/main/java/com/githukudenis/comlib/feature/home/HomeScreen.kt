@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.ImageEndpoints
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
@@ -117,7 +118,7 @@ fun HomeRouteContent(
                             .clickable(
                                 onClick = onOpenProfile
                             ),
-                        model = "https://comlib-api.onrender.com/img/users/default_img.jpg",
+                        model = ImageEndpoints.User("default_img.jpg").url,
                         contentDescription = "User profile"
                     )
                 })
