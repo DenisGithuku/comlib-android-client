@@ -12,4 +12,6 @@
     <string name="month_date_pattern">MMM d</string>
     <string name="see_details">See details</string>
     <string name="toggle_favourite">Toggle favourite</string>
+    <string name="remove_from_favourites">Removed from favourites</string>
+    <string name="add_to_favourites">Added to favourites</string>
 </resources>
