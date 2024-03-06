@@ -5,11 +5,14 @@ import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
 import javax.inject.Inject
 
 data class HomeScreenState(
@@ -18,6 +21,7 @@ data class HomeScreenState(
     val bookmarks: List<String> = emptyList(),
     val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
+    val timePeriod: TimePeriod = TimePeriod.MORNING
 )
 
 @HiltViewModel
@@ -26,6 +30,7 @@ class HomeViewModel @Inject constructor(
 ) : StatefulViewModel<HomeScreenState>(HomeScreenState()) {
 
     init {
+        getTimePeriod()
         getBookmarkedBooks()
         getReadBooks()
         getUserDetails()
@@ -118,6 +123,18 @@ class HomeViewModel @Inject constructor(
             update { copy(bookmarks = bookmarks.toList()) }
 
         }
+    }
+
+    private fun getTimePeriod() {
+        val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
+        val time = if (currHour < 12) {
+            TimePeriod.MORNING
+        } else if (currHour < 16) {
+            TimePeriod.AFTERNOON
+        } else {
+            TimePeriod.EVENING
+        }
+        update { copy(timePeriod = time) }
     }
 
 //    val userProfileState: StateFlow<UserProfileState> =

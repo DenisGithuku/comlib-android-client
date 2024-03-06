@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.feature.home
 
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -21,11 +22,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
@@ -73,6 +76,8 @@ fun HomeRouteContent(
     onClickRetryGetAvailableBooks: () -> Unit,
     onToggleFavourite: (String) -> Unit
 ) {
+    val context = LocalContext.current
+
     Scaffold { values ->
         LazyColumn(
             modifier = Modifier
@@ -81,14 +86,21 @@ fun HomeRouteContent(
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
+                val username = when(state.user) {
+                    is FetchItemState.Error -> "Stranger"
+                    FetchItemState.Loading -> "Stranger"
+                    is FetchItemState.Success -> state.user.data?.firstname?.capitalize()
+                }
+
+                val time = state.timePeriod.name.lowercase().capitalize()
                 HomeHeader(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge), title = {
                     Text(
                         text = buildString {
                             append("Good")
                             append(" ")
-                            append("Afternoon")
+                            append(time)
                             append(" ")
-                            append("Stranger")
+                            append(username)
                         }, style = MaterialTheme.typography.titleMedium
                     )
                 }, subtitle = {
@@ -103,7 +115,7 @@ fun HomeRouteContent(
                             .size(48.dp)
                             .clip(CircleShape)
                             .clickable(
-                                       onClick = onOpenProfile
+                                onClick = onOpenProfile
                             ),
                         model = "https://comlib-api.onrender.com/img/users/default_img.jpg",
                         contentDescription = "User profile"
@@ -160,7 +172,14 @@ fun HomeRouteContent(
                                 horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                             ) {
                                 items(list, key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
-                                    BookCard(bookUiModel = bookUiModel, onClick = onOpenBookDetails, onReserve = {}, onToggleFavourite = onToggleFavourite)
+                                    BookCard(bookUiModel = bookUiModel, onClick = onOpenBookDetails, onReserve = {}, onToggleFavourite = {
+                                        onToggleFavourite(bookUiModel.book.id)
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(if(bookUiModel.isFavourite) R.string.remove_from_favourites else R.string.add_to_favourites),
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    })
                                 }
                             }
                         } else {
