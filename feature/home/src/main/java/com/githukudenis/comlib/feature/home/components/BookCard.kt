@@ -39,7 +39,10 @@ import com.githukudenis.comlib.feature.home.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BookCard(
-    bookUiModel: BookUiModel, onClick: (String) -> Unit, onReserve: (String) -> Unit, onToggleFavourite: (String) -> Unit
+    bookUiModel: BookUiModel,
+    onClick: (String) -> Unit,
+    onReserve: (String) -> Unit,
+    onToggleFavourite: (String) -> Unit
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
@@ -57,7 +60,12 @@ fun BookCard(
         Column(modifier = Modifier.padding(8.dp)) {
             AsyncImage(
                 modifier = Modifier
-                    .sizeIn(120.dp)
+                    .sizeIn(
+                        minHeight = 120.dp,
+                        minWidth = 120.dp,
+                        maxHeight = 120.dp,
+                        maxWidth = 120.dp,
+                    )
                     .clip(CircleShape)
                     .align(Alignment.CenterHorizontally),
                 model = "https://comlib-api.onrender.com/img/books/${bookUiModel.book.image}",
@@ -87,34 +95,21 @@ fun BookCard(
                     )
                 }
             }
-                Text(
-                    text = buildString {
-                        bookUiModel.book.authors.forEach { author ->
-                            append(author)
-                        }
-                    },
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = 0.6f
-                    ),
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
-                )
 
-                CLibButton(
-                    shape = MaterialTheme.shapes.extraLarge,
-                    modifier = Modifier.fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        MaterialTheme.colorScheme.primaryContainer
-                    ),
-                    onClick = { onReserve(bookUiModel.book.id) },
-                ) {
-                    Text(
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        text = stringResource(R.string.reserve),
-                        style = MaterialTheme.typography.labelMedium
-                    )
-                }
+            CLibButton(
+                shape = MaterialTheme.shapes.extraLarge,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    MaterialTheme.colorScheme.primaryContainer
+                ),
+                onClick = { onReserve(bookUiModel.book.id) },
+            ) {
+                Text(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    text = stringResource(R.string.reserve),
+                    style = MaterialTheme.typography.labelMedium
+                )
+            }
         }
     }
 }

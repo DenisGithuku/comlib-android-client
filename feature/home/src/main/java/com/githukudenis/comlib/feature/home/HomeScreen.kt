@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
@@ -81,14 +82,21 @@ fun HomeRouteContent(
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
+                val username = when(state.user) {
+                    is FetchItemState.Error -> "Stranger"
+                    FetchItemState.Loading -> "Stranger"
+                    is FetchItemState.Success -> state.user.data?.firstname?.capitalize()
+                }
+
+                val time = state.timePeriod.name.lowercase().capitalize()
                 HomeHeader(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge), title = {
                     Text(
                         text = buildString {
                             append("Good")
                             append(" ")
-                            append("Afternoon")
+                            append(time)
                             append(" ")
-                            append("Stranger")
+                            append(username)
                         }, style = MaterialTheme.typography.titleMedium
                     )
                 }, subtitle = {

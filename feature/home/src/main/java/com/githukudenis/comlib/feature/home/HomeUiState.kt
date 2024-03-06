@@ -31,7 +31,8 @@ sealed interface BooksState {
     data class Success(
         val available: List<BookUiModel> = emptyList(),
         val readBooks: List<Book> = emptyList(),
-        val bookmarkedBooks: List<Book> = emptyList()
+        val bookmarkedBooks: List<Book> = emptyList(),
+        val timePeriod: TimePeriod = TimePeriod.MORNING
     ) : BooksState
 
     data class Error(val message: String) : BooksState
