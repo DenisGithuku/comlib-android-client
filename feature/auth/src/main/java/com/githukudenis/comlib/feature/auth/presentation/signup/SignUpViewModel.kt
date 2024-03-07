@@ -5,12 +5,9 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.GetNetworkConnectivityUseCase
+import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.model.UserAuthData
-import com.githukudenis.comlib.core.model.user.User
-import com.githukudenis.comlib.data.repository.AuthRepository
-import com.githukudenis.comlib.data.repository.UserRepository
-import com.githukudenis.comlib.feature.auth.presentation.SignInResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -24,8 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val userRepository: UserRepository, private val authRepository: AuthRepository,
-    private val comlibUseCases: ComlibUseCases
+    private val signUpUseCase: SignUpUseCase,
+    private val getNetworkConnectivityUseCase: GetNetworkConnectivityUseCase
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
@@ -34,8 +31,7 @@ class SignUpViewModel @Inject constructor(
     private val _showNetworkDialog = MutableStateFlow(false)
     val showNetworkDialog: StateFlow<Boolean> get() = _showNetworkDialog.asStateFlow()
 
-    private val networkStatus = comlibUseCases
-        .getNetworkConnectivityUseCase
+    private val networkStatus = getNetworkConnectivityUseCase
         .networkStatus
         .onEach { netStatus ->
             _showNetworkDialog.update { netStatus == NetworkStatus.Lost || netStatus == NetworkStatus.Unavailable }
@@ -106,7 +102,7 @@ class SignUpViewModel @Inject constructor(
             }
 
             is SignUpUiEvent.GoogleSignIn -> {
-                onSignInResult(event.signInResult)
+//                onSignInResult(event.signInResult)
             }
 
             is SignUpUiEvent.TogglePasswordVisibility -> {
@@ -141,7 +137,7 @@ class SignUpViewModel @Inject constructor(
                 )
             }
             val (firstname, lastname, email, password) = state.value.formState
-            val signUpResult = authRepository.signUpWithEmail(
+            val signUpResult = signUpUseCase.invoke(
                 UserAuthData(
                     firstname = firstname,
                     lastname = lastname,
@@ -171,45 +167,45 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun onSignInResult(signInResult: SignInResult) {
-        viewModelScope.launch {
-            _state.update { prevState ->
-                prevState.copy(isLoading = true)
-            }
-            if (signInResult.errorMessage != null) {
-                _state.update { prevState ->
-                    val userMessages = prevState.userMessages.toMutableList()
-                    userMessages.add(UserMessage(message = signInResult.errorMessage))
-                    prevState.copy(
-                        isLoading = false,
-                        signUpSuccess = true,
-                        userMessages = userMessages
-                    )
-                }
-                return@launch
-            }
-            val user = signInResult.userData?.run {
-                User(
-                    email = email,
-                    username = username,
-                    image = profilePictureUrl,
-                    authId = authId
-                )
-            }
-            userRepository.addNewUser(
-                user = user ?: return@launch
-            )
-            _state.update { prevState ->
-                val userMessages = prevState.userMessages.toMutableList()
-                userMessages.add(UserMessage(message = "Signed in successfully"))
-                prevState.copy(
-                    isLoading = false,
-                    signUpSuccess = true,
-                    userMessages = userMessages
-                )
-            }
-        }
-    }
+//    private fun onSignInResult(signInResult: SignInResult) {
+//        viewModelScope.launch {
+//            _state.update { prevState ->
+//                prevState.copy(isLoading = true)
+//            }
+//            if (signInResult.errorMessage != null) {
+//                _state.update { prevState ->
+//                    val userMessages = prevState.userMessages.toMutableList()
+//                    userMessages.add(UserMessage(message = signInResult.errorMessage))
+//                    prevState.copy(
+//                        isLoading = false,
+//                        signUpSuccess = true,
+//                        userMessages = userMessages
+//                    )
+//                }
+//                return@launch
+//            }
+//            val user = signInResult.userData?.run {
+//                User(
+//                    email = email,
+//                    username = username,
+//                    image = profilePictureUrl,
+//                    authId = authId
+//                )
+//            }
+//            userRepository.addNewUser(
+//                user = user ?: return@launch
+//            )
+//            _state.update { prevState ->
+//                val userMessages = prevState.userMessages.toMutableList()
+//                userMessages.add(UserMessage(message = "Signed in successfully"))
+//                prevState.copy(
+//                    isLoading = false,
+//                    signUpSuccess = true,
+//                    userMessages = userMessages
+//                )
+//            }
+//        }
+//    }
 
     fun onDismissNetworkDialog() {
         _showNetworkDialog.update { false }

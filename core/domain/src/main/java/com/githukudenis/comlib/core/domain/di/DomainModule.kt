@@ -1,7 +1,6 @@
 package com.githukudenis.comlib.core.domain.di
 
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.domain.usecases.FormatDateUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
@@ -16,6 +15,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
+import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateAppSetupState
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
@@ -37,25 +37,74 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideUseCases(booksRepository: BooksRepository, authRepository: AuthRepository, bookMilestoneRepository: BookMilestoneRepository, userRepository: UserRepository, userPrefsRepository: UserPrefsRepository, genresRepository: GenresRepository, comlibConnectivityManager: ComlibConnectivityManager): ComlibUseCases {
-        return ComlibUseCases(
-            getAllBooksUseCase = GetAllBooksUseCase(booksRepository = booksRepository),
-            getUserProfileUseCase = GetUserProfileUseCase(userRepository = userRepository),
-            getUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository = userPrefsRepository),
-            getTimePeriodUseCase = GetTimePeriodUseCase(),
-            getBookDetailsUseCase = GetBookDetailsUseCase(booksRepository = booksRepository),
-            getFavouriteBooksUseCase = GetFavouriteBooksUseCase(userPrefsRepository = userPrefsRepository),
-            getReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository = userPrefsRepository),
-            getGenresUseCase = GetGenresUseCase(genresRepository = genresRepository),
-            getGenreByIdUseCase = GetGenreByIdUseCase(genresRepository = genresRepository),
-            signOutUseCase = SignOutUseCase(authRepository = authRepository),
-            getNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(comlibConnectivityManager = comlibConnectivityManager),
-            toggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository = userPrefsRepository),
-            formatDateUseCase = FormatDateUseCase(),
-            getStreakUseCase = GetStreakUseCase(bookMilestoneRepository = bookMilestoneRepository),
-            saveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository = bookMilestoneRepository),
-            updateUserUseCase = UpdateUserUseCase(userRepository = userRepository),
-            updateAppSetupState = UpdateAppSetupState(userPrefsRepository = userPrefsRepository)
-        )
-    }
+    fun provideFormatDateUseCase(): FormatDateUseCase = FormatDateUseCase()
+
+    @Provides
+    @Singleton
+    fun provideGetAllBooksUseCase(booksRepository: BooksRepository): GetAllBooksUseCase = GetAllBooksUseCase(booksRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetBookDetailsUseCase(booksRepository: BooksRepository): GetBookDetailsUseCase = GetBookDetailsUseCase(booksRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetFavouriteBooksUseCase(userPrefsRepository: UserPrefsRepository): GetFavouriteBooksUseCase = GetFavouriteBooksUseCase(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetGenresUseCase(genresRepository: GenresRepository): GetGenresUseCase = GetGenresUseCase(genresRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetGenreUseCase(genresRepository: GenresRepository): GetGenreByIdUseCase = GetGenreByIdUseCase(genresRepository)
+
+    @Singleton
+    @Provides
+    fun providesConnectivityUseCase(connectivityManager: ComlibConnectivityManager): GetNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(connectivityManager)
+
+    @Provides
+    @Singleton
+    fun provideGetReadBooksUseCase(userPrefsRepository: UserPrefsRepository): GetReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): GetStreakUseCase = GetStreakUseCase(bookMilestoneRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetTimePeriodUseCase(): GetTimePeriodUseCase = GetTimePeriodUseCase()
+
+    @Provides
+    @Singleton
+    fun provideGetUserPrefsUseCase(userPrefsRepository: UserPrefsRepository): GetUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun providesGetUserProfileUseCase(userRepository: UserRepository): GetUserProfileUseCase = GetUserProfileUseCase(userRepository)
+
+    @Provides
+    @Singleton
+    fun provideSaveStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): SaveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository)
+
+    @Provides
+    @Singleton
+    fun provideSignOutUseCase(authRepository: AuthRepository): SignOutUseCase = SignOutUseCase(authRepository)
+
+    @Provides
+    @Singleton
+    fun provideToggleBookMarkUseCase(userPrefsRepository: UserPrefsRepository): ToggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateAppSetupState(userPrefsRepository: UserPrefsRepository): UpdateAppSetupState = UpdateAppSetupState(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun updateUserUseCase(userRepository: UserRepository): UpdateUserUseCase = UpdateUserUseCase(userRepository)
+
+    @Provides
+    @Singleton
+    fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase = SignUpUseCase(authRepository)
 }
+

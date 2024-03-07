@@ -2,7 +2,9 @@ package com.githukudenis.comlib.feature.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
+import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -13,7 +15,9 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val comlibUseCases: ComlibUseCases
+    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val signOutUseCase: SignOutUseCase
 ) : ViewModel() {
 
     var uiState: MutableStateFlow<ProfileUiState> = MutableStateFlow(ProfileUiState())
@@ -21,7 +25,7 @@ class ProfileViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
+            getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
                     getProfileDetails(prefs.userId ?: return@collectLatest)
                 }
         }
@@ -31,7 +35,7 @@ class ProfileViewModel @Inject constructor(
         uiState.update {
             ProfileUiState(isLoading = true)
         }
-        val user = comlibUseCases.getUserProfileUseCase(userId)
+        val user = getUserProfileUseCase(userId)
         user?.toProfile()?.run {
             uiState.update {
                 ProfileUiState(
@@ -44,7 +48,7 @@ class ProfileViewModel @Inject constructor(
     fun onSignOut() {
         viewModelScope.launch {
             uiState.update { ProfileUiState(isLoading = true) }
-            comlibUseCases.signOutUseCase().also {
+            signOutUseCase().also {
                 uiState.update { ProfileUiState(isLoading = false, isSignedOut = true) }
             }
         }

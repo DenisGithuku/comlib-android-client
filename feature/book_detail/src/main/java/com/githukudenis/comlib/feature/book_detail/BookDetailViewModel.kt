@@ -3,8 +3,12 @@ package com.githukudenis.comlib.feature.book_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.common.DataResult
+import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.model.genre.Genre
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,7 +25,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
-    private val comlibUseCases: ComlibUseCases, savedStateHandle: SavedStateHandle
+    private val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
+    private val getBookDetailsUseCase: GetBookDetailsUseCase,
+    private val getReadBooksUseCase: GetReadBooksUseCase,
+    private val getGenreByIdUseCase: GetGenreByIdUseCase,
+    private val toggleBookMarkUseCase: ToggleBookMarkUseCase,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<BookDetailUiState> =
@@ -30,7 +39,7 @@ class BookDetailViewModel @Inject constructor(
 
     private val bookId: String? = savedStateHandle.get<String>("bookId")
 
-    val isFavourite: StateFlow<Boolean> = comlibUseCases.getFavouriteBooksUseCase()
+    val isFavourite: StateFlow<Boolean> = getFavouriteBooksUseCase()
         .distinctUntilChanged()
         .mapLatest {  bookMarks ->
             bookMarks.contains(bookId)
@@ -49,7 +58,7 @@ class BookDetailViewModel @Inject constructor(
 
     private fun getBook(bookId: String) {
         viewModelScope.launch {
-            comlibUseCases.getBookDetailsUseCase.invoke(bookId).collect { result ->
+            getBookDetailsUseCase.invoke(bookId).collect { result ->
                 when (result) {
                     DataResult.Empty -> Unit
                     is DataResult.Error -> _state.update {
@@ -62,7 +71,7 @@ class BookDetailViewModel @Inject constructor(
 
                     is DataResult.Success -> {
                         val isRead =
-                            comlibUseCases.getReadBooksUseCase().first().contains(result.data.id)
+                            getReadBooksUseCase().first().contains(result.data.id)
                         _state.update {
                             val bookUiModel = result.data.toBookUiModel(
                                 isRead = isRead,
@@ -90,18 +99,18 @@ class BookDetailViewModel @Inject constructor(
     private suspend fun fetchGenreById(
         genreId: String
     ): Genre? {
-        return comlibUseCases.getGenreByIdUseCase(genreId)
+        return getGenreByIdUseCase(genreId)
     }
 
     fun toggleBookmark(bookId: String) {
         viewModelScope.launch {
-            val bookMarks = comlibUseCases.getFavouriteBooksUseCase().first()
+            val bookMarks = getFavouriteBooksUseCase().first()
             val updatedBookmarkSet = if (bookMarks.contains(bookId)) {
                 bookMarks.minus(bookId)
             } else {
                 bookMarks.plus(bookId)
             }
-            comlibUseCases.toggleBookMarkUseCase(updatedBookmarkSet)
+            toggleBookMarkUseCase(updatedBookmarkSet)
         }
     }
 }

@@ -4,8 +4,14 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.TimePeriod
+import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -26,7 +32,13 @@ data class HomeScreenState(
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val libraryUseCase: ComlibUseCases,
+    private val getReadBooksUseCase: GetReadBooksUseCase,
+    private val getAllBooksUseCase: GetAllBooksUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
+    private val toggleBookMarkUseCase: ToggleBookMarkUseCase,
+    private val getStreakUseCase: GetStreakUseCase,
+    private val getUserPrefsUseCase: GetUserPrefsUseCase
 ) : StatefulViewModel<HomeScreenState>(HomeScreenState()) {
 
     init {
@@ -40,7 +52,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getReadBooks() {
         viewModelScope.launch {
-            libraryUseCase.getReadBooksUseCase().collectLatest {
+            getReadBooksUseCase().collectLatest {
                 update { copy(reads = it.toList()) }
             }
         }
@@ -48,7 +60,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getAvailableBooks() {
         viewModelScope.launch {
-            libraryUseCase.getAllBooksUseCase().collectLatest { result ->
+            getAllBooksUseCase().collectLatest { result ->
                 val value = when (result) {
                     DataResult.Empty -> FetchItemState.Success(emptyList())
                     is DataResult.Error -> FetchItemState.Error(message = result.message)
@@ -66,7 +78,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private suspend fun getUserProfile(userId: String) {
-        val profile = libraryUseCase.getUserProfileUseCase(userId)
+        val profile = getUserProfileUseCase(userId)
         if (profile == null) {
             update { copy(user = FetchItemState.Error(message = "Could not fetch profile")) }
         } else {
@@ -84,13 +96,13 @@ class HomeViewModel @Inject constructor(
 
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
-            val bookMarks = libraryUseCase.getFavouriteBooksUseCase().first()
+            val bookMarks = getFavouriteBooksUseCase().first()
             val updatedBookMarkSet = if (id in bookMarks) {
                 bookMarks.minus(id)
             } else {
                 bookMarks.plus(id)
             }
-            libraryUseCase.toggleBookMarkUseCase(
+            toggleBookMarkUseCase(
                 updatedBookMarkSet
             ).also {
                 getBookmarkedBooks()
@@ -101,7 +113,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getStreakState() {
         viewModelScope.launch {
-            libraryUseCase.getStreakUseCase().collectLatest {
+            getStreakUseCase().collectLatest {
                 update { copy(streakState = StreakState(bookMilestone = it)) }
             }
         }
@@ -109,7 +121,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            libraryUseCase.getUserPrefsUseCase().collectLatest { prefs ->
+            getUserPrefsUseCase().collectLatest { prefs ->
                 requireNotNull(prefs.userId).also {
                     getUserProfile(it)
                 }
@@ -119,9 +131,8 @@ class HomeViewModel @Inject constructor(
 
     private fun getBookmarkedBooks() {
         viewModelScope.launch {
-            val bookmarks = libraryUseCase.getFavouriteBooksUseCase().first()
+            val bookmarks = getFavouriteBooksUseCase().first()
             update { copy(bookmarks = bookmarks.toList()) }
-
         }
     }
 
