@@ -28,7 +28,7 @@ class BooksViewModel @Inject constructor(
         MutableStateFlow(BookListUiState.Loading)
 
     private val selectedGenre: MutableStateFlow<GenreUiModel> =
-        MutableStateFlow(GenreUiModel("", ""))
+        MutableStateFlow(GenreUiModel("All", ""))
 
 
     val uiState: StateFlow<BooksUiState> = combine(
@@ -66,7 +66,12 @@ class BooksViewModel @Inject constructor(
                 is DataResult.Success -> {/*
                     map genre to genre ui model
                      */
-                    val genres = result.data.map { genre -> genre.toGenreUiModel() }
+                    val genres = result.data.map { genre -> genre.toGenreUiModel() }.toMutableList()
+
+                    genres.add(
+                        0,
+                        selectedGenre.value
+                    )
                     genreListUiState.update { GenreListUiState.Success(genres) }
                 }
 
@@ -91,7 +96,14 @@ class BooksViewModel @Inject constructor(
                 is DataResult.Success -> {/*
                     map book to book ui model
                      */
-                    val books = result.data.map { book -> book.toBookItemUiModel() }
+                    val books = result.data.filter {
+                        if (selectedGenre.value.name == "All") {
+                            true
+                        } else {
+                            it.genre_ids.contains(selectedGenre.value.name)
+                        }
+                    }.map { book -> book.toBookItemUiModel() }
+
                     bookListUiState.update { BookListUiState.Success(books) }
                 }
 
@@ -102,7 +114,13 @@ class BooksViewModel @Inject constructor(
         }
     }
 
-    fun onChangeGenre(genreUiModel: GenreUiModel) {
-        selectedGenre.update { genreUiModel  }
+    fun onChangeGenre(id: String) {
+        viewModelScope.launch {
+            val updatedGenre = (genreListUiState.value as GenreListUiState.Success).genres.first {
+                it.id == id
+            }
+            selectedGenre.update { updatedGenre }
+            getBookList()
+        }
     }
 }

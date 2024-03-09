@@ -5,4 +5,5 @@
     <string name="cancel">Cancel</string>
     <string name="minimal_dialog_positive_button">Got it</string>
     <string name="default_loading_indicator">Just a moment…</string>
+    <string name="selection_indicator">Selection indicator</string>
 </resources>
