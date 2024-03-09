@@ -2,7 +2,7 @@ package com.githukudenis.comlib.feature.home
 
 import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
@@ -13,7 +13,7 @@ import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
@@ -31,7 +31,7 @@ class HomeViewModelTest {
     lateinit var homeViewModel: HomeViewModel
     lateinit var getReadBooksUseCase: GetReadBooksUseCase
     lateinit var getAllBooksUseCase: GetAllBooksUseCase
-    lateinit var getFavouriteBooksUseCase: GetFavouriteBooksUseCase
+    lateinit var getBookmarkedBooksUseCase: GetBookmarkedBooksUseCase
     lateinit var getStreakUseCase: GetStreakUseCase
     lateinit var getUserProfileUseCase: GetUserProfileUseCase
     lateinit var getUserPrefsUseCase: GetUserPrefsUseCase
@@ -46,7 +46,7 @@ class HomeViewModelTest {
         getAllBooksUseCase = GetAllBooksUseCase(
             FakeBooksRepository()
         )
-        getFavouriteBooksUseCase = GetFavouriteBooksUseCase(
+        getBookmarkedBooksUseCase = GetBookmarkedBooksUseCase(
             FakeUserPrefsRepository()
         )
         getStreakUseCase = GetStreakUseCase(
@@ -64,7 +64,7 @@ class HomeViewModelTest {
         homeViewModel = HomeViewModel(
             getReadBooksUseCase = getReadBooksUseCase,
             getAllBooksUseCase = getAllBooksUseCase,
-            getFavouriteBooksUseCase = getFavouriteBooksUseCase,
+            getBookmarkedBooksUseCase = getBookmarkedBooksUseCase,
             getStreakUseCase = getStreakUseCase,
             getUserProfileUseCase = getUserProfileUseCase,
             toggleBookMarkUseCase = toggleBookmarksUseCase,
@@ -88,9 +88,9 @@ class HomeViewModelTest {
     }
 
     @Test
-    fun onToggleFavourite() = runTest(UnconfinedTestDispatcher()) {
+    fun onToggleFavourite() = runTest {
         homeViewModel.onToggleFavourite("4")
-
+        advanceUntilIdle()
         val bookMarks = homeViewModel.state.value.bookmarks
         assertContains(bookMarks, "4")
     }

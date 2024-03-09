@@ -4,7 +4,7 @@ import com.githukudenis.comlib.core.common.ComlibConnectivityManager
 import com.githukudenis.comlib.core.domain.usecases.FormatDateUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetNetworkConnectivityUseCase
@@ -49,7 +49,7 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideGetFavouriteBooksUseCase(userPrefsRepository: UserPrefsRepository): GetFavouriteBooksUseCase = GetFavouriteBooksUseCase(userPrefsRepository)
+    fun provideGetFavouriteBooksUseCase(userPrefsRepository: UserPrefsRepository): GetBookmarkedBooksUseCase = GetBookmarkedBooksUseCase(userPrefsRepository)
 
     @Provides
     @Singleton

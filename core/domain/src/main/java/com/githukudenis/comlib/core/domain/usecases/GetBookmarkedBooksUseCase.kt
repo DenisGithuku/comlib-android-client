@@ -5,7 +5,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.mapLatest
 import javax.inject.Inject
 
-class GetFavouriteBooksUseCase @Inject constructor(
+class GetBookmarkedBooksUseCase @Inject constructor(
     private val userPrefsRepository: UserPrefsRepository
 ) {
     operator fun invoke(): Flow<Set<String>> =

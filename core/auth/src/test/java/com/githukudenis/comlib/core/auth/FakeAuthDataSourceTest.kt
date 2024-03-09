@@ -23,7 +23,6 @@ class FakeAuthDataSourceTest {
         val userAuthData = UserAuthData(
             email = "alice.doe@example-pet-store.com",
             password = "password",
-            age = 40,
             firstname = "Alice",
             lastname = "Doe"
         )
@@ -36,7 +35,6 @@ class FakeAuthDataSourceTest {
         val userAuthData = UserAuthData(
             email = "sabrina.doe@example-pet-store.com",
             password = "password",
-            age = 40,
             firstname = "Sabrina",
             lastname = "Doe"
         )
