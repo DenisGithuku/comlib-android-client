@@ -4,7 +4,11 @@ import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
+import com.githukudenis.comlib.core.domain.usecases.UpdateAppSetupState
+import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.genre.Genre
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -29,7 +33,11 @@ data class GenreSetupUiState(
 
 @HiltViewModel
 class GenreSetupViewModel @Inject constructor(
-    private val comlibUseCases: ComlibUseCases
+    private val getGenresUseCase: GetGenresUseCase,
+    private val updateUserUseCase: UpdateUserUseCase,
+    private val updateAppSetupState: UpdateAppSetupState,
+    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase,
 ) : StatefulViewModel<GenreSetupUiState>(GenreSetupUiState()) {
 
     private var genresJob: Job? = null
@@ -41,7 +49,7 @@ class GenreSetupViewModel @Inject constructor(
     private fun getGenres() {
         genresJob?.cancel()
         genresJob = viewModelScope.launch {
-            comlibUseCases.getGenresUseCase().catch { throwable ->
+            getGenresUseCase().catch { throwable ->
                 update {
                     copy(
                         isLoading = false,
@@ -77,18 +85,18 @@ class GenreSetupViewModel @Inject constructor(
             if (state.value.genres.any { it.isSelected }) {
                 onUpdateUser()
             }
-            comlibUseCases.updateAppSetupState(isSetupComplete = true)
+            updateAppSetupState(isSetupComplete = true)
             update { copy(isSetupComplete = true) }
         }
     }
 
     private suspend fun onUpdateUser() {
-        requireNotNull(comlibUseCases.getUserPrefsUseCase().first().userId).run {
-            val user = comlibUseCases.getUserProfileUseCase(this)
+        requireNotNull(getUserPrefsUseCase().first().userId).run {
+            val user = getUserProfileUseCase(this)
             user?.let {
                 val genres = it.preferredGenres.toMutableList()
                 genres.addAll(state.value.genres.map { it.genre.id })
-                comlibUseCases.updateUserUseCase(
+                updateUserUseCase(
                     it.copy(
                         preferredGenres = genres
                     )

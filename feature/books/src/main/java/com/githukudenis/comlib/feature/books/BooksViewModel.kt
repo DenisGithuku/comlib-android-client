@@ -2,8 +2,9 @@ package com.githukudenis.comlib.feature.books
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
 import com.githukudenis.comlib.core.common.DataResult
+import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel @Inject constructor(
-    private val comlibUseCases: ComlibUseCases
+    private val getGenresUseCase: GetGenresUseCase,
+    private val getAllBooksUseCase: GetAllBooksUseCase
 ) : ViewModel() {
 
     private val genreListUiState: MutableStateFlow<GenreListUiState> =
@@ -51,7 +53,7 @@ class BooksViewModel @Inject constructor(
     }
 
     private suspend fun getGenreList() {
-        comlibUseCases.getGenresUseCase().collect { result ->
+        getGenresUseCase().collect { result ->
             when (result) {
                 DataResult.Empty -> {
                     genreListUiState.update { GenreListUiState.Error(message = "No genres found") }
@@ -76,7 +78,7 @@ class BooksViewModel @Inject constructor(
     }
 
     private suspend fun getBookList() {
-        comlibUseCases.getAllBooksUseCase().collect { result ->
+        getAllBooksUseCase().collect { result ->
             when (result) {
                 DataResult.Empty -> {
                     bookListUiState.update { BookListUiState.Error(message = "No books found") }

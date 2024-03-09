@@ -2,7 +2,7 @@ package com.githukudenis.comlib
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.domain.usecases.ComlibUseCases
+import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel @Inject constructor(
-    firebaseAuth: FirebaseAuth, private val comlibUseCases: ComlibUseCases
+    firebaseAuth: FirebaseAuth, private val getUserPrefsUseCase: GetUserPrefsUseCase
 ) : ViewModel() {
     private val _state: MutableStateFlow<MainActivityUiState> =
         MutableStateFlow(MainActivityUiState())
@@ -30,7 +30,7 @@ class MainActivityViewModel @Inject constructor(
 
     private fun getSetupState() {
         viewModelScope.launch {
-            comlibUseCases.getUserPrefsUseCase().collectLatest { userPrefs ->
+            getUserPrefsUseCase().collectLatest { userPrefs ->
                     _state.update { it.copy(isSetup = userPrefs.isSetup) }
                 }
         }

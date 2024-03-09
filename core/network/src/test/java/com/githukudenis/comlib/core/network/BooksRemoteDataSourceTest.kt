@@ -1,32 +1,41 @@
 package com.githukudenis.comlib.core.network
 
 import com.githukudenis.comlib.core.model.book.Book
-import kotlinx.coroutines.test.TestScope
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import kotlin.test.assertEquals
 
 class BooksRemoteDataSourceTest {
-    private val fakeBooksRemoteDataSource = FakeBooksRemoteDataSource()
 
-    private val testScope = TestScope(UnconfinedTestDispatcher())
+    @get:Rule
+    val mainCoroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
+
+    lateinit var fakeBooksRemoteDataSource: FakeBooksRemoteDataSource
+
+
+    @Before
+    fun setup() {
+        fakeBooksRemoteDataSource = FakeBooksRemoteDataSource()
+    }
 
     @Test
-    fun getBooks() = testScope.runTest {
+    fun getBooks() = runTest {
         val result = fakeBooksRemoteDataSource.getBooks()
 
         assertEquals(result.data.books.size, 1)
     }
 
     @Test
-    fun getBook() = testScope.runTest {
+    fun getBook() = runTest {
         val result = fakeBooksRemoteDataSource.getBook("1")
         assertEquals(result?.description, "Good book")
     }
 
     @Test
-    fun addNewBook() = testScope.runTest {
+    fun addNewBook() = runTest {
         fakeBooksRemoteDataSource.addNewBook(
             Book(
                 _id = "2",
@@ -44,18 +53,5 @@ class BooksRemoteDataSourceTest {
             )
         )
         assertEquals(allBooks.size, 2)
-    }
-
-    @Test
-    fun getGenres() = testScope.runTest {
-        val result = fakeBooksRemoteDataSource.getGenres()
-        assertEquals(result.size, 2)
-    }
-
-    @Test
-    fun getGenreById() = testScope.runTest {
-        val result = fakeBooksRemoteDataSource.getGenreById("2")
-        assertEquals(result?.name, "Non-fiction")
-
     }
 }
