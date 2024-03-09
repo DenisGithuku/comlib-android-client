@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
@@ -25,7 +25,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel @Inject constructor(
-    private val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
+    private val getBookmarkedBooksUseCase: GetBookmarkedBooksUseCase,
     private val getBookDetailsUseCase: GetBookDetailsUseCase,
     private val getReadBooksUseCase: GetReadBooksUseCase,
     private val getGenreByIdUseCase: GetGenreByIdUseCase,
@@ -39,7 +39,7 @@ class BookDetailViewModel @Inject constructor(
 
     private val bookId: String? = savedStateHandle.get<String>("bookId")
 
-    val isFavourite: StateFlow<Boolean> = getFavouriteBooksUseCase()
+    val isFavourite: StateFlow<Boolean> = getBookmarkedBooksUseCase()
         .distinctUntilChanged()
         .mapLatest {  bookMarks ->
             bookMarks.contains(bookId)
@@ -104,7 +104,7 @@ class BookDetailViewModel @Inject constructor(
 
     fun toggleBookmark(bookId: String) {
         viewModelScope.launch {
-            val bookMarks = getFavouriteBooksUseCase().first()
+            val bookMarks = getBookmarkedBooksUseCase().first()
             val updatedBookmarkSet = if (bookMarks.contains(bookId)) {
                 bookMarks.minus(bookId)
             } else {
