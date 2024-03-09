@@ -5,7 +5,7 @@ import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetFavouriteBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
@@ -35,7 +35,7 @@ class HomeViewModel @Inject constructor(
     private val getReadBooksUseCase: GetReadBooksUseCase,
     private val getAllBooksUseCase: GetAllBooksUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getFavouriteBooksUseCase: GetFavouriteBooksUseCase,
+    private val getBookmarkedBooksUseCase: GetBookmarkedBooksUseCase,
     private val toggleBookMarkUseCase: ToggleBookMarkUseCase,
     private val getStreakUseCase: GetStreakUseCase,
     private val getUserPrefsUseCase: GetUserPrefsUseCase
@@ -96,7 +96,7 @@ class HomeViewModel @Inject constructor(
 
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
-            val bookMarks = getFavouriteBooksUseCase().first()
+            val bookMarks = getBookmarkedBooksUseCase().first()
             val updatedBookMarkSet = if (id in bookMarks) {
                 bookMarks.minus(id)
             } else {
@@ -104,10 +104,10 @@ class HomeViewModel @Inject constructor(
             }
             toggleBookMarkUseCase(
                 updatedBookMarkSet
-            ).also {
-                getBookmarkedBooks()
-                onRefreshAvailableBooks()
-            }
+            )
+
+            update { copy(bookmarks = updatedBookMarkSet.toList()) }
+            onRefreshAvailableBooks()
         }
     }
 
@@ -131,7 +131,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getBookmarkedBooks() {
         viewModelScope.launch {
-            val bookmarks = getFavouriteBooksUseCase().first()
+            val bookmarks = getBookmarkedBooksUseCase().first()
             update { copy(bookmarks = bookmarks.toList()) }
         }
     }
