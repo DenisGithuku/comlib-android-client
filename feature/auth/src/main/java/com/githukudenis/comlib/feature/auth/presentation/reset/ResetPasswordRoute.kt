@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,8 +32,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.feature.auth.R
 import kotlinx.coroutines.delay
@@ -55,6 +56,18 @@ fun ResetPasswordRoute(
             )
             delay(2000)
             onPasswordReset()
+        }
+    }
+
+    LaunchedEffect(state.error) {
+        if (state.error != null) {
+            state.error?.let {
+                snackbarHostState.showSnackbar(
+                    message = it.message ?: return@LaunchedEffect,
+                    duration = SnackbarDuration.Short
+                )
+                viewModel.onErrorShown()
+            }
         }
     }
 

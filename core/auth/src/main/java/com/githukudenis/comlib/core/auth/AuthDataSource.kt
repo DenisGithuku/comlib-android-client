@@ -55,9 +55,14 @@ class AuthDataSource @Inject constructor(
     }
 
     suspend fun signOut() = withContext(dispatcher.io) { firebaseAuth.signOut() }
-    suspend fun resetPassword(email: String) {
+    suspend fun resetPassword(email: String, onSuccess: (String) -> Unit, onError: (Throwable?) -> Unit) {
         withContext(dispatcher.io) {
-            firebaseAuth.sendPasswordResetEmail(email)
+            try {
+                firebaseAuth.sendPasswordResetEmail(email)
+                onSuccess("Password sent successfully!")
+            } catch (t: Throwable) {
+                onError(t)
+            }
         }
     }
 }

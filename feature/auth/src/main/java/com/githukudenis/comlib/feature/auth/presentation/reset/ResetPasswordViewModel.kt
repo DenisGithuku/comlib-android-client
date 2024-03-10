@@ -2,6 +2,8 @@ package com.githukudenis.comlib.feature.auth.presentation.reset
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.MessageType
+import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,12 +28,30 @@ class ResetPasswordViewModel @Inject constructor(
         viewModelScope.launch {
             val email = state.value.email
             state.update { prevState -> prevState.copy(isLoading = true) }
-            val result = authRepository.resetPassword(email)
-            state.update { prevState ->
-                prevState.copy(
-                    isLoading = false, isSuccess = true
-                )
-            }
+            authRepository.resetPassword(email, onSuccess = {
+                state.update { prevState ->
+                    prevState.copy(
+                        isLoading = false, isSuccess = true
+                    )
+                }
+            }, onError = {
+                state.update { prevState ->
+                    prevState.copy(
+                        error = UserMessage(
+                            message = it?.message, messageType = MessageType.ERROR
+                        )
+                    )
+                }
+            })
+
+        }
+    }
+
+    fun onErrorShown() {
+        state.update {
+            it.copy(
+                error = null
+            )
         }
     }
 }
