@@ -58,6 +58,10 @@ class LoginViewModel @Inject constructor(
             is LoginUiEvent.ToggleRememberMe -> {
                 toggleRememberMe(event.remember)
             }
+
+            LoginUiEvent.ResetState -> {
+                resetState()
+            }
         }
     }
 
