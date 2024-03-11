@@ -6,7 +6,8 @@ import com.githukudenis.comlib.core.model.genre.Genre
 sealed class BooksUiState {
     data object Loading : BooksUiState()
     data class Success(
-        val selectedGenre: GenreUiModel,
+        val searchState: GenreSearchState = GenreSearchState(),
+        val selectedGenres: List<GenreUiModel>,
         val bookListUiState: BookListUiState,
         val genreListUiState: GenreListUiState
     ) : BooksUiState()
@@ -18,12 +19,13 @@ sealed class BookListUiState {
     data object Loading : BookListUiState()
     data class Success(val books: List<BookItemUiModel>) : BookListUiState()
     data class Error(val message: String) : BookListUiState()
+    data object Empty: BookListUiState()
 }
 
 sealed class GenreListUiState {
     data object Loading : GenreListUiState()
     data class Success(
-        val genres: List<GenreUiModel>
+        val genres: List<GenreUiModel>,
     ) : GenreListUiState()
 
     data class Error(val message: String) : GenreListUiState()
@@ -51,4 +53,8 @@ data class BookItemUiModel(
     val authors: List<String>,
     val genres: List<String>,
     val imageUrl: String,
+)
+
+data class GenreSearchState(
+    val query: String = ""
 )

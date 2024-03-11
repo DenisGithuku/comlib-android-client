@@ -1,4 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="all_books_title">Books</string>
+    <string name="default_more_genres_id">65eebf0badf8c6d9a1d1db48</string>
+    <string name="default_more_genres_name">More</string>
+    <string name="bottom_sheet_tittle">Select genres</string>
+    <string name="empty_list_label">No %s please try another category.</string>
 </resources>
