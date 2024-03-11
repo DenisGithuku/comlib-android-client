@@ -51,4 +51,17 @@ class FakeAuthDataSource {
             onError(Throwable("No user found"))
         }
     }
+
+    suspend fun resetPassword(
+        email: String,
+        onSuccess: suspend (String) -> Unit,
+        onError: (Throwable?) -> Unit
+    ) {
+        val userRegistered = users.any { user -> user.email == email }
+        if (userRegistered) {
+            onSuccess("Confirmed! Email sent.")
+        } else {
+            onError(Throwable("Couldn't find that user!"))
+        }
+    }
 }

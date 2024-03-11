@@ -26,7 +26,7 @@ class FakeAuthRepository: AuthRepository {
 
     }
 
-    override suspend fun resetPassword(email: String) {
-
+    override suspend fun resetPassword(email: String, onSuccess: (String) -> Unit, onError: (Throwable?) -> Unit) {
+        authDataSource.resetPassword(email, onSuccess, onError)
     }
 }

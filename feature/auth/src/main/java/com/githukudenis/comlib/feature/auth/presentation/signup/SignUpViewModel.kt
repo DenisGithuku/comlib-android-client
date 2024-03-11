@@ -2,19 +2,14 @@ package com.githukudenis.comlib.feature.auth.presentation.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.core.domain.usecases.GetNetworkConnectivityUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.model.UserAuthData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onEach
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -22,7 +17,6 @@ import javax.inject.Inject
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
     private val signUpUseCase: SignUpUseCase,
-    private val getNetworkConnectivityUseCase: GetNetworkConnectivityUseCase
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
@@ -31,16 +25,16 @@ class SignUpViewModel @Inject constructor(
     private val _showNetworkDialog = MutableStateFlow(false)
     val showNetworkDialog: StateFlow<Boolean> get() = _showNetworkDialog.asStateFlow()
 
-    private val networkStatus = getNetworkConnectivityUseCase
-        .networkStatus
-        .onEach { netStatus ->
-            _showNetworkDialog.update { netStatus == NetworkStatus.Lost || netStatus == NetworkStatus.Unavailable }
-        }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = NetworkStatus.Unavailable
-        )
+//    private val networkStatus = getNetworkConnectivityUseCase
+//        .networkStatus
+//        .onEach { netStatus ->
+//            _showNetworkDialog.update { netStatus == NetworkStatus.Lost || netStatus == NetworkStatus.Unavailable }
+//        }
+//        .stateIn(
+//            scope = viewModelScope,
+//            started = SharingStarted.WhileSubscribed(5_000),
+//            initialValue = NetworkStatus.Unavailable
+//        )
 
     fun onEvent(event: SignUpUiEvent) {
         when (event) {

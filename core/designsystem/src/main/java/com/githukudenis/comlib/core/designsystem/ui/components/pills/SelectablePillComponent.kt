@@ -1,4 +1,4 @@
-package com.githukudenis.comlib.feature.genre_setup
+package com.githukudenis.comlib.core.designsystem.ui.components.pills
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
@@ -16,50 +16,60 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.githukudenis.comlib.core.common.untangle
+import com.githukudenis.comlib.core.designsystem.R
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
-fun SelectableGenreComponent(
+fun SelectablePillComponent(
     modifier: Modifier = Modifier,
-    selectableGenreItem: SelectableGenreItem,
+    value: String,
+    isSelected: Boolean,
+    hasIcon: Boolean = true,
     onToggleSelection: (String) -> Unit
 ) {
 
     Surface(shape = CircleShape,
         border = BorderStroke(
-            width = if (selectableGenreItem.isSelected) 0.dp else 1.dp,
-            color = if (selectableGenreItem.isSelected) Color.Transparent else MaterialTheme.colorScheme.onBackground.copy(
+            width = if (isSelected) 0.dp else 1.dp,
+            color = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.onBackground.copy(
                 alpha = 0.1f
             )
         ),
-        color = if (selectableGenreItem.isSelected) MaterialTheme.colorScheme.primary.copy(
-            alpha = 0.1f
-        ) else Color.Transparent,
-        onClick = { onToggleSelection(selectableGenreItem.genre.id) }) {
+        color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
+        onClick = { onToggleSelection(value) }) {
         Row(
             modifier = Modifier.padding(LocalDimens.current.medium),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.small)
         ) {
             Text(
-                text = selectableGenreItem.genre.name.untangle("-"),
+                text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (selectableGenreItem.isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(
+                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground.copy(
                     alpha = 0.7f
                 )
             )
-            if (selectableGenreItem.isSelected) {
+            if (isSelected && hasIcon) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = stringResource(id = R.string.selection_indicator),
-                    tint = if (selectableGenreItem.isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(
+                    tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(
                         alpha = 0.7f
                     )
                 )
             }
         }
     }
+}
 
+@Preview
+@Composable
+private fun SelectableGenrePreview() {
+    SelectablePillComponent(
+        value = "Self help",
+        isSelected = false,
+        hasIcon = true,
+        onToggleSelection = {})
 }

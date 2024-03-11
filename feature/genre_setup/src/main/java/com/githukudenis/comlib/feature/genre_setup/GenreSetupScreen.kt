@@ -26,9 +26,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.githukudenis.comlib.core.common.untangle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
+import com.githukudenis.comlib.core.designsystem.ui.components.pills.SelectablePillComponent
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
@@ -156,8 +158,11 @@ private fun GenreSetupContent(
                     verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
                 ) {
                     state.genres.map { item ->
-                        SelectableGenreComponent(
-                            selectableGenreItem = item, onToggleSelection = onToggleGenreSelection
+                        SelectablePillComponent(
+                            value = item.genre.name.untangle("-"),
+                            isSelected = item.isSelected,
+                            hasIcon = true,
+                            onToggleSelection = onToggleGenreSelection
                         )
                     }
                 }

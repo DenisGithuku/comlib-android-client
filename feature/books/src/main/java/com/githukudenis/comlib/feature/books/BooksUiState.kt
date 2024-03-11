@@ -7,7 +7,8 @@ sealed class BooksUiState {
     data object Loading : BooksUiState()
     data class Success(
         val selectedGenre: GenreUiModel,
-        val bookListUiState: BookListUiState, val genreListUiState: GenreListUiState
+        val bookListUiState: BookListUiState,
+        val genreListUiState: GenreListUiState
     ) : BooksUiState()
 
     data class Error(val message: String) : BooksUiState()
@@ -21,14 +22,16 @@ sealed class BookListUiState {
 
 sealed class GenreListUiState {
     data object Loading : GenreListUiState()
-    data class Success(val genres: List<GenreUiModel>) : GenreListUiState()
+    data class Success(
+        val genres: List<GenreUiModel>
+    ) : GenreListUiState()
+
     data class Error(val message: String) : GenreListUiState()
 }
 
 fun Genre.toGenreUiModel(): GenreUiModel {
     return GenreUiModel(
-        name = name,
-        id = id
+        name = name, id = id
     )
 }
 
@@ -38,10 +41,7 @@ data class GenreUiModel(
 
 fun Book.toBookItemUiModel(): BookItemUiModel {
     return BookItemUiModel(
-        id = id,
-        title = title,
-        authors = authors,
-        imageUrl = image,
+        id = id, title = title, authors = authors, imageUrl = image, genres = genre_ids
     )
 }
 
@@ -49,5 +49,6 @@ data class BookItemUiModel(
     val id: String,
     val title: String,
     val authors: List<String>,
+    val genres: List<String>,
     val imageUrl: String,
 )

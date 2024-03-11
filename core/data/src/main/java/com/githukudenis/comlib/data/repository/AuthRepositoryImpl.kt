@@ -39,6 +39,6 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun signOut() = authDataSource.signOut()
-    override suspend fun resetPassword(email: String) { authDataSource.resetPassword(email) }
+    override suspend fun resetPassword(email: String, onSuccess: (String) -> Unit, onError: (Throwable?) -> Unit) { authDataSource.resetPassword(email, onSuccess, onError) }
 
 }

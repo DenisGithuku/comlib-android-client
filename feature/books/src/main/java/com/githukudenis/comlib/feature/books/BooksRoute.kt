@@ -1,7 +1,6 @@
 package com.githukudenis.comlib.feature.books
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +40,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.common.untangle
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.loadingBrush
+import com.githukudenis.comlib.core.designsystem.ui.components.pills.SelectablePillComponent
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.books.components.BookComponent
 
@@ -64,7 +64,7 @@ fun BooksRoute(
 @Composable
 fun BooksScreen(
     state: BooksUiState,
-    onChangeGenre: (GenreUiModel) -> Unit,
+    onChangeGenre: (String) -> Unit,
     onOpenBook: (String) -> Unit,
     onNavigateUp: () -> Unit
 ) {
@@ -87,6 +87,7 @@ fun BooksScreen(
             is BooksUiState.Success -> {
                 LoadedScreen(
                     paddingValues = innerPadding,
+                    selectedGenreUiModel = state.selectedGenre,
                     genreListUiState = state.genreListUiState,
                     bookListUiState = state.bookListUiState,
                     onChangeGenre = onChangeGenre,
@@ -161,9 +162,10 @@ private fun LoadingScreen() {
 @Composable
 private fun LoadedScreen(
     paddingValues: PaddingValues,
+    selectedGenreUiModel: GenreUiModel,
     genreListUiState: GenreListUiState,
     bookListUiState: BookListUiState,
-    onChangeGenre: (GenreUiModel) -> Unit,
+    onChangeGenre: (String) -> Unit,
     onOpenBook: (String) -> Unit,
 ) {
 
@@ -186,7 +188,7 @@ private fun LoadedScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(vertical = LocalDimens.current.large),
+                            .padding(vertical = LocalDimens.current.medium),
                         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                     ) {
                         (0..4).map {
@@ -208,21 +210,25 @@ private fun LoadedScreen(
                         contentPadding = PaddingValues(LocalDimens.current.extraLarge)
                     ) {
                         items(items = genreListUiState.genres, key = { it.id }) { genre ->
-                            Box(modifier = Modifier
-                                .clip(CircleShape)
-                                .background(
-                                    color = MaterialTheme.colorScheme.onBackground.copy(
-                                        alpha = 0.1f
-                                    )
-                                )
-                                .clickable { onChangeGenre(genre) }) {
-                                Text(
-                                    text = genre.name.untangle("-"), modifier = Modifier.padding(
-                                        horizontal = LocalDimens.current.extraLarge,
-                                        vertical = LocalDimens.current.medium
-                                    ), style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
+                            SelectablePillComponent(value = genre.name.untangle("-"),
+                                isSelected = genre.id == selectedGenreUiModel.id,
+                                hasIcon = false,
+                                onToggleSelection = onChangeGenre)
+//                            Box(modifier = Modifier
+//                                .clip(CircleShape)
+//                                .background(
+//                                    color = MaterialTheme.colorScheme.onBackground.copy(
+//                                        alpha = 0.1f
+//                                    )
+//                                )
+//                                .clickable { onChangeGenre(genre) }) {
+//                                Text(
+//                                    text = genre.name.untangle("-"), modifier = Modifier.padding(
+//                                        horizontal = LocalDimens.current.extraLarge,
+//                                        vertical = LocalDimens.current.medium
+//                                    ), style = MaterialTheme.typography.bodyMedium
+//                                )
+//                            }
                         }
                     }
                 }

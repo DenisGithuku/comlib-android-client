@@ -9,5 +9,5 @@ interface AuthRepository {
     suspend fun login(email: String, password: String, onSuccess: suspend (String) -> Unit, onError: (Throwable?) -> Unit)
 
     suspend fun signOut()
-    suspend fun resetPassword(email: String)
+    suspend fun resetPassword(email: String, onSuccess: (String) -> Unit, onError: (Throwable?) -> Unit)
 }
