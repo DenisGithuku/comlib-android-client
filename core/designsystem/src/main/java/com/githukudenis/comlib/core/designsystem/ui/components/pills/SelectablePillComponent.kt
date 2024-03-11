@@ -25,6 +25,7 @@ import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 fun SelectablePillComponent(
     modifier: Modifier = Modifier,
     value: String,
+    id: String,
     isSelected: Boolean,
     hasIcon: Boolean = true,
     onToggleSelection: (String) -> Unit
@@ -38,7 +39,7 @@ fun SelectablePillComponent(
             )
         ),
         color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        onClick = { onToggleSelection(value) }) {
+        onClick = { onToggleSelection(id) }) {
         Row(
             modifier = Modifier.padding(LocalDimens.current.medium),
             verticalAlignment = Alignment.CenterVertically,
@@ -71,5 +72,6 @@ private fun SelectableGenrePreview() {
         value = "Self help",
         isSelected = false,
         hasIcon = true,
+        id = "",
         onToggleSelection = {})
 }

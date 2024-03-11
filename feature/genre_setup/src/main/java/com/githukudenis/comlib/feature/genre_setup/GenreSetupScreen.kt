@@ -162,6 +162,7 @@ private fun GenreSetupContent(
                             value = item.genre.name.untangle("-"),
                             isSelected = item.isSelected,
                             hasIcon = true,
+                            id = item.genre.id,
                             onToggleSelection = onToggleGenreSelection
                         )
                     }
