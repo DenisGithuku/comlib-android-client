@@ -22,7 +22,7 @@ class BooksViewModel @Inject constructor(
     private val getAllBooksUseCase: GetAllBooksUseCase
 ) : ViewModel() {
 
-    val moreGenreModel = GenreUiModel(
+    private val moreGenreModel = GenreUiModel(
         "More", "65eebf0badf8c6d9a1d1db48"
     )
 
@@ -37,7 +37,6 @@ class BooksViewModel @Inject constructor(
             name = "All",
             id = "65eeb125703fed5c184518bf"
         )))
-
 
 
     val uiState: StateFlow<BooksUiState> = combine(
@@ -55,75 +54,80 @@ class BooksViewModel @Inject constructor(
     )
 
     init {
-        viewModelScope.launch {
             getGenreList()
             getBookList()
-        }
     }
 
-    private suspend fun getGenreList() {
-        getGenresUseCase().collect { result ->
-            when (result) {
-                DataResult.Empty -> {
-                    genreListUiState.update { GenreListUiState.Error(message = "No genres found") }
-                }
+    private fun getGenreList() {
+        viewModelScope.launch {
+            getGenresUseCase().collect { result ->
+                when (result) {
+                    DataResult.Empty -> {
+                        genreListUiState.update { GenreListUiState.Error(message = "No genres found") }
+                    }
 
-                is DataResult.Loading -> {
-                    genreListUiState.update { GenreListUiState.Loading }
-                }
+                    is DataResult.Loading -> {
+                        genreListUiState.update { GenreListUiState.Loading }
+                    }
 
-                is DataResult.Success -> {/*
+                    is DataResult.Success -> {/*
                     map genre to genre ui model
                      */
-                    val genres = result.data
-                        .map { genre -> genre.toGenreUiModel() }
-                        .sortedBy { it.name }.toMutableList()
+                        val genres = result.data
+                            .map { genre -> genre.toGenreUiModel() }
+                            .sortedBy { it.name }.toMutableList()
 
-                    genres.add(
-                        0, selectedGenres.value.first()
-                    )
-                    genres.add(
-                        genres.size, moreGenreModel
-                    )
-                    genreListUiState.update { GenreListUiState.Success(genres) }
-                }
+                        genres.add(
+                            0, selectedGenres.value.first()
+                        )
+                        genres.add(
+                            genres.size, moreGenreModel
+                        )
+                        genreListUiState.update { GenreListUiState.Success(genres) }
+                    }
 
-                is DataResult.Error -> {
-                    genreListUiState.update { GenreListUiState.Error(result.message) }
+                    is DataResult.Error -> {
+                        genreListUiState.update { GenreListUiState.Error(result.message) }
+                    }
                 }
             }
         }
     }
 
-    private suspend fun getBookList() {
-        getAllBooksUseCase().collect { result ->
-            when (result) {
-                DataResult.Empty -> {
-                    bookListUiState.update { BookListUiState.Error(message = "No books found") }
-                }
+    private fun getBookList() {
+        viewModelScope.launch {
+            getAllBooksUseCase().collect { result ->
+                when (result) {
+                    DataResult.Empty -> {
+                        bookListUiState.update { BookListUiState.Error(message = "No books found") }
+                    }
 
-                is DataResult.Loading -> {
-                    bookListUiState.update { BookListUiState.Loading }
-                }
+                    is DataResult.Loading -> {
+                        bookListUiState.update { BookListUiState.Loading }
+                    }
 
-                is DataResult.Success -> {/*
+                    is DataResult.Success -> {/*
                     map book to book ui model
                      */
-                    val books = result.data.filter { book ->
-                        if (selectedGenres.value.map { it.name }.contains("All")) {
-                            true
-                        } else {
-                            selectedGenres.value.map { it.id }.any { it in book.genre_ids }
-                        }
-                    }.map { book -> book.toBookItemUiModel() }.sortedBy { it.title }
+                        val books = result.data.filter { book ->
+                            if (selectedGenres.value.map { it.name }.contains("All")) {
+                                true
+                            } else {
+                                selectedGenres.value.map { it.id }.any { it in book.genre_ids }
+                            }
+                        }.map { book -> book.toBookItemUiModel() }.sortedBy { it.title }
 
-                    val updatedState = if(books.isEmpty()) BookListUiState.Empty else BookListUiState.Success(books)
+                        val updatedState =
+                            if (books.isEmpty()) BookListUiState.Empty else BookListUiState.Success(
+                                books
+                            )
 
-                    bookListUiState.update { updatedState }
-                }
+                        bookListUiState.update { updatedState }
+                    }
 
-                is DataResult.Error -> {
-                    bookListUiState.update { BookListUiState.Error(result.message) }
+                    is DataResult.Error -> {
+                        bookListUiState.update { BookListUiState.Error(result.message) }
+                    }
                 }
             }
         }
