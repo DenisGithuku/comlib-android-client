@@ -4,11 +4,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
+import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
@@ -19,7 +22,9 @@ import javax.inject.Inject
 @HiltViewModel
 class BooksViewModel @Inject constructor(
     private val getGenresUseCase: GetGenresUseCase,
-    private val getAllBooksUseCase: GetAllBooksUseCase
+    private val getAllBooksUseCase: GetAllBooksUseCase,
+    private val getGenresByUserUseCase: GetGenresByUserUseCase,
+    private val togglePreferredGenres: TogglePreferredGenres
 ) : ViewModel() {
 
     private val moreGenreModel = GenreUiModel(
@@ -32,11 +37,13 @@ class BooksViewModel @Inject constructor(
     private val bookListUiState: MutableStateFlow<BookListUiState> =
         MutableStateFlow(BookListUiState.Loading)
 
-    private val selectedGenres: MutableStateFlow<List<GenreUiModel>> =
-        MutableStateFlow(listOf(GenreUiModel(
-            name = "All",
-            id = "65eeb125703fed5c184518bf"
-        )))
+    private val selectedGenres: MutableStateFlow<List<GenreUiModel>> = MutableStateFlow(
+        listOf(
+            GenreUiModel(
+                name = "All", id = "65eeb125703fed5c184518bf"
+            )
+        )
+    )
 
 
     val uiState: StateFlow<BooksUiState> = combine(
@@ -54,8 +61,8 @@ class BooksViewModel @Inject constructor(
     )
 
     init {
-            getGenreList()
-            getBookList()
+        getGenreList()
+        getBookList()
     }
 
     private fun getGenreList() {
@@ -73,9 +80,9 @@ class BooksViewModel @Inject constructor(
                     is DataResult.Success -> {/*
                     map genre to genre ui model
                      */
-                        val genres = result.data
-                            .map { genre -> genre.toGenreUiModel() }
-                            .sortedBy { it.name }.toMutableList()
+                        val genres =
+                            result.data.map { genre -> genre.toGenreUiModel() }.sortedBy { it.name }
+                                .toMutableList()
 
                         genres.add(
                             0, selectedGenres.value.first()
@@ -83,6 +90,7 @@ class BooksViewModel @Inject constructor(
                         genres.add(
                             genres.size, moreGenreModel
                         )
+                        getPreferredGenreList(genres)
                         genreListUiState.update { GenreListUiState.Success(genres) }
                     }
 
@@ -133,6 +141,21 @@ class BooksViewModel @Inject constructor(
         }
     }
 
+    private fun getPreferredGenreList(genres: List<GenreUiModel>) {
+        viewModelScope.launch {
+            getGenresByUserUseCase().collectLatest { preferred ->
+                selectedGenres.update { prevState ->
+                    val newList = prevState.toMutableList()
+                    newList.addAll(genres.filter {
+                        it.id in preferred
+                    })
+                    newList
+                }
+            }
+        }
+    }
+
+
     fun onChangeGenre(id: String) {
         viewModelScope.launch {
             when (val genreState = genreListUiState.value) {
@@ -153,6 +176,10 @@ class BooksViewModel @Inject constructor(
                         selected.add(updatedGenre)
                     }
 
+                    val updatedGenrePrefs =
+                        selected.drop(1).map { it.id }
+                            .toSet()
+                    togglePreferredGenres(updatedGenrePrefs)
                     selectedGenres.update { selected }
                     getBookList()
                 }

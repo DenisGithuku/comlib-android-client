@@ -26,4 +26,7 @@ class UserPrefsRepositoryImpl @Inject constructor(
     override suspend fun setSetupStatus(isComplete: Boolean) {
         userPrefsDataSource.setSetupState(isComplete)
     }
+    override suspend fun setPreferredGenres(genres: Set<String>) {
+        userPrefsDataSource.setPreferredGenres(genres)
+    }
 }
