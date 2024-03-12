@@ -2,10 +2,13 @@ package com.githukudenis.comlib.feature.books
 
 import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
+import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeGenresRepository
+import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -22,6 +25,9 @@ class BooksViewModelTest {
     lateinit var viewModel: BooksViewModel
     lateinit var getAllBooksUseCase: GetAllBooksUseCase
     lateinit var getGenresUseCase: GetGenresUseCase
+    lateinit var getGenresByUserUseCase: GetGenresByUserUseCase
+    lateinit var togglePreferredGenres: TogglePreferredGenres
+
 
     @Before
     fun setUp() {
@@ -31,7 +37,18 @@ class BooksViewModelTest {
         getGenresUseCase = GetGenresUseCase(
             FakeGenresRepository()
         )
-        viewModel = BooksViewModel(getGenresUseCase, getAllBooksUseCase)
+        getGenresByUserUseCase = GetGenresByUserUseCase(
+            FakeUserPrefsRepository()
+        )
+        togglePreferredGenres = TogglePreferredGenres(
+            FakeUserPrefsRepository()
+        )
+        viewModel = BooksViewModel(
+            getGenresUseCase,
+            getAllBooksUseCase,
+            getGenresByUserUseCase,
+            togglePreferredGenres
+        )
     }
 
     @Test
@@ -77,6 +94,5 @@ class BooksViewModelTest {
                 )
             }
         }
-
     }
 }
