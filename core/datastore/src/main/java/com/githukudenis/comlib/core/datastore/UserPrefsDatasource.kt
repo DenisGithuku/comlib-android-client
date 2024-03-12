@@ -24,7 +24,8 @@ class UserPrefsDatasource @Inject constructor(
             userId = prefs[PreferenceKeys.userIdPreferenceKey],
             readBooks = prefs[PreferenceKeys.readBooks]?.toSet() ?: emptySet(),
             bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
-            isSetup = prefs[PreferenceKeys.isSetup] ?: false
+            isSetup = prefs[PreferenceKeys.isSetup] ?: false,
+            preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet()
         )
     }
 
@@ -43,19 +44,25 @@ class UserPrefsDatasource @Inject constructor(
 
     suspend fun setReadBooks(readBooks: Set<String>) {
         prefsDataStore.edit { prefs ->
-            prefs[PreferenceKeys.readBooks] = readBooks.toSet()
+            prefs[PreferenceKeys.readBooks] = readBooks
         }
     }
 
     suspend fun setBookmarkedBooks(bookmarkedBooks: Set<String>) {
         prefsDataStore.edit { prefs ->
-            prefs[PreferenceKeys.bookmarkedBooks] = bookmarkedBooks.toSet()
+            prefs[PreferenceKeys.bookmarkedBooks] = bookmarkedBooks
         }
     }
 
     suspend fun setSetupState(isComplete: Boolean) {
         prefsDataStore.edit { prefs ->
             prefs[PreferenceKeys.isSetup] = isComplete
+        }
+    }
+
+    suspend fun setPreferredGenres(genres: Set<String>) {
+        prefsDataStore.edit { prefs ->
+            prefs[PreferenceKeys.preferredGenres] = genres
         }
     }
 }
@@ -66,4 +73,5 @@ object PreferenceKeys {
     val readBooks = stringSetPreferencesKey("readBooks")
     val bookmarkedBooks = stringSetPreferencesKey("bookmarkedBooks")
     val isSetup = booleanPreferencesKey("issetup")
+    val preferredGenres = stringSetPreferencesKey("preferredGenres")
 }

@@ -50,7 +50,7 @@ object NetworkModule {
                         Timber.tag("Logger Ktor => ").v(message)
                     }
                 }
-                level = LogLevel.BODY
+                level = LogLevel.NONE
             }
 
             install(ResponseObserver) {

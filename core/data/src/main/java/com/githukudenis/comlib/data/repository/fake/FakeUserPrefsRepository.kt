@@ -6,15 +6,16 @@ import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
-class FakeUserPrefsRepository: UserPrefsRepository {
+class FakeUserPrefsRepository : UserPrefsRepository {
 
     private var prefs = UserPrefs(
-            userId = "randomId",
-            readBooks = setOf("1", "2", "3"),
-            themeConfig = ThemeConfig.SYSTEM,
-            bookmarkedBooks = setOf("1", "2", "3"),
-            isSetup = false
-        )
+        userId = "randomId",
+        readBooks = setOf("1", "2", "3"),
+        themeConfig = ThemeConfig.SYSTEM,
+        bookmarkedBooks = setOf("1", "2", "3"),
+        isSetup = false,
+        preferredGenres = setOf("genre1", "genre2")
+    )
 
 
     override val userPrefs: Flow<UserPrefs>
@@ -36,5 +37,9 @@ class FakeUserPrefsRepository: UserPrefsRepository {
 
     override suspend fun setSetupStatus(isComplete: Boolean) {
         prefs = prefs.copy(isSetup = isComplete)
+    }
+
+    override suspend fun setPreferredGenres(genres: Set<String>) {
+        prefs = prefs.copy(preferredGenres = genres)
     }
 }

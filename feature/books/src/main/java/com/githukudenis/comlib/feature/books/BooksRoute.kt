@@ -1,6 +1,7 @@
 package com.githukudenis.comlib.feature.books
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,20 +22,28 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -43,6 +52,7 @@ import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicator
 import com.githukudenis.comlib.core.designsystem.ui.components.pills.SelectablePillComponent
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.books.components.BookComponent
+import kotlinx.coroutines.launch
 
 @Composable
 fun BooksRoute(
@@ -56,7 +66,7 @@ fun BooksRoute(
         state = state,
         onChangeGenre = viewModel::onChangeGenre,
         onOpenBook = onOpenBook,
-        onNavigateUp = onNavigateUp
+        onNavigateUp = onNavigateUp,
     )
 }
 
@@ -66,7 +76,7 @@ fun BooksScreen(
     state: BooksUiState,
     onChangeGenre: (String) -> Unit,
     onOpenBook: (String) -> Unit,
-    onNavigateUp: () -> Unit
+    onNavigateUp: () -> Unit,
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
@@ -87,11 +97,11 @@ fun BooksScreen(
             is BooksUiState.Success -> {
                 LoadedScreen(
                     paddingValues = innerPadding,
-                    selectedGenreUiModel = state.selectedGenre,
+                    selectedGenres = state.selectedGenres,
                     genreListUiState = state.genreListUiState,
                     bookListUiState = state.bookListUiState,
                     onChangeGenre = onChangeGenre,
-                    onOpenBook = onOpenBook
+                    onOpenBook = onOpenBook,
                 )
             }
 
@@ -162,12 +172,64 @@ private fun LoadingScreen() {
 @Composable
 private fun LoadedScreen(
     paddingValues: PaddingValues,
-    selectedGenreUiModel: GenreUiModel,
+    selectedGenres: List<GenreUiModel>,
     genreListUiState: GenreListUiState,
     bookListUiState: BookListUiState,
     onChangeGenre: (String) -> Unit,
     onOpenBook: (String) -> Unit,
 ) {
+
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    var bottomSheetIsVisible: Boolean by remember {
+        mutableStateOf(false)
+    }
+
+    if (bottomSheetIsVisible) {
+        ModalBottomSheet(
+            containerColor = MaterialTheme.colorScheme.background,
+            contentColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+            onDismissRequest = { bottomSheetIsVisible = false },
+        ) {
+            Text(
+                text = stringResource(R.string.bottom_sheet_tittle),
+                style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(LocalDimens.current.medium)
+            )
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                when (genreListUiState) {
+                    is GenreListUiState.Error -> Unit
+                    GenreListUiState.Loading -> Unit
+                    is GenreListUiState.Success -> {
+                        items(genreListUiState.genres.dropLast(1), key = { it.id }) { genre ->
+                            Row(modifier = Modifier
+                                .fillMaxWidth()
+                                .clickable {
+                                    onChangeGenre(
+                                        genre.id
+                                    )
+                                }
+                                .padding(LocalDimens.current.medium),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)) {
+                                Checkbox(checked = genre.id in selectedGenres.map { it.id }, onCheckedChange = {
+                                    onChangeGenre(
+                                        genre.id
+                                    )
+                                })
+                                Text(
+                                    text = genre.name.untangle("-"),
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -209,26 +271,26 @@ private fun LoadedScreen(
                         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
                         contentPadding = PaddingValues(LocalDimens.current.extraLarge)
                     ) {
-                        items(items = genreListUiState.genres, key = { it.id }) { genre ->
+                        val updatedGenres = genreListUiState.genres.take(4).toMutableList()
+                        updatedGenres.add(
+                            GenreUiModel(
+                                context.getString(R.string.default_more_genres_name),
+                                context.getString(R.string.default_more_genres_id)
+                            )
+                        )
+                        items(items = updatedGenres, key = { it.id }) { genre ->
                             SelectablePillComponent(value = genre.name.untangle("-"),
-                                isSelected = genre.id == selectedGenreUiModel.id,
+                                isSelected = genre.id in selectedGenres.map { it.id },
                                 hasIcon = false,
-                                onToggleSelection = onChangeGenre)
-//                            Box(modifier = Modifier
-//                                .clip(CircleShape)
-//                                .background(
-//                                    color = MaterialTheme.colorScheme.onBackground.copy(
-//                                        alpha = 0.1f
-//                                    )
-//                                )
-//                                .clickable { onChangeGenre(genre) }) {
-//                                Text(
-//                                    text = genre.name.untangle("-"), modifier = Modifier.padding(
-//                                        horizontal = LocalDimens.current.extraLarge,
-//                                        vertical = LocalDimens.current.medium
-//                                    ), style = MaterialTheme.typography.bodyMedium
-//                                )
-//                            }
+                                id = genre.id,
+                                onToggleSelection = {
+                                    if (it == context.getString(R.string.default_more_genres_id)) {
+                                        scope.launch {
+                                            bottomSheetIsVisible = !bottomSheetIsVisible
+                                        }
+                                    }
+                                    onChangeGenre(it)
+                                })
                         }
                     }
                 }
@@ -294,6 +356,19 @@ private fun LoadedScreen(
                     BookComponent(bookItemUiModel = bookModel, onOpenBookDetails = { bookId ->
                         onOpenBook(bookId)
                     })
+                }
+            }
+            BookListUiState.Empty -> {
+                item {
+                    Text(
+                        text = stringResource(R.string.empty_list_label, "books"),
+                        style = MaterialTheme.typography.bodyLarge,
+                        color = MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.7f
+                        ),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(LocalDimens.current.large)
+                    )
                 }
             }
         }

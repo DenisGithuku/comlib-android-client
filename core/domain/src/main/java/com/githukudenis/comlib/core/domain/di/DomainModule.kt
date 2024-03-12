@@ -6,6 +6,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetNetworkConnectivityUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
@@ -17,6 +18,7 @@ import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
+import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
 import com.githukudenis.comlib.core.domain.usecases.UpdateAppSetupState
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.data.repository.AuthRepository
@@ -106,5 +108,13 @@ object DomainModule {
     @Provides
     @Singleton
     fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase = SignUpUseCase(authRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetGenresByUserUseCase(userPrefsRepository: UserPrefsRepository): GetGenresByUserUseCase = GetGenresByUserUseCase(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun togglePreferredGenres(userPrefsRepository: UserPrefsRepository): TogglePreferredGenres = TogglePreferredGenres(userPrefsRepository)
 }
 

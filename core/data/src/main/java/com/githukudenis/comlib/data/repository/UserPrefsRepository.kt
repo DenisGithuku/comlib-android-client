@@ -7,11 +7,10 @@ import kotlinx.coroutines.flow.Flow
 interface UserPrefsRepository {
 
     val userPrefs: Flow<UserPrefs>
-
     suspend fun setUserId(userId: String)
-
     suspend fun setThemeConfig(themeConfig: ThemeConfig)
     suspend fun setBookMarks(bookMarks: Set<String>)
     suspend fun setSetupStatus(isComplete: Boolean)
+    suspend fun setPreferredGenres(genres: Set<String>)
 
 }
