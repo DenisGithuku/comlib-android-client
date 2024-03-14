@@ -9,7 +9,7 @@ import kotlinx.coroutines.flow.flowOf
 class FakeUserPrefsRepository : UserPrefsRepository {
 
     private var prefs = UserPrefs(
-        userId = "randomId",
+        userId = "5",
         readBooks = setOf("1", "2", "3"),
         themeConfig = ThemeConfig.SYSTEM,
         bookmarkedBooks = setOf("1", "2", "3"),

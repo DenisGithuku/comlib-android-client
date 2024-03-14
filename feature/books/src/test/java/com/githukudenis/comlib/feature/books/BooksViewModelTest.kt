@@ -69,7 +69,6 @@ class BooksViewModelTest {
                     BookListUiState.Loading -> Unit
                     is BookListUiState.Success -> {
                         assertEquals(
-
                             bookState.books.first().authors, listOf("Sam", "Peter", "Charlie")
                         )
                     }
