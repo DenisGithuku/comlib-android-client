@@ -49,7 +49,6 @@ class MyBooksViewModel @Inject constructor(
             is DataResult.Success -> {
                 update { copy(isLoading = false, books = result.data) }
             }
-
         }
     }
 
