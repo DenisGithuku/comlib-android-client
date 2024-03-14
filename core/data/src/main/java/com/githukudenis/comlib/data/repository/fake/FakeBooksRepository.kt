@@ -19,7 +19,7 @@ class FakeBooksRepository: BooksRepository {
             genre_ids = listOf("1", "2"),
             id = "$it",
             image = "",
-            owner = "",
+            owner = "owner@$it",
             pages = it,
             reserved = listOf(),
             title = "Title $it"

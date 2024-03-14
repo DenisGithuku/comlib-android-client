@@ -67,8 +67,6 @@ fun NavGraphBuilder.homeNavGraph(
                     route = "${ComlibDestination.BookDetail.route}/$bookId",
                     popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
                 )
-            }, onNavigateUp = {
-                appState.popBackStack()
             })
         }
     }
