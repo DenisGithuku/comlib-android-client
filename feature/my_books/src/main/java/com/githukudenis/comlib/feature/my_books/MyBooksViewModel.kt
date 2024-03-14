@@ -23,33 +23,37 @@ class MyBooksViewModel @Inject constructor(
 
 
     init {
+        getBooks()
+    }
+
+    private fun getBooks() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
                 requireNotNull(prefs.userId).run {
-                    getBooks(this)
+                    when (val result = getBooksByUserUseCase(this)) {
+                        DataResult.Empty -> {
+                            update { copy(books = emptyList(), isLoading = false) }
+                        }
+
+                        is DataResult.Error -> {
+                            update { copy(isLoading = false, error = result.message) }
+                        }
+
+                        is DataResult.Loading -> {
+                            update { copy(isLoading = true) }
+                        }
+
+                        is DataResult.Success -> {
+                            update { copy(isLoading = false, books = result.data) }
+                        }
+                    }
                 }
             }
         }
     }
 
-    private suspend fun getBooks(userId: String) {
-        when (val result = getBooksByUserUseCase(userId)) {
-            DataResult.Empty -> {
-                update { copy(books = emptyList(), isLoading = false) }
-            }
-
-            is DataResult.Error -> {
-                update { copy(isLoading = false, error = result.message) }
-            }
-
-            is DataResult.Loading -> {
-                update { copy(isLoading = true) }
-            }
-
-            is DataResult.Success -> {
-                update { copy(isLoading = false, books = result.data) }
-            }
-        }
+    fun onRetry() {
+        getBooks()
     }
 
 }

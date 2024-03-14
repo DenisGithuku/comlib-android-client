@@ -90,9 +90,12 @@ fun ComlibNavGraph(
             slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeOut()
         }, route = ComlibDestination.MyBooks.route
         ) {
-            MyBooksRoute(onNavigateToBookDetails = {}, onNavigateToAddBook = { /*TODO*/ }) {
-
-            }
+            MyBooksRoute(
+                onNavigateToBookDetails = {},
+                onNavigateToAddBook = { /*TODO*/ },
+                onNavigateUp = {
+                    appState.popBackStack()
+                })
         }
         composable(route = ComlibDestination.AddBook.route) {
             AddBookRoute(onNavigateUp = {
@@ -101,7 +104,10 @@ fun ComlibNavGraph(
         }
         composable(route = ComlibDestination.GenreSetup.route) {
             GenreSetupScreen(onSkip = {
-                appState.navigate(route = ComlibDestination.HomeGraph.route, popUpTo = ComlibDestination.GenreSetup.route)
+                appState.navigate(
+                    route = ComlibDestination.HomeGraph.route,
+                    popUpTo = ComlibDestination.GenreSetup.route
+                )
             })
         }
     }
@@ -123,5 +129,5 @@ sealed class ComlibDestination(
     data object Profile : ComlibDestination(route = "profile")
     data object MyBooks : ComlibDestination(route = "my_books")
     data object AddBook : ComlibDestination(route = "add_book")
-    data object GenreSetup: ComlibDestination(route = "genre_setup")
+    data object GenreSetup : ComlibDestination(route = "genre_setup")
 }

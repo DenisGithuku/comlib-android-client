@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.common.capitalize
-import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
@@ -173,7 +173,7 @@ private fun ProfileScreen(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                        CLibButton(onClick = { /*TODO*/ }) {
+                        CLibOutlinedButton(onClick = { /*TODO*/ }) {
                             Text(
                                 text = "Edit", style = MaterialTheme.typography.bodySmall
                             )
