@@ -5,6 +5,7 @@ import com.githukudenis.comlib.core.domain.usecases.FormatDateUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
+import com.githukudenis.comlib.core.domain.usecases.GetBooksByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
@@ -116,5 +117,9 @@ object DomainModule {
     @Provides
     @Singleton
     fun togglePreferredGenres(userPrefsRepository: UserPrefsRepository): TogglePreferredGenres = TogglePreferredGenres(userPrefsRepository)
+
+    @Provides
+    @Singleton
+    fun provideGetBooksByUserUseCase(booksRepository: BooksRepository): GetBooksByUserUseCase = GetBooksByUserUseCase(booksRepository)
 }
 
