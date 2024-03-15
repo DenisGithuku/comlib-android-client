@@ -14,6 +14,7 @@ import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
 import com.githukudenis.comlib.feature.genre_setup.GenreSetupScreen
 import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
+import com.githukudenis.comlib.feature.streak.StreakScreen
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
 
 @Composable
@@ -130,6 +131,17 @@ fun ComlibNavGraph(
                 )
             })
         }
+        composable(route = "${ComlibDestination.Streak.route}/{bookId}", enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        }, exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right
+            )
+        }) {
+            StreakScreen(onNavigateUp = { appState.popBackStack() })
+        }
     }
 }
 
@@ -150,4 +162,5 @@ sealed class ComlibDestination(
     data object MyBooks : ComlibDestination(route = "my_books")
     data object AddBook : ComlibDestination(route = "add_book")
     data object GenreSetup : ComlibDestination(route = "genre_setup")
+    data object Streak : ComlibDestination(route = "streak")
 }

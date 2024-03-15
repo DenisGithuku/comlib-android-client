@@ -57,11 +57,13 @@ class StreakViewModel @Inject constructor(
         }
     }
 
-    fun onSelectBook(book: Book) {
+    fun onToggleBook(book: Book?) {
         update { copy(selectedBook = book) }
     }
 
-    fun onDeleteBook() {
-        update { copy(selectedBook = null) }
+    fun onSaveStreak() {
+        viewModelScope.launch {
+
+        }
     }
 }

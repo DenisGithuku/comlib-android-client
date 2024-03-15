@@ -41,6 +41,11 @@ fun NavGraphBuilder.homeNavGraph(
                     route = ComlibDestination.Profile.route,
                     popUpTo = ComlibDestination.Profile.route
                 )
+            }, onNavigateToStreakDetails = { bookId ->
+                appState.navigate(
+                    route = "${ComlibDestination.Streak.route}/$bookId",
+                    popUpTo = "${ComlibDestination.Streak.route}/$bookId"
+                )
             })
         }
         composable(route = HomeDestination.Clubs.route) {
@@ -50,7 +55,7 @@ fun NavGraphBuilder.homeNavGraph(
                 )
             }
         }
-        composable(route = HomeDestination.Books.route, ) {
+        composable(route = HomeDestination.Books.route) {
             BooksRoute(onOpenBook = { bookId ->
                 appState.navigate(
                     route = "${ComlibDestination.BookDetail.route}/$bookId",

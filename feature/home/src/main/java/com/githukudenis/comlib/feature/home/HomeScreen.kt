@@ -54,6 +54,7 @@ fun HomeRoute(
     onOpenBookDetails: (String) -> Unit,
     onOpenAllBooks: () -> Unit,
     onOpenProfile: () -> Unit,
+    onNavigateToStreakDetails: (String?) -> Unit
 ) {
     val state by viewModel.state.collectAsState()
     HomeRouteContent(
@@ -63,7 +64,8 @@ fun HomeRoute(
         onClickRetryGetAvailableBooks = viewModel::onRefreshAvailableBooks,
         onOpenAllBooks = onOpenAllBooks,
         onOpenBookDetails = onOpenBookDetails,
-        onToggleFavourite = viewModel::onToggleFavourite
+        onToggleFavourite = viewModel::onToggleFavourite,
+        onNavigateToStreakDetails = onNavigateToStreakDetails
     )
 }
 
@@ -75,7 +77,8 @@ fun HomeRouteContent(
     onOpenAllBooks: () -> Unit,
     onOpenBookDetails: (String) -> Unit,
     onClickRetryGetAvailableBooks: () -> Unit,
-    onToggleFavourite: (String) -> Unit
+    onToggleFavourite: (String) -> Unit,
+    onNavigateToStreakDetails: (String?) -> Unit
 ) {
     val context = LocalContext.current
 
@@ -126,8 +129,7 @@ fun HomeRouteContent(
             item {
                 GoalCard(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                     hasStreak = state.streakState.bookMilestone != null,
-                    onSetStreak = { },
-                    onOpenStreakDetails = {})
+                    onOpenStreakDetails = onNavigateToStreakDetails)
             }
             item {
                 SectionSeparator(
