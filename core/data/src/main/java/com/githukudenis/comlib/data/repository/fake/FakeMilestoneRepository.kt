@@ -10,7 +10,8 @@ class FakeMilestoneRepository: BookMilestoneRepository {
         bookId = "randomId",
         bookName = "randomeBookName",
         startDate = 0L,
-        endDate = 0L
+        endDate = 0L,
+        pages = 100
     )
     override val bookMilestone: Flow<BookMilestone?>
         get() = flowOf(currBookMilestone)

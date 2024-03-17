@@ -19,6 +19,8 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.DatePickerDialog
+import androidx.compose.material3.DateRangePicker
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -27,10 +29,14 @@ import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.rememberDateRangePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -42,18 +48,31 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutli
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
-import com.githukudenis.comlib.core.model.book.Book
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 
 @Composable
 fun StreakScreen(
     viewModel: StreakViewModel = hiltViewModel(), onNavigateUp: () -> Unit
 ) {
     val state by viewModel.state.collectAsState()
+    val currentOnSaveStreak by rememberUpdatedState(newValue = onNavigateUp)
+
+    LaunchedEffect(key1 = state.saveSuccess) {
+        if (state.saveSuccess) {
+            currentOnSaveStreak()
+        }
+    }
     StreakContent(
         state = state,
         onSaveStreak = viewModel::onSaveStreak,
         onNavigateUp = onNavigateUp,
+        onChangeStartDate = viewModel::onChangeStartDate,
+        onChangeEndDate = viewModel::onChangeEndDate,
         onToggleBook = viewModel::onToggleBook
     )
 }
@@ -62,9 +81,11 @@ fun StreakScreen(
 @Composable
 private fun StreakContent(
     state: StreakUiState,
+    onChangeStartDate: (LocalDate) -> Unit,
+    onChangeEndDate: (LocalDate) -> Unit,
     onSaveStreak: () -> Unit,
     onNavigateUp: () -> Unit,
-    onToggleBook: (Book?) -> Unit
+    onToggleBook: (StreakBook?) -> Unit
 ) {
 
     var bottomSheetIsVisible by rememberSaveable {
@@ -75,12 +96,15 @@ private fun StreakContent(
         mutableStateOf(false)
     }
 
-    var isStartDatePickerState by rememberSaveable {
-        mutableStateOf(false)
-    }
-    var isEndDatePickerState by rememberSaveable {
-        mutableStateOf(false)
-    }
+    val yearToday = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
+
+    val dateRangePickerState = rememberDateRangePickerState(
+        initialSelectedStartDateMillis = state.startDate.toMillisLong(),
+        initialSelectedEndDateMillis = state.endDate.toMillisLong(),
+        yearRange = IntRange(
+            start = yearToday, endInclusive = yearToday + 1
+        )
+    )
 
     if (bottomSheetIsVisible) {
         ModalBottomSheet(onDismissRequest = { bottomSheetIsVisible = false }) {
@@ -122,7 +146,7 @@ private fun StreakContent(
                 }
                 items(state.availableBooks, key = { it.id }) { book ->
                     SelectableStreakBook(
-                        book = book,
+                        streakBook = book.asStreakBook(),
                         isSelected = book.id == state.selectedBook?.id,
                         onSelect = onToggleBook
                     )
@@ -132,10 +156,50 @@ private fun StreakContent(
     }
 
     if (showDatePicker) {
-//        DatePicker(state = DatePickerState(
-//            initialSelectedDateMillis = state.startDate,
-//            initialDisplayedMonthMillis = state.startDate.month
-//        ))
+        DatePickerDialog(modifier = Modifier.padding(LocalDimens.current.extraLarge),
+            shape = MaterialTheme.shapes.extraLarge,
+            onDismissRequest = {
+                showDatePicker = false
+            },
+            confirmButton = {
+                TextButton(onClick = {
+                    val start = dateRangePickerState.selectedStartDateMillis?.toLocalDate()
+                    val end = dateRangePickerState.selectedEndDateMillis?.toLocalDate()
+                    start?.let { onChangeStartDate(it) }
+                    end?.let { onChangeEndDate(it) }
+                    showDatePicker = false
+                }) {
+                    Text(
+                        text = stringResource(R.string.confirm_btn_label)
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePicker = false }) {
+                    Text(
+                        text = stringResource(R.string.cancel_btn_label)
+                    )
+                }
+            }) {
+            DateRangePicker(showModeToggle = true,
+                title = {
+                    Text(
+                        modifier = Modifier.padding(LocalDimens.current.medium),
+                        text = "Select dates"
+                    )
+                },
+                headline = {
+                    Text(
+                        modifier = Modifier.padding(LocalDimens.current.medium),
+                        text = dateRangePickerState.displayMode.toString()
+                    )
+                },
+                modifier = Modifier.padding(LocalDimens.current.extraLarge),
+                state = dateRangePickerState,
+                dateValidator = { timestamp ->
+                    timestamp >= Clock.System.now().toEpochMilliseconds()
+                })
+        }
     }
 
     Scaffold(topBar = {
@@ -168,23 +232,19 @@ private fun StreakContent(
                 .padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
         ) {
-            SelectedBook(book = state.selectedBook, onAddBook = {
+            SelectedBook(streakBook = state.selectedBook, onAddBook = {
                 bottomSheetIsVisible = true
             }, onDeleteBook = { onToggleBook(null) })
-            DateRow(startDate = state.startDate, endDate = state.endDate, onChangeStartDate = {
+            DateRow(startDate = state.startDate, endDate = state.endDate, onChangeDates = {
                 showDatePicker = true
-                isStartDatePickerState = true
-            }, onChangeEndDate = {
-                showDatePicker = true
-                isEndDatePickerState = true
             })
         }
     }
 }
 
 @Composable
-private fun SelectedBook(book: Book?, onAddBook: () -> Unit, onDeleteBook: () -> Unit) {
-    AnimatedContent(targetState = book == null) { isNull ->
+private fun SelectedBook(streakBook: StreakBook?, onAddBook: () -> Unit, onDeleteBook: () -> Unit) {
+    AnimatedContent(targetState = streakBook == null) { isNull ->
         if (isNull) {
             Column(modifier = Modifier
                 .fillMaxWidth()
@@ -211,15 +271,17 @@ private fun SelectedBook(book: Book?, onAddBook: () -> Unit, onDeleteBook: () ->
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween) {
                 Column {
-                    book?.let {
-                        Text(
-                            text = book.title,
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                        )
+                    streakBook?.let {
+                        streakBook.title?.let { it1 ->
+                            Text(
+                                text = it1,
+                                style = MaterialTheme.typography.titleSmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                            )
+                        }
                         Spacer(modifier = Modifier.height(LocalDimens.current.medium))
                         Text(
-                            text = "Pages: ${book.pages}",
+                            text = "Pages: ${streakBook.pages}",
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                         )
@@ -239,29 +301,28 @@ private fun SelectedBook(book: Book?, onAddBook: () -> Unit, onDeleteBook: () ->
 
 @Composable
 private fun SelectableStreakBook(
-    book: Book, isSelected: Boolean, onSelect: (Book) -> Unit
+    streakBook: StreakBook, isSelected: Boolean, onSelect: (StreakBook) -> Unit
 ) {
     Row(modifier = Modifier
         .fillMaxWidth()
-        .clickable { onSelect(book) }
+        .clickable { onSelect(streakBook) }
         .padding(LocalDimens.current.medium),
         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
         verticalAlignment = Alignment.CenterVertically) {
-        RadioButton(selected = isSelected, onClick = { onSelect(book) })
-        Text(
-            text = book.title,
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-        )
+        RadioButton(selected = isSelected, onClick = { onSelect(streakBook) })
+        streakBook.title?.let {
+            Text(
+                text = it,
+                style = MaterialTheme.typography.titleSmall,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+            )
+        }
     }
 }
 
 @Composable
 private fun DateRow(
-    startDate: LocalDate,
-    endDate: LocalDate,
-    onChangeStartDate: () -> Unit,
-    onChangeEndDate: () -> Unit,
+    startDate: LocalDate, endDate: LocalDate, onChangeDates: () -> Unit
 ) {
     Row(
         modifier = Modifier
@@ -273,48 +334,51 @@ private fun DateRow(
         DateComponent(
             date = startDate,
             title = stringResource(id = R.string.start_label),
-            onChangeDate = onChangeStartDate
         )
         DateComponent(
             date = endDate,
             title = stringResource(R.string.end_label),
-            onChangeDate = onChangeEndDate
         )
+        CLibOutlinedButton(onClick = onChangeDates) {
+            Text(
+                text = stringResource(id = R.string.update_label)
+            )
+        }
     }
 }
 
 @Composable
 private fun DateComponent(
-    date: LocalDate, title: String, onChangeDate: () -> Unit
+    date: LocalDate, title: String
 ) {
     Column {
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Text(
-                text = "$title:",
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-            )
-            Spacer(modifier = Modifier.width(LocalDimens.current.medium))
-            Text(
-                text = date.toDayAndMonth(),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-            )
-        }
-        CLibOutlinedButton(onClick = onChangeDate) {
-            Text(
-                text = stringResource(R.string.update_label)
-            )
-        }
+        Text(
+            text = "$title",
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+        )
+        Spacer(modifier = Modifier.width(LocalDimens.current.medium))
+        Text(
+            text = date.toDayAndMonth(),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+        )
     }
 }
 
-private fun LocalDate.toDayAndMonth(): String {
+fun LocalDate.toDayAndMonth(): String {
     return buildString {
         append(this@toDayAndMonth.dayOfMonth)
         append(" ")
         append(this@toDayAndMonth.month.name.take(3).capitalize())
     }
+}
+
+fun LocalDate.toMillisLong(): Long {
+    return this.atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+}
+
+fun Long.toLocalDate(): LocalDate {
+    val instant = Instant.fromEpochMilliseconds(this)
+    return instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
 }

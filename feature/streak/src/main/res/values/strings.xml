@@ -8,4 +8,6 @@
     <string name="update_label">Update</string>
     <string name="start_label">Start</string>
     <string name="end_label">End</string>
+    <string name="confirm_btn_label">Confirm</string>
+    <string name="cancel_btn_label">Cancel</string>
 </resources>

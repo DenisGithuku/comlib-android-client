@@ -39,6 +39,12 @@ import com.githukudenis.comlib.feature.home.components.ErrorCard
 import com.githukudenis.comlib.feature.home.components.GoalCard
 import com.githukudenis.comlib.feature.home.components.HomeHeader
 import com.githukudenis.comlib.feature.home.components.LoadingBookCard
+import kotlinx.datetime.Clock
+import kotlinx.datetime.Instant
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.atStartOfDayIn
+import kotlinx.datetime.toLocalDateTime
 
 /**
  * project : ComLib
@@ -127,9 +133,24 @@ fun HomeRouteContent(
                 })
             }
             item {
-                GoalCard(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
+                val dateRange = buildString {
+                    append(state.streakState.bookMilestone?.startDate?.toLocalDate()?.toDayAndMonth())
+                    append(" - ")
+                    append(state.streakState.bookMilestone?.endDate?.toLocalDate()?.toDayAndMonth())
+                }
+
+                val progress = state.streakState.bookMilestone?.run {
+                    endDate?.let { startDate?.let { it1 -> calculateProgress(it1, it) } }
+                } ?: 0f
+                GoalCard(
+                    modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                     hasStreak = state.streakState.bookMilestone != null,
-                    onOpenStreakDetails = onNavigateToStreakDetails)
+                    dateRange = dateRange,
+                    progress = progress,
+                    bookId = state.streakState.bookMilestone?.bookId,
+                    currentBookTitle = state.streakState.bookMilestone?.bookName,
+                    onOpenStreakDetails = onNavigateToStreakDetails
+                )
             }
             item {
                 SectionSeparator(
@@ -193,4 +214,28 @@ fun HomeRouteContent(
             }
         }
     }
+}
+
+private fun LocalDate.toMillisLong(): Long {
+    return this.atStartOfDayIn(TimeZone.currentSystemDefault()).toEpochMilliseconds()
+}
+
+private fun Long.toLocalDate(): LocalDate {
+    val instant = Instant.fromEpochMilliseconds(this)
+    return instant.toLocalDateTime(TimeZone.currentSystemDefault()).date
+}
+
+private fun LocalDate.toDayAndMonth(): String {
+    return buildString {
+        append(this@toDayAndMonth.dayOfMonth)
+        append(" ")
+        append(this@toDayAndMonth.month.name.take(3).capitalize())
+    }
+}
+
+private fun calculateProgress(startDate: Long, endDate: Long): Float {
+    val now = Clock.System.now().toEpochMilliseconds().toLocalDate()
+    val progress = (now.dayOfYear - startDate.toLocalDate().dayOfYear).toFloat() /
+            (endDate.toLocalDate().dayOfYear - startDate.toLocalDate().dayOfYear).toFloat()
+    return progress
 }

@@ -31,7 +31,7 @@ fun GoalCard(
     hasStreak: Boolean,
     onOpenStreakDetails: (String?) -> Unit,
     dateRange: String? = null,
-    currentBook: String? = null,
+    currentBookTitle: String? = null,
     bookId: String? = null,
     progress: Float? = null
 ) {
@@ -56,13 +56,11 @@ fun GoalCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Current streak: $dateRange",
+                            text = "Reading: $dateRange",
                             style = MaterialTheme.typography.titleSmall,
                         )
                         IconButton(onClick = {
-                            if (bookId != null) {
                                 onOpenStreakDetails(bookId)
-                            }
                         }) {
                             Icon(
                                 imageVector = Icons.Default.MoreHoriz,
@@ -70,9 +68,9 @@ fun GoalCard(
                             )
                         }
                     }
-                    if (currentBook != null) {
+                    if (currentBookTitle != null) {
                         Text(
-                            text = currentBook,
+                            text = currentBookTitle,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onBackground.copy(
                                 alpha = 0.8f
