@@ -7,8 +7,8 @@ import kotlinx.coroutines.flow.flowOf
 
 class FakeMilestoneRepository: BookMilestoneRepository {
     private var currBookMilestone: BookMilestone? = BookMilestone(
-        bookId = "randomId",
-        bookName = "randomeBookName",
+        bookId = "1",
+        bookName = "testBook",
         startDate = 0L,
         endDate = 0L,
         pages = 100
