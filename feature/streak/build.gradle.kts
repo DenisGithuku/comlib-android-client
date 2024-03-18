@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.comlib.feature.home"
+    namespace = "com.githukudenis.comlib.feature.streak"
 
     defaultConfig {
 
@@ -15,7 +15,7 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -28,7 +28,6 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:designsystem"))
     implementation(project(":core:domain"))
-    implementation(project(":core:testing"))
 
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.navigation.compose)
@@ -45,16 +44,4 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.timber)
-    implementation(libs.work.runtime)
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.8.1")
-
-    coreLibraryDesugaring(libs.android.desugarJdkLibs)
-
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit4)
-    androidTestImplementation(libs.androidx.test.ext.junit)
-    androidTestImplementation(libs.androidx.test.espresso.core)
 }

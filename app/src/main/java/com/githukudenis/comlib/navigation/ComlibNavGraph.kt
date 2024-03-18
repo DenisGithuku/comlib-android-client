@@ -1,8 +1,9 @@
 package com.githukudenis.comlib.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,6 +14,7 @@ import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
 import com.githukudenis.comlib.feature.genre_setup.GenreSetupScreen
 import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
+import com.githukudenis.comlib.feature.streak.StreakScreen
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
 
 @Composable
@@ -36,13 +38,13 @@ fun ComlibNavGraph(
             appState.popBackStack()
         })
         composable(enterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeIn()
-        }, popEnterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeIn()
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
         }, exitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeOut()
-        }, popExitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeOut()
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
         }, route = ComlibDestination.GetStarted.route) {
             OnBoardingScreen {
                 appState.navigate(
@@ -52,26 +54,26 @@ fun ComlibNavGraph(
         }
         homeNavGraph(appState = appState)
         composable(enterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeIn()
-        }, popEnterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeIn()
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
         }, exitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeOut()
-        }, popExitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeOut()
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
         }, route = "${ComlibDestination.BookDetail.route}/{bookId}") {
             BookDetailRoute(onBackPressed = {
                 appState.popBackStack()
             })
         }
         composable(enterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeIn()
-        }, popEnterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeIn()
-        }, popExitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeOut()
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right
+            )
         }, exitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeOut()
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left
+            )
         }, route = ComlibDestination.Profile.route) {
             ProfileRoute(versionName = BuildConfig.VERSION_NAME, onBackPressed = {
                 appState.popBackStack()
@@ -85,30 +87,60 @@ fun ComlibNavGraph(
             })
         }
         composable(enterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left) + fadeIn()
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
         }, exitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right) + fadeOut()
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
         }, route = ComlibDestination.MyBooks.route
         ) {
-            MyBooksRoute(
-                onNavigateToBookDetails = {},
+            MyBooksRoute(onNavigateToBookDetails = {},
                 onNavigateToAddBook = { /*TODO*/ },
                 onNavigateUp = {
                     appState.popBackStack()
                 })
         }
-        composable(route = ComlibDestination.AddBook.route) {
+        composable(route = ComlibDestination.AddBook.route, enterTransition = {
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
+        }, exitTransition = {
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
+        }) {
             AddBookRoute(onNavigateUp = {
 
             }, onBookAdded = {})
         }
-        composable(route = ComlibDestination.GenreSetup.route) {
+        composable(route = ComlibDestination.GenreSetup.route, enterTransition = {
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
+        }, exitTransition = {
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
+        }) {
             GenreSetupScreen(onSkip = {
                 appState.navigate(
                     route = ComlibDestination.HomeGraph.route,
                     popUpTo = ComlibDestination.GenreSetup.route
                 )
             })
+        }
+        composable(route = "${ComlibDestination.Streak.route}/{bookId}", enterTransition = {
+            slideIntoContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Left
+            )
+        }, exitTransition = {
+            slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Right
+            )
+        }) {
+            StreakScreen(onNavigateUp = { appState.popBackStack() })
         }
     }
 }
@@ -130,4 +162,5 @@ sealed class ComlibDestination(
     data object MyBooks : ComlibDestination(route = "my_books")
     data object AddBook : ComlibDestination(route = "add_book")
     data object GenreSetup : ComlibDestination(route = "genre_setup")
+    data object Streak : ComlibDestination(route = "streak")
 }

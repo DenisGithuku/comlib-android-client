@@ -65,6 +65,7 @@ dependencies {
     implementation(project(":feature:add_book"))
     implementation(project(":feature:my_books"))
     implementation(project(":feature:genre_setup"))
+    implementation(project(":feature:streak"))
     implementation(project(":core:designsystem"))
 
     implementation(libs.androidx.compose.ui.tooling)

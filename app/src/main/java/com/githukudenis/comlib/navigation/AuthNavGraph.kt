@@ -1,5 +1,8 @@
 package com.githukudenis.comlib.navigation
 
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
 import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
@@ -20,17 +23,41 @@ fun NavGraphBuilder.authGraph(
     navigation(
         startDestination = AuthDestination.Login.route, route = ComlibDestination.AuthGraph.route
     ) {
-        composable(route = AuthDestination.Login.route) {
+        composable(route = AuthDestination.Login.route, enterTransition = {
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
+        }, exitTransition = {
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
+        }) {
             LoginRoute(
                 onLoginComplete = onLoginComplete,
                 onForgotPassword = onForgotPassword,
                 onSignUpInstead = onSignUpInstead
             )
         }
-        composable(route = AuthDestination.SignUp.route) {
+        composable(route = AuthDestination.SignUp.route, enterTransition = {
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
+        }, exitTransition = {
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
+        }) {
             SignUpRoute(onSignUpComplete = onSignUpComplete, onSignInInstead = onSignInInstead)
         }
-        composable(route = AuthDestination.ForgotPassword.route) {
+        composable(route = AuthDestination.ForgotPassword.route, enterTransition = {
+            scaleIn(
+                initialScale = 0.8f, animationSpec = tween(durationMillis = 500)
+            )
+        }, exitTransition = {
+            scaleOut(
+                targetScale = 0.8f, animationSpec = tween(durationMillis = 300)
+            )
+        }) {
             ResetPasswordRoute(snackbarHostState = snackbarHostState, onReset = onResetComplete)
         }
     }

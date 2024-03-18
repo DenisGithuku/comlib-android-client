@@ -1,11 +1,9 @@
 package com.githukudenis.comlib.feature.home.components
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,21 +21,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.home.R
 
 @Composable
 fun GoalCard(
     modifier: Modifier = Modifier,
     hasStreak: Boolean,
-    onSetStreak: () -> Unit,
-    onOpenStreakDetails: (String) -> Unit,
+    onOpenStreakDetails: (String?) -> Unit,
     dateRange: String? = null,
-    currentBook: String? = null,
+    currentBookTitle: String? = null,
     bookId: String? = null,
     progress: Float? = null
 ) {
     Surface(
+        onClick = { onOpenStreakDetails(bookId) },
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.primaryContainer,
@@ -57,25 +56,21 @@ fun GoalCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            text = "Current streak: $dateRange",
+                            text = "Reading: $dateRange",
                             style = MaterialTheme.typography.titleSmall,
                         )
-                        IconButton(
-                            onClick = {
-                                if (bookId != null) {
-                                    onOpenStreakDetails(bookId)
-                                }
-                            }
-                        ) {
+                        IconButton(onClick = {
+                                onOpenStreakDetails(bookId)
+                        }) {
                             Icon(
                                 imageVector = Icons.Default.MoreHoriz,
                                 contentDescription = stringResource(id = R.string.see_details)
                             )
                         }
                     }
-                    if (currentBook != null) {
+                    if (currentBookTitle != null) {
                         Text(
-                            text = currentBook,
+                            text = currentBookTitle,
                             style = MaterialTheme.typography.bodyMedium,
                             color = MaterialTheme.colorScheme.onBackground.copy(
                                 alpha = 0.8f
@@ -106,19 +101,26 @@ fun GoalCard(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp)
+                        .padding(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                 ) {
                     Text(
-                        text = "No book on streak", style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                        text = "Streak status",
+                        style = MaterialTheme.typography.titleSmall,
+                        color = MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.6f
+                        )
                     )
-                    Spacer(modifier = Modifier.height(12.dp))
-                    CLibOutlinedButton(
-                        border = BorderStroke(
-                            width = 0.5.dp,
-                            color = MaterialTheme.colorScheme.primary
-                        ),
-                        onClick = onSetStreak) {
+                    Text(
+                        text = stringResource(R.string.no_streak_label),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(
+                            alpha = 0.6f
+                        )
+                    )
+                    CLibTextButton(
+                        onClick = { onOpenStreakDetails(null) }
+                    ) {
                         Text(
                             text = "Start streak",
                         )

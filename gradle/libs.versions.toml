@@ -111,7 +111,7 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "kotlinxCoroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
-kotlix-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization", version.ref = "kotlinx-serialization"}
+kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization", version.ref = "kotlinx-serialization"}
 ktor-client = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor"}
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor"}
 ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor"}

@@ -4,5 +4,6 @@ data class BookMilestone(
     val bookId: String? = null,
     val bookName: String? = null,
     val startDate: Long? = null,
-    val endDate: Long? = null
+    val endDate: Long? = null,
+    val pages: Int? = null
 )
