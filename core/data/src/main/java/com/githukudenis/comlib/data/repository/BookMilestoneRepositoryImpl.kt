@@ -21,7 +21,12 @@ class BookMilestoneRepositoryImpl @Inject constructor(
             if (book != null) {
                 emit(
                     BookMilestone(
-                        book.bookId, book.bookName, book.startDate, book.endDate, book.pages
+                        id = book.id,
+                        bookId = book.bookId,
+                        bookName = book.bookName,
+                        startDate = book.startDate,
+                        endDate = book.endDate,
+                        pages = book.pages
                     )
                 )
             } else {
@@ -30,23 +35,43 @@ class BookMilestoneRepositoryImpl @Inject constructor(
         }.flowOn(Dispatchers.IO)
 
 
-    override suspend fun deleteBookMilestone(bookMilestone: BookMilestone) = withContext(dispatchers.io) {
-        bookMilestoneDao.deleteMilestone(bookMilestone.asBookMilestoneEntity())
-    }
+    override suspend fun deleteBookMilestone(bookMilestone: BookMilestone) =
+        withContext(dispatchers.io) {
+            bookMilestoneDao.deleteMilestone(bookMilestone.asBookMilestoneEntity())
+        }
 
 
-    override suspend fun updateBookMilestone(bookMilestone: BookMilestone) = withContext(dispatchers.io) {
-        bookMilestoneDao.updateMilestone(bookMilestone.asBookMilestoneEntity())
-    }
+    override suspend fun updateBookMilestone(bookMilestone: BookMilestone) =
+        withContext(dispatchers.io) {
+            bookMilestoneDao.updateMilestone(bookMilestone.asUpdatedMilestoneEntity())
+        }
 
 
-    override suspend fun insertBookMilestone(bookMilestone: BookMilestone) = withContext(dispatchers.io) {
-        bookMilestoneDao.setMilestone(bookMilestone.asBookMilestoneEntity())
-    }
+    override suspend fun insertBookMilestone(bookMilestone: BookMilestone) =
+        withContext(dispatchers.io) {
+            bookMilestoneDao.setMilestone(bookMilestone.asBookMilestoneEntity())
+        }
 }
 
 fun BookMilestone.asBookMilestoneEntity(): BookMilestoneEntity {
     return BookMilestoneEntity(
-        bookId = bookId, bookName = bookName, startDate = startDate, endDate = endDate
+        bookId = bookId,
+        bookName = bookName,
+        startDate = startDate,
+        endDate = endDate,
+        pages = pages
     )
+}
+
+fun BookMilestone.asUpdatedMilestoneEntity(): BookMilestoneEntity {
+    return id?.let {
+        BookMilestoneEntity(
+            id = it,
+            bookId = bookId,
+            bookName = bookName,
+            startDate = startDate,
+            endDate = endDate,
+            pages = pages
+        )
+    } ?: BookMilestoneEntity()
 }

@@ -21,6 +21,7 @@ import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
 import com.githukudenis.comlib.core.domain.usecases.UpdateAppSetupState
+import com.githukudenis.comlib.core.domain.usecases.UpdateStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.BookMilestoneRepository
@@ -121,5 +122,9 @@ object DomainModule {
     @Provides
     @Singleton
     fun provideGetBooksByUserUseCase(booksRepository: BooksRepository): GetBooksByUserUseCase = GetBooksByUserUseCase(booksRepository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): UpdateStreakUseCase = UpdateStreakUseCase(bookMilestoneRepository)
 }
 
