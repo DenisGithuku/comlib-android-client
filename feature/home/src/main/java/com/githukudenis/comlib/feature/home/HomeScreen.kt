@@ -235,7 +235,8 @@ private fun LocalDate.toDayAndMonth(): String {
 
 private fun calculateProgress(startDate: Long, endDate: Long): Float {
     val now = Clock.System.now().toEpochMilliseconds().toLocalDate()
-    val progress = (now.dayOfYear - startDate.toLocalDate().dayOfYear).toFloat() /
+    val progress = if(startDate.toLocalDate() > now) 0f else
+        (now.dayOfYear - startDate.toLocalDate().dayOfYear).toFloat() /
             (endDate.toLocalDate().dayOfYear - startDate.toLocalDate().dayOfYear).toFloat()
     return progress
 }

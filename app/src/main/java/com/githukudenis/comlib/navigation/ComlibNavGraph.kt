@@ -7,6 +7,7 @@ import androidx.compose.animation.scaleOut
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.githukudenis.comlib.BuildConfig
 import com.githukudenis.comlib.app.AppState
 import com.githukudenis.comlib.feature.add_book.AddBookRoute
@@ -131,15 +132,25 @@ fun ComlibNavGraph(
                 )
             })
         }
-        composable(route = "${ComlibDestination.Streak.route}/{bookId}", enterTransition = {
-            slideIntoContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Left
-            )
-        }, exitTransition = {
-            slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Right
-            )
-        }) {
+        composable(
+            route = "${ComlibDestination.Streak.route}/{bookId}",
+            arguments = listOf(
+                navArgument("bookId") {
+                    nullable = true
+                    defaultValue = null
+                }
+            ),
+            enterTransition = {
+                slideIntoContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Left
+                )
+            },
+            exitTransition = {
+                slideOutOfContainer(
+                    towards = AnimatedContentTransitionScope.SlideDirection.Right
+                )
+            }
+        ) {
             StreakScreen(onNavigateUp = { appState.popBackStack() })
         }
     }

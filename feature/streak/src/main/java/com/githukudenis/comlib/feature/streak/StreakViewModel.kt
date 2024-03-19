@@ -8,6 +8,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
+import com.githukudenis.comlib.core.domain.usecases.UpdateStreakUseCase
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookMilestone
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,6 +27,7 @@ import javax.inject.Inject
 data class StreakUiState(
     val isLoading: Boolean = false,
     val selectedBook: StreakBook? = null,
+    val milestoneId: Long? = null,
     val saveSuccess: Boolean = false,
     val availableBooks: List<Book> = emptyList(),
     val startDate: LocalDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),
@@ -48,12 +50,14 @@ class StreakViewModel @Inject constructor(
     private val getReadBooksUseCase: GetReadBooksUseCase,
     private val saveStreakUseCase: SaveStreakUseCase,
     private val getStreakUseCase: GetStreakUseCase,
-    savedStateHandle: SavedStateHandle
+    private val updateStreakUseCase: UpdateStreakUseCase,
+    private val savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<StreakUiState>(StreakUiState()) {
 
+
     init {
-        savedStateHandle.get<String>("bookId").run {
-            getStreakDetails(this)
+        savedStateHandle.get<String>("bookId").also {
+            getStreakDetails(it)
         }
         getAvailableBooks()
     }
@@ -65,9 +69,9 @@ class StreakViewModel @Inject constructor(
             bookMilestone?.let { bookMilestone ->
                 update {
                     copy(
+                        milestoneId = bookMilestone.id,
                         selectedBook = StreakBook(
-                            id = bookMilestone.bookId,
-                            title = bookMilestone.bookName
+                            id = bookMilestone.bookId, title = bookMilestone.bookName, pages = bookMilestone.pages
                         ),
                         startDate = bookMilestone.startDate?.toLocalDate()!!,
                         endDate = bookMilestone.endDate?.toLocalDate()!!
@@ -83,15 +87,25 @@ class StreakViewModel @Inject constructor(
             getAllBooksUseCase().collectLatest { result ->
                 when (result) {
                     DataResult.Empty -> {
-                        update { copy(isLoading = false) }
+                        update { copy(isLoading = false, error = "No books available") }
                     }
+
                     is DataResult.Error -> update {
                         copy(
-                            error = result.message
+                            error = result.message, isLoading = false
                         )
                     }
-                    is DataResult.Loading -> update { copy(isLoading = true) }
-                    is DataResult.Success -> update { copy(availableBooks = result.data.filterNot { it.id in readBooks }) }
+
+                    is DataResult.Loading -> update {
+                        copy(
+                            isLoading = true
+                        )
+                    }
+
+                    is DataResult.Success -> update {
+                        copy(isLoading = false,
+                            availableBooks = result.data.filterNot { it.id in readBooks })
+                    }
                 }
             }
         }
@@ -112,8 +126,13 @@ class StreakViewModel @Inject constructor(
                     .toEpochMilliseconds(),
                 pages = state.value.selectedBook?.pages
             )
-
-            saveStreakUseCase(milestone)
+            if(savedStateHandle.get<String>("bookId") == null) {
+                saveStreakUseCase(milestone)
+            } else {
+                updateStreakUseCase(
+                    milestone.copy(id = state.value.milestoneId)
+                )
+            }
             update {
                 copy(saveSuccess = true)
             }

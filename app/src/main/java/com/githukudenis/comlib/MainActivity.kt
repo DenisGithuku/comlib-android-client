@@ -83,7 +83,7 @@ class MainActivity : ComponentActivity() {
                         }) { paddingValues ->
                         ComlibNavGraph(
                             appState = appState,
-                            startDestination = if (state.isLoggedIn && state.isSetup) ComlibDestination.HomeGraph.route else if (!state.isSetup) ComlibDestination.GenreSetup.route else ComlibDestination.GetStarted.route
+                            startDestination = if (state.isLoggedIn && state.isSetup) ComlibDestination.HomeGraph.route else if (!state.isLoggedIn) ComlibDestination.GetStarted.route else ComlibDestination.GenreSetup.route
                         )
                     }
                 }
