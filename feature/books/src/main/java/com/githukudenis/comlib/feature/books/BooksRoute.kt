@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -91,54 +90,21 @@ private fun LoadingScreen() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .safeDrawingPadding(),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+            .padding(LocalDimens.current.extraLarge),
+        verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
     ) {
         Row(
-            modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.small)
         ) {
-            (0..4).map {
-                Box(
-                    modifier = Modifier
-                        .height(24.dp)
-                        .width(36.dp)
-                        .clip(CircleShape)
-                        .background(brush = loadingBrush())
-                )
+            (0..4).forEach {
+                LoadingGenrePill()
             }
         }
         Divider(modifier = Modifier.fillMaxWidth(), color = Color.Black.copy(0.09f))
-        Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
-            (0..6).map {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(56.dp)
-                            .clip(CircleShape)
-                            .background(brush = loadingBrush())
-                    )
-                    Spacer(modifier = Modifier.width(16.dp))
-                    Column {
-                        Box(
-                            modifier = Modifier
-                                .height(24.dp)
-                                .fillMaxWidth(0.6f)
-                                .clip(CircleShape)
-                                .background(brush = loadingBrush())
-                        )
-                        Spacer(modifier = Modifier.height(12.dp))
-                        Box(
-                            modifier = Modifier
-                                .height(24.dp)
-                                .fillMaxWidth(0.6f)
-                                .clip(CircleShape)
-                                .background(brush = loadingBrush())
-                        )
-                    }
-                }
+        Column(verticalArrangement = Arrangement.spacedBy(LocalDimens.current.small)) {
+            (0..8).forEach {
+                LoadingBookCard()
             }
         }
     }
@@ -210,8 +176,7 @@ private fun LoadedScreen(
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
-            .padding(LocalDimens.current.extraLarge),
-        verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
+            .padding(vertical = LocalDimens.current.extraLarge),
     ) {
         item {
             when (genreListUiState) {
@@ -227,23 +192,17 @@ private fun LoadedScreen(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = LocalDimens.current.medium),
-                        horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
+                        horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.small)
                     ) {
                         (0..4).map {
-                            Box(
-                                modifier = Modifier
-                                    .height(48.dp)
-                                    .width(72.dp)
-                                    .clip(CircleShape)
-                                    .background(brush = loadingBrush())
-                            )
+                            LoadingGenrePill()
                         }
                     }
                 }
 
                 is GenreListUiState.Success -> {
                     LazyRow(
-                        modifier = Modifier.padding(top = LocalDimens.current.small),
+                        modifier = Modifier.padding(LocalDimens.current.small),
                         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
                         contentPadding = PaddingValues(LocalDimens.current.extraLarge)
                     ) {
@@ -287,41 +246,9 @@ private fun LoadedScreen(
 
             BookListUiState.Loading -> {
                 item {
-                    Column(verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)) {
+                    Column(verticalArrangement = Arrangement.spacedBy(LocalDimens.current.small)) {
                         (0..6).map {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(
-                                        vertical = LocalDimens.current.large,
-                                        horizontal = LocalDimens.current.medium
-                                    ),
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .size(56.dp)
-                                        .clip(CircleShape)
-                                        .background(brush = loadingBrush())
-                                )
-                                Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
-                                Column {
-                                    Box(
-                                        modifier = Modifier
-                                            .height(LocalDimens.current.extraLarge)
-                                            .fillMaxWidth(0.6f)
-                                            .background(brush = loadingBrush())
-                                            .clip(shape = CircleShape)
-                                    )
-                                    Spacer(modifier = Modifier.height(LocalDimens.current.medium))
-                                    Box(
-                                        modifier = Modifier
-                                            .height(LocalDimens.current.extraLarge)
-                                            .fillMaxWidth(0.4f)
-                                            .background(brush = loadingBrush())
-                                            .clip(shape = CircleShape)
-                                    )
-                                }
-                            }
+                           LoadingBookCard()
                         }
                     }
                 }
@@ -355,4 +282,50 @@ private fun LoadedScreen(
 @Composable
 private fun ErrorScreen() {
 
+}
+
+@Composable
+fun LoadingBookCard() {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(LocalDimens.current.medium),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(64.dp)
+                .clip(CircleShape)
+                .background(loadingBrush())
+        )
+        Column {
+            Box(
+                modifier = Modifier
+                    .height(LocalDimens.current.large)
+                    .fillMaxWidth(0.8f)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .background(loadingBrush())
+            )
+            Spacer(modifier = Modifier.padding(LocalDimens.current.medium))
+            Box(
+                modifier = Modifier
+                    .height(LocalDimens.current.large)
+                    .fillMaxWidth(0.4f)
+                    .clip(MaterialTheme.shapes.extraLarge)
+                    .background(loadingBrush())
+            )
+        }
+    }
+}
+
+@Composable
+fun LoadingGenrePill() {
+    Box(
+        modifier = Modifier
+            .height(42.dp)
+            .width(72.dp)
+            .clip(CircleShape)
+            .background(loadingBrush())
+    )
 }
