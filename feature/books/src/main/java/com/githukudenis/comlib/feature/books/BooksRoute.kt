@@ -61,7 +61,6 @@ fun BooksRoute(
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksScreen(
     state: BooksUiState,
