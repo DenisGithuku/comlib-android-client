@@ -55,7 +55,7 @@ class EditProfileViewModel @Inject constructor(
         }
     }
 
-    private fun updateUser() {
+    fun updateUser() {
         viewModelScope.launch {
             val user = User(
                 firstname = state.value.firstname,

@@ -16,8 +16,9 @@ class FakeUserRepository: UserRepository {
             email = "$it@gmail.com",
             preferredGenres = listOf(),
             authId = "$it",
-            firstname = "$it.name",
-            id = "$it"
+            firstname = "$it.firstname",
+            id = "$it",
+            lastname = "$it.lastname"
         )
     }.toMutableList()
 
