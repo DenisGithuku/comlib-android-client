@@ -12,6 +12,7 @@ import com.githukudenis.comlib.BuildConfig
 import com.githukudenis.comlib.app.AppState
 import com.githukudenis.comlib.feature.add_book.AddBookRoute
 import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
+import com.githukudenis.comlib.feature.edit.EditProfileScreen
 import com.githukudenis.comlib.feature.genre_setup.GenreSetupScreen
 import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
@@ -85,7 +86,7 @@ fun ComlibNavGraph(
                 )
             }, onSignOut = {
                 appState.navigate(route = ComlibDestination.AuthGraph.route)
-            })
+            }, onEditProfile = { appState.navigate(route = ComlibDestination.EditProfile.route, popUpTo = ComlibDestination.EditProfile.route)})
         }
         composable(enterTransition = {
             scaleIn(
@@ -153,6 +154,11 @@ fun ComlibNavGraph(
         ) {
             StreakScreen(onNavigateUp = { appState.popBackStack() })
         }
+        composable(
+            route = ComlibDestination.EditProfile.route,
+        ) {
+            EditProfileScreen(onNavigateUp = { appState.popBackStack() })
+        }
     }
 }
 
@@ -170,6 +176,7 @@ sealed class ComlibDestination(
 
     data object GetStarted : ComlibDestination(route = "get_started")
     data object Profile : ComlibDestination(route = "profile")
+    data object EditProfile: ComlibDestination(route = "edit_profile")
     data object MyBooks : ComlibDestination(route = "my_books")
     data object AddBook : ComlibDestination(route = "add_book")
     data object GenreSetup : ComlibDestination(route = "genre_setup")

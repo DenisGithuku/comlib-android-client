@@ -19,14 +19,18 @@ import com.githukudenis.comlib.core.designsystem.R
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 
 @Composable
-fun CLibLoadingDialog(modifier: Modifier = Modifier, label: String? = null, onDismissRequest: () -> Unit) {
+fun CLibLoadingDialog(
+    modifier: Modifier = Modifier,
+    label: String? = null,
+    onDismissRequest: () -> Unit
+) {
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
         Card(
             modifier = Modifier.fillMaxWidth(0.9f)
-                .height(70.dp),
-            shape = MaterialTheme.shapes.large
+                .height(80.dp),
+            shape = MaterialTheme.shapes.medium
         ) {
                 Row(
                     modifier = Modifier

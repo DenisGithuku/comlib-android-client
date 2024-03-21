@@ -1,12 +1,12 @@
 package com.githukudenis.comlib.feature.edit
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
+import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
-import com.githukudenis.comlib.feature.profile.edit.EditProfileViewModel
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
@@ -23,20 +23,28 @@ class EditProfileViewModelTest {
 
     lateinit var viewModel: EditProfileViewModel
     lateinit var getUserProfileUseCase: GetUserProfileUseCase
+    lateinit var getUserPrefsUseCase: GetUserPrefsUseCase
     lateinit var updateUserUseCase: UpdateUserUseCase
-    lateinit var fakeUserRepository: FakeUserRepository
+    lateinit var userRepository: FakeUserRepository
+    lateinit var userPrefsRepository: FakeUserPrefsRepository
 
     @Before
     fun setUp() {
-        fakeUserRepository = FakeUserRepository()
+        userRepository = FakeUserRepository()
+        userPrefsRepository = FakeUserPrefsRepository()
         getUserProfileUseCase = GetUserProfileUseCase(
-            fakeUserRepository
+            userRepository
         )
         updateUserUseCase = UpdateUserUseCase(
-            fakeUserRepository
+            userRepository
+        )
+        getUserPrefsUseCase = GetUserPrefsUseCase(
+            userPrefsRepository
         )
         viewModel = EditProfileViewModel(
-            updateUserUseCase,getUserProfileUseCase, SavedStateHandle(mapOf("userId" to "5"))
+            updateUserUseCase,
+            getUserProfileUseCase,
+            getUserPrefsUseCase
         )
     }
 
@@ -50,6 +58,6 @@ class EditProfileViewModelTest {
     fun testUpdateUser() = runTest {
         viewModel.update { copy(firstname = "test.firstname", lastname = "test.lastname") }
         viewModel.updateUser()
-        assertTrue(fakeUserRepository.users.any { it.firstname == "test.firstname" && it.lastname == "test.lastname" })
+        assertTrue(userRepository.users.any { it.firstname == "test.firstname" && it.lastname == "test.lastname" })
     }
 }

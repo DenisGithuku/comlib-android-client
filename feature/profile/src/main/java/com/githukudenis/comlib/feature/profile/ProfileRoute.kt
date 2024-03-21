@@ -57,7 +57,8 @@ fun ProfileRoute(
     viewModel: ProfileViewModel = hiltViewModel(),
     onBackPressed: () -> Unit,
     onOpenMyBooks: () -> Unit,
-    onSignOut: () -> Unit
+    onSignOut: () -> Unit,
+    onEditProfile: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -69,13 +70,13 @@ fun ProfileRoute(
             onSignedOut()
         }
     }
-    ProfileScreen(state = state,
+    ProfileScreen(
+        state = state,
         versionName = versionName,
         onNavigateUp = onBackPressed,
         onOpenMyBooks = onOpenMyBooks,
         onSignOut = viewModel::onSignOut,
         onToggleCacheDialog = viewModel::onToggleCache,
-        onToggleSignOutDialog = viewModel::onToggleSignOut,
         onClearCache = {
             if (context.cacheDir.deleteRecursively()) {
                 Toast.makeText(context, "Cache cleared", Toast.LENGTH_SHORT).show()
@@ -83,7 +84,10 @@ fun ProfileRoute(
             } else {
                 Toast.makeText(context, "Failed to clear cache", Toast.LENGTH_SHORT).show()
             }
-        })
+        },
+        onToggleSignOutDialog = viewModel::onToggleSignOut,
+        onEditProfile = onEditProfile
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -96,7 +100,8 @@ private fun ProfileScreen(
     onSignOut: () -> Unit,
     onToggleCacheDialog: (Boolean) -> Unit,
     onClearCache: () -> Unit,
-    onToggleSignOutDialog: (Boolean) -> Unit
+    onToggleSignOutDialog: (Boolean) -> Unit,
+    onEditProfile: () -> Unit
 ) {
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
@@ -173,7 +178,7 @@ private fun ProfileScreen(
                                 style = MaterialTheme.typography.bodyMedium
                             )
                         }
-                        CLibOutlinedButton(onClick = { /*TODO*/ }) {
+                        CLibOutlinedButton(onClick = onEditProfile) {
                             Text(
                                 text = "Edit", style = MaterialTheme.typography.bodySmall
                             )

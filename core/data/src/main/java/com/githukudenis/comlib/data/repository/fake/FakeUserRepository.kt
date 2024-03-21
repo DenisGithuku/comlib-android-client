@@ -8,7 +8,7 @@ class FakeUserRepository: UserRepository {
 
     val users = (1..10).map {
         User(
-            _id = "$it",
+            _id = "owner@$it",
             clubs = listOf(
                 "club1", "club2", "club3"
             ),
@@ -17,7 +17,7 @@ class FakeUserRepository: UserRepository {
             preferredGenres = listOf(),
             authId = "$it",
             firstname = "$it.firstname",
-            id = "$it",
+            id = "owner@$it",
             lastname = "$it.lastname"
         )
     }.toMutableList()
