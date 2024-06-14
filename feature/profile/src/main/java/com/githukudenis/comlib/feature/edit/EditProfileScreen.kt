@@ -58,9 +58,10 @@ fun EditProfileScreen(
     EditProfileContent(state = state,
         onNavigateUp = onNavigateUp,
         onSaveChanges = viewModel::updateUser,
-        onChangeFirstname = { viewModel.onChangeFirstname(it) },
-        onChangeLastname = { viewModel.onChangeLastname(it) })
-
+        onChangeFirstname = viewModel::onChangeFirstname,
+        onChangeLastname = viewModel::onChangeLastname,
+        onChangeUsername = viewModel::onChangeUsername
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -70,7 +71,8 @@ fun EditProfileContent(
     onNavigateUp: () -> Unit,
     onSaveChanges: () -> Unit,
     onChangeFirstname: (String) -> Unit,
-    onChangeLastname: (String) -> Unit
+    onChangeLastname: (String) -> Unit,
+    onChangeUsername: (String) -> Unit
 ) {
     var sheetIsOpen by rememberSaveable {
         mutableStateOf(false)
@@ -81,14 +83,12 @@ fun EditProfileContent(
     }
 
     if (state.isUpdating) {
-        CLibLoadingDialog {
-        }
+        CLibLoadingDialog {}
     }
 
     if (sheetIsOpen) {
         ModalBottomSheet(
-            onDismissRequest = { sheetIsOpen = false },
-            windowInsets = WindowInsets.ime
+            onDismissRequest = { sheetIsOpen = false }, windowInsets = WindowInsets.ime
         ) {
             when (selectedProfileItem) {
                 ProfileItem.NOTHING -> {
@@ -126,6 +126,20 @@ fun EditProfileContent(
 
                 ProfileItem.IMAGE -> {
                     ImageChooser(onOpenGallery = { }, onOpenCamera = {})
+                }
+
+                ProfileItem.USERNAME -> {
+                    state.username?.let {
+                        EditableProfileItem(value = it,
+                            onValueChange = onChangeUsername,
+                            onSaveChanges = {
+                                onSaveChanges()
+                                sheetIsOpen = false
+                            },
+                            onCancel = {
+                                sheetIsOpen = false
+                            })
+                    }
                 }
             }
         }
@@ -169,6 +183,19 @@ fun EditProfileContent(
                     })
             }
             item {
+                state.username?.let {
+                    EditProfileItem(
+                        title = stringResource(id = R.string.username_label),
+                        value = state.username,
+                        icon = Icons.Outlined.AccountCircle,
+                        profileItem = ProfileItem.USERNAME,
+                    ) {
+                        selectedProfileItem = it
+                        sheetIsOpen = true
+                    }
+                }
+            }
+            item {
                 state.firstname?.let {
                     EditProfileItem(title = stringResource(id = R.string.firstname_label),
                         value = state.firstname,
@@ -179,6 +206,8 @@ fun EditProfileContent(
                             sheetIsOpen = true
                         })
                 }
+            }
+            item {
                 state.lastname?.let {
                     EditProfileItem(title = stringResource(id = R.string.lastname_label),
                         value = state.lastname,
@@ -280,17 +309,14 @@ private fun ImageSourceComponent(
         verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Box(
-            modifier = Modifier
-                .size(60.dp)
-                .clickable { onClick() }
-                .border(
-                    width = 0.8.dp,
-                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-                    shape = CircleShape
-                )
-            , contentAlignment = Alignment.Center
-        ) {
+        Box(modifier = Modifier
+            .size(60.dp)
+            .clickable { onClick() }
+            .border(
+                width = 0.8.dp,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+                shape = CircleShape
+            ), contentAlignment = Alignment.Center) {
             Icon(
                 imageVector = icon,
                 contentDescription = label,
@@ -355,5 +381,5 @@ fun EditableProfileItem(
 }
 
 enum class ProfileItem {
-    NOTHING, FIRSTNAME, LASTNAME, IMAGE
+    NOTHING, FIRSTNAME, LASTNAME, USERNAME, IMAGE
 }

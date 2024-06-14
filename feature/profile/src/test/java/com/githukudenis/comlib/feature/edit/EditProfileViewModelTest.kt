@@ -60,4 +60,20 @@ class EditProfileViewModelTest {
         viewModel.updateUser()
         assertTrue(userRepository.users.any { it.firstname == "test.firstname" && it.lastname == "test.lastname" })
     }
+
+    @Test
+    fun testOChangeFirstname() = runTest {
+        viewModel.onChangeFirstname("test.firstname")
+        assertEquals(viewModel.state.value.firstname, "test.firstname")
+    }
+    @Test
+    fun testOnChangeLastname() = runTest {
+        viewModel.onChangeLastname("test.lastname")
+        assertEquals(viewModel.state.value.lastname, "test.lastname")
+    }
+    @Test
+    fun testOnChangeUsername() = runTest {
+        viewModel.onChangeUsername("test.username")
+        assertEquals(viewModel.state.value.username, "test.username")
+    }
 }

@@ -13,8 +13,10 @@ import javax.inject.Inject
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
+    val userId: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
+    val username: String? = null,
     val profileUrl: String? = null,
     val isUpdating: Boolean = false,
     val error: String? = null
@@ -34,7 +36,7 @@ class EditProfileViewModel @Inject constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            val userId: String = checkNotNull(getUserPrefsUseCase().first().userId)
+            val userId: String = checkNotNull(getUserPrefsUseCase().first().authId)
             update {
                 copy(isLoading = true)
             }
@@ -42,7 +44,9 @@ class EditProfileViewModel @Inject constructor(
                 val newState: EditProfileUiState = user?.let {
                     EditProfileUiState(
                         isLoading = false,
+                        userId = user.id,
                         firstname = user.firstname,
+                        username = user.username,
                         lastname = user.lastname,
                         profileUrl = user.image,
                     )
@@ -63,9 +67,11 @@ class EditProfileViewModel @Inject constructor(
                 firstname = state.value.firstname,
                 lastname = state.value.lastname,
             )
-            updateUserUseCase(
-                user
-            )
+            state.value.userId?.let {
+                updateUserUseCase(
+                    it, user
+                )
+            }
             update { copy(isUpdating = false) }
         }
     }
@@ -79,6 +85,12 @@ class EditProfileViewModel @Inject constructor(
     fun onChangeLastname(value: String) {
         update {
             copy(lastname = value)
+        }
+    }
+
+    fun onChangeUsername(value: String) {
+        update {
+            copy(username = value)
         }
     }
 }

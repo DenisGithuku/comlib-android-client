@@ -1,6 +1,5 @@
 package com.githukudenis.comlib.data.repository
 
-import android.util.Log
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.user.User
@@ -41,10 +40,10 @@ class UserRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun updateUser(user: User): ResponseResult<String> {
+    override suspend fun updateUser(id: String, user: User): ResponseResult<String> {
         return withContext(dispatchers.io) {
             try {
-                val users = userApi.updateUser(user)
+                userApi.updateUser(id, user)
                 ResponseResult.Success("User added successfully")
             } catch (e: Exception) {
                 Timber.e(e)

@@ -23,4 +23,5 @@
     <string name="save_label">Save</string>
     <string name="camera_label">Camera</string>
     <string name="gallery_label">Gallery</string>
+    <string name="username_label">Username</string>
 </resources>

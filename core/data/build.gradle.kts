@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.comlib.android.library)
     alias(libs.plugins.comlib.android.hilt)
+    alias(libs.plugins.comlib.android.library.firebase)
     id("kotlinx-serialization")
 }
 
@@ -38,7 +39,7 @@ dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.timber)
-
+    implementation(libs.firebase.storage)
     implementation(libs.ktor.serialization)
     implementation(libs.ktor.client)
     implementation(libs.ktor.logging)

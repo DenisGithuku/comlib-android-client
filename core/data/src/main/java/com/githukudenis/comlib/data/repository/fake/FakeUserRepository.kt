@@ -37,11 +37,10 @@ class FakeUserRepository: UserRepository {
         }
     }
 
-    override suspend fun updateUser(user: User): ResponseResult<String> {
+    override suspend fun updateUser(id: String, user: User): ResponseResult<String> {
         return try {
-            users.replaceAll {
-                user
-            }
+            val pos = users.indexOf(users.find { it.id == id })
+            users[pos] = user
             ResponseResult.Success("success")
         } catch (e: Exception) {
             ResponseResult.Failure(e)

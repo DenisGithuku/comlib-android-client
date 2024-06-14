@@ -9,6 +9,8 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
 import io.ktor.client.request.post
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
@@ -43,11 +45,12 @@ class UserApi @Inject constructor(
         }
     }
 
-    suspend fun updateUser(user: User) {
+    suspend fun updateUser(id: String, user: User) {
         withContext(dispatchers.io) {
             httpClient.patch<User>(
-                urlString = Endpoints.Users.url
+                urlString = Endpoints.User(id ?: return@withContext).url
             ) {
+                contentType(ContentType.Application.Json)
                 body = user
             }
         }

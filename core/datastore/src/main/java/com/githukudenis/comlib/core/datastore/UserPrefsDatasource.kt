@@ -21,7 +21,7 @@ class UserPrefsDatasource @Inject constructor(
             themeConfig = ThemeConfigConverter.toThemeConfig(
                 prefs[PreferenceKeys.themeConfigPreferenceKey] ?: ThemeConfig.SYSTEM.name
             ),
-            userId = prefs[PreferenceKeys.userIdPreferenceKey],
+            authId = prefs[PreferenceKeys.userIdPreferenceKey],
             readBooks = prefs[PreferenceKeys.readBooks]?.toSet() ?: emptySet(),
             bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
             isSetup = prefs[PreferenceKeys.isSetup] ?: false,

@@ -10,6 +10,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateAppSetupState
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.genre.Genre
+import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
@@ -52,8 +53,7 @@ class GenreSetupViewModel @Inject constructor(
             getGenresUseCase().catch { throwable ->
                 update {
                     copy(
-                        isLoading = false,
-                        error = throwable.message
+                        isLoading = false, error = throwable.message
                     )
                 }
             }.collectLatest { result ->
@@ -66,8 +66,7 @@ class GenreSetupViewModel @Inject constructor(
                     is DataResult.Loading -> update { copy(isLoading = true) }
                     is DataResult.Success -> {
                         update {
-                            copy(
-                                isLoading = false,
+                            copy(isLoading = false,
                                 genres = result.data.map { SelectableGenreItem(genre = it) })
                         }
                     }
@@ -91,13 +90,13 @@ class GenreSetupViewModel @Inject constructor(
     }
 
     private suspend fun onUpdateUser() {
-        requireNotNull(getUserPrefsUseCase().first().userId).run {
+        requireNotNull(getUserPrefsUseCase().first().authId).run {
             val user = getUserProfileUseCase(this)
             user?.let {
                 val genres = it.preferredGenres.toMutableList()
                 genres.addAll(state.value.genres.map { it.genre.id })
                 updateUserUseCase(
-                    it.copy(
+                    this, User(
                         preferredGenres = genres
                     )
                 )

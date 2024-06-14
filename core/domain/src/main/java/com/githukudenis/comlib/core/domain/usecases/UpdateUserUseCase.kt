@@ -9,9 +9,9 @@ import javax.inject.Inject
 class UpdateUserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
-    suspend operator fun invoke(user: User) {
+    suspend operator fun invoke(id: String, user: User) {
         try {
-            userRepository.updateUser(user)
+            userRepository.updateUser(id, user)
         } catch (e: Exception) {
             Timber.e(e)
             if (e is CancellationException) throw e
