@@ -19,36 +19,43 @@ suspend fun <T : Any> dataResultSafeApiCall(
         val result = apiCall.invoke()
         DataResult.Success(result)
     }
-    catch (e: NoInternetException) {
+    catch (e: OperationException.NoInternetException) {
         Timber.e(e)
         DataResult.Error(
-            message = e.message,
-            e
+            message = e.message ?: "An error occurred",
+            t = e.throwable
         )
     }
-    catch (e: NoDataConnectionException) {
+    catch(e: OperationException.AuthenticationException){
         Timber.e(e)
         DataResult.Error(
-            message = e.message,
-            e
+            message = e.message ?: "An error occurred",
+            t = e.throwable
+        )
+    }
+    catch (e: OperationException.UnauthorizedException) {
+        Timber.e(e)
+        DataResult.Error(
+            message = e.message ?: "An error occurred",
+            t = e
         )
     }
     catch(e: IOException) {
         Timber.e(e)
         DataResult.Error(
             message = "Oops! Looks like you're not connected",
-            e
+            t = e
         )
     }
     catch(e: UnknownHostException) {
         Timber.e(e)
         DataResult.Error(
             message = "Could not connect to service. Please check your internet connection!",
-            e
+            t = e
         )
     }
     catch (t: Throwable) {
         Timber.e(t)
-        DataResult.Error(t.message ?: "An unknown error occurred", t)
+        DataResult.Error(message = t.message ?: "An unknown error occurred", t = t)
     }
 }

@@ -1,5 +1,7 @@
 package com.githukudenis.comlib.data.di
 
+import com.githukudenis.comlib.core.common.ComlibConnectivityManager
+import com.githukudenis.comlib.data.utils.FirebaseStorageHandlerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -64,5 +66,13 @@ object NetworkModule {
             }
         }
         return httpClient
+    }
+
+    @Provides
+    @Singleton
+    fun provideImageStorage(connectivityManager: ComlibConnectivityManager): FirebaseStorageHandlerImpl {
+        return FirebaseStorageHandlerImpl(
+            connectivityManager
+        )
     }
 }

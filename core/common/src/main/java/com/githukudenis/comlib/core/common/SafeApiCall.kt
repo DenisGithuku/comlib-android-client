@@ -10,13 +10,19 @@ suspend fun <T> safeApiCall(block: suspend () -> ResponseResult<T>): ResponseRes
         Timber.e(e)
         ResponseResult.Failure(Throwable(message = "Could not connect to service. Please check your internet connection!", cause = e))
     }
-    catch (e: NoInternetException) {
+    catch (e: OperationException.NoInternetException) {
         Timber.e(e)
-        ResponseResult.Failure(e)
+        ResponseResult.Failure(
+            Throwable(e.message)
+        )
     }
-    catch (e: NoDataConnectionException) {
+    catch(e: OperationException.AuthenticationException){
         Timber.e(e)
-        ResponseResult.Failure(e)
+        ResponseResult.Failure(Throwable(e.message))
+    }
+    catch (e: OperationException.UnauthorizedException) {
+        Timber.e(e)
+        ResponseResult.Failure(Throwable(e.message))
     }
     catch (e: Exception) {
         Timber.e(e)

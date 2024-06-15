@@ -11,7 +11,7 @@ interface FirebaseStorageOperationHandler {
     suspend fun <T> execute(operation: suspend () -> T ): Result<T>
 }
 
-class ImageStorageHandlerImpl @Inject constructor(
+class FirebaseStorageHandlerImpl @Inject constructor(
     private val connectivityManager: ComlibConnectivityManager
 ): FirebaseStorageOperationHandler {
     override suspend fun <T> execute(operation: suspend () -> T): Result<T> {

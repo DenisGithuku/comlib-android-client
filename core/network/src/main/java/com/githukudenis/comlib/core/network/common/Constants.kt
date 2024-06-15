@@ -4,6 +4,10 @@ object Constants {
     const val BASE_URL =  "https://comlib-api.onrender.com/"
 }
 
+object ImagesStorage {
+    const val ref = "images"
+}
+
 sealed class Endpoints(private val path: String) {
     val url: String
         get() {
