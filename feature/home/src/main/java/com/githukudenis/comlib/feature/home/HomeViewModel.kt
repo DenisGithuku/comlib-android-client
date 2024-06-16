@@ -122,7 +122,7 @@ class HomeViewModel @Inject constructor(
     private fun getUserDetails() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.userId).also {
+                requireNotNull(prefs.authId).also {
                     getUserProfile(it)
                 }
             }

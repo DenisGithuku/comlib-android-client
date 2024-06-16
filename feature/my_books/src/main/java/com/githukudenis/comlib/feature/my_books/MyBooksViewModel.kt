@@ -29,7 +29,7 @@ class MyBooksViewModel @Inject constructor(
     private fun getBooks() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.userId).run {
+                requireNotNull(prefs.authId).run {
                     when (val result = getBooksByUserUseCase(this)) {
                         DataResult.Empty -> {
                             update { copy(books = emptyList(), isLoading = false) }

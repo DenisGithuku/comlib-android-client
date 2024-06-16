@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="change_book_image">Change book image</string>
+    <string name="add_book_title">New book</string>
+    <string name="no_media_selected">No media selected</string>
+</resources>

@@ -1,5 +1,6 @@
 package com.githukudenis.comlib.data.repository.fake
 
+import android.net.Uri
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BooksData
@@ -50,7 +51,9 @@ class FakeBooksRepository: BooksRepository {
         )
     }
 
-    override suspend fun addNewBook(book: Book): String {
+    override suspend fun addNewBook(
+        image: Uri,
+        book: Book): String {
         return try {
             books.add(book)
             MutationResult.SUCCESS.name

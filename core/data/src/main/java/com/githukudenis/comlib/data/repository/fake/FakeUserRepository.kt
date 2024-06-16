@@ -8,7 +8,7 @@ class FakeUserRepository: UserRepository {
 
     val users = (1..10).map {
         User(
-            _id = "$it",
+            _id = "owner@$it",
             clubs = listOf(
                 "club1", "club2", "club3"
             ),
@@ -16,8 +16,9 @@ class FakeUserRepository: UserRepository {
             email = "$it@gmail.com",
             preferredGenres = listOf(),
             authId = "$it",
-            firstname = "$it.name",
-            id = "$it"
+            firstname = "$it.firstname",
+            id = "owner@$it",
+            lastname = "$it.lastname"
         )
     }.toMutableList()
 
@@ -36,11 +37,10 @@ class FakeUserRepository: UserRepository {
         }
     }
 
-    override suspend fun updateUser(user: User): ResponseResult<String> {
+    override suspend fun updateUser(id: String, user: User): ResponseResult<String> {
         return try {
-            users.replaceAll {
-                user
-            }
+            val pos = users.indexOf(users.find { it.id == id })
+            users[pos] = user
             ResponseResult.Success("success")
         } catch (e: Exception) {
             ResponseResult.Failure(e)

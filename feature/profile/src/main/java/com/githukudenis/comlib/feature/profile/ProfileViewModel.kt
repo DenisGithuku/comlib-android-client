@@ -26,7 +26,7 @@ class ProfileViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             getUserPrefsUseCase().distinctUntilChanged().collectLatest { prefs ->
-                    getProfileDetails(prefs.userId ?: return@collectLatest)
+                    getProfileDetails(prefs.authId ?: return@collectLatest)
                 }
         }
     }

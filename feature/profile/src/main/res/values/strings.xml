@@ -13,4 +13,15 @@
     <string name="profile_title">Profile</string>
     <string name="sign_out_dialog_title">Sign out</string>
     <string name="sign_out_dialog_text">You are about to be signed out.</string>
+    <string name="screen_title">Edit Profile</string>
+    <string name="back">Back</string>
+    <string name="check">Check</string>
+    <string name="edit">Edit</string>
+    <string name="firstname_label">Firstname</string>
+    <string name="lastname_label">Lastname</string>
+    <string name="cancel_label">Cancel</string>
+    <string name="save_label">Save</string>
+    <string name="camera_label">Camera</string>
+    <string name="gallery_label">Gallery</string>
+    <string name="username_label">Username</string>
 </resources>

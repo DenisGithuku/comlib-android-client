@@ -19,19 +19,22 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.feature.profile.R
 
 @Composable
 fun ProfileImage(
-    imageUrl: String?, onChangeImage: () -> Unit
+    imageUrl: String?,
+    size: Dp = 100.dp,
+    onChangeImage: () -> Unit
 ) {
     Box(modifier = Modifier) {
         AsyncImage(
             model = imageUrl,
             modifier = Modifier
-                .size(100.dp)
+                .size(size)
                 .clip(CircleShape),
             contentScale = ContentScale.Crop,
             contentDescription = null,
