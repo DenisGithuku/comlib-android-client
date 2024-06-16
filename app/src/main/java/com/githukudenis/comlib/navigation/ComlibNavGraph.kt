@@ -99,7 +99,9 @@ fun ComlibNavGraph(
         }, route = ComlibDestination.MyBooks.route
         ) {
             MyBooksRoute(onNavigateToBookDetails = {},
-                onNavigateToAddBook = { /*TODO*/ },
+                onNavigateToAddBook = {
+                    appState.navigate(route = ComlibDestination.AddBook.route, popUpTo = ComlibDestination.AddBook.route)
+                },
                 onNavigateUp = {
                     appState.popBackStack()
                 })
