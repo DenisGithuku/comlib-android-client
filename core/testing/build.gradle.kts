@@ -4,12 +4,9 @@ plugins {
     alias(libs.plugins.comlib.android.hilt)
 }
 
-android {
-    namespace = "com.githukudenis.comlib.core.testing"
-}
+android { namespace = "com.githukudenis.comlib.core.testing" }
 
 dependencies {
-
     api(libs.androidx.activity.compose)
     api(libs.androidx.compose.ui.test)
     api(libs.androidx.test.core)
@@ -23,8 +20,8 @@ dependencies {
 
     debugApi(libs.androidx.compose.ui.test.manifest)
 
-//    implementation(project(":core:data"))
-//    implementation(project(":core:model"))
-//    implementation(project(":core:common"))
+    //    implementation(project(":core:data"))
+    //    implementation(project(":core:model"))
+    //    implementation(project(":core:common"))
     implementation(libs.kotlinx.datetime)
 }

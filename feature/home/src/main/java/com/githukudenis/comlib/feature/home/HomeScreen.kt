@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.home
 
 import android.widget.Toast
@@ -47,13 +63,9 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 
 /**
- * project : ComLib
- * date    : Friday 23/02/2024
- * time    : 12:45 pm
- * user    : mambo
- * email   : mambobryan@gmail.com
+ * project : ComLib date : Friday 23/02/2024 time : 12:45 pm user : mambo email :
+ * mambobryan@gmail.com
  */
-
 @Composable
 fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
@@ -90,47 +102,48 @@ fun HomeRouteContent(
 
     Scaffold { values ->
         LazyColumn(
-            modifier = Modifier
-                .padding(values)
-                .fillMaxSize(),
+            modifier = Modifier.padding(values).fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
-                val username = when(state.user) {
-                    is FetchItemState.Error -> "Stranger"
-                    FetchItemState.Loading -> "Stranger"
-                    is FetchItemState.Success -> state.user.data?.firstname?.capitalize()
-                }
+                val username =
+                    when (state.user) {
+                        is FetchItemState.Error -> "Stranger"
+                        FetchItemState.Loading -> "Stranger"
+                        is FetchItemState.Success -> state.user.data?.firstname?.capitalize()
+                    }
 
                 val time = state.timePeriod.name.lowercase().capitalize()
-                HomeHeader(modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge), title = {
-                    Text(
-                        text = buildString {
-                            append("Good")
-                            append(" ")
-                            append(time)
-                            append(" ")
-                            append(username)
-                        }, style = MaterialTheme.typography.titleMedium
-                    )
-                }, subtitle = {
-                    Text(
-                        text = stringResource(id = R.string.home_header_subtitle),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-                    )
-                }, profileImage = {
-                    AsyncImage(
-                        modifier = Modifier
-                            .size(48.dp)
-                            .clip(CircleShape)
-                            .clickable(
-                                onClick = onOpenProfile
-                            ),
-                        model = ImageEndpoints.User("default_img.jpg").url,
-                        contentDescription = "User profile"
-                    )
-                })
+                HomeHeader(
+                    modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
+                    title = {
+                        Text(
+                            text =
+                                buildString {
+                                    append("Good")
+                                    append(" ")
+                                    append(time)
+                                    append(" ")
+                                    append(username)
+                                },
+                            style = MaterialTheme.typography.titleMedium
+                        )
+                    },
+                    subtitle = {
+                        Text(
+                            text = stringResource(id = R.string.home_header_subtitle),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                        )
+                    },
+                    profileImage = {
+                        AsyncImage(
+                            modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
+                            model = ImageEndpoints.User("default_img.jpg").url,
+                            contentDescription = "User profile"
+                        )
+                    }
+                )
             }
             item {
                 val dateRange = buildString {
@@ -139,9 +152,10 @@ fun HomeRouteContent(
                     append(state.streakState.bookMilestone?.endDate?.toLocalDate()?.toDayAndMonth())
                 }
 
-                val progress = state.streakState.bookMilestone?.run {
-                    endDate?.let { startDate?.let { it1 -> calculateProgress(it1, it) } }
-                } ?: 0f
+                val progress =
+                    state.streakState.bookMilestone?.run {
+                        endDate?.let { startDate?.let { it1 -> calculateProgress(it1, it) } }
+                    } ?: 0f
                 GoalCard(
                     modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                     hasStreak = state.streakState.bookMilestone != null,
@@ -176,18 +190,14 @@ fun HomeRouteContent(
                             }
                         }
                     }
-
                     FetchItemState.Loading -> {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
                             horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                         ) {
-                            items(4) {
-                                LoadingBookCard()
-                            }
+                            items(4) { LoadingBookCard() }
                         }
                     }
-
                     is FetchItemState.Success -> {
                         val list = state.availableState.data
                         if (list.isNotEmpty()) {
@@ -196,14 +206,24 @@ fun HomeRouteContent(
                                 horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                             ) {
                                 items(list, key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
-                                    BookCard(bookUiModel = bookUiModel, onClick = onOpenBookDetails, onReserve = {}, onToggleFavourite = {
-                                        onToggleFavourite(bookUiModel.book.id)
-                                        Toast.makeText(
-                                            context,
-                                            context.getString(if(bookUiModel.isFavourite) R.string.remove_from_favourites else R.string.add_to_favourites),
-                                            Toast.LENGTH_SHORT
-                                        ).show()
-                                    })
+                                    BookCard(
+                                        bookUiModel = bookUiModel,
+                                        onClick = onOpenBookDetails,
+                                        onReserve = {},
+                                        onToggleFavourite = {
+                                            onToggleFavourite(bookUiModel.book.id)
+                                            Toast.makeText(
+                                                    context,
+                                                    context.getString(
+                                                        if (bookUiModel.isFavourite) {
+                                                            R.string.remove_from_favourites
+                                                        } else R.string.add_to_favourites
+                                                    ),
+                                                    Toast.LENGTH_SHORT
+                                                )
+                                                .show()
+                                        }
+                                    )
                                 }
                             }
                         } else {
@@ -235,8 +255,11 @@ private fun LocalDate.toDayAndMonth(): String {
 
 private fun calculateProgress(startDate: Long, endDate: Long): Float {
     val now = Clock.System.now().toEpochMilliseconds().toLocalDate()
-    val progress = if(startDate.toLocalDate() > now) 0f else
-        (now.dayOfYear - startDate.toLocalDate().dayOfYear).toFloat() /
-            (endDate.toLocalDate().dayOfYear - startDate.toLocalDate().dayOfYear).toFloat()
+    val progress =
+        if (startDate.toLocalDate() > now) {
+            0f
+        } else
+            (now.dayOfYear - startDate.toLocalDate().dayOfYear).toFloat() /
+                (endDate.toLocalDate().dayOfYear - startDate.toLocalDate().dayOfYear).toFloat()
     return progress
 }

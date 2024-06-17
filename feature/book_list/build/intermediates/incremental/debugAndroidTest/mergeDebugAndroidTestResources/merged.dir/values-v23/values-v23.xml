@@ -7,13 +7,13 @@
     <style name="Base.Theme.AppCompat" parent="Base.V23.Theme.AppCompat"/>
     <style name="Base.Theme.AppCompat.Light" parent="Base.V23.Theme.AppCompat.Light"/>
     <style name="Base.V23.Theme.AppCompat" parent="Base.V22.Theme.AppCompat">
-        
+
         <item name="ratingBarStyleIndicator">?android:attr/ratingBarStyleIndicator</item>
         <item name="ratingBarStyleSmall">?android:attr/ratingBarStyleSmall</item>
 
-        
+
         <item name="actionBarItemBackground">?android:attr/actionBarItemBackground</item>
-        
+
         <item name="actionMenuTextColor">?android:attr/actionMenuTextColor</item>
         <item name="actionMenuTextAppearance">?android:attr/actionMenuTextAppearance</item>
         <item name="actionOverflowButtonStyle">?android:attr/actionOverflowButtonStyle</item>
@@ -21,13 +21,13 @@
         <item name="controlBackground">@drawable/abc_control_background_material</item>
     </style>
     <style name="Base.V23.Theme.AppCompat.Light" parent="Base.V22.Theme.AppCompat.Light">
-        
+
         <item name="ratingBarStyleIndicator">?android:attr/ratingBarStyleIndicator</item>
         <item name="ratingBarStyleSmall">?android:attr/ratingBarStyleSmall</item>
 
-        
+
         <item name="actionBarItemBackground">?android:attr/actionBarItemBackground</item>
-        
+
         <item name="actionMenuTextColor">?android:attr/actionMenuTextColor</item>
         <item name="actionMenuTextAppearance">?android:attr/actionMenuTextAppearance</item>
         <item name="actionOverflowButtonStyle">?android:attr/actionOverflowButtonStyle</item>
@@ -57,11 +57,11 @@
     <item name="colorControlNormal">@color/m3_textfield_indicator_text_color</item>
   </style>
     <style name="ThemeOverlay.Material3.Chip" parent="">
-    
+
     <item name="colorControlNormal">@color/m3_chip_text_color</item>
   </style>
     <style name="ThemeOverlay.Material3.Chip.Assist" parent="">
-    
+
     <item name="colorControlNormal">@color/m3_assist_chip_icon_tint_color</item>
   </style>
     <style name="ThemeOverlay.Material3.TextInputEditText" parent="Base.ThemeOverlay.Material3.TextInputEditText">

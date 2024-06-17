@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.my_books
 
 import androidx.compose.foundation.clickable
@@ -69,45 +85,42 @@ private fun MyBooksContent(
     onOpenBookDetails: (String) -> Unit,
     onNavigateToAddBook: () -> Unit
 ) {
-
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = {
-            Text(
-                text = stringResource(R.string.my_books_title),
-                style = MaterialTheme.typography.titleMedium
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.my_books_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { onNavigateUp() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
-        }, navigationIcon = {
-            IconButton(onClick = { onNavigateUp() }) {
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = onNavigateToAddBook) {
                 Icon(
-                    imageVector = Icons.Default.ArrowBack, contentDescription = "Back"
+                    imageVector = Icons.Default.Add,
+                    tint = MaterialTheme.colorScheme.onSecondaryContainer,
+                    contentDescription = stringResource(id = R.string.add_book)
                 )
             }
-        })
-    }, floatingActionButton = {
-        FloatingActionButton(onClick = onNavigateToAddBook) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                tint = MaterialTheme.colorScheme.onSecondaryContainer,
-                contentDescription = stringResource(id = R.string.add_book)
-            )
         }
-    }) { innerPadding ->
+    ) { innerPadding ->
         if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CLibCircularProgressBar()
             }
             return@Scaffold
         }
 
         if (state.error?.isNotEmpty() == true) {
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = state.error, style = MaterialTheme.typography.bodyMedium
-                )
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text(text = state.error, style = MaterialTheme.typography.bodyMedium)
                 return@Scaffold
             }
         }
@@ -117,10 +130,7 @@ private fun MyBooksContent(
         }
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding)
-                .padding(LocalDimens.current.medium)
+            modifier = Modifier.fillMaxSize().padding(innerPadding).padding(LocalDimens.current.medium)
         ) {
             items(state.books, key = { it.id }) { book ->
                 BookComponent(book = book, onOpenBookDetails = onOpenBookDetails)
@@ -131,44 +141,32 @@ private fun MyBooksContent(
 
 @Composable
 fun BookComponent(book: Book, onOpenBookDetails: (String) -> Unit) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable {
-            onOpenBookDetails(book.id)
-        }
-        .padding(vertical = 16.dp, horizontal = 8.dp),
+    Row(
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable { onOpenBookDetails(book.id) }
+                .padding(vertical = 16.dp, horizontal = 8.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Row {
             AsyncImage(
-                modifier = Modifier
-                    .size(50.dp)
-                    .clip(CircleShape),
+                modifier = Modifier.size(50.dp).clip(CircleShape),
                 model = "https://comlib-api.onrender.com/img/books/${book.image}",
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
+                Text(text = book.title, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = book.title,
-                    style = MaterialTheme.typography.titleMedium,
-                )
-                Text(
-                    text = buildString {
-                        book.authors.map { author ->
-                            append(author)
-                        }
-                    },
-                    style = MaterialTheme.typography.bodyMedium,
+                    text = buildString { book.authors.map { author -> append(author) } },
+                    style = MaterialTheme.typography.bodyMedium
                 )
             }
         }
         IconButton(onClick = { onOpenBookDetails(book.id) }) {
-            Icon(
-                imageVector = Icons.Default.ChevronRight,
-                contentDescription = "Open book details",
-            )
+            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = "Open book details")
         }
     }
 }
@@ -176,9 +174,7 @@ fun BookComponent(book: Book, onOpenBookDetails: (String) -> Unit) {
 @Composable
 fun EmptyBooks() {
     Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(LocalDimens.current.extraLarge),
+        modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
         contentAlignment = Alignment.Center
     ) {
         Text(

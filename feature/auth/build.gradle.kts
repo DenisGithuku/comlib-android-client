@@ -8,9 +8,7 @@ plugins {
 android {
     namespace = "com.githukudenis.comlib.feature.auth"
 
-
     defaultConfig {
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -18,13 +16,9 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
-
 }
 
 dependencies {

@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.streak
 
 import androidx.compose.animation.AnimatedContent
@@ -57,9 +73,7 @@ import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.toLocalDateTime
 
 @Composable
-fun StreakScreen(
-    viewModel: StreakViewModel = hiltViewModel(), onNavigateUp: () -> Unit
-) {
+fun StreakScreen(viewModel: StreakViewModel = hiltViewModel(), onNavigateUp: () -> Unit) {
     val state by viewModel.state.collectAsState()
     val currentOnSaveStreak by rememberUpdatedState(newValue = onNavigateUp)
 
@@ -88,33 +102,25 @@ private fun StreakContent(
     onNavigateUp: () -> Unit,
     onToggleBook: (StreakBook?) -> Unit
 ) {
+    var bottomSheetIsVisible by rememberSaveable { mutableStateOf(false) }
 
-    var bottomSheetIsVisible by rememberSaveable {
-        mutableStateOf(false)
-    }
-
-    var showDatePicker by rememberSaveable {
-        mutableStateOf(false)
-    }
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
 
     val yearToday = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).year
 
-    val dateRangePickerState = rememberDateRangePickerState(
-        initialDisplayMode = DisplayMode.Input,
-        initialSelectedStartDateMillis = state.startDate.toMillisLong(),
-        initialSelectedEndDateMillis = state.endDate.toMillisLong(),
-        yearRange = IntRange(
-            start = yearToday, endInclusive = yearToday + 1
+    val dateRangePickerState =
+        rememberDateRangePickerState(
+            initialDisplayMode = DisplayMode.Input,
+            initialSelectedStartDateMillis = state.startDate.toMillisLong(),
+            initialSelectedEndDateMillis = state.endDate.toMillisLong(),
+            yearRange = IntRange(start = yearToday, endInclusive = yearToday + 1)
         )
-    )
 
     if (bottomSheetIsVisible) {
         ModalBottomSheet(onDismissRequest = { bottomSheetIsVisible = false }) {
             if (state.isLoading) {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(LocalDimens.current.extraLarge),
+                    modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.extraLarge),
                     verticalArrangement = Arrangement.Center,
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
@@ -132,16 +138,14 @@ private fun StreakContent(
             LazyColumn {
                 item {
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = LocalDimens.current.medium),
+                        modifier = Modifier.fillMaxWidth().padding(horizontal = LocalDimens.current.medium),
                         horizontalArrangement = Arrangement.End
                     ) {
                         IconButton(onClick = { bottomSheetIsVisible = false }) {
                             Icon(
                                 imageVector = Icons.Default.Close,
                                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.4f),
-                                contentDescription = stringResource(R.string.close),
+                                contentDescription = stringResource(R.string.close)
                             )
                         }
                     }
@@ -158,38 +162,33 @@ private fun StreakContent(
     }
 
     if (showDatePicker) {
-        DatePickerDialog(modifier = Modifier.padding(LocalDimens.current.extraLarge),
+        DatePickerDialog(
+            modifier = Modifier.padding(LocalDimens.current.extraLarge),
             shape = MaterialTheme.shapes.extraLarge,
-            onDismissRequest = {
-                showDatePicker = false
-            },
+            onDismissRequest = { showDatePicker = false },
             confirmButton = {
-                TextButton(onClick = {
-                    val start = dateRangePickerState.selectedStartDateMillis?.toLocalDate()
-                    val end = dateRangePickerState.selectedEndDateMillis?.toLocalDate()
-                    start?.let { onChangeStartDate(it) }
-                    end?.let { onChangeEndDate(it) }
-                    showDatePicker = false
-                }) {
-                    Text(
-                        text = stringResource(R.string.confirm_btn_label)
-                    )
+                TextButton(
+                    onClick = {
+                        val start = dateRangePickerState.selectedStartDateMillis?.toLocalDate()
+                        val end = dateRangePickerState.selectedEndDateMillis?.toLocalDate()
+                        start?.let { onChangeStartDate(it) }
+                        end?.let { onChangeEndDate(it) }
+                        showDatePicker = false
+                    }
+                ) {
+                    Text(text = stringResource(R.string.confirm_btn_label))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDatePicker = false }) {
-                    Text(
-                        text = stringResource(R.string.cancel_btn_label)
-                    )
+                    Text(text = stringResource(R.string.cancel_btn_label))
                 }
-            }) {
+            }
+        ) {
             DateRangePicker(
                 showModeToggle = true,
                 title = {
-                    Text(
-                        modifier = Modifier.padding(LocalDimens.current.medium),
-                        text = "Select dates"
-                    )
+                    Text(modifier = Modifier.padding(LocalDimens.current.medium), text = "Select dates")
                 },
                 headline = {
                     Text(
@@ -199,48 +198,54 @@ private fun StreakContent(
                 },
                 modifier = Modifier.padding(LocalDimens.current.extraLarge),
                 state = dateRangePickerState,
-                dateValidator = { timestamp ->
-                    timestamp >= Clock.System.now().toEpochMilliseconds()
-                })
+                dateValidator = { timestamp -> timestamp >= Clock.System.now().toEpochMilliseconds() }
+            )
         }
     }
 
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = {
-            Text(
-                text = stringResource(id = R.string.streak_details_title),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-            )
-        }, navigationIcon = {
-            IconButton(onClick = onNavigateUp) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack, contentDescription = stringResource(
-                        R.string.back
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(id = R.string.streak_details_title),
+                        style = MaterialTheme.typography.titleMedium,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                     )
-                )
-            }
-        }, actions = {
-            IconButton(onClick = onSaveStreak, enabled = state.isValid) {
-                Icon(
-                    imageVector = Icons.Default.Check,
-                    contentDescription = stringResource(R.string.save_streak_label)
-                )
-            }
-        })
-    }) { innerPadding ->
+                },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = onSaveStreak, enabled = state.isValid) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = stringResource(R.string.save_streak_label)
+                        )
+                    }
+                }
+            )
+        }
+    ) { innerPadding ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(innerPadding),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
         ) {
-            SelectedBook(streakBook = state.selectedBook, onAddBook = {
-                bottomSheetIsVisible = true
-            }, onDeleteBook = { onToggleBook(null) })
-            DateRow(startDate = state.startDate, endDate = state.endDate, onChangeDates = {
-                showDatePicker = true
-            })
+            SelectedBook(
+                streakBook = state.selectedBook,
+                onAddBook = { bottomSheetIsVisible = true },
+                onDeleteBook = { onToggleBook(null) }
+            )
+            DateRow(
+                startDate = state.startDate,
+                endDate = state.endDate,
+                onChangeDates = { showDatePicker = true }
+            )
         }
     }
 }
@@ -249,30 +254,25 @@ private fun StreakContent(
 private fun SelectedBook(streakBook: StreakBook?, onAddBook: () -> Unit, onDeleteBook: () -> Unit) {
     AnimatedContent(targetState = streakBook == null) { isNull ->
         if (isNull) {
-            Column(modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onAddBook() }
-                .padding(
-                    LocalDimens.current.extraLarge
-                ), verticalArrangement = Arrangement.spacedBy(LocalDimens.current.small)) {
+            Column(
+                modifier =
+                    Modifier.fillMaxWidth().clickable { onAddBook() }.padding(LocalDimens.current.extraLarge),
+                verticalArrangement = Arrangement.spacedBy(LocalDimens.current.small)
+            ) {
                 Text(
                     text = "No book selected",
                     style = MaterialTheme.typography.titleSmall,
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
-                CLibTextButton(onClick = onAddBook) {
-                    Text(
-                        text = "Select",
-                    )
-                }
+                CLibTextButton(onClick = onAddBook) { Text(text = "Select") }
             }
         } else {
-            Row(modifier = Modifier
-                .fillMaxWidth()
-                .clickable { onAddBook() }
-                .padding(LocalDimens.current.extraLarge),
+            Row(
+                modifier =
+                    Modifier.fillMaxWidth().clickable { onAddBook() }.padding(LocalDimens.current.extraLarge),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween) {
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
                 Column {
                     streakBook?.let {
                         streakBook.title?.let { it1 ->
@@ -306,14 +306,18 @@ private fun SelectedBook(streakBook: StreakBook?, onAddBook: () -> Unit, onDelet
 
 @Composable
 private fun SelectableStreakBook(
-    streakBook: StreakBook, isSelected: Boolean, onSelect: (StreakBook) -> Unit
+    streakBook: StreakBook,
+    isSelected: Boolean,
+    onSelect: (StreakBook) -> Unit
 ) {
-    Row(modifier = Modifier
-        .fillMaxWidth()
-        .clickable { onSelect(streakBook) }
-        .padding(LocalDimens.current.medium),
+    Row(
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable { onSelect(streakBook) }
+                .padding(LocalDimens.current.medium),
         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
-        verticalAlignment = Alignment.CenterVertically) {
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         RadioButton(selected = isSelected, onClick = { onSelect(streakBook) })
         streakBook.title?.let {
             Text(
@@ -326,36 +330,22 @@ private fun SelectableStreakBook(
 }
 
 @Composable
-private fun DateRow(
-    startDate: LocalDate, endDate: LocalDate, onChangeDates: () -> Unit
-) {
+private fun DateRow(startDate: LocalDate, endDate: LocalDate, onChangeDates: () -> Unit) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(LocalDimens.current.extraLarge),
+        modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.extraLarge),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        DateComponent(
-            date = startDate,
-            title = stringResource(id = R.string.start_label),
-        )
-        DateComponent(
-            date = endDate,
-            title = stringResource(R.string.end_label),
-        )
+        DateComponent(date = startDate, title = stringResource(id = R.string.start_label))
+        DateComponent(date = endDate, title = stringResource(R.string.end_label))
         CLibOutlinedButton(onClick = onChangeDates) {
-            Text(
-                text = stringResource(id = R.string.update_label)
-            )
+            Text(text = stringResource(id = R.string.update_label))
         }
     }
 }
 
 @Composable
-private fun DateComponent(
-    date: LocalDate, title: String
-) {
+private fun DateComponent(date: LocalDate, title: String) {
     Column {
         Text(
             text = "$title",

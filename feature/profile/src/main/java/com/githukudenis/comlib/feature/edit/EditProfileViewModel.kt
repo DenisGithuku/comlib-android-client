@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.edit
 
 import androidx.lifecycle.viewModelScope
@@ -7,9 +23,9 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
@@ -23,12 +39,13 @@ data class EditProfileUiState(
 )
 
 @HiltViewModel
-class EditProfileViewModel @Inject constructor(
+class EditProfileViewModel
+@Inject
+constructor(
     private val updateUserUseCase: UpdateUserUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val getUserPrefsUseCase: GetUserPrefsUseCase
 ) : StatefulViewModel<EditProfileUiState>(EditProfileUiState()) {
-
 
     init {
         getUserDetails()
@@ -37,25 +54,24 @@ class EditProfileViewModel @Inject constructor(
     private fun getUserDetails() {
         viewModelScope.launch {
             val userId: String = checkNotNull(getUserPrefsUseCase().first().authId)
-            update {
-                copy(isLoading = true)
-            }
+            update { copy(isLoading = true) }
             getUserProfileUseCase(userId).also { user ->
-                val newState: EditProfileUiState = user?.let {
-                    EditProfileUiState(
-                        isLoading = false,
-                        userId = user.id,
-                        firstname = user.firstname,
-                        username = user.username,
-                        lastname = user.lastname,
-                        profileUrl = user.image,
-                    )
-                } ?: EditProfileUiState(
-                    isLoading = false, error = "Couldn't fetch profile. Please try again!"
-                )
-                update {
-                    newState
-                }
+                val newState: EditProfileUiState =
+                    user?.let {
+                        EditProfileUiState(
+                            isLoading = false,
+                            userId = user.id,
+                            firstname = user.firstname,
+                            username = user.username,
+                            lastname = user.lastname,
+                            profileUrl = user.image
+                        )
+                    }
+                        ?: EditProfileUiState(
+                            isLoading = false,
+                            error = "Couldn't fetch profile. Please try again!"
+                        )
+                update { newState }
             }
         }
     }
@@ -63,34 +79,21 @@ class EditProfileViewModel @Inject constructor(
     fun updateUser() {
         viewModelScope.launch {
             update { copy(isUpdating = true) }
-            val user = User(
-                firstname = state.value.firstname,
-                lastname = state.value.lastname,
-            )
-            state.value.userId?.let {
-                updateUserUseCase(
-                    it, user
-                )
-            }
+            val user = User(firstname = state.value.firstname, lastname = state.value.lastname)
+            state.value.userId?.let { updateUserUseCase(it, user) }
             update { copy(isUpdating = false) }
         }
     }
 
     fun onChangeFirstname(value: String) {
-        update {
-            copy(firstname = value)
-        }
+        update { copy(firstname = value) }
     }
 
     fun onChangeLastname(value: String) {
-        update {
-            copy(lastname = value)
-        }
+        update { copy(lastname = value) }
     }
 
     fun onChangeUsername(value: String) {
-        update {
-            copy(username = value)
-        }
+        update { copy(username = value) }
     }
 }

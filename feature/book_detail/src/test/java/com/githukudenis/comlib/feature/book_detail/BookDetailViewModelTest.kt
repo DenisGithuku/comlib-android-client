@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.book_detail
 
 import androidx.lifecycle.SavedStateHandle
@@ -23,8 +39,7 @@ import org.junit.Test
 @MediumTest
 class BookDetailViewModelTest {
 
-    @get:Rule
-    val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
+    @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: BookDetailViewModel
     lateinit var getReadBooksUseCase: GetReadBooksUseCase
@@ -37,35 +52,22 @@ class BookDetailViewModelTest {
 
     @Before
     fun setUp() {
-        getReadBooksUseCase = GetReadBooksUseCase(
-            FakeUserPrefsRepository()
-        )
-        getAllBooksUseCase = GetAllBooksUseCase(
-            FakeBooksRepository()
-        )
-        getBookmarkedBooksUseCase = GetBookmarkedBooksUseCase(
-            FakeUserPrefsRepository()
-        )
-        getStreakUseCase = GetStreakUseCase(
-            FakeMilestoneRepository()
-        )
-        toggleBookmarksUseCase = ToggleBookMarkUseCase(
-            FakeUserPrefsRepository()
-        )
-        getGenreByIdUseCase = GetGenreByIdUseCase(
-            FakeGenresRepository()
-        )
-        getBookDetailUseCase = GetBookDetailsUseCase(
-            FakeBooksRepository()
-        )
-        viewModel = BookDetailViewModel(
-            getBookmarkedBooksUseCase = getBookmarkedBooksUseCase,
-            getBookDetailsUseCase = getBookDetailUseCase,
-            getReadBooksUseCase = getReadBooksUseCase,
-            getGenreByIdUseCase = getGenreByIdUseCase,
-            toggleBookMarkUseCase = toggleBookmarksUseCase,
-            savedStateHandle = SavedStateHandle(mapOf("bookId" to "1")),
-        )
+        getReadBooksUseCase = GetReadBooksUseCase(FakeUserPrefsRepository())
+        getAllBooksUseCase = GetAllBooksUseCase(FakeBooksRepository())
+        getBookmarkedBooksUseCase = GetBookmarkedBooksUseCase(FakeUserPrefsRepository())
+        getStreakUseCase = GetStreakUseCase(FakeMilestoneRepository())
+        toggleBookmarksUseCase = ToggleBookMarkUseCase(FakeUserPrefsRepository())
+        getGenreByIdUseCase = GetGenreByIdUseCase(FakeGenresRepository())
+        getBookDetailUseCase = GetBookDetailsUseCase(FakeBooksRepository())
+        viewModel =
+            BookDetailViewModel(
+                getBookmarkedBooksUseCase = getBookmarkedBooksUseCase,
+                getBookDetailsUseCase = getBookDetailUseCase,
+                getReadBooksUseCase = getReadBooksUseCase,
+                getGenreByIdUseCase = getGenreByIdUseCase,
+                toggleBookMarkUseCase = toggleBookmarksUseCase,
+                savedStateHandle = SavedStateHandle(mapOf("bookId" to "1"))
+            )
     }
 
     @Test

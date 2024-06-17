@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.auth.presentation.login
 
 import android.app.Activity.RESULT_OK
@@ -60,9 +76,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
@@ -83,10 +99,7 @@ fun LoginRoute(
     val scope = rememberCoroutineScope()
 
     val googleAuthUiClient: GoogleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            context = context,
-            oneTapClient = Identity.getSignInClient(context),
-        )
+        GoogleAuthUiClient(context = context, oneTapClient = Identity.getSignInClient(context))
     }
 
     val loginOnComplete by rememberUpdatedState(newValue = onLoginComplete)
@@ -98,17 +111,18 @@ fun LoginRoute(
     }
 
     val signInLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult(),
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartIntentSenderForResult(),
             onResult = { activityResult ->
                 if (activityResult.resultCode == RESULT_OK) {
                     scope.launch {
-                        val signInResult = googleAuthUiClient.signInWithIntent(
-                            activityResult.data ?: return@launch
-                        )
+                        val signInResult =
+                            googleAuthUiClient.signInWithIntent(activityResult.data ?: return@launch)
                         viewModel.onEvent(LoginUiEvent.GoogleSignIn(signInResult ?: return@launch))
                     }
                 }
-            })
+            }
+        )
 
     LoginScreen(
         state = state,
@@ -122,29 +136,15 @@ fun LoginRoute(
                 val intentSender = googleAuthUiClient.signIn()
                 val intent = IntentSenderRequest.Builder(intentSender ?: return@launch).build()
 
-                signInLauncher.launch(
-                    intent
-                )
+                signInLauncher.launch(intent)
             }
         },
         onTogglePasswordVisibility = { isVisible ->
-            viewModel.onEvent(
-                LoginUiEvent.TogglePassword(
-                    isVisible
-                )
-            )
+            viewModel.onEvent(LoginUiEvent.TogglePassword(isVisible))
         },
-        onDismissUserMessage = { id ->
-            viewModel.onEvent(
-                LoginUiEvent.DismissUserMessage(id)
-            )
-        },
-        onToggleRememberMe = {
-                             viewModel.onEvent(LoginUiEvent.ToggleRememberMe(it))
-        },
-        onSubmit = {
-            viewModel.onEvent(LoginUiEvent.SubmitData)
-        },
+        onDismissUserMessage = { id -> viewModel.onEvent(LoginUiEvent.DismissUserMessage(id)) },
+        onToggleRememberMe = { viewModel.onEvent(LoginUiEvent.ToggleRememberMe(it)) },
+        onSubmit = { viewModel.onEvent(LoginUiEvent.SubmitData) }
     )
 }
 
@@ -163,31 +163,27 @@ private fun LoginScreen(
     onSubmit: () -> Unit,
     onToggleRememberMe: ((Boolean) -> Unit)?
 ) {
-
     val snackbarHostState = remember { SnackbarHostState() }
 
-    Scaffold(snackbarHost = {
-        SnackbarHost(hostState = snackbarHostState)
-    }) { paddingValues ->
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { paddingValues ->
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .safeDrawingPadding()
-                .imePadding()
-                .imeNestedScroll()
-                .padding(
-                    PaddingValues(
-                        top = paddingValues.calculateTopPadding(),
-                        bottom = paddingValues.calculateBottomPadding(),
-                        start = 16.dp,
-                        end = 16.dp,
+            modifier =
+                Modifier.fillMaxSize()
+                    .safeDrawingPadding()
+                    .imePadding()
+                    .imeNestedScroll()
+                    .padding(
+                        PaddingValues(
+                            top = paddingValues.calculateTopPadding(),
+                            bottom = paddingValues.calculateBottomPadding(),
+                            start = 16.dp,
+                            end = 16.dp
+                        )
                     )
-                )
-                .verticalScroll(rememberScrollState()),
+                    .verticalScroll(rememberScrollState()),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             LaunchedEffect(snackbarHostState, state.userMessages) {
                 if (state.userMessages.isNotEmpty()) {
                     val userMessage = state.userMessages.first()
@@ -212,21 +208,20 @@ private fun LoginScreen(
             )
             Text(
                 text = stringResource(id = R.string.login_header_title),
-                style = MaterialTheme.typography.titleMedium.copy(
-                    fontWeight = FontWeight.Bold
-                )
+                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(id = R.string.login_header_description),
-                style = MaterialTheme.typography.labelMedium,
+                style = MaterialTheme.typography.labelMedium
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             CLibOutlinedTextField(
-                value = state.formState.email, onValueChange = onEmailChange, label =
-
-                stringResource(id = R.string.email_hint), modifier = Modifier.fillMaxWidth()
+                value = state.formState.email,
+                onValueChange = onEmailChange,
+                label = stringResource(id = R.string.email_hint),
+                modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -234,18 +229,22 @@ private fun LoginScreen(
                 value = state.formState.password,
                 onValueChange = onPasswordChange,
                 label = stringResource(id = R.string.password_hint),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password
-                ),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 trailingIcon = {
                     IconButton(onClick = { onTogglePasswordVisibility(!state.formState.passwordIsVisible) }) {
                         Icon(
-                            imageVector = if (state.formState.passwordIsVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                            imageVector =
+                                if (state.formState.passwordIsVisible) {
+                                    Icons.Default.Visibility
+                                } else Icons.Default.VisibilityOff,
                             contentDescription = context.getString(R.string.toggle_password_visibility_txt)
                         )
                     }
                 },
-                visualTransformation = if (state.formState.passwordIsVisible) PasswordVisualTransformation() else VisualTransformation.None,
+                visualTransformation =
+                    if (state.formState.passwordIsVisible) {
+                        PasswordVisualTransformation()
+                    } else VisualTransformation.None,
                 modifier = Modifier.fillMaxWidth()
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -286,9 +285,7 @@ private fun LoginScreen(
                 }
             }
 
-            AuthProviderButton(
-                icon = R.drawable.ic_google, onClick = onGoogleSignIn
-            )
+            AuthProviderButton(icon = R.drawable.ic_google, onClick = onGoogleSignIn)
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
@@ -316,15 +313,13 @@ private fun LoginScreen(
 @Composable
 fun LoginScreenPreview() {
     LoginScreen(
-        state = LoginUiState(
-            isLoading = true,
-        ),
+        state = LoginUiState(isLoading = true),
         context = LocalContext.current,
         onEmailChange = {},
         onPasswordChange = {},
-        onForgotPassword = { /*TODO*/ },
-        onSignInInstead = { /*TODO*/ },
-        onGoogleSignIn = { /*TODO*/ },
+        onForgotPassword = { /*TODO*/},
+        onSignInInstead = { /*TODO*/},
+        onGoogleSignIn = { /*TODO*/},
         onTogglePasswordVisibility = {},
         onDismissUserMessage = {},
         onSubmit = {},

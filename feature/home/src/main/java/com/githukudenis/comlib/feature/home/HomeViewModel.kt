@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.home
 
 import androidx.lifecycle.viewModelScope
@@ -14,12 +30,12 @@ import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 
 data class HomeScreenState(
     val user: FetchItemState<User?> = FetchItemState.Loading,
@@ -31,7 +47,9 @@ data class HomeScreenState(
 )
 
 @HiltViewModel
-class HomeViewModel @Inject constructor(
+class HomeViewModel
+@Inject
+constructor(
     private val getReadBooksUseCase: GetReadBooksUseCase,
     private val getAllBooksUseCase: GetAllBooksUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
@@ -52,26 +70,25 @@ class HomeViewModel @Inject constructor(
 
     private fun getReadBooks() {
         viewModelScope.launch {
-            getReadBooksUseCase().collectLatest {
-                update { copy(reads = it.toList()) }
-            }
+            getReadBooksUseCase().collectLatest { update { copy(reads = it.toList()) } }
         }
     }
 
     private fun getAvailableBooks() {
         viewModelScope.launch {
             getAllBooksUseCase().collectLatest { result ->
-                val value = when (result) {
-                    DataResult.Empty -> FetchItemState.Success(emptyList())
-                    is DataResult.Error -> FetchItemState.Error(message = result.message)
-                    is DataResult.Loading -> FetchItemState.Loading
-                    is DataResult.Success -> FetchItemState.Success(result.data.map {
-                        BookUiModel(
-                            book = it,
-                            isFavourite = it.id in state.value.bookmarks
-                        )
-                    })
-                }
+                val value =
+                    when (result) {
+                        DataResult.Empty -> FetchItemState.Success(emptyList())
+                        is DataResult.Error -> FetchItemState.Error(message = result.message)
+                        is DataResult.Loading -> FetchItemState.Loading
+                        is DataResult.Success ->
+                            FetchItemState.Success(
+                                result.data.map {
+                                    BookUiModel(book = it, isFavourite = it.id in state.value.bookmarks)
+                                }
+                            )
+                    }
                 update { copy(availableState = value) }
             }
         }
@@ -97,14 +114,13 @@ class HomeViewModel @Inject constructor(
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
             val bookMarks = getBookmarkedBooksUseCase().first()
-            val updatedBookMarkSet = if (id in bookMarks) {
-                bookMarks.minus(id)
-            } else {
-                bookMarks.plus(id)
-            }
-            toggleBookMarkUseCase(
-                updatedBookMarkSet
-            )
+            val updatedBookMarkSet =
+                if (id in bookMarks) {
+                    bookMarks.minus(id)
+                } else {
+                    bookMarks.plus(id)
+                }
+            toggleBookMarkUseCase(updatedBookMarkSet)
 
             update { copy(bookmarks = updatedBookMarkSet.toList()) }
             onRefreshAvailableBooks()
@@ -122,9 +138,7 @@ class HomeViewModel @Inject constructor(
     private fun getUserDetails() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.authId).also {
-                    getUserProfile(it)
-                }
+                requireNotNull(prefs.authId).also { getUserProfile(it) }
             }
         }
     }
@@ -138,13 +152,14 @@ class HomeViewModel @Inject constructor(
 
     private fun getTimePeriod() {
         val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
-        val time = if (currHour < 12) {
-            TimePeriod.MORNING
-        } else if (currHour < 16) {
-            TimePeriod.AFTERNOON
-        } else {
-            TimePeriod.EVENING
-        }
+        val time =
+            if (currHour < 12) {
+                TimePeriod.MORNING
+            } else if (currHour < 16) {
+                TimePeriod.AFTERNOON
+            } else {
+                TimePeriod.EVENING
+            }
         update { copy(timePeriod = time) }
     }
 }

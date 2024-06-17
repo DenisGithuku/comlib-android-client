@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.core.designsystem.ui.components.dialog
 
 import androidx.compose.foundation.layout.Column
@@ -21,16 +37,10 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextB
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
-fun CLibMinimalDialog(
-    title: String,
-    text: String,
-    onDismissRequest: () -> Unit
-) {
+fun CLibMinimalDialog(title: String, text: String, onDismissRequest: () -> Unit) {
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(LocalDimens.current.extraLarge),
+            modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.extraLarge),
             shape = MaterialTheme.shapes.extraLarge
         ) {
             Column(modifier = Modifier.padding(LocalDimens.current.extraLarge)) {
@@ -47,14 +57,9 @@ fun CLibMinimalDialog(
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 )
                 Spacer(modifier = Modifier.height(LocalDimens.current.medium))
-                Text(
-                    text = text,
-                    style = MaterialTheme.typography.bodyMedium,
-                )
+                Text(text = text, style = MaterialTheme.typography.bodyMedium)
                 CLibTextButton(onClick = { onDismissRequest() }) {
-                    Text(
-                        text = stringResource(R.string.minimal_dialog_positive_button)
-                    )
+                    Text(text = stringResource(R.string.minimal_dialog_positive_button))
                 }
             }
         }

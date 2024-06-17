@@ -43,6 +43,7 @@ kotlinxSerializationJson = "1.6.0"
 kotlinx-serialization = "1.0.1"
 ktor = "1.5.0"
 material = "1.10.0"
+spotlessPluginGradle = "6.25.0"
 timber = "5.0.1"
 turbine = "1.0.0"
 work = "2.8.1"
@@ -156,3 +157,4 @@ comlib-android-library-firebase = { id = "comlib.android.library.firebase", vers
 comlib-android-library = { id = "comlib.android.library", version = "unspecified" }
 comlib-android-room = { id = "comlib.android.room", version = "unspecified" }
 comlib-android-test = { id = "comlib.android.test", version = "unspecified" }
+com-diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPluginGradle" }

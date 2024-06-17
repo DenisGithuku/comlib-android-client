@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.home.components
 
 import androidx.compose.animation.AnimatedContent
@@ -40,14 +56,12 @@ fun GoalCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.large,
         color = MaterialTheme.colorScheme.primaryContainer,
-        shadowElevation = 0.dp,
+        shadowElevation = 0.dp
     ) {
         AnimatedContent(targetState = hasStreak) { hasStreak ->
             if (hasStreak) {
                 Column(
-                    modifier = Modifier
-                        .padding(12.dp)
-                        .fillMaxWidth(),
+                    modifier = Modifier.padding(12.dp).fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
@@ -55,13 +69,8 @@ fun GoalCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(
-                            text = "Reading: $dateRange",
-                            style = MaterialTheme.typography.titleSmall,
-                        )
-                        IconButton(onClick = {
-                                onOpenStreakDetails(bookId)
-                        }) {
+                        Text(text = "Reading: $dateRange", style = MaterialTheme.typography.titleSmall)
+                        IconButton(onClick = { onOpenStreakDetails(bookId) }) {
                             Icon(
                                 imageVector = Icons.Default.MoreHoriz,
                                 contentDescription = stringResource(id = R.string.see_details)
@@ -72,22 +81,16 @@ fun GoalCard(
                         Text(
                             text = currentBookTitle,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onBackground.copy(
-                                alpha = 0.8f
-                            )
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                         )
                     }
                     if (progress != null) {
                         LinearProgressIndicator(
                             progress = progress,
                             color = MaterialTheme.colorScheme.secondary,
-                            trackColor = MaterialTheme.colorScheme.onBackground.copy(
-                                alpha = 0.2f
-                            ),
+                            trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
                             strokeCap = StrokeCap.Round,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(8.dp)
+                            modifier = Modifier.fillMaxWidth().height(8.dp)
                         )
 
                         Text(
@@ -99,35 +102,22 @@ fun GoalCard(
                 }
             } else {
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
+                    modifier = Modifier.fillMaxWidth().padding(12.dp),
                     verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                 ) {
                     Text(
                         text = "Streak status",
                         style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onBackground.copy(
-                            alpha = 0.6f
-                        )
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
                     Text(
                         text = stringResource(R.string.no_streak_label),
                         style = MaterialTheme.typography.bodyMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(
-                            alpha = 0.6f
-                        )
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
-                    CLibTextButton(
-                        onClick = { onOpenStreakDetails(null) }
-                    ) {
-                        Text(
-                            text = "Start streak",
-                        )
-                    }
+                    CLibTextButton(onClick = { onOpenStreakDetails(null) }) { Text(text = "Start streak") }
                 }
             }
         }
-
     }
 }

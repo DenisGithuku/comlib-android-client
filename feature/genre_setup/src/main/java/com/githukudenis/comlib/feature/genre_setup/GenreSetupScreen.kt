@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.genre_setup
 
 import androidx.compose.foundation.background
@@ -71,9 +87,7 @@ private fun GenreSetupContent(
 ) {
     if (state.isLoading) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(LocalDimens.current.extraLarge),
+            modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
             contentAlignment = Alignment.Center
         ) {
             CLibCircularProgressBar()
@@ -83,42 +97,34 @@ private fun GenreSetupContent(
 
     if (state.error?.isNotEmpty() == true) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(LocalDimens.current.extraLarge),
+            modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
                 text = state.error,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onBackground.copy(
-                    alpha = 0.7f
-                )
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
             Spacer(modifier = Modifier.height(LocalDimens.current.medium))
             CLibOutlinedButton(onClick = onRefresh) {
                 Text(
                     text = stringResource(id = R.string.retry_btn_label),
                     style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = 0.7f
-                    )
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }
         }
         return
     }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(LocalDimens.current.extraLarge)
-    ) {
+    Box(modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge)) {
         LazyColumn(
-            modifier = Modifier.padding(
-                top = LocalDimens.current.extraLarge,
-                bottom = LocalDimens.current.extraLarge * 3
-            ), verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
+            modifier =
+                Modifier.padding(
+                    top = LocalDimens.current.extraLarge,
+                    bottom = LocalDimens.current.extraLarge * 3
+                ),
+            verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
         ) {
             item {
                 Row(
@@ -132,18 +138,20 @@ private fun GenreSetupContent(
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
                     )
                     Box(
-                        modifier = Modifier
-                            .background(
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
-                                shape = CircleShape
-                            )
-                            .clickable(onClick = onSkip), contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier.background(
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
+                                    shape = CircleShape
+                                )
+                                .clickable(onClick = onSkip),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            modifier = Modifier.padding(
-                                vertical = LocalDimens.current.small,
-                                horizontal = LocalDimens.current.medium
-                            ),
+                            modifier =
+                                Modifier.padding(
+                                    vertical = LocalDimens.current.small,
+                                    horizontal = LocalDimens.current.medium
+                                ),
                             text = stringResource(id = R.string.skip_label),
                             style = MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
@@ -155,7 +163,7 @@ private fun GenreSetupContent(
                 FlowRow(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
-                    verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
+                    verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                 ) {
                     state.genres.map { item ->
                         SelectablePillComponent(
@@ -170,14 +178,14 @@ private fun GenreSetupContent(
             }
         }
         Box(
-            modifier = Modifier
-                .align(Alignment.BottomCenter)
-                .background(color = MaterialTheme.colorScheme.background)
+            modifier =
+                Modifier.align(Alignment.BottomCenter)
+                    .background(color = MaterialTheme.colorScheme.background)
         ) {
             CLibButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.screenIsValid,
-                onClick = onCompleteSetup,
+                onClick = onCompleteSetup
             ) {
                 Text(
                     text = stringResource(id = R.string.complete_btn_label),
