@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -42,6 +43,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     override fun onCreate(savedInstanceState: Bundle?) {
         val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
 
@@ -95,7 +97,7 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         }
-                    ) { paddingValues ->
+                    ) {
                         ComlibNavGraph(
                             appState = appState,
                             startDestination =
