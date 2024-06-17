@@ -1,16 +1,15 @@
-name: Run lint checks
+name: Build gradle project
 
 on:
   push:
-    branches: [ "master" ]
+    branches: 
+      - master
   pull_request:
-    branches: [ "master" ]
-
-  # Run workflows manually 
-  workflow_dispatch:
+    branches: 
+      - master
 
 jobs:
-  run_lint_checks:
+  build-gradle-project:
     runs-on: ubuntu_latest
 
     steps:
