@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib
 
 import android.os.Bundle
@@ -27,7 +43,6 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-
         val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
 
         // Enable support for SplashScreen API
@@ -44,29 +59,27 @@ class MainActivity : ComponentActivity() {
 
             ComLibTheme(darkTheme = false) {
                 Surface {
-                    Scaffold(snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
+                    Scaffold(
+                        snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
                         bottomBar = {
                             // Only show bottom bar on routes in home graph
-                            if (appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Clubs.route) {
-                                NavigationBar(
-                                    containerColor = MaterialTheme.colorScheme.background
-                                ) {
-                                    val homeGraphDestinations = listOf(
-                                        HomeDestination.Home,
-                                        HomeDestination.Books,
-                                        HomeDestination.Clubs
-                                    )
+                            if (
+                                appState.currentDestination?.route == HomeDestination.Home.route ||
+                                    appState.currentDestination?.route == HomeDestination.Books.route ||
+                                    appState.currentDestination?.route == HomeDestination.Clubs.route
+                            ) {
+                                NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
+                                    val homeGraphDestinations =
+                                        listOf(HomeDestination.Home, HomeDestination.Books, HomeDestination.Clubs)
                                     homeGraphDestinations.forEach { destination ->
-                                        NavigationBarItem(onClick = { appState.navigate(destination.route) },
+                                        NavigationBarItem(
+                                            onClick = { appState.navigate(destination.route) },
                                             selected = appState.currentDestination?.route == destination.route,
                                             icon = {
                                                 (if (destination.route == appState.currentDestination?.route) {
-                                                    destination.selectedIcon
-                                                } else destination.unselectedIcon)?.let {
-                                                    Icon(
-                                                        imageVector = it, contentDescription = null
-                                                    )
-                                                }
+                                                        destination.selectedIcon
+                                                    } else destination.unselectedIcon)
+                                                    ?.let { Icon(imageVector = it, contentDescription = null) }
                                             },
                                             label = {
                                                 destination.label?.let {
@@ -76,14 +89,21 @@ class MainActivity : ComponentActivity() {
                                                         fontWeight = FontWeight.Medium
                                                     )
                                                 }
-                                            })
+                                            }
+                                        )
                                     }
                                 }
                             }
-                        }) { paddingValues ->
+                        }
+                    ) { paddingValues ->
                         ComlibNavGraph(
                             appState = appState,
-                            startDestination = if (state.isLoggedIn && state.isSetup) ComlibDestination.HomeGraph.route else if (!state.isLoggedIn) ComlibDestination.GetStarted.route else ComlibDestination.GenreSetup.route
+                            startDestination =
+                                if (state.isLoggedIn && state.isSetup) {
+                                    ComlibDestination.HomeGraph.route
+                                } else if (!state.isLoggedIn) {
+                                    ComlibDestination.GetStarted.route
+                                } else ComlibDestination.GenreSetup.route
                         )
                     }
                 }
@@ -91,4 +111,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-

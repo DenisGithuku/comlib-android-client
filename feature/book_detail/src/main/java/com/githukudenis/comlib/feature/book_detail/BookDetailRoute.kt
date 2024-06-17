@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.book_detail
 
 import androidx.compose.foundation.background
@@ -47,15 +63,16 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutli
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.loadingBrush
 
 @Composable
-fun BookDetailRoute(
-    viewModel: BookDetailViewModel = hiltViewModel(), onBackPressed: () -> Unit
-) {
+fun BookDetailRoute(viewModel: BookDetailViewModel = hiltViewModel(), onBackPressed: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val isFavourite by viewModel.isFavourite.collectAsStateWithLifecycle()
 
-    BookDetailScreen(state = state, isFavourite = isFavourite, onToggleFavourite = { bookId ->
-        viewModel.toggleBookmark(bookId)
-    }, onRetry = { viewModel.onRetry() }, onBackPressed = onBackPressed
+    BookDetailScreen(
+        state = state,
+        isFavourite = isFavourite,
+        onToggleFavourite = { bookId -> viewModel.toggleBookmark(bookId) },
+        onRetry = { viewModel.onRetry() },
+        onBackPressed = onBackPressed
     )
 }
 
@@ -71,15 +88,13 @@ fun BookDetailScreen(
         is BookDetailUiState.Loading -> {
             LoadingScreen(onBackPressed = onBackPressed)
         }
-
         is BookDetailUiState.Success -> {
             LoadedScreen(
-                bookUiModel = state.bookUiModel.copy(
-                    isFavourite = isFavourite
-                ), onBackPressed = onBackPressed, onToggleFavourite = onToggleFavourite
+                bookUiModel = state.bookUiModel.copy(isFavourite = isFavourite),
+                onBackPressed = onBackPressed,
+                onToggleFavourite = onToggleFavourite
             )
         }
-
         is BookDetailUiState.Error -> {
             ErrorScreen(message = state.message, onRetry = onRetry)
         }
@@ -88,24 +103,15 @@ fun BookDetailScreen(
 
 @Composable
 fun LoadingScreen(onBackPressed: () -> Unit) {
-    Column(
-        modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(250.dp)
-                .background(brush = loadingBrush())
-        ) {
+    Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(12.dp)) {
+        Box(modifier = Modifier.fillMaxWidth().height(250.dp).background(brush = loadingBrush())) {
             Box(
-                modifier = Modifier
-                    .safeDrawingPadding()
-                    .padding(horizontal = 16.dp)
-                    .clip(CircleShape)
-                    .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
-                    .clickable {
-                        onBackPressed()
-                    },
+                modifier =
+                    Modifier.safeDrawingPadding()
+                        .padding(horizontal = 16.dp)
+                        .clip(CircleShape)
+                        .background(color = MaterialTheme.colorScheme.surface.copy(alpha = 0.3f))
+                        .clickable { onBackPressed() }
             ) {
                 Icon(
                     modifier = Modifier.padding(8.dp),
@@ -116,79 +122,63 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
             }
         }
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Box(
-                modifier = Modifier
-                    .height(16.dp)
-                    .fillMaxWidth(0.4f)
-                    .clip(CircleShape)
-                    .background(brush = loadingBrush())
+                modifier =
+                    Modifier.height(16.dp)
+                        .fillMaxWidth(0.4f)
+                        .clip(CircleShape)
+                        .background(brush = loadingBrush())
             )
-            Box(
-                modifier = Modifier
-                    .size(32.dp)
-                    .clip(CircleShape)
-                    .background(brush = loadingBrush())
-            )
+            Box(modifier = Modifier.size(32.dp).clip(CircleShape).background(brush = loadingBrush()))
         }
         Box(
-            modifier = Modifier
-                .height(16.dp)
-                .fillMaxWidth(0.6f)
-                .padding(horizontal = 16.dp)
-                .clip(CircleShape)
-                .background(brush = loadingBrush())
+            modifier =
+                Modifier.height(16.dp)
+                    .fillMaxWidth(0.6f)
+                    .padding(horizontal = 16.dp)
+                    .clip(CircleShape)
+                    .background(brush = loadingBrush())
         )
 
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             (0..2).map {
                 Box(
-                    modifier = Modifier
-                        .height(40.dp)
-                        .width(70.dp)
-                        .clip(CircleShape)
-                        .background(brush = loadingBrush())
+                    modifier =
+                        Modifier.height(40.dp).width(70.dp).clip(CircleShape).background(brush = loadingBrush())
                 )
             }
         }
         Divider(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             color = Color.LightGray,
             thickness = 1.dp
         )
         Box(
-            modifier = Modifier
-                .height(16.dp)
-                .fillMaxWidth(0.4f)
-                .clip(CircleShape)
-                .padding(horizontal = 16.dp)
-                .background(brush = loadingBrush())
+            modifier =
+                Modifier.height(16.dp)
+                    .fillMaxWidth(0.4f)
+                    .clip(CircleShape)
+                    .padding(horizontal = 16.dp)
+                    .background(brush = loadingBrush())
         )
         Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             (0..5).map {
                 Box(
-                    modifier = Modifier
-                        .height(16.dp)
-                        .fillMaxWidth()
-                        .clip(CircleShape)
-                        .background(brush = loadingBrush())
+                    modifier =
+                        Modifier.height(16.dp)
+                            .fillMaxWidth()
+                            .clip(CircleShape)
+                            .background(brush = loadingBrush())
                 )
             }
         }
@@ -205,29 +195,23 @@ fun LoadedScreen(
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState()),
+            modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Box(modifier = Modifier) {
                 AsyncImage(
                     model = "https://comlib-api.onrender.com/img/books/${bookUiModel.imageUrl}",
                     contentDescription = null,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(200.dp),
+                    modifier = Modifier.fillMaxWidth().height(200.dp),
                     contentScale = ContentScale.FillWidth
                 )
                 Box(
-                    modifier = Modifier
-                        .safeDrawingPadding()
-                        .padding(horizontal = 16.dp)
-                        .clip(CircleShape)
-                        .background(color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f))
-                        .clickable {
-                            onBackPressed()
-                        },
+                    modifier =
+                        Modifier.safeDrawingPadding()
+                            .padding(horizontal = 16.dp)
+                            .clip(CircleShape)
+                            .background(color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.3f))
+                            .clickable { onBackPressed() }
                 ) {
                     Icon(
                         modifier = Modifier.padding(8.dp),
@@ -238,20 +222,19 @@ fun LoadedScreen(
                 }
             }
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
+                modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(
-                    text = bookUiModel.title,
-                    style = MaterialTheme.typography.titleMedium
-                )
+                Text(text = bookUiModel.title, style = MaterialTheme.typography.titleMedium)
                 IconButton(onClick = { onToggleFavourite(bookUiModel.id) }) {
                     Icon(
-                        imageVector = if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
-                        tint = if (bookUiModel.isFavourite) Color.Yellow.copy(green = 0.7f) else MaterialTheme.colorScheme.onBackground,
+                        imageVector =
+                            if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        tint =
+                            if (bookUiModel.isFavourite) {
+                                Color.Yellow.copy(green = 0.7f)
+                            } else MaterialTheme.colorScheme.onBackground,
                         contentDescription = "Favourite"
                     )
                 }
@@ -264,12 +247,11 @@ fun LoadedScreen(
             )
             Text(
                 modifier = Modifier.padding(horizontal = 16.dp),
-                text = buildString {
-                    if (bookUiModel.authors.size == 1) append("Author: ") else append("Authors: ")
-                    bookUiModel.authors.map { author ->
-                        append(author)
-                    }
-                },
+                text =
+                    buildString {
+                        if (bookUiModel.authors.size == 1) append("Author: ") else append("Authors: ")
+                        bookUiModel.authors.map { author -> append(author) }
+                    },
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
@@ -285,13 +267,14 @@ fun LoadedScreen(
             ) {
                 for (genre in bookUiModel.genres) {
                     Box(
-                        modifier = Modifier
-                            .clip(MaterialTheme.shapes.extraLarge)
-                            .border(
-                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
-                                width = 1.dp,
-                                shape = MaterialTheme.shapes.extraLarge
-                            ), contentAlignment = Alignment.Center
+                        modifier =
+                            Modifier.clip(MaterialTheme.shapes.extraLarge)
+                                .border(
+                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
+                                    width = 1.dp,
+                                    shape = MaterialTheme.shapes.extraLarge
+                                ),
+                        contentAlignment = Alignment.Center
                     ) {
                         Text(
                             modifier = Modifier.padding(8.dp),
@@ -317,11 +300,10 @@ fun LoadedScreen(
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
         }
-        CLibButton(modifier = Modifier
-            .fillMaxWidth()
-            .align(Alignment.BottomCenter)
-            .padding(16.dp),
-            onClick = { onReserve(bookUiModel.id) }) {
+        CLibButton(
+            modifier = Modifier.fillMaxWidth().align(Alignment.BottomCenter).padding(16.dp),
+            onClick = { onReserve(bookUiModel.id) }
+        ) {
             Text(
                 text = stringResource(id = R.string.reserve_now),
                 style = MaterialTheme.typography.labelMedium
@@ -331,20 +313,12 @@ fun LoadedScreen(
 }
 
 @Composable
-fun ErrorScreen(
-    message: String, onRetry: () -> Unit
-) {
+fun ErrorScreen(message: String, onRetry: () -> Unit) {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
         Column(modifier = Modifier.padding(start = 24.dp)) {
-            Text(
-                text = message, style = MaterialTheme.typography.bodyMedium
-            )
+            Text(text = message, style = MaterialTheme.typography.bodyMedium)
             Spacer(modifier = Modifier.height(12.dp))
-            CLibOutlinedButton(onClick = { onRetry() }) {
-                Text(
-                    text = "Retry"
-                )
-            }
+            CLibOutlinedButton(onClick = { onRetry() }) { Text(text = "Retry") }
         }
     }
 }

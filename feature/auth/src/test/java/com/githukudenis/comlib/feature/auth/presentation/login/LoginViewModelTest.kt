@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.auth.presentation.login
 
 import androidx.test.filters.MediumTest
@@ -7,27 +23,27 @@ import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
+import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
 
 @MediumTest
 class LoginViewModelTest {
-    @get:Rule
-    val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
+    @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: LoginViewModel
 
     @Before
     fun setUp() {
-        viewModel = LoginViewModel(
-            authRepository = FakeAuthRepository(),
-            userRepository = FakeUserRepository(),
-            userPrefsRepository = FakeUserPrefsRepository()
-        )
+        viewModel =
+            LoginViewModel(
+                authRepository = FakeAuthRepository(),
+                userRepository = FakeUserRepository(),
+                userPrefsRepository = FakeUserPrefsRepository()
+            )
     }
 
     @Test
@@ -58,7 +74,8 @@ class LoginViewModelTest {
     fun testResetState() = runTest {
         viewModel.onEvent(LoginUiEvent.ResetState)
         assertEquals(
-            viewModel.state.value, LoginUiState(
+            viewModel.state.value,
+            LoginUiState(
                 isLoading = false,
                 formState = FormState(),
                 loginSuccess = false,
@@ -69,31 +86,19 @@ class LoginViewModelTest {
 
     @Test
     fun testLoginWithEmptyEmailThrowsError() = runTest {
-        viewModel.onEvent(
-            LoginUiEvent.ChangePassword("pass1234")
-        )
-        viewModel.onEvent(
-            LoginUiEvent.SubmitData
-        )
+        viewModel.onEvent(LoginUiEvent.ChangePassword("pass1234"))
+        viewModel.onEvent(LoginUiEvent.SubmitData)
         assertEquals(
             viewModel.state.value.userMessages.first(),
-            UserMessage(
-                message = "Please check your details", messageType = MessageType.ERROR
-            )
+            UserMessage(message = "Please check your details", messageType = MessageType.ERROR)
         )
     }
 
     @Test
     fun testLoginWithValidDetailsReturnsSuccess() = runTest {
-        viewModel.onEvent(
-            LoginUiEvent.ChangeEmail("william.henry.moody@my-own-personal-domain.com")
-        )
-        viewModel.onEvent(
-            LoginUiEvent.ChangePassword("password")
-        )
+        viewModel.onEvent(LoginUiEvent.ChangeEmail("william.henry.moody@my-own-personal-domain.com"))
+        viewModel.onEvent(LoginUiEvent.ChangePassword("password"))
         viewModel.onEvent(LoginUiEvent.SubmitData)
-        assertTrue(
-            viewModel.state.value.loginSuccess
-        )
+        assertTrue(viewModel.state.value.loginSuccess)
     }
 }

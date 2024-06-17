@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.profile.components
 
 import androidx.compose.foundation.background
@@ -25,32 +41,28 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.feature.profile.R
 
 @Composable
-fun ProfileImage(
-    imageUrl: String?,
-    size: Dp = 100.dp,
-    onChangeImage: () -> Unit
-) {
+fun ProfileImage(imageUrl: String?, size: Dp = 100.dp, onChangeImage: () -> Unit) {
     Box(modifier = Modifier) {
         AsyncImage(
             model = imageUrl,
-            modifier = Modifier
-                .size(size)
-                .clip(CircleShape),
+            modifier = Modifier.size(size).clip(CircleShape),
             contentScale = ContentScale.Crop,
             contentDescription = null,
-            placeholder = painterResource(id = R.drawable.ic_profile_placeholder),
+            placeholder = painterResource(id = R.drawable.ic_profile_placeholder)
         )
         Box(
-            modifier = Modifier
-                .align(alignment = Alignment.BottomEnd)
-                .clip(CircleShape)
-                .background(color = MaterialTheme.colorScheme.background, shape = CircleShape)
-                .border(
-                    width = 0.5.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f), shape = CircleShape
-                )
-                .background(MaterialTheme.colorScheme.background, shape = CircleShape)
-                .clickable { onChangeImage() }
-                , contentAlignment = Alignment.Center
+            modifier =
+                Modifier.align(alignment = Alignment.BottomEnd)
+                    .clip(CircleShape)
+                    .background(color = MaterialTheme.colorScheme.background, shape = CircleShape)
+                    .border(
+                        width = 0.5.dp,
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
+                        shape = CircleShape
+                    )
+                    .background(MaterialTheme.colorScheme.background, shape = CircleShape)
+                    .clickable { onChangeImage() },
+            contentAlignment = Alignment.Center
         ) {
             Icon(
                 modifier = Modifier.padding(4.dp),
@@ -65,7 +77,5 @@ fun ProfileImage(
 @Preview
 @Composable
 private fun ProfileImagePrev() {
-    ProfileImage(imageUrl = "") {
-
-    }
+    ProfileImage(imageUrl = "") {}
 }

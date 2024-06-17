@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.auth.presentation.reset
 
 import androidx.compose.animation.AnimatedVisibility
@@ -48,12 +64,9 @@ fun ResetPasswordRoute(
     val onPasswordReset by rememberUpdatedState(onReset)
     val context = LocalContext.current
 
-
     LaunchedEffect(state.isSuccess) {
         if (state.isSuccess) {
-            snackbarHostState.showSnackbar(
-                message = context.getString(R.string.email_reset)
-            )
+            snackbarHostState.showSnackbar(message = context.getString(R.string.email_reset))
             delay(2000)
             onPasswordReset()
         }
@@ -71,27 +84,26 @@ fun ResetPasswordRoute(
         }
     }
 
-    ResetPasswordScreen(state = state,
+    ResetPasswordScreen(
+        state = state,
         onEmailChange = { viewModel.onEmailChange(it) },
-        onReset = { viewModel.onReset() })
+        onReset = { viewModel.onReset() }
+    )
 }
 
 @Composable
-fun ResetPasswordScreen(
-    state: ResetUiState, onEmailChange: (String) -> Unit, onReset: () -> Unit
-) {
-
+fun ResetPasswordScreen(state: ResetUiState, onEmailChange: (String) -> Unit, onReset: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                PaddingValues(
-                    top = PaddingValues().calculateTopPadding(),
-                    bottom = PaddingValues().calculateBottomPadding(),
-                    start = 16.dp,
-                    end = 16.dp
-                )
-            ),
+        modifier =
+            Modifier.fillMaxSize()
+                .padding(
+                    PaddingValues(
+                        top = PaddingValues().calculateTopPadding(),
+                        bottom = PaddingValues().calculateBottomPadding(),
+                        start = 16.dp,
+                        end = 16.dp
+                    )
+                ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -109,25 +121,25 @@ fun ResetPasswordScreen(
         )
         Text(
             text = stringResource(id = R.string.reset_header_title),
-            style = MaterialTheme.typography.titleMedium.copy(
-                fontWeight = FontWeight.Bold
-            )
+            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = stringResource(id = R.string.reset_header_description),
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.labelMedium
         )
         Spacer(modifier = Modifier.height(8.dp))
         CLibOutlinedTextField(
-            value = state.email, onValueChange = onEmailChange, modifier = Modifier.fillMaxWidth()
+            value = state.email,
+            onValueChange = onEmailChange,
+            modifier = Modifier.fillMaxWidth()
         )
         CLibButton(
-            onClick = onReset, enabled = state.isEmailValid, modifier = Modifier.fillMaxWidth()
+            onClick = onReset,
+            enabled = state.isEmailValid,
+            modifier = Modifier.fillMaxWidth()
         ) {
-            Text(
-                text = stringResource(id = R.string.reset_button_text),
-            )
+            Text(text = stringResource(id = R.string.reset_button_text))
         }
     }
 }

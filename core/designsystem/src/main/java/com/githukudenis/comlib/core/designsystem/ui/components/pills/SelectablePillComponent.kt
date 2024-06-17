@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.core.designsystem.ui.components.pills
 
 import androidx.compose.foundation.BorderStroke
@@ -30,16 +46,19 @@ fun SelectablePillComponent(
     hasIcon: Boolean = true,
     onToggleSelection: (String) -> Unit
 ) {
-
-    Surface(shape = CircleShape,
-        border = BorderStroke(
-            width = if (isSelected) 0.dp else 1.dp,
-            color = if (isSelected) Color.Transparent else MaterialTheme.colorScheme.onBackground.copy(
-                alpha = 0.1f
-            )
-        ),
+    Surface(
+        shape = CircleShape,
+        border =
+            BorderStroke(
+                width = if (isSelected) 0.dp else 1.dp,
+                color =
+                    if (isSelected) {
+                        Color.Transparent
+                    } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+            ),
         color = if (isSelected) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-        onClick = { onToggleSelection(id) }) {
+        onClick = { onToggleSelection(id) }
+    ) {
         Row(
             modifier = Modifier.padding(LocalDimens.current.medium),
             verticalAlignment = Alignment.CenterVertically,
@@ -48,17 +67,19 @@ fun SelectablePillComponent(
             Text(
                 text = value,
                 style = MaterialTheme.typography.bodyMedium,
-                color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onBackground.copy(
-                    alpha = 0.7f
-                )
+                color =
+                    if (isSelected) {
+                        MaterialTheme.colorScheme.onPrimaryContainer
+                    } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
             if (isSelected && hasIcon) {
                 Icon(
                     imageVector = Icons.Default.Check,
                     contentDescription = stringResource(id = R.string.selection_indicator),
-                    tint = if (isSelected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onBackground.copy(
-                        alpha = 0.7f
-                    )
+                    tint =
+                        if (isSelected) {
+                            MaterialTheme.colorScheme.primary
+                        } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                 )
             }
         }
@@ -73,5 +94,6 @@ private fun SelectableGenrePreview() {
         isSelected = false,
         hasIcon = true,
         id = "",
-        onToggleSelection = {})
+        onToggleSelection = {}
+    )
 }

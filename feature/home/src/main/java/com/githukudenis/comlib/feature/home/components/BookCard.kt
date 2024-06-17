@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.home.components
 
 import androidx.compose.foundation.BorderStroke
@@ -47,28 +63,23 @@ fun BookCard(
 ) {
     Card(
         shape = MaterialTheme.shapes.large,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
-        ),
-        border = BorderStroke(
-            width = 1.dp,
-            color = MaterialTheme.colorScheme.onBackground.copy(
-                alpha = 0.1f
-            )
-        ),
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
+        border =
+            BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)),
         modifier = Modifier.width(IntrinsicSize.Max),
-        onClick = { onClick(bookUiModel.book.id) }) {
+        onClick = { onClick(bookUiModel.book.id) }
+    ) {
         Column(modifier = Modifier.padding(8.dp)) {
             AsyncImage(
-                modifier = Modifier
-                    .sizeIn(
-                        minHeight = 120.dp,
-                        minWidth = 120.dp,
-                        maxHeight = 120.dp,
-                        maxWidth = 120.dp,
-                    )
-                    .clip(CircleShape)
-                    .align(Alignment.CenterHorizontally),
+                modifier =
+                    Modifier.sizeIn(
+                            minHeight = 120.dp,
+                            minWidth = 120.dp,
+                            maxHeight = 120.dp,
+                            maxWidth = 120.dp
+                        )
+                        .clip(CircleShape)
+                        .align(Alignment.CenterHorizontally),
                 model = ImageEndpoints.Book(bookUiModel.book.image).url,
                 contentDescription = stringResource(id = R.string.book_image),
                 contentScale = ContentScale.Crop,
@@ -88,11 +99,13 @@ fun BookCard(
                 )
                 IconButton(onClick = { onToggleFavourite(bookUiModel.book.id) }) {
                     Icon(
-                        imageVector = if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
+                        imageVector =
+                            if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,
                         contentDescription = stringResource(R.string.toggle_favourite),
-                        tint = if (bookUiModel.isFavourite) Color(0xFFFFAA00) else MaterialTheme.colorScheme.onBackground.copy(
-                            alpha = 0.7f
-                        )
+                        tint =
+                            if (bookUiModel.isFavourite) {
+                                Color(0xFFFFAA00)
+                            } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
                     )
                 }
             }
@@ -100,10 +113,8 @@ fun BookCard(
             CLibButton(
                 shape = MaterialTheme.shapes.extraLarge,
                 modifier = Modifier.fillMaxWidth(),
-                colors = ButtonDefaults.buttonColors(
-                    MaterialTheme.colorScheme.primaryContainer
-                ),
-                onClick = { onReserve(bookUiModel.book.id) },
+                colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.primaryContainer),
+                onClick = { onReserve(bookUiModel.book.id) }
             ) {
                 Text(
                     color = MaterialTheme.colorScheme.onPrimaryContainer,

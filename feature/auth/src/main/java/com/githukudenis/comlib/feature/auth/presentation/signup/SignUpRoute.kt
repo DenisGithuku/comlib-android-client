@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.auth.presentation.signup
 
 import android.app.Activity
@@ -54,10 +70,10 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibMinimalDialog
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
@@ -68,7 +84,9 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun SignUpRoute(
-    viewModel: SignUpViewModel = hiltViewModel(), onSignUpComplete: () -> Unit, onSignInInstead: () -> Unit
+    viewModel: SignUpViewModel = hiltViewModel(),
+    onSignUpComplete: () -> Unit,
+    onSignInInstead: () -> Unit
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -83,75 +101,63 @@ fun SignUpRoute(
     }
 
     if (showNetworkDialog) {
-        CLibMinimalDialog(title = stringResource(id = R.string.no_network_title),
+        CLibMinimalDialog(
+            title = stringResource(id = R.string.no_network_title),
             text = stringResource(id = R.string.no_network_desc),
-            onDismissRequest = { viewModel.onDismissNetworkDialog() })
+            onDismissRequest = { viewModel.onDismissNetworkDialog() }
+        )
         return
     }
 
     val googleAuthUiClient: GoogleAuthUiClient by lazy {
-        GoogleAuthUiClient(
-            context = context,
-            oneTapClient = Identity.getSignInClient(context),
-        )
+        GoogleAuthUiClient(context = context, oneTapClient = Identity.getSignInClient(context))
     }
 
     val signInLauncher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartIntentSenderForResult(),
+        rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartIntentSenderForResult(),
             onResult = { activityResult ->
                 if (activityResult.resultCode == Activity.RESULT_OK) {
                     scope.launch {
-                        val signInResult = googleAuthUiClient.signInWithIntent(
-                            activityResult.data ?: return@launch
-                        )
+                        val signInResult =
+                            googleAuthUiClient.signInWithIntent(activityResult.data ?: return@launch)
                         viewModel.onEvent(SignUpUiEvent.GoogleSignIn(signInResult ?: return@launch))
                     }
                 }
-            })
+            }
+        )
 
-    SignUpScreen(state = state,
+    SignUpScreen(
+        state = state,
         context = context,
-        onChangeFirstname = { firstname -> viewModel.onEvent(SignUpUiEvent.ChangeFirstname(firstname)) },
+        onChangeFirstname = { firstname ->
+            viewModel.onEvent(SignUpUiEvent.ChangeFirstname(firstname))
+        },
         onChangeLastname = { lastname -> viewModel.onEvent(SignUpUiEvent.ChangeLastname(lastname)) },
         onChangeEmail = { email -> viewModel.onEvent(SignUpUiEvent.ChangeEmail(email)) },
         onChangePassword = { password -> viewModel.onEvent(SignUpUiEvent.ChangePassword(password)) },
         onTogglePasswordVisibility = { visible ->
-            viewModel.onEvent(
-                SignUpUiEvent.TogglePasswordVisibility(
-                    visible
-                )
-            )
+            viewModel.onEvent(SignUpUiEvent.TogglePasswordVisibility(visible))
         },
         onChangeConfirmPassword = { confirm ->
-            viewModel.onEvent(
-                SignUpUiEvent.ChangeConfirmPassword(
-                    confirm
-                )
-            )
+            viewModel.onEvent(SignUpUiEvent.ChangeConfirmPassword(confirm))
         },
         onToggleConfirmPasswordVisibility = { visible ->
-            viewModel.onEvent(
-                SignUpUiEvent.ToggleConfirmPasswordVisibility(
-                    visible
-                )
-            )
+            viewModel.onEvent(SignUpUiEvent.ToggleConfirmPasswordVisibility(visible))
         },
         onGoogleSignIn = {
             scope.launch {
                 val intentSender = googleAuthUiClient.signIn()
                 val intent = IntentSenderRequest.Builder(intentSender ?: return@launch).build()
 
-                signInLauncher.launch(
-                    intent
-                )
+                signInLauncher.launch(intent)
             }
         },
         onDismissUserMessage = { id -> viewModel.onEvent(SignUpUiEvent.DismissUserMessage(id)) },
-        onSubmit = {
-            viewModel.onEvent(SignUpUiEvent.Submit)
-        },
+        onSubmit = { viewModel.onEvent(SignUpUiEvent.Submit) },
         onSignInInstead = onSignInInstead,
-        onToggleTerms = { viewModel.onEvent(SignUpUiEvent.ToggleTerms(it)) })
+        onToggleTerms = { viewModel.onEvent(SignUpUiEvent.ToggleTerms(it)) }
+    )
 }
 
 @Composable
@@ -169,12 +175,9 @@ private fun SignUpScreen(
     onDismissUserMessage: (Int) -> Unit,
     onSignInInstead: () -> Unit,
     onGoogleSignIn: () -> Unit,
-    onSubmit: () -> Unit,
+    onSubmit: () -> Unit
 ) {
-
-    val snackbarHostState = remember {
-        SnackbarHostState()
-    }
+    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(snackbarHostState, state.userMessages) {
         if (state.userMessages.isNotEmpty()) {
@@ -196,16 +199,16 @@ private fun SignUpScreen(
 
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { paddingValues ->
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(
-                    PaddingValues(
-                        top = paddingValues.calculateTopPadding(),
-                        bottom = paddingValues.calculateBottomPadding(),
-                        start = 16.dp,
-                        end = 16.dp
-                    )
-                ),
+            modifier =
+                Modifier.fillMaxSize()
+                    .padding(
+                        PaddingValues(
+                            top = paddingValues.calculateTopPadding(),
+                            bottom = paddingValues.calculateBottomPadding(),
+                            start = 16.dp,
+                            end = 16.dp
+                        )
+                    ),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -217,15 +220,13 @@ private fun SignUpScreen(
                 )
                 Text(
                     text = stringResource(id = R.string.signup_header_title),
-                    style = MaterialTheme.typography.titleMedium.copy(
-                        fontWeight = FontWeight.Bold
-                    )
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
                 )
 
                 Spacer(modifier = Modifier.height(LocalDimens.current.medium))
                 Text(
                     text = stringResource(id = R.string.signup_header_description),
-                    style = MaterialTheme.typography.labelMedium,
+                    style = MaterialTheme.typography.labelMedium
                 )
             }
             item {
@@ -238,9 +239,7 @@ private fun SignUpScreen(
                         value = state.formState.firstname,
                         onValueChange = onChangeFirstname,
                         label = stringResource(id = R.string.firstname_hint),
-                        keyboardOptions = KeyboardOptions(
-                            imeAction = ImeAction.Next
-                        ),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
                         modifier = Modifier.weight(1f)
                     )
 
@@ -268,39 +267,54 @@ private fun SignUpScreen(
                     value = state.formState.password,
                     onValueChange = onChangePassword,
                     label = stringResource(id = R.string.password_hint),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password, imeAction = ImeAction.Next
-                    ),
+                    keyboardOptions =
+                        KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Next),
                     trailingIcon = {
-                        IconButton(onClick = { onTogglePasswordVisibility(!state.formState.passwordIsVisible) }) {
+                        IconButton(
+                            onClick = { onTogglePasswordVisibility(!state.formState.passwordIsVisible) }
+                        ) {
                             Icon(
-                                imageVector = if (state.formState.passwordIsVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                imageVector =
+                                    if (state.formState.passwordIsVisible) {
+                                        Icons.Default.Visibility
+                                    } else Icons.Default.VisibilityOff,
                                 contentDescription = context.getString(R.string.toggle_password_visibility_txt)
                             )
                         }
                     },
-                    visualTransformation = if (state.formState.passwordIsVisible) PasswordVisualTransformation() else VisualTransformation.None,
+                    visualTransformation =
+                        if (state.formState.passwordIsVisible) {
+                            PasswordVisualTransformation()
+                        } else VisualTransformation.None,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
             item {
-
                 CLibOutlinedTextField(
                     value = state.formState.confirmPassword,
                     onValueChange = onChangeConfirmPassword,
                     label = stringResource(id = R.string.confirm_password_hint),
-                    keyboardOptions = KeyboardOptions(
-                        keyboardType = KeyboardType.Password, imeAction = ImeAction.Go
-                    ),
+                    keyboardOptions =
+                        KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Go),
                     trailingIcon = {
-                        IconButton(onClick = { onToggleConfirmPasswordVisibility(!state.formState.confirmPasswordIsVisible) }) {
+                        IconButton(
+                            onClick = {
+                                onToggleConfirmPasswordVisibility(!state.formState.confirmPasswordIsVisible)
+                            }
+                        ) {
                             Icon(
-                                imageVector = if (state.formState.confirmPasswordIsVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
+                                imageVector =
+                                    if (state.formState.confirmPasswordIsVisible) {
+                                        Icons.Default.Visibility
+                                    } else Icons.Default.VisibilityOff,
                                 contentDescription = context.getString(R.string.toggle_password_visibility_txt)
                             )
                         }
                     },
-                    visualTransformation = if (state.formState.confirmPasswordIsVisible) PasswordVisualTransformation() else VisualTransformation.None,
+                    visualTransformation =
+                        if (state.formState.confirmPasswordIsVisible) {
+                            PasswordVisualTransformation()
+                        } else VisualTransformation.None,
                     modifier = Modifier.fillMaxWidth()
                 )
             }
@@ -323,22 +337,20 @@ private fun SignUpScreen(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.small)
                 ) {
-                    Checkbox(
-                        checked = state.formState.acceptedTerms, onCheckedChange = onToggleTerms
-                    )
+                    Checkbox(checked = state.formState.acceptedTerms, onCheckedChange = onToggleTerms)
                     Text(
                         text = stringResource(R.string.terms_label),
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
             }
+            item { AuthProviderButton(onClick = onGoogleSignIn, icon = R.drawable.ic_google) }
             item {
-                AuthProviderButton(
-                    onClick = onGoogleSignIn, icon = R.drawable.ic_google
-                )
-            }
-            item {
-                Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Center) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
                     Text(
                         text = stringResource(id = R.string.has_account),
                         style = MaterialTheme.typography.labelMedium

@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.profile
 
 import android.widget.Toast
@@ -103,85 +119,73 @@ private fun ProfileScreen(
     onToggleSignOutDialog: (Boolean) -> Unit,
     onEditProfile: () -> Unit
 ) {
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = {
-            Text(
-                text = stringResource(R.string.profile_title), style = MaterialTheme.typography.titleMedium
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.profile_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { onNavigateUp() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
-        }, navigationIcon = {
-            IconButton(onClick = { onNavigateUp() }) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack, contentDescription = "Back"
-                )
-            }
-        })
-    }) { innerPadding ->
+        }
+    ) { innerPadding ->
         if (state.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center
-            ) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CLibCircularProgressBar()
             }
             return@Scaffold
         }
 
         if (state.isClearCache) {
-            CLibAlertDialog(title = stringResource(id = R.string.clear_cache_dialog_title),
-                text = stringResource(
-                    id = R.string.clear_cache_dialog_text
-                ),
+            CLibAlertDialog(
+                title = stringResource(id = R.string.clear_cache_dialog_title),
+                text = stringResource(id = R.string.clear_cache_dialog_text),
                 onDismiss = { onToggleCacheDialog(false) },
-                onConfirm = {
-                    onClearCache()
-                })
+                onConfirm = { onClearCache() }
+            )
         }
 
         if (state.isSignout) {
-            CLibAlertDialog(title = stringResource(id = R.string.sign_out_dialog_title),
-                text = stringResource(
-                    id = R.string.sign_out_dialog_text
-                ),
+            CLibAlertDialog(
+                title = stringResource(id = R.string.sign_out_dialog_title),
+                text = stringResource(id = R.string.sign_out_dialog_text),
                 onDismiss = { onToggleSignOutDialog(false) },
-                onConfirm = {
-                    onSignOut()
-                })
+                onConfirm = { onSignOut() }
+            )
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0xFFF5F5F5))
-                .padding(
-                    innerPadding
-                ), verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxSize().background(Color(0xFFF5F5F5)).padding(innerPadding),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = LocalDimens.current.extraLarge),
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = LocalDimens.current.extraLarge),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProfileImage(imageUrl = "https://comlib-api.onrender.com/img/users/${state.profile?.imageUrl}",
-                        onChangeImage = {})
+                    ProfileImage(
+                        imageUrl = "https://comlib-api.onrender.com/img/users/${state.profile?.imageUrl}",
+                        onChangeImage = {}
+                    )
                     Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
-                    Column(
-                        modifier = Modifier
-                    ) {
+                    Column(modifier = Modifier) {
                         Text(
-                            text = "${state.profile?.firstname?.capitalize()} ${state.profile?.lastname?.capitalize()}",
+                            text =
+                                "${state.profile?.firstname?.capitalize()} ${state.profile?.lastname?.capitalize()}",
                             style = MaterialTheme.typography.titleSmall
                         )
                         state.profile?.email?.let {
-                            Text(
-                                text = state.profile.email,
-                                style = MaterialTheme.typography.bodyMedium
-                            )
+                            Text(text = state.profile.email, style = MaterialTheme.typography.bodyMedium)
                         }
                         CLibOutlinedButton(onClick = onEditProfile) {
-                            Text(
-                                text = "Edit", style = MaterialTheme.typography.bodySmall
-                            )
+                            Text(text = "Edit", style = MaterialTheme.typography.bodySmall)
                         }
                     }
                 }
@@ -189,15 +193,13 @@ private fun ProfileScreen(
                 Card(
                     shape = MaterialTheme.shapes.large,
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.background
-                    ),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
                     modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
                 ) {
                     ProfileListItem(
                         leading = Icons.Default.MenuBook,
                         onClick = onOpenMyBooks,
-                        title = stringResource(R.string.my_books),
+                        title = stringResource(R.string.my_books)
                     )
                     Divider(
                         thickness = 0.4.dp,
@@ -234,14 +236,14 @@ private fun ProfileScreen(
                 Card(
                     shape = MaterialTheme.shapes.large,
                     elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-                    colors = CardDefaults.cardColors(
-                        containerColor = MaterialTheme.colorScheme.background
-                    ),
+                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
                     modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
                 ) {
-                    ProfileListItem(leading = Icons.Default.DeleteOutline,
+                    ProfileListItem(
+                        leading = Icons.Default.DeleteOutline,
                         title = stringResource(R.string.clear_cache),
-                        onClick = { onToggleCacheDialog(true) })
+                        onClick = { onToggleCacheDialog(true) }
+                    )
                     Divider(
                         thickness = 0.4.dp,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
@@ -258,9 +260,7 @@ private fun ProfileScreen(
                 text = "Version $versionName",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = LocalDimens.current.extraLarge),
+                modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimens.current.extraLarge),
                 textAlign = TextAlign.Center
             )
         }

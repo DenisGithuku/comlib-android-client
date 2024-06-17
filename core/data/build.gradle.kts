@@ -8,9 +8,7 @@ plugins {
 android {
     namespace = "com.githukudenis.comlib.core.data"
 
-
     defaultConfig {
-
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
@@ -18,16 +16,12 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }
 
 dependencies {
-
     implementation(project(":core:auth"))
     implementation(project(":core:common"))
     implementation(project(":core:model"))
@@ -43,5 +37,4 @@ dependencies {
     implementation(libs.ktor.serialization)
     implementation(libs.ktor.client)
     implementation(libs.ktor.logging)
-
 }

@@ -1,16 +1,32 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.home
 
 //
-//@Composable
-//fun HomeRoute(
+// @Composable
+// fun HomeRoute(
 //    viewModel: HomeViewModel = hiltViewModel(),
 //    onOpenBookDetails: (String) -> Unit,
 //    onOpenBookList: () -> Unit,
 //    onOpenProfile: () -> Unit,
-//) {
+// ) {
 //    val userProfileState by viewModel.userProfileState.collectAsStateWithLifecycle()
 //    val booksState by viewModel.booksState.collectAsStateWithLifecycle()
-////    val networkState by viewModel.networkStatus.collectAsStateWithLifecycle()
+// //    val networkState by viewModel.networkStatus.collectAsStateWithLifecycle()
 //    val streakState by viewModel.streakState.collectAsStateWithLifecycle()
 //    val timePeriodState by viewModel.timePeriodState.collectAsStateWithLifecycle()
 //
@@ -18,7 +34,7 @@ package com.githukudenis.comlib.feature.home
 //
 //    HomeScreen(
 //        booksState = booksState,
-////        networkState = networkState,
+// //        networkState = networkState,
 //        userProfileState = userProfileState,
 //        streakState = streakState,
 //        timePeriodState = timePeriodState,
@@ -28,12 +44,12 @@ package com.githukudenis.comlib.feature.home
 //        onOpenProfile = onOpenProfile,
 //        onSaveStreak = { book -> viewModel.onEvent(HomeUiEvent.SaveStreak(book)) }
 //    )
-//}
+// }
 //
-//@Composable
-//private fun HomeScreen(
+// @Composable
+// private fun HomeScreen(
 //    booksState: BooksState,
-////    networkState: NetworkStatus,
+// //    networkState: NetworkStatus,
 //    userProfileState: UserProfileState,
 //    streakState: StreakState,
 //    timePeriodState: TimePeriod,
@@ -42,19 +58,19 @@ package com.githukudenis.comlib.feature.home
 //    onOpenBookList: () -> Unit,
 //    onOpenProfile: () -> Unit,
 //    onSaveStreak: (BookMilestone) -> Unit,
-//) {
-////    when (networkState) {
-////
-////        NetworkStatus.Lost,
-////        NetworkStatus.Unavailable,
-////        NetworkStatus.Losing, -> Unit
-//////        -> {
-//////            ErrorScreen(isNetworkError = true,
-//////                error = stringResource(id = R.string.no_network_desc),
-//////                onRetry = {})
-//////        }
-////
-////        NetworkStatus.Available -> {
+// ) {
+// //    when (networkState) {
+// //
+// //        NetworkStatus.Lost,
+// //        NetworkStatus.Unavailable,
+// //        NetworkStatus.Losing, -> Unit
+// ////        -> {
+// ////            ErrorScreen(isNetworkError = true,
+// ////                error = stringResource(id = R.string.no_network_desc),
+// ////                onRetry = {})
+// ////        }
+// //
+// //        NetworkStatus.Available -> {
 //    LoadedScreen(
 //        booksState = booksState,
 //        userProfileState = userProfileState,
@@ -65,14 +81,14 @@ package com.githukudenis.comlib.feature.home
 //        onOpenProfile = onOpenProfile,
 //        onSaveStreak = onSaveStreak
 //    )
-////        }
-////    }
+// //        }
+// //    }
 //
-//}
+// }
 //
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun LoadedScreen(
+// @OptIn(ExperimentalMaterial3Api::class)
+// @Composable
+// fun LoadedScreen(
 //    timePeriod: TimePeriod,
 //    booksState: BooksState,
 //    streakState: StreakState,
@@ -81,7 +97,7 @@ package com.githukudenis.comlib.feature.home
 //    onOpenBookList: () -> Unit,
 //    onOpenProfile: () -> Unit,
 //    onSaveStreak: (BookMilestone) -> Unit,
-//) {
+// ) {
 //
 //    var showBottomSheet by remember { mutableStateOf(false) }
 //    val modalBottomSheetState = rememberModalBottomSheetState()
@@ -98,7 +114,8 @@ package com.githukudenis.comlib.feature.home
 //    val coroutineScope = rememberCoroutineScope()
 //
 //    if (showBottomSheet) {
-//        ModalBottomSheet(modifier = Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
+//        ModalBottomSheet(modifier =
+// Modifier.nestedScroll(rememberNestedScrollInteropConnection()),
 //            sheetState = modalBottomSheetState,
 //            onDismissRequest = {
 //                showBottomSheet = false
@@ -219,9 +236,12 @@ package com.githukudenis.comlib.feature.home
 //                        .clickable {
 //                            onOpenProfile()
 //                        }, model = when (userProfileState) {
-//                        is UserProfileState.Error -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
-//                        UserProfileState.Loading -> "https://comlib-api.onrender.com/img/users/default_img.jpg"
-//                        is UserProfileState.Success -> "https://comlib-api.onrender.com/img/users/${userProfileState.user?.image}"
+//                        is UserProfileState.Error ->
+// "https://comlib-api.onrender.com/img/users/default_img.jpg"
+//                        UserProfileState.Loading ->
+// "https://comlib-api.onrender.com/img/users/default_img.jpg"
+//                        is UserProfileState.Success ->
+// "https://comlib-api.onrender.com/img/users/${userProfileState.user?.image}"
 //                    }, contentDescription = "User profile"
 //                )
 //            })
@@ -347,19 +367,19 @@ package com.githukudenis.comlib.feature.home
 //            )
 //        }
 //    }
-//}
+// }
 //
-//@Composable
-//fun LoadingScreen() {
+// @Composable
+// fun LoadingScreen() {
 //    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
 //        CLibLoadingSpinner()
 //    }
-//}
+// }
 //
-//@Composable
-//fun ErrorScreen(
+// @Composable
+// fun ErrorScreen(
 //    isNetworkError: Boolean, error: String, onRetry: () -> Unit,
-//) {
+// ) {
 //
 //    if (isNetworkError) {
 //        CLibMinimalDialog(title = stringResource(id = R.string.no_network_title),
@@ -384,10 +404,10 @@ package com.githukudenis.comlib.feature.home
 //            }
 //        }
 //    }
-//}
+// }
 //
-//@Composable
-//private fun NewStreakContent(
+// @Composable
+// private fun NewStreakContent(
 //    streakStartDate: Long?,
 //    streakEndDate: Long?,
 //    context: Context,
@@ -395,7 +415,7 @@ package com.githukudenis.comlib.feature.home
 //    onCloseBottomSheet: () -> Unit,
 //    onSaveStreak: (BookMilestone) -> Unit,
 //    toggleDateRangeDialog: (Boolean) -> Unit,
-//) {
+// ) {
 //    Column(
 //        modifier = Modifier
 //            .fillMaxWidth()
@@ -461,7 +481,8 @@ package com.githukudenis.comlib.feature.home
 //            }
 //
 //            is BooksState.Success -> {
-//                var selectedBookInStreak by remember { mutableStateOf(booksState.available.first()) }
+//                var selectedBookInStreak by remember {
+// mutableStateOf(booksState.available.first()) }
 //
 //                LazyRow {
 //                    items(booksState.available, key = { it.id }) { book ->
@@ -477,7 +498,8 @@ package com.githukudenis.comlib.feature.home
 //                        BookMilestone(
 //                            bookId = selectedBookInStreak.id,
 //                            startDate = streakStartDate ?: Date().toInstant().toEpochMilli(),
-//                            endDate = streakEndDate ?: OffsetDateTime.now().plusDays(8).toInstant()
+//                            endDate = streakEndDate ?:
+// OffsetDateTime.now().plusDays(8).toInstant()
 //                                .toEpochMilli(),
 //                            bookName = selectedBookInStreak.title,
 //                        )
@@ -505,12 +527,12 @@ package com.githukudenis.comlib.feature.home
 //            }
 //        }
 //    }
-//}
+// }
 //
-//@Composable
-//private fun StreakDetails(
+// @Composable
+// private fun StreakDetails(
 //    onDismissBottomSheet: () -> Unit,
-//) {
+// ) {
 //    Column(
 //        modifier = Modifier
 //            .fillMaxWidth()
@@ -526,12 +548,12 @@ package com.githukudenis.comlib.feature.home
 //            text = "Just some test"
 //        )
 //    }
-//}
+// }
 //
-//@Composable
-//fun NonFlickeringScreen(
+// @Composable
+// fun NonFlickeringScreen(
 //    modifier: Modifier = Modifier,
-//) {
+// ) {
 //    Column(
 //        modifier = modifier.fillMaxSize(),
 //        horizontalAlignment = Alignment.Start,
@@ -543,4 +565,4 @@ package com.githukudenis.comlib.feature.home
 //            style = MaterialTheme.typography.titleMedium
 //        )
 //    }
-//}
+// }

@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.genre_setup
 
 import android.util.Log
@@ -12,16 +28,14 @@ import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.genre.Genre
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-data class SelectableGenreItem(
-    val genre: Genre, val isSelected: Boolean = false
-)
+data class SelectableGenreItem(val genre: Genre, val isSelected: Boolean = false)
 
 data class GenreSetupUiState(
     val isLoading: Boolean = false,
@@ -29,16 +43,19 @@ data class GenreSetupUiState(
     val isSetupComplete: Boolean = false,
     val error: String? = null
 ) {
-    val screenIsValid: Boolean get() = genres.filter { it.isSelected }.size >= 3
+    val screenIsValid: Boolean
+        get() = genres.filter { it.isSelected }.size >= 3
 }
 
 @HiltViewModel
-class GenreSetupViewModel @Inject constructor(
+class GenreSetupViewModel
+@Inject
+constructor(
     private val getGenresUseCase: GetGenresUseCase,
     private val updateUserUseCase: UpdateUserUseCase,
     private val updateAppSetupState: UpdateAppSetupState,
     private val getUserPrefsUseCase: GetUserPrefsUseCase,
-    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val getUserProfileUseCase: GetUserProfileUseCase
 ) : StatefulViewModel<GenreSetupUiState>(GenreSetupUiState()) {
 
     private var genresJob: Job? = null
@@ -49,30 +66,28 @@ class GenreSetupViewModel @Inject constructor(
 
     private fun getGenres() {
         genresJob?.cancel()
-        genresJob = viewModelScope.launch {
-            getGenresUseCase().catch { throwable ->
-                update {
-                    copy(
-                        isLoading = false, error = throwable.message
-                    )
-                }
-            }.collectLatest { result ->
-                when (result) {
-                    DataResult.Empty -> Unit
-                    is DataResult.Error -> {
-                        update { copy(isLoading = false, error = result.message) }
-                    }
-
-                    is DataResult.Loading -> update { copy(isLoading = true) }
-                    is DataResult.Success -> {
-                        update {
-                            copy(isLoading = false,
-                                genres = result.data.map { SelectableGenreItem(genre = it) })
+        genresJob =
+            viewModelScope.launch {
+                getGenresUseCase()
+                    .catch { throwable -> update { copy(isLoading = false, error = throwable.message) } }
+                    .collectLatest { result ->
+                        when (result) {
+                            DataResult.Empty -> Unit
+                            is DataResult.Error -> {
+                                update { copy(isLoading = false, error = result.message) }
+                            }
+                            is DataResult.Loading -> update { copy(isLoading = true) }
+                            is DataResult.Success -> {
+                                update {
+                                    copy(
+                                        isLoading = false,
+                                        genres = result.data.map { SelectableGenreItem(genre = it) }
+                                    )
+                                }
+                            }
                         }
                     }
-                }
             }
-        }
     }
 
     fun onRefresh() {
@@ -95,24 +110,20 @@ class GenreSetupViewModel @Inject constructor(
             user?.let {
                 val genres = it.preferredGenres.toMutableList()
                 genres.addAll(state.value.genres.map { it.genre.id })
-                updateUserUseCase(
-                    this, User(
-                        preferredGenres = genres
-                    )
-                )
+                updateUserUseCase(this, User(preferredGenres = genres))
             }
         }
     }
 
-
     fun onToggleGenreSelection(id: String) {
-        val genres = state.value.genres.map {
-            if (it.genre.id == id) {
-                it.copy(isSelected = !it.isSelected)
-            } else {
-                it
+        val genres =
+            state.value.genres.map {
+                if (it.genre.id == id) {
+                    it.copy(isSelected = !it.isSelected)
+                } else {
+                    it
+                }
             }
-        }
         update { copy(genres = genres) }
         Log.d("valid", "${state.value.screenIsValid}")
     }

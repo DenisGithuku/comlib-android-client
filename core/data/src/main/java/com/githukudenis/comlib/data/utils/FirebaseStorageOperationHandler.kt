@@ -1,19 +1,36 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.data.utils
 
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
 import com.githukudenis.comlib.core.common.NetworkStatus
 import com.githukudenis.comlib.core.common.OperationException
 import com.google.firebase.storage.StorageException
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
+import kotlinx.coroutines.flow.first
 
 interface FirebaseStorageOperationHandler {
-    suspend fun <T> execute(operation: suspend () -> T ): Result<T>
+    suspend fun <T> execute(operation: suspend () -> T): Result<T>
 }
 
-class FirebaseStorageHandlerImpl @Inject constructor(
-    private val connectivityManager: ComlibConnectivityManager
-): FirebaseStorageOperationHandler {
+class FirebaseStorageHandlerImpl
+@Inject
+constructor(private val connectivityManager: ComlibConnectivityManager) :
+    FirebaseStorageOperationHandler {
     override suspend fun <T> execute(operation: suspend () -> T): Result<T> {
         return try {
             Result.success(operation.invoke())
@@ -21,12 +38,13 @@ class FirebaseStorageHandlerImpl @Inject constructor(
             val error = FirebaseExceptionFactory.createError(exception)
             Result.failure(error)
         } catch (exception: Exception) {
-            val netStatus: Boolean = when(connectivityManager.observe().first()) {
-                NetworkStatus.Lost -> false
-                NetworkStatus.Available -> true
-                NetworkStatus.Unavailable -> false
-                NetworkStatus.Losing -> false
-            }
+            val netStatus: Boolean =
+                when (connectivityManager.observe().first()) {
+                    NetworkStatus.Lost -> false
+                    NetworkStatus.Available -> true
+                    NetworkStatus.Unavailable -> false
+                    NetworkStatus.Losing -> false
+                }
             if (!netStatus) {
                 Result.failure(OperationException.NoInternetException(exception))
             } else {

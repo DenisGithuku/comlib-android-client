@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.core.domain.di
 
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
@@ -39,41 +55,49 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object DomainModule {
 
-    @Provides
-    @Singleton
-    fun provideFormatDateUseCase(): FormatDateUseCase = FormatDateUseCase()
+    @Provides @Singleton fun provideFormatDateUseCase(): FormatDateUseCase = FormatDateUseCase()
 
     @Provides
     @Singleton
-    fun provideGetAllBooksUseCase(booksRepository: BooksRepository): GetAllBooksUseCase = GetAllBooksUseCase(booksRepository)
+    fun provideGetAllBooksUseCase(booksRepository: BooksRepository): GetAllBooksUseCase =
+        GetAllBooksUseCase(booksRepository)
 
     @Provides
     @Singleton
-    fun provideGetBookDetailsUseCase(booksRepository: BooksRepository): GetBookDetailsUseCase = GetBookDetailsUseCase(booksRepository)
+    fun provideGetBookDetailsUseCase(booksRepository: BooksRepository): GetBookDetailsUseCase =
+        GetBookDetailsUseCase(booksRepository)
 
     @Provides
     @Singleton
-    fun provideGetFavouriteBooksUseCase(userPrefsRepository: UserPrefsRepository): GetBookmarkedBooksUseCase = GetBookmarkedBooksUseCase(userPrefsRepository)
+    fun provideGetFavouriteBooksUseCase(
+        userPrefsRepository: UserPrefsRepository
+    ): GetBookmarkedBooksUseCase = GetBookmarkedBooksUseCase(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun provideGetGenresUseCase(genresRepository: GenresRepository): GetGenresUseCase = GetGenresUseCase(genresRepository)
+    fun provideGetGenresUseCase(genresRepository: GenresRepository): GetGenresUseCase =
+        GetGenresUseCase(genresRepository)
 
     @Provides
     @Singleton
-    fun provideGetGenreUseCase(genresRepository: GenresRepository): GetGenreByIdUseCase = GetGenreByIdUseCase(genresRepository)
+    fun provideGetGenreUseCase(genresRepository: GenresRepository): GetGenreByIdUseCase =
+        GetGenreByIdUseCase(genresRepository)
 
     @Singleton
     @Provides
-    fun providesConnectivityUseCase(connectivityManager: ComlibConnectivityManager): GetNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(connectivityManager)
+    fun providesConnectivityUseCase(
+        connectivityManager: ComlibConnectivityManager
+    ): GetNetworkConnectivityUseCase = GetNetworkConnectivityUseCase(connectivityManager)
 
     @Provides
     @Singleton
-    fun provideGetReadBooksUseCase(userPrefsRepository: UserPrefsRepository): GetReadBooksUseCase = GetReadBooksUseCase(userPrefsRepository)
+    fun provideGetReadBooksUseCase(userPrefsRepository: UserPrefsRepository): GetReadBooksUseCase =
+        GetReadBooksUseCase(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun provideGetStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): GetStreakUseCase = GetStreakUseCase(bookMilestoneRepository)
+    fun provideGetStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): GetStreakUseCase =
+        GetStreakUseCase(bookMilestoneRepository)
 
     @Provides
     @Singleton
@@ -81,50 +105,65 @@ object DomainModule {
 
     @Provides
     @Singleton
-    fun provideGetUserPrefsUseCase(userPrefsRepository: UserPrefsRepository): GetUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
+    fun provideGetUserPrefsUseCase(userPrefsRepository: UserPrefsRepository): GetUserPrefsUseCase =
+        GetUserPrefsUseCase(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun providesGetUserProfileUseCase(userRepository: UserRepository): GetUserProfileUseCase = GetUserProfileUseCase(userRepository)
+    fun providesGetUserProfileUseCase(userRepository: UserRepository): GetUserProfileUseCase =
+        GetUserProfileUseCase(userRepository)
 
     @Provides
     @Singleton
-    fun provideSaveStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): SaveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository)
+    fun provideSaveStreakUseCase(
+        bookMilestoneRepository: BookMilestoneRepository
+    ): SaveStreakUseCase = SaveStreakUseCase(bookMilestoneRepository)
 
     @Provides
     @Singleton
-    fun provideSignOutUseCase(authRepository: AuthRepository): SignOutUseCase = SignOutUseCase(authRepository)
+    fun provideSignOutUseCase(authRepository: AuthRepository): SignOutUseCase =
+        SignOutUseCase(authRepository)
 
     @Provides
     @Singleton
-    fun provideToggleBookMarkUseCase(userPrefsRepository: UserPrefsRepository): ToggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository)
+    fun provideToggleBookMarkUseCase(
+        userPrefsRepository: UserPrefsRepository
+    ): ToggleBookMarkUseCase = ToggleBookMarkUseCase(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun provideUpdateAppSetupState(userPrefsRepository: UserPrefsRepository): UpdateAppSetupState = UpdateAppSetupState(userPrefsRepository)
+    fun provideUpdateAppSetupState(userPrefsRepository: UserPrefsRepository): UpdateAppSetupState =
+        UpdateAppSetupState(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun updateUserUseCase(userRepository: UserRepository): UpdateUserUseCase = UpdateUserUseCase(userRepository)
+    fun updateUserUseCase(userRepository: UserRepository): UpdateUserUseCase =
+        UpdateUserUseCase(userRepository)
 
     @Provides
     @Singleton
-    fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase = SignUpUseCase(authRepository)
+    fun provideSignUpUseCase(authRepository: AuthRepository): SignUpUseCase =
+        SignUpUseCase(authRepository)
 
     @Provides
     @Singleton
-    fun provideGetGenresByUserUseCase(userPrefsRepository: UserPrefsRepository): GetGenresByUserUseCase = GetGenresByUserUseCase(userPrefsRepository)
+    fun provideGetGenresByUserUseCase(
+        userPrefsRepository: UserPrefsRepository
+    ): GetGenresByUserUseCase = GetGenresByUserUseCase(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun togglePreferredGenres(userPrefsRepository: UserPrefsRepository): TogglePreferredGenres = TogglePreferredGenres(userPrefsRepository)
+    fun togglePreferredGenres(userPrefsRepository: UserPrefsRepository): TogglePreferredGenres =
+        TogglePreferredGenres(userPrefsRepository)
 
     @Provides
     @Singleton
-    fun provideGetBooksByUserUseCase(booksRepository: BooksRepository): GetBooksByUserUseCase = GetBooksByUserUseCase(booksRepository)
+    fun provideGetBooksByUserUseCase(booksRepository: BooksRepository): GetBooksByUserUseCase =
+        GetBooksByUserUseCase(booksRepository)
 
     @Provides
     @Singleton
-    fun provideUpdateStreakUseCase(bookMilestoneRepository: BookMilestoneRepository): UpdateStreakUseCase = UpdateStreakUseCase(bookMilestoneRepository)
+    fun provideUpdateStreakUseCase(
+        bookMilestoneRepository: BookMilestoneRepository
+    ): UpdateStreakUseCase = UpdateStreakUseCase(bookMilestoneRepository)
 }
-
