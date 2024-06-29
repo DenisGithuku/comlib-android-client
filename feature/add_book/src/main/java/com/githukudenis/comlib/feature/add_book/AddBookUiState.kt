@@ -17,42 +17,57 @@
 package com.githukudenis.comlib.feature.add_book
 
 import android.net.Uri
+import com.githukudenis.comlib.core.model.genre.Genre
+
+sealed class GenreUiState {
+    data object Loading: GenreUiState()
+    data class Success(val genres: List<Genre>): GenreUiState()
+    data class Error(val message: String): GenreUiState()
+}
 
 data class AddBookUiState(
     val photoUri: Uri? = null,
     val title: String = "",
-    val genre: String = "",
-    val author: String = "",
+    val genres: String = "",
+    val authors: String = "",
     val edition: String = "",
-    val year: String = "",
-    val description: String = ""
+    val pages: String = "",
+    val description: String = "",
+    val genreState: GenreUiState = GenreUiState.Loading,
+    val errorMessage: String = "",
+    val selectedGenre: Genre = Genre()
 ) {
     val descriptionIsValid: Boolean = description.isNotEmpty() && description.length >= 200
 
     val uiIsValid: Boolean =
         title.isNotEmpty() &&
             photoUri != null &&
-            genre.isNotEmpty() &&
-            author.isNotEmpty() &&
+            genres.isNotEmpty() &&
+            authors.isNotEmpty() &&
             edition.isNotEmpty() &&
-            year.isNotEmpty() &&
-            descriptionIsValid
+                pages.isNotEmpty() &&
+            descriptionIsValid &&
+                selectedGenre.id.isNotEmpty()
 }
 
 sealed class AddBookUiEvent {
     data class OnTitleChange(val newValue: String) : AddBookUiEvent()
 
-    data class OnGenreChange(val newValue: String) : AddBookUiEvent()
+    data class OnGenreChange(val newValue: Genre) : AddBookUiEvent()
 
     data class OnAuthorChange(val newValue: String) : AddBookUiEvent()
 
     data class OnEditionChange(val newValue: String) : AddBookUiEvent()
 
-    data class OnYearChange(val newValue: String) : AddBookUiEvent()
+    data class OnPageChange(val newValue: String) : AddBookUiEvent()
 
     data class OnDescriptionChange(val newValue: String) : AddBookUiEvent()
 
     data class OnChangePhoto(val uri: Uri) : AddBookUiEvent()
 
     data object OnSave : AddBookUiEvent()
+
+    data object DismissMessage: AddBookUiEvent()
+
+    data object OnRetryLoadGenres: AddBookUiEvent()
 }
