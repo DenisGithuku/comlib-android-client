@@ -54,7 +54,7 @@ fun BookComponent(bookItemUiModel: BookItemUiModel, onOpenBookDetails: (String) 
         Row {
             AsyncImage(
                 modifier = Modifier.size(50.dp).clip(CircleShape),
-                model = "https://comlib-api.onrender.com/img/books/${bookItemUiModel.imageUrl}",
+                model = bookItemUiModel.imageUrl,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )
