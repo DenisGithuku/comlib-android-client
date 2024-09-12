@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.toBookDTO
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -90,16 +91,20 @@ class AddBookViewModel @Inject constructor(
                 state.update { it.copy(photoUri = event.uri) }
             }
 
+            is AddBookUiEvent.ShowMessage -> {
+                state.update { it.copy(message = event.message) }
+            }
+
             AddBookUiEvent.OnSave -> {
                 if(state.value.uiIsValid) {
                     onSaveBook()
                 } else {
-                    state.update { it.copy(errorMessage = "Please check details!") }
+                    state.update { it.copy(message = "Please check details!") }
                 }
             }
 
             AddBookUiEvent.DismissMessage -> {
-                state.update { it.copy(errorMessage = "") }
+                state.update { it.copy(message = "") }
             }
 
             AddBookUiEvent.OnRetryLoadGenres -> {
@@ -109,27 +114,24 @@ class AddBookViewModel @Inject constructor(
     }
 
     private fun onSaveBook() {
-        if (!state.value.uiIsValid) {
-            state.update {
-                it.copy(errorMessage = "Invalid details. Please check your input.")
-            }
-            return
-        }
         viewModelScope.launch {
+            state.update { it.copy(isLoading = true) }
+
             val book = Book(
                 title = state.value.title,
                 authors = state.value.authors.split(','),
                 pages = state.value.pages.toInt(),
                 genre_ids = listOf(state.value.selectedGenre.id),
-                owner = userPrefsRepository.userPrefs.first().authId ?: return@launch,
+                owner = userPrefsRepository.userPrefs.first().userId ?: return@launch,
                 edition = state.value.edition,
                 description = state.value.description,
             )
             state.value.photoUri?.let { uri ->
                 booksRepository.addNewBook(
-                    imageUri = uri, book = book
+                    imageUri = uri, book = book.toBookDTO()
                 )
             }
+            state.update { it.copy(isLoading = false, isSuccess = true) }
         }
     }
 

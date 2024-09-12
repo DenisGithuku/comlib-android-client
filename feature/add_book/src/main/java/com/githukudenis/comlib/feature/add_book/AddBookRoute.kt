@@ -58,6 +58,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -73,8 +74,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -95,6 +98,8 @@ fun AddBookRoute(
             }
         }
 
+    val currentOnFinishAddingBook by rememberUpdatedState(onBookAdded)
+
     Scaffold(topBar = {
         CenterAlignedTopAppBar(title = {
             Text(
@@ -108,17 +113,32 @@ fun AddBookRoute(
         })
     }) { paddingValues ->
 
-        LaunchedEffect(state.errorMessage) {
-            if (state.errorMessage.isNotEmpty()) {
+        LaunchedEffect(state.message) {
+            if (state.message.isNotEmpty()) {
                 Toast.makeText(
-                    context, state.errorMessage, Toast.LENGTH_SHORT
+                    context, state.message, Toast.LENGTH_SHORT
                 ).show()
                 viewModel.onEvent(AddBookUiEvent.DismissMessage)
             }
         }
 
+        LaunchedEffect(state.isSuccess) {
+            if(state.isSuccess) {
+                viewModel.onEvent(AddBookUiEvent.ShowMessage(context.getString(R.string.book_added_successfully)))
+                delay(3000)
+                currentOnFinishAddingBook()
+            }
+        }
+
         var bottomSheetExpanded by remember {
             mutableStateOf(false)
+        }
+
+        if (state.isLoading) {
+            CLibLoadingDialog(
+                label = stringResource(R.string.saving_book),
+                onDismissRequest = { }
+            )
         }
 
         if (bottomSheetExpanded) {
@@ -188,7 +208,11 @@ fun AddBookRoute(
                 .fillMaxSize()
                 .windowInsetsPadding(WindowInsets.ime)
                 .padding(paddingValues)
-                .padding(horizontal = LocalDimens.current.extraLarge),
+                .padding(
+                    start = LocalDimens.current.extraLarge,
+                    end = LocalDimens.current.extraLarge,
+                    bottom = LocalDimens.current.extraLarge,
+                ),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
         ) {
             item {

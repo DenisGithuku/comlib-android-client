@@ -19,14 +19,14 @@ package com.githukudenis.comlib.core.network
 import android.util.Log
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
-import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 import com.githukudenis.comlib.core.network.common.Endpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
-import javax.inject.Inject
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class BooksApi
 @Inject
@@ -49,7 +49,7 @@ constructor(
         }
     }
 
-    suspend fun addNewBook(book: Book): String {
+    suspend fun addNewBook(book: BookDTO): String {
         return withContext(dispatchers.io) {
             httpClient.post<String>(Endpoints.Books.url) { body = book }
         }

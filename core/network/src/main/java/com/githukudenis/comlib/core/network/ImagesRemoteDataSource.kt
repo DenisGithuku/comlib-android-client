@@ -20,9 +20,9 @@ import android.net.Uri
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.network.common.ImagesStorage
 import com.google.firebase.storage.FirebaseStorage
-import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
 class ImagesRemoteDataSource
 @Inject
@@ -36,7 +36,7 @@ constructor(firebaseStorage: FirebaseStorage, private val dispatchers: ComlibCor
                     imageUri.lastPathSegment?.let { path ->
                         val imagePath = storageRef.child(path)
                         val result = imagePath.putFile(imageUri).await()
-                        result.storage.downloadUrl.await().path
+                        result.storage.downloadUrl.await().toString()
                     } ?: ""
                 Result.success(url)
             } catch (e: Exception) {

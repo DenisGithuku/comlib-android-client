@@ -18,7 +18,7 @@ package com.githukudenis.comlib.data.repository
 
 import android.net.Uri
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
-import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 import com.githukudenis.comlib.core.network.BooksRemoteDataSource
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
@@ -39,7 +39,7 @@ constructor(
         return booksRemoteDataSource.getBook(id)
     }
 
-    override suspend fun addNewBook(imageUri: Uri, book: Book): String {
+    override suspend fun addNewBook(imageUri: Uri, book: BookDTO): String {
         val bookImage = imagesRemoteDataSource.addImage(imageUri)
         return bookImage.getOrNull()?.let { imagePath ->
             val updatedBook = book.copy(image = imagePath)

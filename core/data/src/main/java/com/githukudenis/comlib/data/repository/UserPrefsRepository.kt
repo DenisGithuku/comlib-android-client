@@ -24,6 +24,8 @@ interface UserPrefsRepository {
 
     val userPrefs: Flow<UserPrefs>
 
+    suspend fun setAuthId(authId: String)
+
     suspend fun setUserId(userId: String)
 
     suspend fun setThemeConfig(themeConfig: ThemeConfig)
@@ -33,4 +35,6 @@ interface UserPrefsRepository {
     suspend fun setSetupStatus(isComplete: Boolean)
 
     suspend fun setPreferredGenres(genres: Set<String>)
+
+    suspend fun clearSession()
 }

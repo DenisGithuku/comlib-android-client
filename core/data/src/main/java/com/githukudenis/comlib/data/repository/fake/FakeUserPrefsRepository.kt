@@ -31,14 +31,15 @@ class FakeUserPrefsRepository : UserPrefsRepository {
             themeConfig = ThemeConfig.SYSTEM,
             bookmarkedBooks = setOf("1", "2", "3"),
             isSetup = false,
-            preferredGenres = setOf("genre1", "genre2")
+            preferredGenres = setOf("genre1", "genre2"),
+            userId = "1"
         )
 
     override val userPrefs: Flow<UserPrefs>
         get() = flowOf(prefs)
 
-    override suspend fun setUserId(userId: String) {
-        prefs = prefs.copy(authId = userId)
+    override suspend fun setAuthId(authId: String) {
+        prefs = prefs.copy(authId = authId)
     }
 
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
@@ -55,5 +56,13 @@ class FakeUserPrefsRepository : UserPrefsRepository {
 
     override suspend fun setPreferredGenres(genres: Set<String>) {
         prefs = prefs.copy(preferredGenres = genres)
+    }
+
+    override suspend fun setUserId(userId: String) {
+        prefs = prefs.copy(userId = userId)
+    }
+
+    override suspend fun clearSession() {
+        prefs = prefs.copy(authId = null, userId = null, themeConfig = ThemeConfig.SYSTEM)
     }
 }

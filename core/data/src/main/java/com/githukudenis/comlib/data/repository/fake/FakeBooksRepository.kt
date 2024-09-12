@@ -19,14 +19,17 @@ package com.githukudenis.comlib.data.repository.fake
 import android.net.Uri
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.BooksData
 import com.githukudenis.comlib.core.model.book.Data
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
+import com.githukudenis.comlib.core.model.book.toBook
+import com.githukudenis.comlib.core.model.book.toBookDTO
 import com.githukudenis.comlib.data.repository.BooksRepository
 import kotlinx.coroutines.delay
 
 class FakeBooksRepository : BooksRepository {
-    val books: MutableList<Book> =
+    val books: MutableList<BookDTO> =
         (1..5)
             .map {
                 Book(
@@ -42,7 +45,7 @@ class FakeBooksRepository : BooksRepository {
                     pages = it,
                     reserved = listOf(),
                     title = "Title $it"
-                )
+                ).toBookDTO()
             }
             .toMutableList()
 
@@ -54,7 +57,7 @@ class FakeBooksRepository : BooksRepository {
     override suspend fun getAllBooks(): AllBooksResponse {
         delay(1000L)
         return AllBooksResponse(
-            data = BooksData(books),
+            data = BooksData(books.map { it.toBook() }),
             requestedAt = "now",
             results = books.size,
             status = "Ok"
@@ -62,10 +65,10 @@ class FakeBooksRepository : BooksRepository {
     }
 
     override suspend fun getBookById(id: String): SingleBookResponse {
-        return SingleBookResponse(data = Data(book = books.first { it.id == id }), status = "Ok")
+        return SingleBookResponse(data = Data(book = books.first { it.id == id }.toBook()), status = "Ok")
     }
 
-    override suspend fun addNewBook(image: Uri, book: Book): String {
+    override suspend fun addNewBook(image: Uri, book: BookDTO): String {
         return try {
             books.add(book)
             MutationResult.SUCCESS.name

@@ -28,21 +28,21 @@ sealed class GenreUiState {
 data class AddBookUiState(
     val photoUri: Uri? = null,
     val title: String = "",
-    val genres: String = "",
     val authors: String = "",
     val edition: String = "",
     val pages: String = "",
     val description: String = "",
     val genreState: GenreUiState = GenreUiState.Loading,
-    val errorMessage: String = "",
-    val selectedGenre: Genre = Genre()
+    val message: String = "",
+    val selectedGenre: Genre = Genre(),
+    val isLoading: Boolean = false,
+    val isSuccess: Boolean = false
 ) {
     val descriptionIsValid: Boolean = description.isNotEmpty() && description.length >= 200
 
     val uiIsValid: Boolean =
         title.isNotEmpty() &&
             photoUri != null &&
-            genres.isNotEmpty() &&
             authors.isNotEmpty() &&
             edition.isNotEmpty() &&
                 pages.isNotEmpty() &&
@@ -66,6 +66,8 @@ sealed class AddBookUiEvent {
     data class OnChangePhoto(val uri: Uri) : AddBookUiEvent()
 
     data object OnSave : AddBookUiEvent()
+
+    data class ShowMessage(val message: String): AddBookUiEvent()
 
     data object DismissMessage: AddBookUiEvent()
 

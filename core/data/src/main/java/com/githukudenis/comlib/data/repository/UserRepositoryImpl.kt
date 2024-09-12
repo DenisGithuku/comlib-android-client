@@ -20,10 +20,10 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.UserApi
-import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 class UserRepositoryImpl
 @Inject
@@ -45,8 +45,8 @@ constructor(private val userApi: UserApi, private val dispatchers: ComlibCorouti
     override suspend fun addNewUser(user: User): ResponseResult<String> {
         return withContext(dispatchers.io) {
             try {
-                userApi.addUser(user)
-                ResponseResult.Success("User added successfully")
+                val userId = userApi.addUser(user)
+                ResponseResult.Success(userId)
             } catch (e: Exception) {
                 Timber.e(e)
                 if (e is CancellationException) throw e
