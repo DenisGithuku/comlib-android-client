@@ -18,7 +18,7 @@ package com.githukudenis.comlib.data.repository
 
 import android.net.Uri
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
-import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 
 interface BooksRepository {
@@ -26,5 +26,5 @@ interface BooksRepository {
 
     suspend fun getBookById(id: String): SingleBookResponse
 
-    suspend fun addNewBook(imageUri: Uri, book: Book): String
+    suspend fun addNewBook(imageUri: Uri, book: BookDTO): String
 }

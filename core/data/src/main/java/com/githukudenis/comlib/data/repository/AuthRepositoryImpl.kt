@@ -26,17 +26,33 @@ class AuthRepositoryImpl
 @Inject
 constructor(
     private val authDataSource: AuthDataSource,
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    private val userPrefsRepository: UserPrefsRepository
 ) : AuthRepository {
     override suspend fun signUpWithEmail(userAuthData: UserAuthData): ResponseResult<String?> {
-        val result = authDataSource.signUpWithEmail(userAuthData)
-        return when (result) {
+        return when (val result = authDataSource.signUpWithEmail(userAuthData)) {
             is ResponseResult.Failure -> result
             is ResponseResult.Success -> {
                 val (email, firstname, lastname) = userAuthData
-                userRepository.addNewUser(
-                    User(email = email, firstname = firstname, lastname = lastname, authId = result.data)
-                )
+                val authId = result.data
+                val response =
+                    userRepository.addNewUser(
+                        User(email = email, firstname = firstname, lastname = lastname, authId = result.data)
+                    )
+                val userId =
+                    when (response) {
+                        is ResponseResult.Failure -> null
+                        is ResponseResult.Success -> response.data
+                    }
+
+                if (userId != null && authId != null) {
+                    userPrefsRepository.setUserId(userId)
+                    userPrefsRepository.setAuthId(authId)
+                    ResponseResult.Success("User added successfully")
+                } else {
+                    authDataSource.deleteUser()
+                    ResponseResult.Failure(Throwable("Could not add user"))
+                }
             }
         }
     }
@@ -50,7 +66,10 @@ constructor(
         authDataSource.login(email, password, onSuccess, onError)
     }
 
-    override suspend fun signOut() = authDataSource.signOut()
+    override suspend fun signOut() {
+        userPrefsRepository.clearSession()
+        authDataSource.signOut()
+    }
 
     override suspend fun resetPassword(
         email: String,

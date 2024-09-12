@@ -200,7 +200,7 @@ fun LoadedScreen(
         ) {
             Box(modifier = Modifier) {
                 AsyncImage(
-                    model = "https://comlib-api.onrender.com/img/books/${bookUiModel.imageUrl}",
+                    model = bookUiModel.imageUrl,
                     contentDescription = null,
                     modifier = Modifier.fillMaxWidth().height(200.dp),
                     contentScale = ContentScale.FillWidth

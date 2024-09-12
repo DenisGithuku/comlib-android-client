@@ -27,6 +27,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,21 +37,30 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -63,8 +73,12 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
+import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -86,6 +100,8 @@ fun AddBookRoute(
             }
         }
 
+    val currentOnFinishAddingBook by rememberUpdatedState(onBookAdded)
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -103,12 +119,94 @@ fun AddBookRoute(
             )
         }
     ) { paddingValues ->
+        LaunchedEffect(state.message) {
+            if (state.message.isNotEmpty()) {
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
+                viewModel.onEvent(AddBookUiEvent.DismissMessage)
+            }
+        }
+
+        LaunchedEffect(state.isSuccess) {
+            if (state.isSuccess) {
+                viewModel.onEvent(
+                    AddBookUiEvent.ShowMessage(context.getString(R.string.book_added_successfully))
+                )
+                delay(3000)
+                currentOnFinishAddingBook()
+            }
+        }
+
+        var bottomSheetExpanded by remember { mutableStateOf(false) }
+
+        if (state.isLoading) {
+            CLibLoadingDialog(label = stringResource(R.string.saving_book), onDismissRequest = {})
+        }
+
+        if (bottomSheetExpanded) {
+            ModalBottomSheet(onDismissRequest = { bottomSheetExpanded = !bottomSheetExpanded }) {
+                when (val genreState = state.genreState) {
+                    is GenreUiState.Error -> {
+                        Column(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
+                        ) {
+                            Text(text = genreState.message)
+                            CLibButton(onClick = { viewModel.onEvent(AddBookUiEvent.OnRetryLoadGenres) }) {
+                                Text(
+                                    text = stringResource(R.string.retry),
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                    GenreUiState.Loading -> {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                            CLibLoadingSpinner()
+                        }
+                    }
+                    is GenreUiState.Success -> {
+                        LazyColumn {
+                            items(genreState.genres) { genre ->
+                                Row(
+                                    modifier =
+                                        Modifier.fillMaxWidth()
+                                            .clickable(
+                                                onClick = {
+                                                    viewModel.onEvent(AddBookUiEvent.OnGenreChange(genre))
+                                                    //                                            bottomSheetExpanded = false
+                                                }
+                                            )
+                                            .padding(LocalDimens.current.medium),
+                                    horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    RadioButton(
+                                        selected = genre.id == state.selectedGenre.id,
+                                        onClick = { viewModel.onEvent(AddBookUiEvent.OnGenreChange(genre)) }
+                                    )
+                                    Text(
+                                        text = genre.name.capitalize().split("-").joinToString(" "),
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         LazyColumn(
             modifier =
                 Modifier.fillMaxSize()
                     .windowInsetsPadding(WindowInsets.ime)
                     .padding(paddingValues)
-                    .padding(horizontal = LocalDimens.current.extraLarge),
+                    .padding(
+                        start = LocalDimens.current.extraLarge,
+                        end = LocalDimens.current.extraLarge,
+                        bottom = LocalDimens.current.extraLarge
+                    ),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
         ) {
             item {
@@ -133,11 +231,15 @@ fun AddBookRoute(
                     value = state.title,
                     onValueChange = { viewModel.onEvent(AddBookUiEvent.OnTitleChange(it)) }
                 )
+            }
+            item {
                 AddBookFormItem(
                     title = "Author",
-                    value = state.author,
+                    value = state.authors,
                     onValueChange = { viewModel.onEvent(AddBookUiEvent.OnAuthorChange(it)) }
                 )
+            }
+            item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
@@ -151,17 +253,30 @@ fun AddBookRoute(
                     )
                     AddBookFormItem(
                         modifier = Modifier.weight(1f),
-                        title = "Year",
-                        value = state.year,
+                        title = "Pages",
+                        value = state.pages,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        onValueChange = { viewModel.onEvent(AddBookUiEvent.OnYearChange(it)) }
+                        onValueChange = { viewModel.onEvent(AddBookUiEvent.OnPageChange(it)) }
                     )
                 }
+            }
+            item {
                 AddBookFormItem(
                     title = "Genre",
-                    value = state.genre,
-                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnGenreChange(it)) }
+                    readOnly = true,
+                    value = state.selectedGenre.name.capitalize().split("-").joinToString(" "),
+                    trailingIcon = {
+                        IconButton(onClick = { bottomSheetExpanded = !bottomSheetExpanded }) {
+                            Icon(
+                                imageVector = Icons.Default.KeyboardArrowDown,
+                                contentDescription = stringResource(R.string.select_genre)
+                            )
+                        }
+                    },
+                    onValueChange = {}
                 )
+            }
+            item {
                 AddBookFormItem(
                     singleLine = false,
                     maxLines = 10,
@@ -178,7 +293,10 @@ fun AddBookRoute(
                 )
             }
             item {
-                CLibButton(modifier = Modifier.fillMaxWidth(), onClick = {}) {
+                CLibButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { viewModel.onEvent(AddBookUiEvent.OnSave) }
+                ) {
                     Text(text = "Save", style = MaterialTheme.typography.labelLarge)
                 }
             }
@@ -223,17 +341,20 @@ fun AddBookFormItem(
     modifier: Modifier = Modifier.fillMaxWidth(),
     singleLine: Boolean = true,
     maxLines: Int = 1,
+    readOnly: Boolean = false,
     supportingText: String? = null,
     minLines: Int = 1,
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     title: String,
     value: String,
+    trailingIcon: (@Composable () -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
     OutlinedTextField(
         modifier = modifier,
         singleLine = singleLine,
         value = value,
+        readOnly = readOnly,
         keyboardOptions = keyboardOptions,
         maxLines = maxLines,
         supportingText = {
@@ -242,6 +363,7 @@ fun AddBookFormItem(
             }
         },
         minLines = minLines,
+        trailingIcon = trailingIcon,
         onValueChange = onValueChange,
         label = { Text(text = title, style = MaterialTheme.typography.labelSmall) }
     )

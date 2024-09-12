@@ -19,7 +19,6 @@ package com.githukudenis.comlib.feature.home.components
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -48,7 +47,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
-import com.githukudenis.comlib.core.common.ImageEndpoints
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.feature.home.BookUiModel
 import com.githukudenis.comlib.feature.home.R
@@ -66,7 +64,7 @@ fun BookCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         border =
             BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)),
-        modifier = Modifier.width(IntrinsicSize.Max),
+        modifier = Modifier.width(150.dp),
         onClick = { onClick(bookUiModel.book.id) }
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
@@ -80,7 +78,7 @@ fun BookCard(
                         )
                         .clip(CircleShape)
                         .align(Alignment.CenterHorizontally),
-                model = ImageEndpoints.Book(bookUiModel.book.image).url,
+                model = bookUiModel.book.image,
                 contentDescription = stringResource(id = R.string.book_image),
                 contentScale = ContentScale.Crop,
                 error = painterResource(id = R.drawable.ic_broken_image),
@@ -94,10 +92,14 @@ fun BookCard(
                 Text(
                     text = bookUiModel.book.title,
                     style = MaterialTheme.typography.titleSmall,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(0.7f)
                 )
-                IconButton(onClick = { onToggleFavourite(bookUiModel.book.id) }) {
+                IconButton(
+                    onClick = { onToggleFavourite(bookUiModel.book.id) },
+                    modifier = Modifier.weight(0.3f)
+                ) {
                     Icon(
                         imageVector =
                             if (bookUiModel.isFavourite) Icons.Filled.Favorite else Icons.Outlined.FavoriteBorder,

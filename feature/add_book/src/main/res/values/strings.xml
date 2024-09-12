@@ -3,4 +3,8 @@
     <string name="change_book_image">Change book image</string>
     <string name="add_book_title">New book</string>
     <string name="no_media_selected">No media selected</string>
+    <string name="select_genre">Select genre</string>
+    <string name="retry">Retry</string>
+    <string name="saving_book">Saving book…</string>
+    <string name="book_added_successfully">Book added successfully!</string>
 </resources>

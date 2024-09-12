@@ -45,8 +45,8 @@ constructor(private val userApi: UserApi, private val dispatchers: ComlibCorouti
     override suspend fun addNewUser(user: User): ResponseResult<String> {
         return withContext(dispatchers.io) {
             try {
-                userApi.addUser(user)
-                ResponseResult.Success("User added successfully")
+                val userId = userApi.addUser(user)
+                ResponseResult.Success(userId)
             } catch (e: Exception) {
                 Timber.e(e)
                 if (e is CancellationException) throw e

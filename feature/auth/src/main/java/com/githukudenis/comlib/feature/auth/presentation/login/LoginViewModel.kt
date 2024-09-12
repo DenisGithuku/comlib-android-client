@@ -128,7 +128,7 @@ constructor(
             when (result) {
                 is ResponseResult.Failure -> Unit
                 is ResponseResult.Success -> {
-                    user.authId?.let { userPrefsRepository.setUserId(it) }
+                    user.authId?.let { userPrefsRepository.setAuthId(it) }
                 }
             }
 
@@ -160,7 +160,7 @@ constructor(
                 email,
                 password,
                 onSuccess = { authId ->
-                    userPrefsRepository.setUserId(authId)
+                    userPrefsRepository.setAuthId(authId)
                     _state.update { prevState -> prevState.copy(isLoading = false, loginSuccess = true) }
                 },
                 onError = { error ->

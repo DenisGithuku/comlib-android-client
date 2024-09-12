@@ -37,8 +37,11 @@ constructor(
     private val dispatchers: ComlibCoroutineDispatchers
 ) {
 
-    suspend fun addUser(user: User) {
-        withContext(dispatchers.io) { httpClient.post<User>(Endpoints.Users.url) { body = user } }
+    suspend fun addUser(user: User): String {
+        return withContext(dispatchers.io) {
+            val response = httpClient.post<User>(Endpoints.Users.url) { body = user }
+            response.id ?: ""
+        }
     }
 
     suspend fun getUsersInClub(clubId: String): List<User> {

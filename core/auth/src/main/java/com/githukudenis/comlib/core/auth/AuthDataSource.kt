@@ -20,7 +20,6 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.common.safeApiCall
 import com.githukudenis.comlib.core.model.UserAuthData
-import com.githukudenis.comlib.core.network.UserApi
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
@@ -29,7 +28,6 @@ import kotlinx.coroutines.withContext
 class AuthDataSource
 @Inject
 constructor(
-    private val userApi: UserApi,
     private val firebaseAuth: FirebaseAuth,
     private val dispatcher: ComlibCoroutineDispatchers
 ) {
@@ -81,5 +79,9 @@ constructor(
                 onError(t)
             }
         }
+    }
+
+    suspend fun deleteUser() {
+        withContext(dispatcher.io) { firebaseAuth.currentUser?.delete() }
     }
 }

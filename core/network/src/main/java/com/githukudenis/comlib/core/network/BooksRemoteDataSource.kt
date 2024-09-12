@@ -16,7 +16,7 @@
 */
 package com.githukudenis.comlib.core.network
 
-import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.BookDTO
 import javax.inject.Inject
 
 class BooksRemoteDataSource @Inject constructor(private val booksApi: BooksApi) {
@@ -24,5 +24,5 @@ class BooksRemoteDataSource @Inject constructor(private val booksApi: BooksApi) 
 
     suspend fun getBook(id: String) = booksApi.getBookById(id)
 
-    suspend fun addNewBook(book: Book) = booksApi.addNewBook(book)
+    suspend fun addNewBook(book: BookDTO) = booksApi.addNewBook(book)
 }

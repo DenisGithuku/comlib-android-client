@@ -18,23 +18,56 @@ package com.githukudenis.comlib.feature.add_book
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.DataResult
+import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
+import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.toBookDTO
 import com.githukudenis.comlib.data.repository.BooksRepository
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel
-class AddBookViewModel @Inject constructor(private val booksRepository: BooksRepository) :
-    ViewModel() {
+class AddBookViewModel
+@Inject
+constructor(
+    private val booksRepository: BooksRepository,
+    private val genresUseCase: GetGenresUseCase,
+    private val userPrefsRepository: UserPrefsRepository
+) : ViewModel() {
+
     var state = MutableStateFlow(AddBookUiState())
         private set
+
+    init {
+        loadGenres()
+    }
+
+    private fun loadGenres() {
+        viewModelScope.launch {
+            state.update { it.copy(genreState = GenreUiState.Loading) }
+            genresUseCase().collectLatest { result ->
+                val genreState =
+                    when (result) {
+                        DataResult.Empty -> GenreUiState.Error("Could not find any genre")
+                        is DataResult.Error -> GenreUiState.Error(result.message)
+                        is DataResult.Loading -> GenreUiState.Loading
+                        is DataResult.Success -> GenreUiState.Success(result.data)
+                    }
+                state.update { it.copy(genreState = genreState) }
+            }
+        }
+    }
 
     fun onEvent(event: AddBookUiEvent) {
         when (event) {
             is AddBookUiEvent.OnAuthorChange -> {
-                state.update { it.copy(author = event.newValue) }
+                state.update { it.copy(authors = event.newValue) }
             }
             is AddBookUiEvent.OnDescriptionChange -> {
                 state.update { it.copy(description = event.newValue) }
@@ -43,27 +76,54 @@ class AddBookViewModel @Inject constructor(private val booksRepository: BooksRep
                 state.update { it.copy(edition = event.newValue) }
             }
             is AddBookUiEvent.OnGenreChange -> {
-                state.update { it.copy(genre = event.newValue) }
+                state.update { it.copy(selectedGenre = event.newValue) }
             }
             is AddBookUiEvent.OnTitleChange -> {
                 state.update { it.copy(title = event.newValue) }
             }
-            is AddBookUiEvent.OnYearChange -> {
-                state.update { it.copy(year = event.newValue) }
+            is AddBookUiEvent.OnPageChange -> {
+                state.update { it.copy(pages = event.newValue) }
             }
             is AddBookUiEvent.OnChangePhoto -> {
                 state.update { it.copy(photoUri = event.uri) }
             }
-            AddBookUiEvent.OnSave -> {}
+            is AddBookUiEvent.ShowMessage -> {
+                state.update { it.copy(message = event.message) }
+            }
+            AddBookUiEvent.OnSave -> {
+                if (state.value.uiIsValid) {
+                    onSaveBook()
+                } else {
+                    state.update { it.copy(message = "Please check details!") }
+                }
+            }
+            AddBookUiEvent.DismissMessage -> {
+                state.update { it.copy(message = "") }
+            }
+            AddBookUiEvent.OnRetryLoadGenres -> {
+                loadGenres()
+            }
         }
     }
 
-    fun onSaveBook() {
+    private fun onSaveBook() {
         viewModelScope.launch {
-            //            booksRepository.addNewBook(
-            //                state.value.photoUri,
-            //
-            //            )
+            state.update { it.copy(isLoading = true) }
+
+            val book =
+                Book(
+                    title = state.value.title,
+                    authors = state.value.authors.split(','),
+                    pages = state.value.pages.toInt(),
+                    genre_ids = listOf(state.value.selectedGenre.id),
+                    owner = userPrefsRepository.userPrefs.first().userId ?: return@launch,
+                    edition = state.value.edition,
+                    description = state.value.description
+                )
+            state.value.photoUri?.let { uri ->
+                booksRepository.addNewBook(imageUri = uri, book = book.toBookDTO())
+            }
+            state.update { it.copy(isLoading = false, isSuccess = true) }
         }
     }
 

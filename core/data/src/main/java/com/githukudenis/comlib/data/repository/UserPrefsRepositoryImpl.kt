@@ -27,12 +27,16 @@ class UserPrefsRepositoryImpl
 constructor(private val userPrefsDataSource: UserPrefsDatasource) : UserPrefsRepository {
     override val userPrefs: Flow<UserPrefs> = userPrefsDataSource.userPrefs
 
-    override suspend fun setUserId(userId: String) {
-        userPrefsDataSource.setUserId(userId)
+    override suspend fun setAuthId(authId: String) {
+        userPrefsDataSource.setAuthId(authId)
     }
 
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
         userPrefsDataSource.setThemeConfig(themeConfig)
+    }
+
+    override suspend fun setUserId(userId: String) {
+        userPrefsDataSource.setUserId(userId)
     }
 
     override suspend fun setBookMarks(bookMarks: Set<String>) {
@@ -45,5 +49,9 @@ constructor(private val userPrefsDataSource: UserPrefsDatasource) : UserPrefsRep
 
     override suspend fun setPreferredGenres(genres: Set<String>) {
         userPrefsDataSource.setPreferredGenres(genres)
+    }
+
+    override suspend fun clearSession() {
+        userPrefsDataSource.clearSession()
     }
 }

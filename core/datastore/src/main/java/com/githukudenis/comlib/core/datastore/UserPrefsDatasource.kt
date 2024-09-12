@@ -37,7 +37,8 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
                     ThemeConfigConverter.toThemeConfig(
                         prefs[PreferenceKeys.themeConfigPreferenceKey] ?: ThemeConfig.SYSTEM.name
                     ),
-                authId = prefs[PreferenceKeys.userIdPreferenceKey],
+                authId = prefs[PreferenceKeys.authIdPreferenceKey],
+                userId = prefs[PreferenceKeys.userIdPreferenceKey],
                 readBooks = prefs[PreferenceKeys.readBooks]?.toSet() ?: emptySet(),
                 bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
                 isSetup = prefs[PreferenceKeys.isSetup] ?: false,
@@ -50,6 +51,10 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
             prefs[PreferenceKeys.themeConfigPreferenceKey] =
                 ThemeConfigConverter.fromThemeConfig(themeConfig)
         }
+    }
+
+    suspend fun setAuthId(authId: String) {
+        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.authIdPreferenceKey] = authId }
     }
 
     suspend fun setUserId(userId: String) {
@@ -71,11 +76,20 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
     suspend fun setPreferredGenres(genres: Set<String>) {
         prefsDataStore.edit { prefs -> prefs[PreferenceKeys.preferredGenres] = genres }
     }
+
+    suspend fun clearSession() {
+        prefsDataStore.edit { prefs ->
+            prefs.remove(PreferenceKeys.authIdPreferenceKey)
+            prefs.remove(PreferenceKeys.userIdPreferenceKey)
+            prefs.remove(PreferenceKeys.themeConfigPreferenceKey)
+        }
+    }
 }
 
 object PreferenceKeys {
     val themeConfigPreferenceKey = stringPreferencesKey("themeConfig")
     val userIdPreferenceKey = stringPreferencesKey("userId")
+    val authIdPreferenceKey = stringPreferencesKey("authId")
     val readBooks = stringSetPreferencesKey("readBooks")
     val bookmarkedBooks = stringSetPreferencesKey("bookmarkedBooks")
     val isSetup = booleanPreferencesKey("issetup")
