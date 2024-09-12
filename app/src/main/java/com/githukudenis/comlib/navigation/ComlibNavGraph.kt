@@ -134,7 +134,10 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             },
             exitTransition = { scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300)) }
         ) {
-            AddBookRoute(onNavigateUp = { appState.popBackStack() }, onBookAdded = { appState.popBackStack() })
+            AddBookRoute(
+                onNavigateUp = { appState.popBackStack() },
+                onBookAdded = { appState.popBackStack() }
+            )
         }
         composable(
             route = ComlibDestination.GenreSetup.route,

@@ -19,8 +19,8 @@ package com.githukudenis.comlib.data.repository
 import com.githukudenis.comlib.core.datastore.UserPrefsDatasource
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 class UserPrefsRepositoryImpl
 @Inject

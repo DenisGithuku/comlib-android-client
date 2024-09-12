@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -22,7 +23,8 @@ import com.githukudenis.comlib.core.model.user.User
 import javax.inject.Inject
 
 class AuthRepositoryImpl
-@Inject constructor(
+@Inject
+constructor(
     private val authDataSource: AuthDataSource,
     private val userRepository: UserRepository,
     private val userPrefsRepository: UserPrefsRepository
@@ -33,18 +35,15 @@ class AuthRepositoryImpl
             is ResponseResult.Success -> {
                 val (email, firstname, lastname) = userAuthData
                 val authId = result.data
-                val response = userRepository.addNewUser(
-                    User(
-                        email = email,
-                        firstname = firstname,
-                        lastname = lastname,
-                        authId = result.data
+                val response =
+                    userRepository.addNewUser(
+                        User(email = email, firstname = firstname, lastname = lastname, authId = result.data)
                     )
-                )
-                val userId = when (response) {
-                    is ResponseResult.Failure -> null
-                    is ResponseResult.Success -> response.data
-                }
+                val userId =
+                    when (response) {
+                        is ResponseResult.Failure -> null
+                        is ResponseResult.Success -> response.data
+                    }
 
                 if (userId != null && authId != null) {
                     userPrefsRepository.setUserId(userId)
@@ -73,7 +72,9 @@ class AuthRepositoryImpl
     }
 
     override suspend fun resetPassword(
-        email: String, onSuccess: (String) -> Unit, onError: (Throwable?) -> Unit
+        email: String,
+        onSuccess: (String) -> Unit,
+        onError: (Throwable?) -> Unit
     ) {
         authDataSource.resetPassword(email, onSuccess, onError)
     }

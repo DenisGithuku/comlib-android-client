@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -82,7 +83,9 @@ import kotlinx.coroutines.delay
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AddBookRoute(
-    onNavigateUp: () -> Unit, onBookAdded: () -> Unit, viewModel: AddBookViewModel = hiltViewModel()
+    onNavigateUp: () -> Unit,
+    onBookAdded: () -> Unit,
+    viewModel: AddBookViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -92,59 +95,55 @@ fun AddBookRoute(
             if (uri != null) {
                 viewModel.onEvent(AddBookUiEvent.OnChangePhoto(uri))
             } else {
-                Toast.makeText(
-                    context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
     val currentOnFinishAddingBook by rememberUpdatedState(onBookAdded)
 
-    Scaffold(topBar = {
-        CenterAlignedTopAppBar(title = {
-            Text(
-                text = stringResource(R.string.add_book_title),
-                style = MaterialTheme.typography.titleMedium
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = {
+                    Text(
+                        text = stringResource(R.string.add_book_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                navigationIcon = {
+                    IconButton(onClick = { onNavigateUp() }) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                }
             )
-        }, navigationIcon = {
-            IconButton(onClick = { onNavigateUp() }) {
-                Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
-            }
-        })
-    }) { paddingValues ->
-
+        }
+    ) { paddingValues ->
         LaunchedEffect(state.message) {
             if (state.message.isNotEmpty()) {
-                Toast.makeText(
-                    context, state.message, Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                 viewModel.onEvent(AddBookUiEvent.DismissMessage)
             }
         }
 
         LaunchedEffect(state.isSuccess) {
-            if(state.isSuccess) {
-                viewModel.onEvent(AddBookUiEvent.ShowMessage(context.getString(R.string.book_added_successfully)))
+            if (state.isSuccess) {
+                viewModel.onEvent(
+                    AddBookUiEvent.ShowMessage(context.getString(R.string.book_added_successfully))
+                )
                 delay(3000)
                 currentOnFinishAddingBook()
             }
         }
 
-        var bottomSheetExpanded by remember {
-            mutableStateOf(false)
-        }
+        var bottomSheetExpanded by remember { mutableStateOf(false) }
 
         if (state.isLoading) {
-            CLibLoadingDialog(
-                label = stringResource(R.string.saving_book),
-                onDismissRequest = { }
-            )
+            CLibLoadingDialog(label = stringResource(R.string.saving_book), onDismissRequest = {})
         }
 
         if (bottomSheetExpanded) {
-            ModalBottomSheet(onDismissRequest = {
-                bottomSheetExpanded = !bottomSheetExpanded
-            }) {
+            ModalBottomSheet(onDismissRequest = { bottomSheetExpanded = !bottomSheetExpanded }) {
                 when (val genreState = state.genreState) {
                     is GenreUiState.Error -> {
                         Column(
@@ -152,12 +151,8 @@ fun AddBookRoute(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                         ) {
-                            Text(
-                                text = genreState.message
-                            )
-                            CLibButton(
-                                onClick = { viewModel.onEvent(AddBookUiEvent.OnRetryLoadGenres) }
-                            ) {
+                            Text(text = genreState.message)
+                            CLibButton(onClick = { viewModel.onEvent(AddBookUiEvent.OnRetryLoadGenres) }) {
                                 Text(
                                     text = stringResource(R.string.retry),
                                     style = MaterialTheme.typography.bodyMedium
@@ -165,12 +160,8 @@ fun AddBookRoute(
                             }
                         }
                     }
-
                     GenreUiState.Loading -> {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.Center
-                        ) {
+                        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
                             CLibLoadingSpinner()
                         }
                     }
@@ -178,12 +169,15 @@ fun AddBookRoute(
                         LazyColumn {
                             items(genreState.genres) { genre ->
                                 Row(
-                                    modifier = Modifier.fillMaxWidth()
-                                        .clickable(onClick = {
-                                            viewModel.onEvent(AddBookUiEvent.OnGenreChange(genre))
-//                                            bottomSheetExpanded = false
-                                        })
-                                        .padding(LocalDimens.current.medium),
+                                    modifier =
+                                        Modifier.fillMaxWidth()
+                                            .clickable(
+                                                onClick = {
+                                                    viewModel.onEvent(AddBookUiEvent.OnGenreChange(genre))
+                                                    //                                            bottomSheetExpanded = false
+                                                }
+                                            )
+                                            .padding(LocalDimens.current.medium),
                                     horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
@@ -204,95 +198,105 @@ fun AddBookRoute(
         }
 
         LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.ime)
-                .padding(paddingValues)
-                .padding(
-                    start = LocalDimens.current.extraLarge,
-                    end = LocalDimens.current.extraLarge,
-                    bottom = LocalDimens.current.extraLarge,
-                ),
+            modifier =
+                Modifier.fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.ime)
+                    .padding(paddingValues)
+                    .padding(
+                        start = LocalDimens.current.extraLarge,
+                        end = LocalDimens.current.extraLarge,
+                        bottom = LocalDimens.current.extraLarge
+                    ),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
         ) {
             item {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(LocalDimens.current.medium),
+                    modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.medium),
                     horizontalArrangement = Arrangement.Center
                 ) {
-                    BookImage(imageUri = state.photoUri, onPickImage = {
-                        imagePickLauncher.launch(
-                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                        )
-                    })
+                    BookImage(
+                        imageUri = state.photoUri,
+                        onPickImage = {
+                            imagePickLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }
+                    )
                 }
             }
             item { Text(text = "Details", style = MaterialTheme.typography.titleMedium) }
             item {
-                AddBookFormItem(title = "Title",
+                AddBookFormItem(
+                    title = "Title",
                     value = state.title,
-                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnTitleChange(it)) })
+                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnTitleChange(it)) }
+                )
             }
             item {
-                AddBookFormItem(title = "Author",
+                AddBookFormItem(
+                    title = "Author",
                     value = state.authors,
-                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnAuthorChange(it)) })
+                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnAuthorChange(it)) }
+                )
             }
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
                 ) {
-                    AddBookFormItem(modifier = Modifier.weight(1f),
+                    AddBookFormItem(
+                        modifier = Modifier.weight(1f),
                         title = "Edition",
                         value = state.edition,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        onValueChange = { viewModel.onEvent(AddBookUiEvent.OnEditionChange(it)) })
-                    AddBookFormItem(modifier = Modifier.weight(1f),
+                        onValueChange = { viewModel.onEvent(AddBookUiEvent.OnEditionChange(it)) }
+                    )
+                    AddBookFormItem(
+                        modifier = Modifier.weight(1f),
                         title = "Pages",
                         value = state.pages,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                        onValueChange = { viewModel.onEvent(AddBookUiEvent.OnPageChange(it)) })
+                        onValueChange = { viewModel.onEvent(AddBookUiEvent.OnPageChange(it)) }
+                    )
                 }
             }
             item {
-
-                AddBookFormItem(title = "Genre",
+                AddBookFormItem(
+                    title = "Genre",
                     readOnly = true,
                     value = state.selectedGenre.name.capitalize().split("-").joinToString(" "),
                     trailingIcon = {
-                        IconButton(onClick = {
-                            bottomSheetExpanded = !bottomSheetExpanded
-                        }) {
+                        IconButton(onClick = { bottomSheetExpanded = !bottomSheetExpanded }) {
                             Icon(
                                 imageVector = Icons.Default.KeyboardArrowDown,
                                 contentDescription = stringResource(R.string.select_genre)
                             )
                         }
                     },
-                    onValueChange = { })
+                    onValueChange = {}
+                )
             }
             item {
-                AddBookFormItem(singleLine = false,
+                AddBookFormItem(
+                    singleLine = false,
                     maxLines = 10,
-                    supportingText = if (!state.descriptionIsValid) {
-                        "${state.description.length}/200"
-                    } else {
-                        null
-                    },
+                    supportingText =
+                        if (!state.descriptionIsValid) {
+                            "${state.description.length}/200"
+                        } else {
+                            null
+                        },
                     minLines = 4,
                     title = "Description",
                     value = state.description,
-                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnDescriptionChange(it)) })
+                    onValueChange = { viewModel.onEvent(AddBookUiEvent.OnDescriptionChange(it)) }
+                )
             }
             item {
-                CLibButton(modifier = Modifier.fillMaxWidth(), onClick = {
-                    viewModel.onEvent(
-                        AddBookUiEvent.OnSave
-                    )
-                }) {
+                CLibButton(
+                    modifier = Modifier.fillMaxWidth(),
+                    onClick = { viewModel.onEvent(AddBookUiEvent.OnSave) }
+                ) {
                     Text(text = "Save", style = MaterialTheme.typography.labelLarge)
                 }
             }
@@ -307,27 +311,21 @@ fun BookImage(imageUri: Uri? = null, onPickImage: () -> Unit) {
             Image(
                 painter = rememberAsyncImagePainter(model = imageUri),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape),
+                modifier = Modifier.size(100.dp).clip(CircleShape),
                 contentDescription = "Book image"
             )
         } else {
-            Box(
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape)
-                    .background(Color.LightGray)
-            )
+            Box(modifier = Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray))
         }
         Box(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .size(36.dp)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.background)
-                .border(width = 1.dp, shape = CircleShape, color = Color.LightGray)
-                .clickable { onPickImage() }, contentAlignment = Alignment.Center
+            modifier =
+                Modifier.align(Alignment.BottomEnd)
+                    .size(36.dp)
+                    .clip(CircleShape)
+                    .background(MaterialTheme.colorScheme.background)
+                    .border(width = 1.dp, shape = CircleShape, color = Color.LightGray)
+                    .clickable { onPickImage() },
+            contentAlignment = Alignment.Center
         ) {
             Icon(
                 imageVector = Icons.Default.Add,
@@ -352,7 +350,8 @@ fun AddBookFormItem(
     trailingIcon: (@Composable () -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
-    OutlinedTextField(modifier = modifier,
+    OutlinedTextField(
+        modifier = modifier,
         singleLine = singleLine,
         value = value,
         readOnly = readOnly,
@@ -366,5 +365,6 @@ fun AddBookFormItem(
         minLines = minLines,
         trailingIcon = trailingIcon,
         onValueChange = onValueChange,
-        label = { Text(text = title, style = MaterialTheme.typography.labelSmall) })
+        label = { Text(text = title, style = MaterialTheme.typography.labelSmall) }
+    )
 }

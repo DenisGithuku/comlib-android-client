@@ -20,9 +20,11 @@ import android.net.Uri
 import com.githukudenis.comlib.core.model.genre.Genre
 
 sealed class GenreUiState {
-    data object Loading: GenreUiState()
-    data class Success(val genres: List<Genre>): GenreUiState()
-    data class Error(val message: String): GenreUiState()
+    data object Loading : GenreUiState()
+
+    data class Success(val genres: List<Genre>) : GenreUiState()
+
+    data class Error(val message: String) : GenreUiState()
 }
 
 data class AddBookUiState(
@@ -45,9 +47,9 @@ data class AddBookUiState(
             photoUri != null &&
             authors.isNotEmpty() &&
             edition.isNotEmpty() &&
-                pages.isNotEmpty() &&
+            pages.isNotEmpty() &&
             descriptionIsValid &&
-                selectedGenre.id.isNotEmpty()
+            selectedGenre.id.isNotEmpty()
 }
 
 sealed class AddBookUiEvent {
@@ -67,9 +69,9 @@ sealed class AddBookUiEvent {
 
     data object OnSave : AddBookUiEvent()
 
-    data class ShowMessage(val message: String): AddBookUiEvent()
+    data class ShowMessage(val message: String) : AddBookUiEvent()
 
-    data object DismissMessage: AddBookUiEvent()
+    data object DismissMessage : AddBookUiEvent()
 
-    data object OnRetryLoadGenres: AddBookUiEvent()
+    data object OnRetryLoadGenres : AddBookUiEvent()
 }

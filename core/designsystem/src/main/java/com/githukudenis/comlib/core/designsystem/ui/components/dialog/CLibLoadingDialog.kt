@@ -48,12 +48,14 @@ fun CLibLoadingDialog(
     Dialog(
         onDismissRequest = onDismissRequest,
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
-        ) {
+    ) {
         Box(
-            modifier = modifier.size(200.dp)
-                .clip(MaterialTheme.shapes.large)
-                .background(MaterialTheme.colorScheme.surface),
-            contentAlignment = Alignment.Center,
+            modifier =
+                modifier
+                    .size(200.dp)
+                    .clip(MaterialTheme.shapes.large)
+                    .background(MaterialTheme.colorScheme.surface),
+            contentAlignment = Alignment.Center
         ) {
             Column(
                 modifier = Modifier.fillMaxHeight().fillMaxWidth(),

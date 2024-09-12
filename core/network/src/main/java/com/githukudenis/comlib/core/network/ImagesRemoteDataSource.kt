@@ -20,9 +20,9 @@ import android.net.Uri
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.network.common.ImagesStorage
 import com.google.firebase.storage.FirebaseStorage
+import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class ImagesRemoteDataSource
 @Inject

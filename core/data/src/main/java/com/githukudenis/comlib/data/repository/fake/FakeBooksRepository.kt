@@ -33,19 +33,20 @@ class FakeBooksRepository : BooksRepository {
         (1..5)
             .map {
                 Book(
-                    _id = "$it",
-                    authors = listOf("Sam", "Peter", "Charlie"),
-                    currentHolder = "",
-                    edition = "",
-                    description = "",
-                    genre_ids = listOf("1", "2"),
-                    id = "$it",
-                    image = "",
-                    owner = "owner@$it",
-                    pages = it,
-                    reserved = listOf(),
-                    title = "Title $it"
-                ).toBookDTO()
+                        _id = "$it",
+                        authors = listOf("Sam", "Peter", "Charlie"),
+                        currentHolder = "",
+                        edition = "",
+                        description = "",
+                        genre_ids = listOf("1", "2"),
+                        id = "$it",
+                        image = "",
+                        owner = "owner@$it",
+                        pages = it,
+                        reserved = listOf(),
+                        title = "Title $it"
+                    )
+                    .toBookDTO()
             }
             .toMutableList()
 
@@ -65,7 +66,10 @@ class FakeBooksRepository : BooksRepository {
     }
 
     override suspend fun getBookById(id: String): SingleBookResponse {
-        return SingleBookResponse(data = Data(book = books.first { it.id == id }.toBook()), status = "Ok")
+        return SingleBookResponse(
+            data = Data(book = books.first { it.id == id }.toBook()),
+            status = "Ok"
+        )
     }
 
     override suspend fun addNewBook(image: Uri, book: BookDTO): String {
