@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -16,34 +15,43 @@
 */
 package com.githukudenis.comlib.feature.home.components
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.MoreHoriz
+import androidx.compose.material.icons.filled.ArrowForwardIos
+import androidx.compose.material.icons.filled.ElectricBolt
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
-import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.feature.home.R
 
+@RequiresApi(Build.VERSION_CODES.S)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalCard(
-    modifier: Modifier = Modifier,
     hasStreak: Boolean,
     onOpenStreakDetails: (String?) -> Unit,
     dateRange: String? = null,
@@ -51,17 +59,39 @@ fun GoalCard(
     bookId: String? = null,
     progress: Float? = null
 ) {
-    Surface(
+    Card(
+        modifier = Modifier
+            .padding(horizontal = 16.dp)
+            .shadow(
+                2.dp, shape = RoundedCornerShape(6.dp),
+                spotColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f),
+            ),
+//            .graphicsLayer {
+//                shadowElevation = 2.dp.toPx() // Convert dp to px for elevation (spread)
+//                renderEffect = RenderEffect.createBlurEffect(
+//                    16.dp.toPx(), // Horizontal blur radius
+//                    16.dp.toPx(), // Vertical blur radius
+//                    Shader.TileMode.CLAMP
+//                ).asComposeRenderEffect()
+//            }
         onClick = { onOpenStreakDetails(bookId) },
-        modifier = modifier,
-        shape = MaterialTheme.shapes.large,
-        color = MaterialTheme.colorScheme.primaryContainer,
-        shadowElevation = 0.dp
+        shape = MaterialTheme.shapes.small,
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.background,
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = 0.dp
+        ),
+        border = BorderStroke(
+            width = 1.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+        ),
     ) {
         AnimatedContent(targetState = hasStreak) { hasStreak ->
             if (hasStreak) {
                 Column(
-                    modifier = Modifier.padding(12.dp).fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(12.dp)
+                        .fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Row(
@@ -69,12 +99,36 @@ fun GoalCard(
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Text(text = "Reading: $dateRange", style = MaterialTheme.typography.titleSmall)
-                        IconButton(onClick = { onOpenStreakDetails(bookId) }) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
                             Icon(
-                                imageVector = Icons.Default.MoreHoriz,
-                                contentDescription = stringResource(id = R.string.see_details)
+                                imageVector = Icons.Filled.ElectricBolt,
+                                contentDescription = stringResource(id = R.string.see_details),
+                                tint = Color(0xFFFBBC05)
                             )
+                            Text(
+                                text = "Streak", style = MaterialTheme.typography.titleSmall
+                            )
+                        }
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = "Details",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                            )
+                            IconButton(onClick = { onOpenStreakDetails(bookId) }) {
+                                Icon(
+                                    imageVector = Icons.Default.ArrowForwardIos,
+                                    contentDescription = stringResource(id = R.string.see_details),
+                                    tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
+                                )
+                            }
                         }
                     }
                     if (currentBookTitle != null) {
@@ -90,11 +144,13 @@ fun GoalCard(
                             color = MaterialTheme.colorScheme.secondary,
                             trackColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.2f),
                             strokeCap = StrokeCap.Round,
-                            modifier = Modifier.fillMaxWidth().height(8.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(2.dp)
                         )
 
                         Text(
-                            text = "${progress * 100}%",
+                            text = "${(progress * 100).toInt()}%",
                             style = MaterialTheme.typography.titleSmall,
                             color = MaterialTheme.colorScheme.secondary
                         )
@@ -102,20 +158,17 @@ fun GoalCard(
                 }
             } else {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     Text(
-                        text = "Streak status",
-                        style = MaterialTheme.typography.titleSmall,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
-                    )
-                    Text(
                         text = stringResource(R.string.no_streak_label),
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                     )
-                    CLibTextButton(onClick = { onOpenStreakDetails(null) }) { Text(text = "Start streak") }
+                    CLibButton(onClick = { onOpenStreakDetails(null) }) { Text(text = "Start streak") }
                 }
             }
         }

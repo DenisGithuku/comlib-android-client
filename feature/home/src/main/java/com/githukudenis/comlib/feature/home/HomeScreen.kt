@@ -29,6 +29,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -87,6 +88,7 @@ fun HomeRoute(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeRouteContent(
     state: HomeScreenState,
@@ -157,7 +159,6 @@ fun HomeRouteContent(
                         endDate?.let { startDate?.let { it1 -> calculateProgress(it1, it) } }
                     } ?: 0f
                 GoalCard(
-                    modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                     hasStreak = state.streakState.bookMilestone != null,
                     dateRange = dateRange,
                     progress = progress,

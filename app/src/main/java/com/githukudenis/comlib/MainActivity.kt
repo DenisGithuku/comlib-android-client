@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
@@ -83,6 +84,9 @@ class MainActivity : ComponentActivity() {
                                                     } else destination.unselectedIcon)
                                                     ?.let { Icon(imageVector = it, contentDescription = null) }
                                             },
+                                            colors = NavigationBarItemDefaults.colors(
+                                                indicatorColor = MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
+                                            ),
                                             label = {
                                                 destination.label?.let {
                                                     Text(
