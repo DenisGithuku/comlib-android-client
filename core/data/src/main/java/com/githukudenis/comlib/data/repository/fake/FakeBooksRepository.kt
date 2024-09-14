@@ -72,7 +72,7 @@ class FakeBooksRepository : BooksRepository {
         )
     }
 
-    override suspend fun addNewBook(image: Uri, book: BookDTO): String {
+    override suspend fun addNewBook(imageUri: Uri, book: BookDTO): String {
         return try {
             books.add(book)
             MutationResult.SUCCESS.name

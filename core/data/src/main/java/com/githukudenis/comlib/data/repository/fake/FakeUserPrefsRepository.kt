@@ -32,7 +32,7 @@ class FakeUserPrefsRepository : UserPrefsRepository {
             bookmarkedBooks = setOf("1", "2", "3"),
             isSetup = false,
             preferredGenres = setOf("genre1", "genre2"),
-            userId = "1"
+            userId = "owner@5"
         )
 
     override val userPrefs: Flow<UserPrefs>
