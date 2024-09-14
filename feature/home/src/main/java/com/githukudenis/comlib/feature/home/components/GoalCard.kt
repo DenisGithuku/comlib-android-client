@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
@@ -100,7 +101,6 @@ fun GoalCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Row(
-                            modifier = Modifier.fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically,
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
@@ -114,7 +114,6 @@ fun GoalCard(
                             )
                         }
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Text(
@@ -124,6 +123,7 @@ fun GoalCard(
                             )
                             IconButton(onClick = { onOpenStreakDetails(bookId) }) {
                                 Icon(
+                                    modifier = Modifier.size(16.dp),
                                     imageVector = Icons.Default.ArrowForwardIos,
                                     contentDescription = stringResource(id = R.string.see_details),
                                     tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.5f)
