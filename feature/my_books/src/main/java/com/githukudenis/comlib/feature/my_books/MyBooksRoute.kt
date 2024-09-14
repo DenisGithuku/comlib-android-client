@@ -152,7 +152,7 @@ fun BookComponent(book: Book, onOpenBookDetails: (String) -> Unit) {
         Row {
             AsyncImage(
                 modifier = Modifier.size(50.dp).clip(CircleShape),
-                model = "https://comlib-api.onrender.com/img/books/${book.image}",
+                model = book.image,
                 contentDescription = null,
                 contentScale = ContentScale.Crop
             )

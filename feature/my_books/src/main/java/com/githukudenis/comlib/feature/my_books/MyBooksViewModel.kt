@@ -23,9 +23,9 @@ import com.githukudenis.comlib.core.domain.usecases.GetBooksByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.model.book.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class MyBooksUiState(
     val isLoading: Boolean = false,
@@ -48,7 +48,7 @@ constructor(
     private fun getBooks() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.authId).run {
+                requireNotNull(prefs.userId).run {
                     when (val result = getBooksByUserUseCase(this)) {
                         DataResult.Empty -> {
                             update { copy(books = emptyList(), isLoading = false) }
