@@ -117,7 +117,11 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             route = ComlibDestination.MyBooks.route
         ) {
             MyBooksRoute(
-                onNavigateToBookDetails = {},
+                onNavigateToBookDetails = { bookId -> appState.navigate(
+                    route = "${ComlibDestination.BookDetail.route}/$bookId",
+                    popUpTo = ComlibDestination.MyBooks.route
+                )
+                                          },
                 onNavigateToAddBook = {
                     appState.navigate(
                         route = ComlibDestination.AddBook.route,

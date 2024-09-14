@@ -50,10 +50,6 @@ constructor(
     }
 
     override suspend fun getBooksByUser(userId: String): List<Book> {
-        return booksRemoteDataSource.getBooks()
-            .data
-            .books
-            .filter { it.owner == userId }
-
+        return booksRemoteDataSource.getBooks().data.books.filter { it.owner == userId }
     }
 }
