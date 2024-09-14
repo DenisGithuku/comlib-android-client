@@ -45,7 +45,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.common.FetchItemState
-import com.githukudenis.comlib.core.common.ImageEndpoints
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
@@ -141,7 +140,12 @@ fun HomeRouteContent(
                     profileImage = {
                         AsyncImage(
                             modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
-                            model = ImageEndpoints.User("default_img.jpg").url,
+                            model =
+                                when (val user = state.user) {
+                                    is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
+                                    FetchItemState.Loading -> context.getDrawable(R.drawable.placeholder_no_text)
+                                    is FetchItemState.Success -> user.data?.image
+                                },
                             contentDescription = "User profile"
                         )
                     }

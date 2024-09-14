@@ -20,8 +20,10 @@ object Constants {
     const val BASE_URL = "https://comlib-api.onrender.com/"
 }
 
-object ImagesStorage {
-    const val ref = "images"
+sealed class ImageStorageRef(val ref: String) {
+    data class Books(private val path: String) : ImageStorageRef(ref = "images/books/$path")
+
+    data class Users(private val path: String) : ImageStorageRef(ref = "images/books/$path")
 }
 
 sealed class Endpoints(private val path: String) {

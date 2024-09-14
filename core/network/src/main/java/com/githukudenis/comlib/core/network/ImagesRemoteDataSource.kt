@@ -18,7 +18,6 @@ package com.githukudenis.comlib.core.network
 
 import android.net.Uri
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
-import com.githukudenis.comlib.core.network.common.ImagesStorage
 import com.google.firebase.storage.FirebaseStorage
 import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
@@ -27,9 +26,9 @@ import kotlinx.coroutines.withContext
 class ImagesRemoteDataSource
 @Inject
 constructor(firebaseStorage: FirebaseStorage, private val dispatchers: ComlibCoroutineDispatchers) {
-    private val storageRef = firebaseStorage.reference.child(ImagesStorage.ref)
+    private val storageRef = firebaseStorage.reference
 
-    suspend fun addImage(imageUri: Uri): Result<String?> {
+    suspend fun addImage(imageUri: Uri, path: String): Result<String?> {
         return withContext(dispatchers.io) {
             try {
                 val url: String =
