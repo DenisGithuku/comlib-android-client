@@ -140,11 +140,12 @@ fun HomeRouteContent(
                     profileImage = {
                         AsyncImage(
                             modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
-                            model = when(val user = state.user) {
-                                is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
-                                FetchItemState.Loading -> context.getDrawable(R.drawable.placeholder_no_text)
-                                is FetchItemState.Success -> user.data?.image
-                            },
+                            model =
+                                when (val user = state.user) {
+                                    is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
+                                    FetchItemState.Loading -> context.getDrawable(R.drawable.placeholder_no_text)
+                                    is FetchItemState.Success -> user.data?.image
+                                },
                             contentDescription = "User profile"
                         )
                     }
