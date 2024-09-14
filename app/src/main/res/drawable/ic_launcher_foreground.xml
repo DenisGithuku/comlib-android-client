@@ -8,8 +8,8 @@
       android:scaleY="0.36055556"
       android:translateX="49.876667"
       android:translateY="49.876667">>
-        
+
       <path android:fillColor="#53CA81" android:pathData="M78,155.22H0.78V78C0.78,35.35 35.35,0.78 78,0.78C120.65,0.78 155.22,35.35 155.22,78C155.22,120.65 120.65,155.22 78,155.22Z" android:strokeColor="#53CA81" android:strokeWidth="1.56"/>
-      
+
   </group>
 </vector>

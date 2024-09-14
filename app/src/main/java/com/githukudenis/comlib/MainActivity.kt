@@ -84,9 +84,10 @@ class MainActivity : ComponentActivity() {
                                                     } else destination.unselectedIcon)
                                                     ?.let { Icon(imageVector = it, contentDescription = null) }
                                             },
-                                            colors = NavigationBarItemDefaults.colors(
-                                                indicatorColor = MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
-                                            ),
+                                            colors =
+                                                NavigationBarItemDefaults.colors(
+                                                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
+                                                ),
                                             label = {
                                                 destination.label?.let {
                                                     Text(
