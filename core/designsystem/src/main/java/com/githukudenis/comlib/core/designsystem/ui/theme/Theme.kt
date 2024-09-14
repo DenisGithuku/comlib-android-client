@@ -36,30 +36,35 @@ import androidx.core.view.WindowCompat
 
 private val DarkColorScheme =
     darkColorScheme(
-        primary = CLibPurple70,
-        secondary = CLibPink50,
-        tertiary = CLibPink50,
-        background = Color(0xFF313131),
+        primary = PastelGreen,
+        secondary = MossGreen,
+        tertiary = MossGreen,
+        background = CharcoalGray,
         surface = Color(0xFF626262),
-        onPrimary = Color.White,
-        onSecondary = Color.White,
-        onTertiary = Color.White,
-        onBackground = Color(0xFFF5F5F5),
-        onSurface = Color(0xFFF5F5F5)
+        onPrimary = SnowDrift,
+        onSecondary = SnowDrift,
+        onTertiary = SnowDrift,
+        onBackground = SnowDrift,
+        onSurface = IvoryWhisper,
+        secondaryContainer = IvoryWhisper
     )
 
 private val LightColorScheme =
     lightColorScheme(
-        primary = CLibPurple50,
-        secondary = CLibPink50,
-        tertiary = CLibPink30,
-        background = Color(0xFFFFFFFF),
-        surface = Color(0xFFF5F5F5),
+        primary = PastelGreen,
+        secondary = MossGreen,
+        tertiary = LimeGreen,
+        background = SnowDrift,
+        surface = IvoryWhisper,
         onPrimary = Color.White,
         onSecondary = Color.White,
         onTertiary = Color.White,
-        onBackground = Color(0xFF313131),
-        onSurface = Color(0xFF313131)
+        onBackground = CharcoalGray,
+        onSurface = CharcoalGray,
+        primaryContainer = PastelGreen.copy(alpha = 0.2f),
+        tertiaryContainer = LimeGreen,
+        surfaceVariant = SnowDrift,
+        secondaryContainer = SpringGreen.copy(alpha = 0.2f)
     )
 
 @Composable
@@ -72,9 +77,9 @@ fun ComLibTheme(
     val dimens: Dimens =
         Dimens(
             default = 0.dp,
-            small = 2.dp,
-            extraSmall = 4.dp,
-            medium = 8.dp,
+            extraSmall = 2.dp,
+            small = 4.dp,
+            medium = 6.dp,
             large = 12.dp,
             extraLarge = 16.dp
         )

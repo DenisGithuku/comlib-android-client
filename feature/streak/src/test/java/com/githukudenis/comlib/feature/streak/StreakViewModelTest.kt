@@ -22,6 +22,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
 import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
+import com.githukudenis.comlib.core.domain.usecases.UpdateStreakUseCase
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
@@ -45,6 +46,7 @@ class StreakViewModelTest {
     lateinit var getReadBooksUseCase: GetReadBooksUseCase
     lateinit var saveStreakUseCase: SaveStreakUseCase
     lateinit var getStreakUseCase: GetStreakUseCase
+    lateinit var updateStreakUseCase: UpdateStreakUseCase
 
     @Before
     fun setUp() {
@@ -52,13 +54,15 @@ class StreakViewModelTest {
         getReadBooksUseCase = GetReadBooksUseCase(FakeUserPrefsRepository())
         saveStreakUseCase = SaveStreakUseCase(FakeMilestoneRepository())
         getStreakUseCase = GetStreakUseCase(FakeMilestoneRepository())
+        updateStreakUseCase = UpdateStreakUseCase(FakeMilestoneRepository())
         viewModel =
             StreakViewModel(
                 getAllBooksUseCase = getAllBooksUseCase,
                 getReadBooksUseCase = getReadBooksUseCase,
                 saveStreakUseCase = saveStreakUseCase,
                 getStreakUseCase = getStreakUseCase,
-                savedStateHandle = SavedStateHandle(mapOf("bookId" to "1"))
+                savedStateHandle = SavedStateHandle(mapOf("bookId" to "1")),
+                updateStreakUseCase = updateStreakUseCase
             )
     }
 

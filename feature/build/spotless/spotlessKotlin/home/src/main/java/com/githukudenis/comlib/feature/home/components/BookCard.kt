@@ -109,9 +109,8 @@ fun BookCard(
                     ) {
                         Icon(
                             imageVector =
-                                if (bookUiModel.isFavourite) {
-                                    Icons.Filled.Favorite
-                                } else Icons.Outlined.FavoriteBorder,
+                                if (bookUiModel.isFavourite) Icons.Filled.Favorite
+                                else Icons.Outlined.FavoriteBorder,
                             contentDescription = stringResource(R.string.toggle_favourite),
                             tint =
                                 if (bookUiModel.isFavourite) {

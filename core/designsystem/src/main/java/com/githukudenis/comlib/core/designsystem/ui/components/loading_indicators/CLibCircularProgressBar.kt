@@ -26,6 +26,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -40,7 +41,7 @@ import androidx.compose.ui.unit.dp
 fun CLibCircularProgressBar(
     modifier: Modifier = Modifier,
     size: Dp = 36.dp,
-    trackColor: Color = Color(0xFFE92EB0)
+    trackColor: Color = MaterialTheme.colorScheme.secondary
 ) {
     val infiniteTransition = rememberInfiniteTransition(label = "Infinite value progress")
 
