@@ -50,7 +50,6 @@ import androidx.compose.ui.unit.dp
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.feature.home.R
 
-@RequiresApi(Build.VERSION_CODES.S)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun GoalCard(
@@ -69,14 +68,6 @@ fun GoalCard(
                     shape = RoundedCornerShape(6.dp),
                     spotColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f)
                 ),
-        //            .graphicsLayer {
-        //                shadowElevation = 2.dp.toPx() // Convert dp to px for elevation (spread)
-        //                renderEffect = RenderEffect.createBlurEffect(
-        //                    16.dp.toPx(), // Horizontal blur radius
-        //                    16.dp.toPx(), // Vertical blur radius
-        //                    Shader.TileMode.CLAMP
-        //                ).asComposeRenderEffect()
-        //            }
         onClick = { onOpenStreakDetails(bookId) },
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
