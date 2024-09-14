@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib.data.repository.fake
 
+import android.net.Uri
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.UserRepository
@@ -72,5 +73,15 @@ class FakeUserRepository : UserRepository {
 
     override suspend fun deleteUser(userId: String) {
         users.removeIf { it.id == userId }
+    }
+
+    override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String> {
+        return try {
+            val pos = users.indexOf(users.find { it.id == userId })
+            users.set(pos, users[pos].copy(image = imageUri.lastPathSegment))
+            ResponseResult.Success("success")
+        } catch (e: Exception) {
+            ResponseResult.Failure(e)
+        }
     }
 }
