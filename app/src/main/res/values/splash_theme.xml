@@ -5,7 +5,7 @@
         <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher_round</item>
         <item name="windowSplashScreenAnimationDuration">300</item>
         <item name="postSplashScreenTheme">@style/Theme.ComLib</item>
-
+        <item name="splashScreenIconSize">100dp</item>
         <!--nav bar and status bar config -->
         <item name="android:statusBarColor">@color/white</item>
         <item name="android:navigationBarColor">@color/white</item>
