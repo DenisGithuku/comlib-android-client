@@ -171,7 +171,7 @@ private fun ProfileScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     ProfileImage(
-                        imageUrl = "https://comlib-api.onrender.com/img/users/${state.profile?.imageUrl}",
+                        imageUrl = state.profile?.imageUrl,
                         onChangeImage = {}
                     )
                     Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
