@@ -18,6 +18,7 @@ package com.githukudenis.comlib.data.repository
 
 import android.net.Uri
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
+import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 import com.githukudenis.comlib.core.network.BooksRemoteDataSource
@@ -46,5 +47,9 @@ constructor(
             val updatedBook = book.copy(image = imagePath)
             booksRemoteDataSource.addNewBook(updatedBook)
         } ?: ""
+    }
+
+    override suspend fun getBooksByUser(userId: String): List<Book> {
+        return booksRemoteDataSource.getBooks().data.books.filter { it.owner == userId }
     }
 }

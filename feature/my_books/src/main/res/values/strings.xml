@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="my_books_title">Your Books</string>
+    <string name="my_books_title">My Books</string>
     <string name="empty_books_label">You don\'t have any books available. Whenever you add your books they will appear here</string>
     <string name="add_book">Add book</string>
 </resources>

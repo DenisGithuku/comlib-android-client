@@ -48,7 +48,7 @@ constructor(
     private fun getBooks() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.authId).run {
+                requireNotNull(prefs.userId).run {
                     when (val result = getBooksByUserUseCase(this)) {
                         DataResult.Empty -> {
                             update { copy(books = emptyList(), isLoading = false) }

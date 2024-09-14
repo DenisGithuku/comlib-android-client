@@ -81,4 +81,8 @@ class FakeBooksRepository : BooksRepository {
             MutationResult.FAIL.name
         }
     }
+
+    override suspend fun getBooksByUser(userId: String): List<Book> {
+        return books.filter { it.owner == userId }.map { it.toBook() }
+    }
 }
