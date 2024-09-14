@@ -16,6 +16,11 @@
 */
 package com.githukudenis.comlib.feature.edit
 
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -53,6 +58,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,7 +80,8 @@ fun EditProfileScreen(onNavigateUp: () -> Unit, viewModel: EditProfileViewModel 
         onSaveChanges = viewModel::updateUser,
         onChangeFirstname = viewModel::onChangeFirstname,
         onChangeLastname = viewModel::onChangeLastname,
-        onChangeUsername = viewModel::onChangeUsername
+        onChangeUsername = viewModel::onChangeUsername,
+        onChangeUserImage = viewModel::onChangePhoto
     )
 }
 
@@ -86,67 +93,26 @@ fun EditProfileContent(
     onSaveChanges: () -> Unit,
     onChangeFirstname: (String) -> Unit,
     onChangeLastname: (String) -> Unit,
-    onChangeUsername: (String) -> Unit
+    onChangeUsername: (String) -> Unit,
+    onChangeUserImage: (Uri) -> Unit
 ) {
-    var sheetIsOpen by rememberSaveable { mutableStateOf(false) }
-
+    var sheetIsOpen by rememberSaveable {  mutableStateOf(false) }
+    val context = LocalContext.current
     var selectedProfileItem by rememberSaveable { mutableStateOf(ProfileItem.NOTHING) }
 
     if (state.isUpdating) {
         CLibLoadingDialog {}
     }
 
-    if (sheetIsOpen) {
-        ModalBottomSheet(onDismissRequest = { sheetIsOpen = false }, windowInsets = WindowInsets.ime) {
-            when (selectedProfileItem) {
-                ProfileItem.NOTHING -> {
-                    Unit
-                }
-                ProfileItem.FIRSTNAME -> {
-                    state.firstname?.let {
-                        EditableProfileItem(
-                            value = it,
-                            onValueChange = onChangeFirstname,
-                            onSaveChanges = {
-                                onSaveChanges()
-                                sheetIsOpen = false
-                            },
-                            onCancel = { sheetIsOpen = false }
-                        )
-                    }
-                }
-                ProfileItem.LASTNAME -> {
-                    state.lastname?.let {
-                        EditableProfileItem(
-                            value = it,
-                            onValueChange = onChangeLastname,
-                            onSaveChanges = {
-                                onSaveChanges()
-                                sheetIsOpen = false
-                            },
-                            onCancel = { sheetIsOpen = false }
-                        )
-                    }
-                }
-                ProfileItem.IMAGE -> {
-                    ImageChooser(onOpenGallery = {}, onOpenCamera = {})
-                }
-                ProfileItem.USERNAME -> {
-                    state.username?.let {
-                        EditableProfileItem(
-                            value = it,
-                            onValueChange = onChangeUsername,
-                            onSaveChanges = {
-                                onSaveChanges()
-                                sheetIsOpen = false
-                            },
-                            onCancel = { sheetIsOpen = false }
-                        )
-                    }
-                }
+    val imagePickLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                onChangeUserImage(uri)
+            } else {
+                Toast.makeText(context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
-    }
 
     Scaffold(
         topBar = {
@@ -172,17 +138,67 @@ fun EditProfileContent(
             LoadingContent()
         }
 
+        if (sheetIsOpen) {
+            ModalBottomSheet(onDismissRequest = { sheetIsOpen = false }, windowInsets = WindowInsets.ime) {
+                when (selectedProfileItem) {
+                    ProfileItem.NOTHING -> {
+                        Unit
+                    }
+                    ProfileItem.FIRSTNAME -> {
+                        state.firstname?.let {
+                            EditableProfileItem(
+                                value = it,
+                                onValueChange = onChangeFirstname,
+                                onSaveChanges = {
+                                    onSaveChanges()
+                                    sheetIsOpen = false
+                                },
+                                onCancel = { sheetIsOpen = false }
+                            )
+                        }
+                    }
+                    ProfileItem.LASTNAME -> {
+                        state.lastname?.let {
+                            EditableProfileItem(
+                                value = it,
+                                onValueChange = onChangeLastname,
+                                onSaveChanges = {
+                                    onSaveChanges()
+                                    sheetIsOpen = false
+                                },
+                                onCancel = { sheetIsOpen = false }
+                            )
+                        }
+                    }
+                    ProfileItem.USERNAME -> {
+                        state.username?.let {
+                            EditableProfileItem(
+                                value = it,
+                                onValueChange = onChangeUsername,
+                                onSaveChanges = {
+                                    onSaveChanges()
+                                    sheetIsOpen = false
+                                },
+                                onCancel = { sheetIsOpen = false }
+                            )
+                        }
+                    }
+                }
+            }
+        }
+
         LazyColumn(
             modifier = Modifier.fillMaxSize().padding(innerPadding),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
                 ProfileImage(
-                    imageUrl = "https://comlib-api.onrender.com/img/users/${state.profileUrl}",
+                    imageUrl = state.profileUrl,
                     size = 200.dp,
                     onChangeImage = {
-                        selectedProfileItem = ProfileItem.IMAGE
-                        sheetIsOpen = true
+                        imagePickLauncher.launch(
+                            PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                        )
                     }
                 )
             }
@@ -385,5 +401,4 @@ enum class ProfileItem {
     FIRSTNAME,
     LASTNAME,
     USERNAME,
-    IMAGE
 }

@@ -16,16 +16,18 @@
 */
 package com.githukudenis.comlib.feature.edit
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
@@ -44,7 +46,8 @@ class EditProfileViewModel
 constructor(
     private val updateUserUseCase: UpdateUserUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase
+    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val userRepository: UserRepository
 ) : StatefulViewModel<EditProfileUiState>(EditProfileUiState()) {
 
     init {
@@ -95,5 +98,11 @@ constructor(
 
     fun onChangeUsername(value: String) {
         update { copy(username = value) }
+    }
+
+    fun onChangePhoto(value: Uri) {
+        viewModelScope.launch {
+            state.value.userId?.let { userRepository.uploadUserImage(value, it) }
+        }
     }
 }

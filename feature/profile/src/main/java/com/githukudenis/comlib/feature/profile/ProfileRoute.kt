@@ -17,6 +17,9 @@
 package com.githukudenis.comlib.feature.profile
 
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -86,6 +89,17 @@ fun ProfileRoute(
             onSignedOut()
         }
     }
+
+    val imagePickLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                viewModel.onChangeUserImage(uri)
+            } else {
+                Toast.makeText(context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
     ProfileScreen(
         state = state,
         versionName = versionName,
@@ -102,7 +116,12 @@ fun ProfileRoute(
             }
         },
         onToggleSignOutDialog = viewModel::onToggleSignOut,
-        onEditProfile = onEditProfile
+        onEditProfile = onEditProfile,
+        onChangeImage = {
+            imagePickLauncher.launch(
+                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+            )
+        }
     )
 }
 
@@ -117,7 +136,8 @@ private fun ProfileScreen(
     onToggleCacheDialog: (Boolean) -> Unit,
     onClearCache: () -> Unit,
     onToggleSignOutDialog: (Boolean) -> Unit,
-    onEditProfile: () -> Unit
+    onEditProfile: () -> Unit,
+    onChangeImage: () -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -170,7 +190,10 @@ private fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = LocalDimens.current.extraLarge),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProfileImage(imageUrl = state.profile?.imageUrl, onChangeImage = {})
+                    ProfileImage(
+                        imageUrl = state.profile?.imageUrl,
+                        onChangeImage = onChangeImage
+                    )
                     Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
                     Column(modifier = Modifier) {
                         Text(

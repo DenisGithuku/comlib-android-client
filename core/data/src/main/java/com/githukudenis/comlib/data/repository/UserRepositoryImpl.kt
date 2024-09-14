@@ -23,10 +23,10 @@ import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
-import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 class UserRepositoryImpl
 @Inject
@@ -98,6 +98,13 @@ constructor(
     override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String> {
         return withContext(dispatchers.io) {
             try {
+                // Delete existing image first
+                userApi.getUserById(userId).data.user.image?.let {
+                    imagesRemoteDataSource.deleteImage(
+                        imagePath = it
+                    )
+                }
+
                 val path = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
                 val userImage = imagesRemoteDataSource.addImage(imageUri, path)
 
