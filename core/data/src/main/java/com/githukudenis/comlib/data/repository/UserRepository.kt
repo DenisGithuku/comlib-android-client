@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib.data.repository
 
+import android.net.Uri
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.model.user.User
 
@@ -29,4 +30,6 @@ interface UserRepository {
     suspend fun getUserById(userId: String): ResponseResult<User>
 
     suspend fun deleteUser(userId: String)
+
+    suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String>
 }

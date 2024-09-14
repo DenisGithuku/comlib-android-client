@@ -16,10 +16,13 @@
 */
 package com.githukudenis.comlib.data.repository
 
+import android.net.Uri
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
+import com.githukudenis.comlib.core.network.common.ImageStorageRef
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
@@ -27,8 +30,11 @@ import timber.log.Timber
 
 class UserRepositoryImpl
 @Inject
-constructor(private val userApi: UserApi, private val dispatchers: ComlibCoroutineDispatchers) :
-    UserRepository {
+constructor(
+    private val userApi: UserApi,
+    private val dispatchers: ComlibCoroutineDispatchers,
+    private val imagesRemoteDataSource: ImagesRemoteDataSource
+) : UserRepository {
     override suspend fun getUsersByClub(clubId: String): ResponseResult<List<User>> {
         return withContext(dispatchers.io) {
             try {
@@ -82,6 +88,29 @@ constructor(private val userApi: UserApi, private val dispatchers: ComlibCorouti
     }
 
     override suspend fun deleteUser(userId: String) {
-        withContext(dispatchers.io) { userApi.deleteUser(userId) }
+        withContext(dispatchers.io) {
+            val user = userApi.getUserById(userId).data.user
+            user.image?.let { imagesRemoteDataSource.deleteImage(it) }
+            userApi.deleteUser(userId)
+        }
+    }
+
+    override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String> {
+        return withContext(dispatchers.io) {
+            try {
+                val path = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
+                val userImage = imagesRemoteDataSource.addImage(imageUri, path)
+
+                userImage.getOrNull()?.let {
+                    val updatedUser = userApi.getUserById(userId).data.user.copy(image = it)
+                    userApi.updateUser(userId, updatedUser)
+                    ResponseResult.Success("success")
+                } ?: ResponseResult.Failure(Exception("Image upload failed"))
+            } catch (e: Exception) {
+                Timber.e(e)
+                if (e is CancellationException) throw e
+                ResponseResult.Failure(e)
+            }
+        }
     }
 }

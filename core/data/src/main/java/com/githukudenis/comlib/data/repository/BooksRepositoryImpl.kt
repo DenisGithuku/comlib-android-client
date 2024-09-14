@@ -23,6 +23,7 @@ import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 import com.githukudenis.comlib.core.network.BooksRemoteDataSource
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
+import com.githukudenis.comlib.core.network.common.ImageStorageRef
 import javax.inject.Inject
 
 class BooksRepositoryImpl
@@ -30,7 +31,6 @@ class BooksRepositoryImpl
 constructor(
     private val booksRemoteDataSource: BooksRemoteDataSource,
     private val imagesRemoteDataSource: ImagesRemoteDataSource
-    //    private val booksLocalDataSource: BooksLocalDataSource,
 ) : BooksRepository {
     override suspend fun getAllBooks(): AllBooksResponse {
         return booksRemoteDataSource.getBooks()
@@ -41,7 +41,8 @@ constructor(
     }
 
     override suspend fun addNewBook(imageUri: Uri, book: BookDTO): String {
-        val bookImage = imagesRemoteDataSource.addImage(imageUri)
+        val path = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
+        val bookImage = imagesRemoteDataSource.addImage(imageUri, path)
         return bookImage.getOrNull()?.let { imagePath ->
             val updatedBook = book.copy(image = imagePath)
             booksRemoteDataSource.addNewBook(updatedBook)
