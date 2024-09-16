@@ -22,6 +22,7 @@ import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
+import com.githukudenis.comlib.core.network.common.FirebaseExt
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
@@ -95,22 +96,22 @@ constructor(
         }
     }
 
-    override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String> {
+    override suspend fun uploadUserImage(imageUri: Uri, authId: String): ResponseResult<String> {
         return withContext(dispatchers.io) {
             try {
                 // Delete existing image first
-                userApi.getUserById(userId).data.user.image?.let {
+                userApi.getUserById(authId).data.user.image?.let {
                     imagesRemoteDataSource.deleteImage(
-                        imagePath = it
+                        imagePath = FirebaseExt.getFilePathFromUrl(it)
                     )
                 }
 
-                val path = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
-                val userImage = imagesRemoteDataSource.addImage(imageUri, path)
+                val imagePath = ImageStorageRef.Users(imageUri.lastPathSegment ?: "").ref
+                val userImage = imagesRemoteDataSource.addImage(imageUri, imagePath)
 
                 userImage.getOrNull()?.let {
-                    val updatedUser = userApi.getUserById(userId).data.user.copy(image = it)
-                    userApi.updateUser(userId, updatedUser)
+                    val updatedUser = userApi.getUserById(authId).data.user.copy(image = it)
+                    userApi.updateUser(updatedUser.id ?: "", updatedUser)
                     ResponseResult.Success("success")
                 } ?: ResponseResult.Failure(Exception("Image upload failed"))
             } catch (e: Exception) {

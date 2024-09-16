@@ -20,6 +20,7 @@ import com.githukudenis.comlib.core.auth.AuthDataSource
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.model.UserAuthData
 import com.githukudenis.comlib.core.model.user.User
+import timber.log.Timber
 import javax.inject.Inject
 
 class AuthRepositoryImpl
@@ -44,6 +45,7 @@ constructor(
                         is ResponseResult.Failure -> null
                         is ResponseResult.Success -> response.data
                     }
+                Timber.d("user id", userId)
 
                 if (userId != null && authId != null) {
                     userPrefsRepository.setUserId(userId)

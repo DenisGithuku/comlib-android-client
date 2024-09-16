@@ -78,7 +78,7 @@ constructor(
 
     fun onChangeUserImage(imageUri: Uri) {
         viewModelScope.launch {
-            val userId = getUserPrefsUseCase().first().userId
+            val userId = getUserPrefsUseCase().first().authId
             checkNotNull(userId).also {
                 userRepository.uploadUserImage(imageUri, userId)
             }

@@ -41,10 +41,11 @@ constructor(
     }
 
     override suspend fun addNewBook(imageUri: Uri, book: BookDTO): String {
-        val path = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
-        val bookImage = imagesRemoteDataSource.addImage(imageUri, path)
-        return bookImage.getOrNull()?.let { imagePath ->
-            val updatedBook = book.copy(image = imagePath)
+        val imagePath = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
+
+        val bookImage = imagesRemoteDataSource.addImage(imageUri, imagePath)
+        return bookImage.getOrNull()?.let { path ->
+            val updatedBook = book.copy(image = path)
             booksRemoteDataSource.addNewBook(updatedBook)
         } ?: ""
     }

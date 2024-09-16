@@ -32,6 +32,7 @@ import javax.inject.Inject
 data class EditProfileUiState(
     val isLoading: Boolean = false,
     val userId: String? = null,
+    val authId: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
     val username: String? = null,
@@ -67,7 +68,8 @@ constructor(
                             firstname = user.firstname,
                             username = user.username,
                             lastname = user.lastname,
-                            profileUrl = user.image
+                            profileUrl = user.image,
+                            authId = user.authId
                         )
                     }
                         ?: EditProfileUiState(

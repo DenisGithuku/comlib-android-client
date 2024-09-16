@@ -64,7 +64,7 @@ fun BookCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         border =
             BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)),
-        modifier = Modifier.width(190.dp),
+        modifier = Modifier.width(150.dp),
         onClick = { onClick(bookUiModel.book.id) }
     ) {
         Column {

@@ -39,6 +39,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -140,6 +141,7 @@ fun HomeRouteContent(
                     profileImage = {
                         AsyncImage(
                             modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
+                            contentScale = ContentScale.Crop,
                             model =
                                 when (val user = state.user) {
                                     is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
