@@ -20,8 +20,8 @@ import com.githukudenis.comlib.core.auth.AuthDataSource
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.model.UserAuthData
 import com.githukudenis.comlib.core.model.user.User
-import timber.log.Timber
 import javax.inject.Inject
+import timber.log.Timber
 
 class AuthRepositoryImpl
 @Inject

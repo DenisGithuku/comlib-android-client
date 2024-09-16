@@ -190,10 +190,7 @@ private fun ProfileScreen(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = LocalDimens.current.extraLarge),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    ProfileImage(
-                        imageUrl = state.profile?.imageUrl,
-                        onChangeImage = onChangeImage
-                    )
+                    ProfileImage(imageUrl = state.profile?.imageUrl, onChangeImage = onChangeImage)
                     Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
                     Column(modifier = Modifier) {
                         Text(

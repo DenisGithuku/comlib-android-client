@@ -29,8 +29,8 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlinx.coroutines.withContext
 
 class UserApi
 @Inject

@@ -25,9 +25,9 @@ import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
@@ -103,8 +103,6 @@ constructor(
     }
 
     fun onChangePhoto(value: Uri) {
-        viewModelScope.launch {
-            state.value.userId?.let { userRepository.uploadUserImage(value, it) }
-        }
+        viewModelScope.launch { state.value.userId?.let { userRepository.uploadUserImage(value, it) } }
     }
 }

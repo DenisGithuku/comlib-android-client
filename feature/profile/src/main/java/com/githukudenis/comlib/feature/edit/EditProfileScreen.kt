@@ -96,7 +96,7 @@ fun EditProfileContent(
     onChangeUsername: (String) -> Unit,
     onChangeUserImage: (Uri) -> Unit
 ) {
-    var sheetIsOpen by rememberSaveable {  mutableStateOf(false) }
+    var sheetIsOpen by rememberSaveable { mutableStateOf(false) }
     val context = LocalContext.current
     var selectedProfileItem by rememberSaveable { mutableStateOf(ProfileItem.NOTHING) }
 
@@ -139,7 +139,10 @@ fun EditProfileContent(
         }
 
         if (sheetIsOpen) {
-            ModalBottomSheet(onDismissRequest = { sheetIsOpen = false }, windowInsets = WindowInsets.ime) {
+            ModalBottomSheet(
+                onDismissRequest = { sheetIsOpen = false },
+                windowInsets = WindowInsets.ime
+            ) {
                 when (selectedProfileItem) {
                     ProfileItem.NOTHING -> {
                         Unit
@@ -400,5 +403,5 @@ enum class ProfileItem {
     NOTHING,
     FIRSTNAME,
     LASTNAME,
-    USERNAME,
+    USERNAME
 }

@@ -24,10 +24,10 @@ import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
 import com.githukudenis.comlib.core.network.common.FirebaseExt
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
+import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
 
 class UserRepositoryImpl
 @Inject
@@ -101,9 +101,7 @@ constructor(
             try {
                 // Delete existing image first
                 userApi.getUserById(authId).data.user.image?.let {
-                    imagesRemoteDataSource.deleteImage(
-                        imagePath = FirebaseExt.getFilePathFromUrl(it)
-                    )
+                    imagesRemoteDataSource.deleteImage(imagePath = FirebaseExt.getFilePathFromUrl(it))
                 }
 
                 val imagePath = ImageStorageRef.Users(imageUri.lastPathSegment ?: "").ref

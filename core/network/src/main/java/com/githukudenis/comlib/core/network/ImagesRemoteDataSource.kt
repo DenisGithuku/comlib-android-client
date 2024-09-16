@@ -19,9 +19,9 @@ package com.githukudenis.comlib.core.network
 import android.net.Uri
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.google.firebase.storage.FirebaseStorage
+import javax.inject.Inject
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
-import javax.inject.Inject
 
 class ImagesRemoteDataSource
 @Inject
@@ -31,14 +31,8 @@ constructor(firebaseStorage: FirebaseStorage, private val dispatchers: ComlibCor
     suspend fun addImage(imageUri: Uri, path: String): Result<String?> {
         return withContext(dispatchers.io) {
             try {
-                val url: String = storageRef
-                    .child(path)
-                    .putFile(imageUri)
-                    .await()
-                    .storage
-                    .downloadUrl
-                    .await()
-                    .toString()
+                val url: String =
+                    storageRef.child(path).putFile(imageUri).await().storage.downloadUrl.await().toString()
                 Result.success(url)
             } catch (e: Exception) {
                 Result.failure(e)

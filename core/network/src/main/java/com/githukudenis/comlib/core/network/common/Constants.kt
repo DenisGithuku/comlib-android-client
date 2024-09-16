@@ -55,5 +55,4 @@ object FirebaseExt {
         val endIndex = fileUrl.indexOf("?alt")
         return fileUrl.substring(startIndex, endIndex).replace("%2F", "/")
     }
-
 }

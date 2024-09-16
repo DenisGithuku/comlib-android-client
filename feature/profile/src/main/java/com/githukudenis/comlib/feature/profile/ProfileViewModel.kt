@@ -24,13 +24,13 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
@@ -79,9 +79,7 @@ constructor(
     fun onChangeUserImage(imageUri: Uri) {
         viewModelScope.launch {
             val userId = getUserPrefsUseCase().first().authId
-            checkNotNull(userId).also {
-                userRepository.uploadUserImage(imageUri, userId)
-            }
+            checkNotNull(userId).also { userRepository.uploadUserImage(imageUri, userId) }
         }
     }
 }
