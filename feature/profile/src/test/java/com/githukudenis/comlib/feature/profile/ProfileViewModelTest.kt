@@ -25,11 +25,11 @@ import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
-import kotlin.test.Test
-import kotlin.test.assertTrue
+import org.junit.Test
 
 @MediumTest
 class ProfileViewModelTest {
