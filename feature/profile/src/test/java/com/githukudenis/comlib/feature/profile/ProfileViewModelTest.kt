@@ -21,14 +21,15 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
+import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
-import kotlin.test.Test
-import kotlin.test.assertTrue
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
+import org.junit.Test
 
 @MediumTest
 class ProfileViewModelTest {
@@ -38,13 +39,17 @@ class ProfileViewModelTest {
     lateinit var getUserPrefsUseCase: GetUserPrefsUseCase
     lateinit var getUserProfileUseCase: GetUserProfileUseCase
     lateinit var signOutUseCase: SignOutUseCase
+    lateinit var userRepository: UserRepository
 
     @Before
     fun setup() {
+        userRepository = FakeUserRepository()
         getUserPrefsUseCase = GetUserPrefsUseCase(FakeUserPrefsRepository())
-        getUserProfileUseCase = GetUserProfileUseCase(FakeUserRepository())
+        getUserProfileUseCase = GetUserProfileUseCase(userRepository)
         signOutUseCase = SignOutUseCase(FakeAuthRepository())
-        viewModel = ProfileViewModel(getUserPrefsUseCase, getUserProfileUseCase, signOutUseCase)
+
+        viewModel =
+            ProfileViewModel(getUserPrefsUseCase, getUserProfileUseCase, signOutUseCase, userRepository)
     }
 
     @Test

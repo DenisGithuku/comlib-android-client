@@ -32,11 +32,7 @@ constructor(firebaseStorage: FirebaseStorage, private val dispatchers: ComlibCor
         return withContext(dispatchers.io) {
             try {
                 val url: String =
-                    imageUri.lastPathSegment?.let { path ->
-                        val imagePath = storageRef.child(path)
-                        val result = imagePath.putFile(imageUri).await()
-                        result.storage.downloadUrl.await().toString()
-                    } ?: ""
+                    storageRef.child(path).putFile(imageUri).await().storage.downloadUrl.await().toString()
                 Result.success(url)
             } catch (e: Exception) {
                 Result.failure(e)

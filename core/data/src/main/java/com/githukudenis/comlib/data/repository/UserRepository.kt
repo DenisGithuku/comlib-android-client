@@ -31,5 +31,5 @@ interface UserRepository {
 
     suspend fun deleteUser(userId: String)
 
-    suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String>
+    suspend fun uploadUserImage(imageUri: Uri, authId: String): ResponseResult<String>
 }

@@ -21,7 +21,9 @@ import com.githukudenis.comlib.core.network.BooksApi
 import com.githukudenis.comlib.core.network.GenresApi
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
+import com.google.firebase.Firebase
 import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.storage
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -48,7 +50,7 @@ object NetworkModule {
     fun provideGenresApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): GenresApi =
         GenresApi(httpClient, dispatchers)
 
-    @Provides @Singleton fun provideFirebaseStorage(): FirebaseStorage = FirebaseStorage.getInstance()
+    @Provides @Singleton fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
 
     @Provides
     @Singleton

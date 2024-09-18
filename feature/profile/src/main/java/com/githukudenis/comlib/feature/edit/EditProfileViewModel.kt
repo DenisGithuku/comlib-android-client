@@ -16,12 +16,14 @@
 */
 package com.githukudenis.comlib.feature.edit
 
+import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -30,6 +32,7 @@ import kotlinx.coroutines.launch
 data class EditProfileUiState(
     val isLoading: Boolean = false,
     val userId: String? = null,
+    val authId: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
     val username: String? = null,
@@ -44,7 +47,8 @@ class EditProfileViewModel
 constructor(
     private val updateUserUseCase: UpdateUserUseCase,
     private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase
+    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val userRepository: UserRepository
 ) : StatefulViewModel<EditProfileUiState>(EditProfileUiState()) {
 
     init {
@@ -64,7 +68,8 @@ constructor(
                             firstname = user.firstname,
                             username = user.username,
                             lastname = user.lastname,
-                            profileUrl = user.image
+                            profileUrl = user.image,
+                            authId = user.authId
                         )
                     }
                         ?: EditProfileUiState(
@@ -95,5 +100,9 @@ constructor(
 
     fun onChangeUsername(value: String) {
         update { copy(username = value) }
+    }
+
+    fun onChangePhoto(value: Uri) {
+        viewModelScope.launch { state.value.userId?.let { userRepository.uploadUserImage(value, it) } }
     }
 }

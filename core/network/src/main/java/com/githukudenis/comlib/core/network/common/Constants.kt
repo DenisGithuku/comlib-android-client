@@ -23,7 +23,7 @@ object Constants {
 sealed class ImageStorageRef(val ref: String) {
     data class Books(private val path: String) : ImageStorageRef(ref = "images/books/$path")
 
-    data class Users(private val path: String) : ImageStorageRef(ref = "images/books/$path")
+    data class Users(private val path: String) : ImageStorageRef(ref = "images/users/$path")
 }
 
 sealed class Endpoints(private val path: String) {
@@ -46,4 +46,13 @@ sealed class Endpoints(private val path: String) {
     data object Genres : Endpoints("api/v1/genres")
 
     data class Genre(private val id: String) : Endpoints("api/v1/genres/$id")
+}
+
+object FirebaseExt {
+    fun getFilePathFromUrl(fileUrl: String): String {
+        // Parse the storage bucket URL from the download URL
+        val startIndex = fileUrl.indexOf("/o/") + 3
+        val endIndex = fileUrl.indexOf("?alt")
+        return fileUrl.substring(startIndex, endIndex).replace("%2F", "/")
+    }
 }

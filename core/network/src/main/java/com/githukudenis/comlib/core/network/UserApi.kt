@@ -17,7 +17,9 @@
 package com.githukudenis.comlib.core.network
 
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
+import com.githukudenis.comlib.core.model.user.AddUserResponse
 import com.githukudenis.comlib.core.model.user.SingleUserResponse
+import com.githukudenis.comlib.core.model.user.UpdateUserResponse
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.common.Endpoints
 import io.ktor.client.HttpClient
@@ -39,8 +41,8 @@ constructor(
 
     suspend fun addUser(user: User): String {
         return withContext(dispatchers.io) {
-            val response = httpClient.post<User>(Endpoints.Users.url) { body = user }
-            response.id ?: ""
+            val response = httpClient.post<AddUserResponse>(Endpoints.Users.url) { body = user }
+            response.id
         }
     }
 
@@ -54,7 +56,7 @@ constructor(
 
     suspend fun updateUser(id: String, user: User) {
         withContext(dispatchers.io) {
-            httpClient.patch<User>(urlString = Endpoints.User(id ?: return@withContext).url) {
+            httpClient.patch<UpdateUserResponse>(urlString = Endpoints.User(id).url) {
                 contentType(ContentType.Application.Json)
                 body = user
             }

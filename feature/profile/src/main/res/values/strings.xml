@@ -7,7 +7,7 @@
     <string name="display">Display</string>
     <string name="clear_cache">Clear cache</string>
     <string name="logout">Logout</string>
-    <string name="my_books">My books</string>
+    <string name="my_books">Your books</string>
     <string name="clear_cache_dialog_title">Clear app cache</string>
     <string name="clear_cache_dialog_text">Clearing the app cache will free up storage and may improve performance. Proceed with clearing cache?</string>
     <string name="profile_title">Profile</string>
@@ -24,4 +24,5 @@
     <string name="camera_label">Camera</string>
     <string name="gallery_label">Gallery</string>
     <string name="username_label">Username</string>
+    <string name="no_media_selected">No media selected!</string>
 </resources>
