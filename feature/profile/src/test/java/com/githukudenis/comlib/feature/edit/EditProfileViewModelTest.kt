@@ -50,7 +50,13 @@ class EditProfileViewModelTest {
         getUserProfileUseCase = GetUserProfileUseCase(userRepository)
         updateUserUseCase = UpdateUserUseCase(userRepository)
         getUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
-        viewModel = EditProfileViewModel(updateUserUseCase, getUserProfileUseCase, getUserPrefsUseCase)
+        viewModel =
+            EditProfileViewModel(
+                updateUserUseCase,
+                getUserProfileUseCase,
+                getUserPrefsUseCase,
+                userRepository
+            )
     }
 
     @Test
