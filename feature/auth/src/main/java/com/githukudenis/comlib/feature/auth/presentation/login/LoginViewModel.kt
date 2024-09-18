@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib.feature.auth.presentation.login
 
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
@@ -26,6 +27,11 @@ import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.feature.auth.presentation.SignInResult
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.CapitalLetter
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.Length
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.Number
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.SpecialCharacter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -85,14 +91,32 @@ constructor(
 
     private fun changeEmail(value: String) {
         _state.update { prevState ->
-            val formState = prevState.formState.copy(email = value)
+            val formState =
+                prevState.formState.copy(
+                    email = value,
+                    isEmailValid = Patterns.EMAIL_ADDRESS.matcher(value).matches()
+                )
             prevState.copy(formState = formState)
         }
     }
 
-    private fun changePassword(value: String) {
+    private fun changePassword(password: String) {
         _state.update { prevState ->
-            val formState = prevState.formState.copy(password = value)
+            val specialSymbolsRegex = "[!@#\$%^&*()_+\\-=\\[\\]{}|;:'\",.<>?]\n"
+            val requirements = mutableListOf<PasswordRequirements>()
+            if (password.length > 7) {
+                requirements.add(Length)
+            }
+            if (password.any { it.isDigit() }) {
+                requirements.add(Number)
+            }
+            if (password.any { it.isUpperCase() }) {
+                requirements.add(CapitalLetter)
+            }
+            if (password.any { it in specialSymbolsRegex }) {
+                requirements.add(SpecialCharacter)
+            }
+            val formState = prevState.formState.copy(password = password, requirements = requirements)
             prevState.copy(formState = formState)
         }
     }

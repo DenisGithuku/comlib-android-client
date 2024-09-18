@@ -17,6 +17,7 @@
 package com.githukudenis.comlib.feature.auth.presentation.signup
 
 import com.githukudenis.comlib.core.common.UserMessage
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 
 data class SignUpUiState(
     val isLoading: Boolean = false,
@@ -33,13 +34,16 @@ data class SignUpFormState(
     val passwordIsVisible: Boolean = true,
     val confirmPassword: String = "",
     val confirmPasswordIsVisible: Boolean = true,
-    val acceptedTerms: Boolean = false
+    val acceptedTerms: Boolean = false,
+    val isEmailValid: Boolean = false,
+    val requirements: List<PasswordRequirements> = emptyList()
 ) {
     val formIsValid: Boolean
         get() =
-            firstname.isNotEmpty() &&
-                lastname.isNotEmpty() &&
-                email.isNotEmpty() &&
-                password.isNotEmpty() &&
-                confirmPassword.isNotEmpty()
+            firstname.trim().isNotEmpty() &&
+                lastname.trim().isNotEmpty() &&
+                email.trim().isNotEmpty() &&
+                password.trim().isNotEmpty() &&
+                password == confirmPassword &&
+                acceptedTerms
 }

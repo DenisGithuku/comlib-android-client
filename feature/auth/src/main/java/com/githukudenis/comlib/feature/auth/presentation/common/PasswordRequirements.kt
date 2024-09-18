@@ -14,16 +14,14 @@
 * See the License for the specific language governing permissions and
 * limitations under the License.
 */
-package com.githukudenis.comlib.core.designsystem.ui.theme
+package com.githukudenis.comlib.feature.auth.presentation.common
 
-import androidx.compose.ui.graphics.Color
+import androidx.annotation.StringRes
+import com.githukudenis.comlib.feature.auth.R
 
-val PastelGreen = Color(0xFF53CA81)
-val ForestGreen = Color(0xFF0F6136)
-val LimeGreen = Color(0xFF99D420)
-val MossGreen = Color(0xFF6D9D17)
-val SpringGreen = Color(0xFF99D420)
-val SnowDrift = Color(0xFFF5F5F5)
-val IvoryWhisper = Color(0xFFFAF9F6)
-val CharcoalGray = Color(0xFF333333)
-val Critical = Color(0xFFFC4236)
+enum class PasswordRequirements(@StringRes val label: Int) {
+    CapitalLetter(R.string.password_requirement_capital),
+    Number(R.string.password_requirement_digit),
+    SpecialCharacter(R.string.password_requirement_special),
+    Length(R.string.password_requirement_length)
+}

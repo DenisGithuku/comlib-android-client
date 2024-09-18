@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.text.input.VisualTransformation
+import com.githukudenis.comlib.core.designsystem.ui.theme.Critical
 
 @Composable
 fun CLibOutlinedTextField(
@@ -36,13 +37,19 @@ fun CLibOutlinedTextField(
     label: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    isError: Boolean = false,
     shape: Shape = MaterialTheme.shapes.small,
     leadingIcon: (@Composable () -> Unit)? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
+    supportingText: (@Composable () -> Unit)? = null,
     colors: TextFieldColors =
         OutlinedTextFieldDefaults.colors(
             unfocusedBorderColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
-            focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f)
+            focusedBorderColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
+            errorBorderColor = Critical,
+            errorCursorColor = Critical,
+            errorLabelColor = Critical,
+            errorTrailingIconColor = Critical
         ),
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {
@@ -56,11 +63,13 @@ fun CLibOutlinedTextField(
                 Text(text = label, style = MaterialTheme.typography.labelMedium)
             }
         },
+        supportingText = supportingText,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
         visualTransformation = visualTransformation,
+        isError = isError,
         modifier = modifier
     )
 }

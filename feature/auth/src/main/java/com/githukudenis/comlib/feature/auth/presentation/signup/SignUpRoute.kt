@@ -54,11 +54,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -75,10 +78,12 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextB
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibMinimalDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
+import com.githukudenis.comlib.core.designsystem.ui.theme.Critical
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
 import com.githukudenis.comlib.feature.auth.presentation.common.AuthProviderButton
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -179,6 +184,10 @@ private fun SignUpScreen(
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
 
+    var isEmailFocused by remember { mutableStateOf(false) }
+    var isPasswordFocused by remember { mutableStateOf(false) }
+    var isConfirmFocused by remember { mutableStateOf(false) }
+
     LaunchedEffect(snackbarHostState, state.userMessages) {
         if (state.userMessages.isNotEmpty()) {
             val userMessage = state.userMessages.first()
@@ -259,7 +268,17 @@ private fun SignUpScreen(
                     onValueChange = onChangeEmail,
                     label = stringResource(id = R.string.email_hint),
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().onFocusChanged { isEmailFocused = it.isFocused },
+                    supportingText = {
+                        if (isEmailFocused && !state.formState.isEmailValid) {
+                            Text(
+                                text = stringResource(id = R.string.invalid_email),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Critical
+                            )
+                        }
+                    },
+                    isError = !state.formState.isEmailValid && isEmailFocused
                 )
             }
             item {
@@ -286,7 +305,19 @@ private fun SignUpScreen(
                         if (state.formState.passwordIsVisible) {
                             PasswordVisualTransformation()
                         } else VisualTransformation.None,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().onFocusChanged { isPasswordFocused = it.isFocused },
+                    supportingText = {
+                        if (isPasswordFocused && state.formState.requirements.size < 4) {
+                            val missingRequirement =
+                                PasswordRequirements.entries.first { it !in state.formState.requirements }
+                            Text(
+                                text = stringResource(id = missingRequirement.label),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Critical
+                            )
+                        }
+                    },
+                    isError = state.formState.requirements.size < 4 && isPasswordFocused
                 )
             }
             item {
@@ -315,7 +346,17 @@ private fun SignUpScreen(
                         if (state.formState.confirmPasswordIsVisible) {
                             PasswordVisualTransformation()
                         } else VisualTransformation.None,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().onFocusChanged { isConfirmFocused = it.isFocused },
+                    supportingText = {
+                        if (isConfirmFocused && state.formState.password != state.formState.confirmPassword) {
+                            Text(
+                                text = stringResource(id = R.string.password_mismatch),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = Critical
+                            )
+                        }
+                    },
+                    isError = state.formState.password != state.formState.confirmPassword && isConfirmFocused
                 )
             }
             item {
