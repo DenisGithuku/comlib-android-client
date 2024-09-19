@@ -18,15 +18,10 @@ package com.githukudenis.comlib.feature.auth.presentation.login
 
 import android.app.Activity.RESULT_OK
 import android.content.Context
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -40,7 +35,6 @@ import androidx.compose.foundation.layout.imeNestedScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawingPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
@@ -69,9 +63,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
@@ -81,7 +73,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.core.designsystem.ui.theme.Critical
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
@@ -90,6 +82,7 @@ import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
 import com.githukudenis.comlib.feature.auth.presentation.common.AuthProviderButton
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.google.android.gms.auth.api.identity.Identity
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 @Composable
@@ -111,9 +104,12 @@ fun LoginRoute(
 
     LaunchedEffect(key1 = state.loginSuccess) {
         if (state.loginSuccess) {
+            Toast.makeText(context, context.getString(R.string.login_success_txt), Toast.LENGTH_SHORT).show()
+            delay(2_000)
             loginOnComplete()
         }
     }
+
 
     val signInLauncher =
         rememberLauncherForActivityResult(
@@ -191,6 +187,11 @@ private fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
+            if (state.isLoading) {
+                CLibLoadingDialog(label = context.getString(R.string.logging_in_txt))
+            }
+
             LaunchedEffect(snackbarHostState, state.userMessages) {
                 if (state.userMessages.isNotEmpty()) {
                     val userMessage = state.userMessages.first()
@@ -201,22 +202,6 @@ private fun LoginScreen(
                     onDismissUserMessage(userMessage.id)
                 }
             }
-            AnimatedVisibility(
-                visible = state.isLoading,
-                enter = fadeIn() + slideInVertically(),
-                exit = fadeOut() + slideOutVertically()
-            ) {
-                CLibLoadingSpinner()
-            }
-            Image(
-                painter = painterResource(R.drawable.comliblogo),
-                modifier = Modifier.size(80.dp),
-                contentDescription = null
-            )
-            Text(
-                text = stringResource(id = R.string.login_header_title),
-                style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
-            )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(id = R.string.login_header_description),

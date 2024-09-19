@@ -81,8 +81,8 @@ fun ProfileRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    val onSignedOut by rememberUpdatedState(newValue = onSignOut)
     val context = LocalContext.current
+    val onSignedOut by rememberUpdatedState(newValue = onSignOut)
     LaunchedEffect(key1 = state.isSignedOut) {
         if (state.isSignedOut) {
             Toast.makeText(context, "You have been signed out", Toast.LENGTH_SHORT).show()

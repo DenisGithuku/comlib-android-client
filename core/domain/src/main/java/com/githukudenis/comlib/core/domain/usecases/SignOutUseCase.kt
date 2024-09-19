@@ -17,15 +17,17 @@
 package com.githukudenis.comlib.core.domain.usecases
 
 import com.githukudenis.comlib.data.repository.AuthRepository
-import javax.inject.Inject
 import timber.log.Timber
+import javax.inject.Inject
 
 class SignOutUseCase @Inject constructor(private val authRepository: AuthRepository) {
-    suspend operator fun invoke() {
-        try {
+    suspend operator fun invoke(): Boolean {
+        return try {
             authRepository.signOut()
+            true
         } catch (e: Exception) {
             Timber.e(e)
+            false
         }
     }
 }

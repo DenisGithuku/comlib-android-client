@@ -25,9 +25,9 @@ import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.ThemeConfigConverter
 import com.githukudenis.comlib.core.model.UserPrefs
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataStore<Preferences>) {
     val userPrefs: Flow<UserPrefs> =
@@ -80,7 +80,6 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
     suspend fun clearSession() {
         prefsDataStore.edit { prefs ->
             prefs.remove(PreferenceKeys.authIdPreferenceKey)
-            prefs.remove(PreferenceKeys.userIdPreferenceKey)
             prefs.remove(PreferenceKeys.themeConfigPreferenceKey)
         }
     }

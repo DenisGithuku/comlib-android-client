@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.githukudenis.comlib.core.designsystem.R
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 
 @Composable
@@ -52,7 +54,7 @@ fun CLibLoadingDialog(
         Box(
             modifier =
             modifier
-                .size(150.dp)
+                .size(200.dp)
                 .clip(MaterialTheme.shapes.large)
                 .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
@@ -60,11 +62,12 @@ fun CLibLoadingDialog(
             Column(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CLibLoadingSpinner()
+                CLibCircularProgressBar()
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = label ?: stringResource(id = R.string.default_loading_indicator),

@@ -43,13 +43,15 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             onLoginComplete = {
                 appState.navigate(
                     ComlibDestination.HomeGraph.route,
-                    popUpTo = ComlibDestination.AuthGraph.route
+                    popUpTo = ComlibDestination.AuthGraph.route,
+                    inclusive = true
                 )
             },
             onSignUpInstead = {
                 appState.navigate(
                     route = AuthDestination.SignUp.route,
-                    popUpTo = AuthDestination.SignUp.route
+                    popUpTo = AuthDestination.SignUp.route,
+                    inclusive = true
                 )
             },
             onResetComplete = { appState.navigate(route = AuthDestination.Login.route) },
@@ -69,7 +71,8 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             OnBoardingScreen {
                 appState.navigate(
                     ComlibDestination.AuthGraph.route,
-                    popUpTo = ComlibDestination.GetStarted.route
+                    popUpTo = ComlibDestination.GetStarted.route,
+                    inclusive = true
                 )
             }
         }
@@ -100,14 +103,22 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
                 onOpenMyBooks = {
                     appState.navigate(
                         route = ComlibDestination.MyBooks.route,
-                        popUpTo = ComlibDestination.MyBooks.route
+                        popUpTo = ComlibDestination.MyBooks.route,
+                        inclusive = true
                     )
                 },
-                onSignOut = { appState.navigate(route = ComlibDestination.AuthGraph.route) },
+                onSignOut = {
+                    appState.navigate(
+                        route = ComlibDestination.AuthGraph.route,
+                        popUpTo = ComlibDestination.AuthGraph.route,
+                        inclusive = true
+                    )
+                            },
                 onEditProfile = {
                     appState.navigate(
                         route = ComlibDestination.EditProfile.route,
-                        popUpTo = ComlibDestination.EditProfile.route
+                        popUpTo = ComlibDestination.EditProfile.route,
+                        inclusive = true
                     )
                 }
             )
@@ -125,13 +136,15 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
                 onNavigateToBookDetails = { bookId ->
                     appState.navigate(
                         route = "${ComlibDestination.BookDetail.route}/$bookId",
-                        popUpTo = ComlibDestination.MyBooks.route
+                        popUpTo = ComlibDestination.MyBooks.route,
+                        inclusive = true
                     )
                 },
                 onNavigateToAddBook = {
                     appState.navigate(
                         route = ComlibDestination.AddBook.route,
-                        popUpTo = ComlibDestination.AddBook.route
+                        popUpTo = ComlibDestination.AddBook.route,
+                        inclusive = true
                     )
                 },
                 onNavigateUp = { appState.popBackStack() }
@@ -160,7 +173,8 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
                 onSkip = {
                     appState.navigate(
                         route = ComlibDestination.HomeGraph.route,
-                        popUpTo = ComlibDestination.GenreSetup.route
+                        popUpTo = ComlibDestination.GenreSetup.route,
+                        inclusive = true
                     )
                 }
             )

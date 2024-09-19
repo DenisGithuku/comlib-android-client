@@ -106,11 +106,15 @@ class MainActivity : ComponentActivity() {
                         ComlibNavGraph(
                             appState = appState,
                             startDestination =
-                                if (state.isLoggedIn && state.isSetup) {
+                            when {
+                                state.isLoggedIn && state.isSetup -> {
                                     ComlibDestination.HomeGraph.route
-                                } else if (!state.isLoggedIn) {
+                                }
+                                !state.isLoggedIn -> {
                                     ComlibDestination.GetStarted.route
-                                } else ComlibDestination.GenreSetup.route
+                                }
+                                else -> ComlibDestination.GenreSetup.route
+                            }
                         )
                     }
                 }
