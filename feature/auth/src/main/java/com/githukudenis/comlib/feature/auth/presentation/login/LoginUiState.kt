@@ -17,6 +17,7 @@
 package com.githukudenis.comlib.feature.auth.presentation.login
 
 import com.githukudenis.comlib.core.common.UserMessage
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 
 data class LoginUiState(
     val isLoading: Boolean = false,
@@ -29,7 +30,9 @@ data class FormState(
     val email: String = "",
     val password: String = "",
     val passwordIsVisible: Boolean = true,
-    val rememberMe: Boolean = false
+    val isEmailValid: Boolean = false,
+    val rememberMe: Boolean = false,
+    val requirements: List<PasswordRequirements> = emptyList()
 ) {
     val formIsValid: Boolean
         get() = email.isNotEmpty() && password.isNotEmpty()

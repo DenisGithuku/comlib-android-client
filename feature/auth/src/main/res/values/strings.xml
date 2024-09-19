@@ -28,4 +28,11 @@
     <string name="terms_label">Accept terms and conditions.</string>
     <string name="has_account">Already have an account?</string>
     <string name="remember_me">Remember me</string>
+    <string name="password_requirement_capital">At least 1 capital letter</string>
+    <string name="password_requirement_digit">At least 1 digit</string>
+    <string name="password_requirement_special">At least 1 special character</string>
+    <string name="password_requirement_length">At least 8 characters</string>
+    <string name="email_not_valid">Email is not valid</string>
+    <string name="invalid_email">Invalid email.</string>
+    <string name="password_mismatch">Passwords do not match!</string>
 </resources>

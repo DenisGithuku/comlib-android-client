@@ -16,12 +16,14 @@
 */
 package com.githukudenis.comlib.feature.auth.presentation.signup
 
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -63,7 +65,11 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             }
             is SignUpUiEvent.ChangeEmail -> {
                 _state.update { prevState ->
-                    val formState = prevState.formState.copy(email = event.email)
+                    val formState =
+                        prevState.formState.copy(
+                            email = event.email,
+                            isEmailValid = PatternsCompat.EMAIL_ADDRESS.matcher(event.email).matches()
+                        )
                     prevState.copy(formState = formState)
                 }
             }
@@ -81,7 +87,22 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             }
             is SignUpUiEvent.ChangePassword -> {
                 _state.update { prevState ->
-                    val formState = prevState.formState.copy(password = event.password)
+                    val specialSymbolsRegex = "[!@#\$%^&*()_+\\-=\\[\\]{}|;:'\",.<>?]\n"
+                    val requirements = mutableListOf<PasswordRequirements>()
+                    if (event.password.length > 7) {
+                        requirements.add(PasswordRequirements.Length)
+                    }
+                    if (event.password.any { it.isDigit() }) {
+                        requirements.add(PasswordRequirements.Number)
+                    }
+                    if (event.password.any { it.isUpperCase() }) {
+                        requirements.add(PasswordRequirements.CapitalLetter)
+                    }
+                    if (event.password.any { it in specialSymbolsRegex }) {
+                        requirements.add(PasswordRequirements.SpecialCharacter)
+                    }
+                    val formState =
+                        prevState.formState.copy(password = event.password, requirements = requirements)
                     prevState.copy(formState = formState)
                 }
             }
@@ -123,10 +144,10 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
             val signUpResult =
                 signUpUseCase.invoke(
                     UserAuthData(
-                        firstname = firstname,
-                        lastname = lastname,
+                        firstname = firstname.trim(),
+                        lastname = lastname.trim(),
                         email = email,
-                        password = password
+                        password = password.trim()
                     )
                 )
             when (signUpResult) {

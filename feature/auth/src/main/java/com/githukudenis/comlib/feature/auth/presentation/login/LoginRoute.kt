@@ -60,11 +60,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -80,10 +83,12 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButto
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
+import com.githukudenis.comlib.core.designsystem.ui.theme.Critical
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
 import com.githukudenis.comlib.feature.auth.presentation.common.AuthProviderButton
+import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.launch
 
@@ -130,7 +135,7 @@ fun LoginRoute(
         onEmailChange = { email -> viewModel.onEvent(LoginUiEvent.ChangeEmail(email)) },
         onPasswordChange = { password -> viewModel.onEvent(LoginUiEvent.ChangePassword(password)) },
         onForgotPassword = onForgotPassword,
-        onSignInInstead = onSignUpInstead,
+        onSignUpInstead = onSignUpInstead,
         onGoogleSignIn = {
             scope.launch {
                 val intentSender = googleAuthUiClient.signIn()
@@ -156,7 +161,7 @@ private fun LoginScreen(
     onEmailChange: (String) -> Unit,
     onPasswordChange: (String) -> Unit,
     onForgotPassword: () -> Unit,
-    onSignInInstead: () -> Unit,
+    onSignUpInstead: () -> Unit,
     onGoogleSignIn: () -> Unit,
     onTogglePasswordVisibility: (Boolean) -> Unit,
     onDismissUserMessage: (Int) -> Unit,
@@ -164,6 +169,8 @@ private fun LoginScreen(
     onToggleRememberMe: ((Boolean) -> Unit)?
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
+    var isEmailFocused by remember { mutableStateOf(false) }
+    var isPasswordFocused by remember { mutableStateOf(false) }
 
     Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) { paddingValues ->
         Column(
@@ -221,7 +228,17 @@ private fun LoginScreen(
                 value = state.formState.email,
                 onValueChange = onEmailChange,
                 label = stringResource(id = R.string.email_hint),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().onFocusChanged { isEmailFocused = it.isFocused },
+                supportingText = {
+                    if (isEmailFocused && !state.formState.isEmailValid) {
+                        Text(
+                            text = stringResource(id = R.string.invalid_email),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Critical
+                        )
+                    }
+                },
+                isError = !state.formState.isEmailValid && isEmailFocused
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -245,7 +262,22 @@ private fun LoginScreen(
                     if (state.formState.passwordIsVisible) {
                         PasswordVisualTransformation()
                     } else VisualTransformation.None,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().onFocusChanged { isPasswordFocused = it.isFocused },
+                supportingText = {
+                    if (
+                        isPasswordFocused &&
+                            !state.formState.requirements.containsAll(PasswordRequirements.entries.toList())
+                    ) {
+                        val missingRequirement =
+                            PasswordRequirements.entries.first { it !in state.formState.requirements }
+                        Text(
+                            text = stringResource(id = missingRequirement.label),
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Critical
+                        )
+                    }
+                },
+                isError = state.formState.requirements.size < 4 && isPasswordFocused
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -298,7 +330,7 @@ private fun LoginScreen(
                     style = MaterialTheme.typography.labelMedium
                 )
                 Spacer(modifier = Modifier.width(LocalDimens.current.medium))
-                CLibTextButton(onClick = onSignInInstead) {
+                CLibTextButton(onClick = onSignUpInstead) {
                     Text(
                         text = stringResource(id = R.string.sign_up_txt),
                         style = MaterialTheme.typography.labelMedium
@@ -318,7 +350,7 @@ fun LoginScreenPreview() {
         onEmailChange = {},
         onPasswordChange = {},
         onForgotPassword = { /*TODO*/},
-        onSignInInstead = { /*TODO*/},
+        onSignUpInstead = { /*TODO*/},
         onGoogleSignIn = { /*TODO*/},
         onTogglePasswordVisibility = {},
         onDismissUserMessage = {},
