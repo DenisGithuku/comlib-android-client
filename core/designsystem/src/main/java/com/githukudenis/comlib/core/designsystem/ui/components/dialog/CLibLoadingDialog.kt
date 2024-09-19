@@ -37,32 +37,34 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.githukudenis.comlib.core.designsystem.R
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 
 @Composable
 fun CLibLoadingDialog(
     modifier: Modifier = Modifier,
     label: String? = null,
-    onDismissRequest: () -> Unit
+    onDismissRequest: (() -> Unit)? = null
 ) {
     Dialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { if (onDismissRequest != null) onDismissRequest() },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
         Box(
             modifier =
-                modifier
-                    .size(200.dp)
-                    .clip(MaterialTheme.shapes.large)
-                    .background(MaterialTheme.colorScheme.surface),
+            modifier
+                .size(150.dp)
+                .clip(MaterialTheme.shapes.large)
+                .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .fillMaxWidth(),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                CLibCircularProgressBar()
+                CLibLoadingSpinner()
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
                     text = label ?: stringResource(id = R.string.default_loading_indicator),
