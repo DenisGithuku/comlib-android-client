@@ -16,7 +16,7 @@
 */
 package com.githukudenis.comlib.feature.auth.presentation.login
 
-import android.util.Patterns
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
@@ -94,7 +94,7 @@ constructor(
             val formState =
                 prevState.formState.copy(
                     email = value,
-                    isEmailValid = Patterns.EMAIL_ADDRESS.matcher(value).matches()
+                    isEmailValid = PatternsCompat.EMAIL_ADDRESS.matcher(value).matches()
                 )
             prevState.copy(formState = formState)
         }

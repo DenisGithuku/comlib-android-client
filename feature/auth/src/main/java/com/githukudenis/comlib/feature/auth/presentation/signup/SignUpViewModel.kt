@@ -16,7 +16,7 @@
 */
 package com.githukudenis.comlib.feature.auth.presentation.signup
 
-import android.util.Patterns
+import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
@@ -68,7 +68,7 @@ class SignUpViewModel @Inject constructor(private val signUpUseCase: SignUpUseCa
                     val formState =
                         prevState.formState.copy(
                             email = event.email,
-                            isEmailValid = Patterns.EMAIL_ADDRESS.matcher(event.email).matches()
+                            isEmailValid = PatternsCompat.EMAIL_ADDRESS.matcher(event.email).matches()
                         )
                     prevState.copy(formState = formState)
                 }
