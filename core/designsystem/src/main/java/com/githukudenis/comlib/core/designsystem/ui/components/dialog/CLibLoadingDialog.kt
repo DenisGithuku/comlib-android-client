@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -43,10 +44,10 @@ import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicator
 fun CLibLoadingDialog(
     modifier: Modifier = Modifier,
     label: String? = null,
-    onDismissRequest: () -> Unit
+    onDismissRequest: (() -> Unit)? = null
 ) {
     Dialog(
-        onDismissRequest = onDismissRequest,
+        onDismissRequest = { if (onDismissRequest != null) onDismissRequest() },
         properties = DialogProperties(dismissOnBackPress = false, dismissOnClickOutside = false)
     ) {
         Box(
@@ -58,7 +59,7 @@ fun CLibLoadingDialog(
             contentAlignment = Alignment.Center
         ) {
             Column(
-                modifier = Modifier.fillMaxHeight().fillMaxWidth(),
+                modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

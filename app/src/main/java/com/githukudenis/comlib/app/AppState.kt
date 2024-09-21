@@ -42,10 +42,12 @@ data class AppState(
     val currentDestination: NavDestination?
         @Composable get() = navController.currentBackStackEntryAsState().value?.destination
 
-    fun navigate(route: String, popUpTo: String? = null) {
+    fun navigate(route: String, popUpTo: String? = null, inclusive: Boolean = false) {
         navController.navigate(route) {
-            popUpTo(route = popUpTo ?: navController.graph.startDestinationRoute ?: return@navigate) {
-                inclusive = true
+            if (popUpTo != null) {
+                this.popUpTo(popUpTo) { this.inclusive = inclusive }
+            } else {
+                navController.popBackStack()
             }
         }
     }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="login_header_title">Login</string>
-    <string name="login_header_description">Welcome back</string>
+    <string name="login_header_description">Welcome Back, Book Lover!</string>
     <string name="login_button_txt">Login</string>
     <string name="email_hint">Email address</string>
     <string name="password_hint">Password</string>
@@ -16,7 +16,7 @@
     <string name="lastname_hint">Lastname</string>
     <string name="confirm_password_hint">Confirm password</string>
     <string name="age_hint">Age</string>
-    <string name="signup_header_title">Registration</string>
+    <string name="signup_header_title">Unlock the Bookish Fun</string>
     <string name="signup_header_description">Create account</string>
     <string name="signup_button_txt">Signup</string>
     <string name="reset_header_title">Reset password</string>
@@ -35,4 +35,8 @@
     <string name="email_not_valid">Email is not valid</string>
     <string name="invalid_email">Invalid email.</string>
     <string name="password_mismatch">Passwords do not match!</string>
+    <string name="login_success_txt">Logged in successfully!</string>
+    <string name="logging_in_txt">Logging you in…</string>
+    <string name="sign_up_success_txt">Yay! You\'re a reader now!</string>
+    <string name="signing_up_txt">Adding you to readers. Please wait...</string>
 </resources>

@@ -62,9 +62,8 @@ constructor(
     fun onSignOut() {
         viewModelScope.launch {
             uiState.update { ProfileUiState(isLoading = true) }
-            signOutUseCase().also {
-                uiState.update { ProfileUiState(isLoading = false, isSignedOut = true) }
-            }
+            val result = signOutUseCase()
+            uiState.update { ProfileUiState(isLoading = false, isSignedOut = result) }
         }
     }
 

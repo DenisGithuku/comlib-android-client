@@ -46,9 +46,7 @@ fun ProfileListItem(
 ) {
     Row(
         modifier =
-            Modifier.fillMaxWidth()
-                .clickable(clickable) { onClick.invoke() }
-                .padding(vertical = 12.dp, horizontal = 16.dp),
+            Modifier.fillMaxWidth().clickable(clickable) { onClick.invoke() }.padding(horizontal = 16.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

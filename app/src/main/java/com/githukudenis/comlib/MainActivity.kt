@@ -86,7 +86,8 @@ class MainActivity : ComponentActivity() {
                                             },
                                             colors =
                                                 NavigationBarItemDefaults.colors(
-                                                    indicatorColor = MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
+                                                    //                                                    indicatorColor =
+                                                    // MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
                                                 ),
                                             label = {
                                                 destination.label?.let {
@@ -106,11 +107,15 @@ class MainActivity : ComponentActivity() {
                         ComlibNavGraph(
                             appState = appState,
                             startDestination =
-                                if (state.isLoggedIn && state.isSetup) {
-                                    ComlibDestination.HomeGraph.route
-                                } else if (!state.isLoggedIn) {
-                                    ComlibDestination.GetStarted.route
-                                } else ComlibDestination.GenreSetup.route
+                                when {
+                                    state.isLoggedIn && state.isSetup -> {
+                                        ComlibDestination.HomeGraph.route
+                                    }
+                                    !state.isLoggedIn -> {
+                                        ComlibDestination.GetStarted.route
+                                    }
+                                    else -> ComlibDestination.GenreSetup.route
+                                }
                         )
                     }
                 }

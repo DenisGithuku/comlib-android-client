@@ -46,25 +46,29 @@ fun NavGraphBuilder.homeNavGraph(
                 onOpenBookDetails = { bookId ->
                     appState.navigate(
                         route = "${ComlibDestination.BookDetail.route}/$bookId",
-                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
+                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId",
+                        inclusive = true
                     )
                 },
                 onOpenAllBooks = {
                     appState.navigate(
                         route = HomeDestination.Books.route,
-                        popUpTo = HomeDestination.Books.route
+                        popUpTo = HomeDestination.Books.route,
+                        inclusive = true
                     )
                 },
                 onOpenProfile = {
                     appState.navigate(
                         route = ComlibDestination.Profile.route,
-                        popUpTo = ComlibDestination.Profile.route
+                        popUpTo = ComlibDestination.Profile.route,
+                        inclusive = true
                     )
                 },
                 onNavigateToStreakDetails = { bookId ->
                     appState.navigate(
                         route = "${ComlibDestination.Streak.route}/$bookId",
-                        popUpTo = "${ComlibDestination.Streak.route}/$bookId"
+                        popUpTo = "${ComlibDestination.Streak.route}/$bookId",
+                        inclusive = true
                     )
                 }
             )
@@ -79,7 +83,8 @@ fun NavGraphBuilder.homeNavGraph(
                 onOpenBook = { bookId ->
                     appState.navigate(
                         route = "${ComlibDestination.BookDetail.route}/$bookId",
-                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId"
+                        popUpTo = "${ComlibDestination.BookDetail.route}/$bookId",
+                        inclusive = true
                     )
                 }
             )

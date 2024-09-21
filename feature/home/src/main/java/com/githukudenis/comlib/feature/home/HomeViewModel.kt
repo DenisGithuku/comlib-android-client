@@ -137,9 +137,7 @@ constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.authId).also { getUserProfile(it) }
-            }
+            getUserPrefsUseCase().collectLatest { prefs -> prefs.authId?.let { getUserProfile(it) } }
         }
     }
 

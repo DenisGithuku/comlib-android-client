@@ -80,7 +80,6 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
     suspend fun clearSession() {
         prefsDataStore.edit { prefs ->
             prefs.remove(PreferenceKeys.authIdPreferenceKey)
-            prefs.remove(PreferenceKeys.userIdPreferenceKey)
             prefs.remove(PreferenceKeys.themeConfigPreferenceKey)
         }
     }
