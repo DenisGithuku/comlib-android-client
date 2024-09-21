@@ -51,8 +51,6 @@ sealed class Endpoints(private val path: String) {
 object FirebaseExt {
     fun getFilePathFromUrl(fileUrl: String): String {
         // Parse the storage bucket URL from the download URL
-        val startIndex = fileUrl.indexOf("/o/") + 3
-        val endIndex = fileUrl.indexOf("?alt")
-        return fileUrl.substring(startIndex, endIndex).replace("%2F", "/")
+        return fileUrl.substringAfterLast("/")
     }
 }
