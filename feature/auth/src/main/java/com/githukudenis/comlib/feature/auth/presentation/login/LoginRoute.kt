@@ -104,12 +104,12 @@ fun LoginRoute(
 
     LaunchedEffect(key1 = state.loginSuccess) {
         if (state.loginSuccess) {
-            Toast.makeText(context, context.getString(R.string.login_success_txt), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.login_success_txt), Toast.LENGTH_SHORT)
+                .show()
             delay(2_000)
             loginOnComplete()
         }
     }
-
 
     val signInLauncher =
         rememberLauncherForActivityResult(
@@ -187,7 +187,6 @@ private fun LoginScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-
             if (state.isLoading) {
                 CLibLoadingDialog(label = context.getString(R.string.logging_in_txt))
             }

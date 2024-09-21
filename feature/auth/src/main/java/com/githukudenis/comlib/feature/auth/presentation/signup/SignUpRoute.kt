@@ -94,7 +94,8 @@ fun SignUpRoute(
 
     LaunchedEffect(state.signUpSuccess) {
         if (state.signUpSuccess) {
-            Toast.makeText(context, context.getString(R.string.sign_up_success_txt), Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.sign_up_success_txt), Toast.LENGTH_SHORT)
+                .show()
             delay(2_000)
             signUpComplete()
         }

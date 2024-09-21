@@ -110,10 +110,10 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
                 onSignOut = {
                     appState.navigate(
                         route = ComlibDestination.AuthGraph.route,
-                        popUpTo = ComlibDestination.AuthGraph.route,
+                        popUpTo = ComlibDestination.HomeGraph.route,
                         inclusive = true
                     )
-                            },
+                },
                 onEditProfile = {
                     appState.navigate(
                         route = ComlibDestination.EditProfile.route,

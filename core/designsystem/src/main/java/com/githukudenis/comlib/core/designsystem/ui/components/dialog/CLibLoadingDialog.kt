@@ -39,7 +39,6 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.githukudenis.comlib.core.designsystem.R
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 
 @Composable
 fun CLibLoadingDialog(
@@ -53,17 +52,14 @@ fun CLibLoadingDialog(
     ) {
         Box(
             modifier =
-            modifier
-                .size(200.dp)
-                .clip(MaterialTheme.shapes.large)
-                .background(MaterialTheme.colorScheme.surface),
+                modifier
+                    .size(200.dp)
+                    .clip(MaterialTheme.shapes.large)
+                    .background(MaterialTheme.colorScheme.surface),
             contentAlignment = Alignment.Center
         ) {
             Column(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .fillMaxWidth()
-                    .padding(16.dp),
+                modifier = Modifier.fillMaxHeight().fillMaxWidth().padding(16.dp),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

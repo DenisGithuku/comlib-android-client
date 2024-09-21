@@ -30,12 +30,12 @@ import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.Instant
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import javax.inject.Inject
 
 data class HomeScreenState(
     val user: FetchItemState<User?> = FetchItemState.Loading,
@@ -138,7 +138,7 @@ constructor(
     private fun getUserDetails() {
         viewModelScope.launch {
             getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.authId).also { getUserProfile(it) }
+                prefs.authId?.let { getUserProfile(it) }
             }
         }
     }
