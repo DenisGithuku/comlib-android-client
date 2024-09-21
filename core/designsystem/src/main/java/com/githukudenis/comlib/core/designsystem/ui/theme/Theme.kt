@@ -61,10 +61,10 @@ private val LightColorScheme =
         onTertiary = Color.White,
         onBackground = CharcoalGray,
         onSurface = CharcoalGray,
-        primaryContainer = PastelGreen.copy(alpha = 0.2f),
+        primaryContainer = PastelGreen,
         tertiaryContainer = LimeGreen,
         surfaceVariant = SnowDrift,
-        secondaryContainer = SpringGreen.copy(alpha = 0.2f)
+        secondaryContainer = SpringGreen
     )
 
 @Composable
@@ -102,6 +102,6 @@ fun ComLibTheme(
     }
 
     CompositionLocalProvider(LocalDimens provides dimens) {
-        MaterialTheme(colorScheme = colorScheme, typography = Typography, content = content)
+        MaterialTheme(colorScheme = colorScheme, typography = CLibTypography, content = content)
     }
 }

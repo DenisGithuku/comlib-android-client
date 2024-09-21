@@ -75,6 +75,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.rememberAsyncImagePainter
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
@@ -114,6 +115,13 @@ fun AddBookRoute(
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                    }
+                },
+                actions = {
+                    CLibTextButton(
+                        onClick = { viewModel.onEvent(AddBookUiEvent.OnSave) }
+                    ) {
+                        Text(text = stringResource(R.string.save_book))
                     }
                 }
             )
@@ -170,10 +178,15 @@ fun AddBookRoute(
                             items(genreState.genres) { genre ->
                                 Row(
                                     modifier =
-                                        Modifier.fillMaxWidth()
+                                        Modifier
+                                            .fillMaxWidth()
                                             .clickable(
                                                 onClick = {
-                                                    viewModel.onEvent(AddBookUiEvent.OnGenreChange(genre))
+                                                    viewModel.onEvent(
+                                                        AddBookUiEvent.OnGenreChange(
+                                                            genre
+                                                        )
+                                                    )
                                                     //                                            bottomSheetExpanded = false
                                                 }
                                             )
@@ -199,7 +212,8 @@ fun AddBookRoute(
 
         LazyColumn(
             modifier =
-                Modifier.fillMaxSize()
+                Modifier
+                    .fillMaxSize()
                     .windowInsetsPadding(WindowInsets.ime)
                     .padding(paddingValues)
                     .padding(
@@ -211,7 +225,9 @@ fun AddBookRoute(
         ) {
             item {
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.medium),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(LocalDimens.current.medium),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     BookImage(
@@ -234,7 +250,8 @@ fun AddBookRoute(
             }
             item {
                 AddBookFormItem(
-                    title = "Author",
+                    title = "Author(s)",
+                    placeholder = stringResource(R.string.author_placeholder),
                     value = state.authors,
                     onValueChange = { viewModel.onEvent(AddBookUiEvent.OnAuthorChange(it)) }
                 )
@@ -292,14 +309,6 @@ fun AddBookRoute(
                     onValueChange = { viewModel.onEvent(AddBookUiEvent.OnDescriptionChange(it)) }
                 )
             }
-            item {
-                CLibButton(
-                    modifier = Modifier.fillMaxWidth(),
-                    onClick = { viewModel.onEvent(AddBookUiEvent.OnSave) }
-                ) {
-                    Text(text = "Save", style = MaterialTheme.typography.labelLarge)
-                }
-            }
         }
     }
 }
@@ -311,15 +320,21 @@ fun BookImage(imageUri: Uri? = null, onPickImage: () -> Unit) {
             Image(
                 painter = rememberAsyncImagePainter(model = imageUri),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier.size(100.dp).clip(CircleShape),
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(CircleShape),
                 contentDescription = "Book image"
             )
         } else {
-            Box(modifier = Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray))
+            Box(modifier = Modifier
+                .size(100.dp)
+                .clip(CircleShape)
+                .background(Color.LightGray))
         }
         Box(
             modifier =
-                Modifier.align(Alignment.BottomEnd)
+                Modifier
+                    .align(Alignment.BottomEnd)
                     .size(36.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.background)
@@ -347,6 +362,7 @@ fun AddBookFormItem(
     keyboardOptions: KeyboardOptions = KeyboardOptions(),
     title: String,
     value: String,
+    placeholder: String? = null,
     trailingIcon: (@Composable () -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
@@ -365,6 +381,11 @@ fun AddBookFormItem(
         minLines = minLines,
         trailingIcon = trailingIcon,
         onValueChange = onValueChange,
-        label = { Text(text = title, style = MaterialTheme.typography.labelSmall) }
+        label = { Text(text = title, style = MaterialTheme.typography.labelSmall) },
+        placeholder = {
+            if (placeholder != null) {
+                Text(text = placeholder, style = MaterialTheme.typography.labelSmall)
+            }
+        }
     )
 }
