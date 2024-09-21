@@ -25,14 +25,12 @@ import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @HiltViewModel
 class ProfileViewModel
@@ -63,11 +61,9 @@ constructor(
 
     fun onSignOut() {
         viewModelScope.launch {
-            withContext(Dispatchers.IO) {
-                uiState.update { ProfileUiState(isLoading = true) }
-                val result = signOutUseCase()
-                uiState.update { ProfileUiState(isLoading = false, isSignedOut = result) }
-            }
+            uiState.update { ProfileUiState(isLoading = true) }
+            val result = signOutUseCase()
+            uiState.update { ProfileUiState(isLoading = false, isSignedOut = result) }
         }
     }
 
