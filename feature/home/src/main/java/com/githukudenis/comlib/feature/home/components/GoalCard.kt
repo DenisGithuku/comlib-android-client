@@ -57,8 +57,7 @@ fun GoalCard(
     progress: Float? = null
 ) {
     Card(
-        modifier =
-            Modifier.padding(horizontal = 16.dp),
+        modifier = Modifier.padding(horizontal = 16.dp),
         onClick = { onOpenStreakDetails(bookId) },
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),

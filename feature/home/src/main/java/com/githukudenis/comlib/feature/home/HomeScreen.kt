@@ -104,9 +104,8 @@ fun HomeRouteContent(
 
     Scaffold { values ->
         LazyColumn(
-            modifier = Modifier.padding(values)
-                .padding(vertical = LocalDimens.current.extraLarge)
-                .fillMaxSize(),
+            modifier =
+                Modifier.padding(values).padding(vertical = LocalDimens.current.extraLarge).fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {

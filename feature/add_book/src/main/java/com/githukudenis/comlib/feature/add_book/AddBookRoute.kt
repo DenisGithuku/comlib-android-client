@@ -118,9 +118,7 @@ fun AddBookRoute(
                     }
                 },
                 actions = {
-                    CLibTextButton(
-                        onClick = { viewModel.onEvent(AddBookUiEvent.OnSave) }
-                    ) {
+                    CLibTextButton(onClick = { viewModel.onEvent(AddBookUiEvent.OnSave) }) {
                         Text(text = stringResource(R.string.save_book))
                     }
                 }
@@ -178,15 +176,10 @@ fun AddBookRoute(
                             items(genreState.genres) { genre ->
                                 Row(
                                     modifier =
-                                        Modifier
-                                            .fillMaxWidth()
+                                        Modifier.fillMaxWidth()
                                             .clickable(
                                                 onClick = {
-                                                    viewModel.onEvent(
-                                                        AddBookUiEvent.OnGenreChange(
-                                                            genre
-                                                        )
-                                                    )
+                                                    viewModel.onEvent(AddBookUiEvent.OnGenreChange(genre))
                                                     //                                            bottomSheetExpanded = false
                                                 }
                                             )
@@ -212,8 +205,7 @@ fun AddBookRoute(
 
         LazyColumn(
             modifier =
-                Modifier
-                    .fillMaxSize()
+                Modifier.fillMaxSize()
                     .windowInsetsPadding(WindowInsets.ime)
                     .padding(paddingValues)
                     .padding(
@@ -225,9 +217,7 @@ fun AddBookRoute(
         ) {
             item {
                 Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(LocalDimens.current.medium),
+                    modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.medium),
                     horizontalArrangement = Arrangement.Center
                 ) {
                     BookImage(
@@ -320,21 +310,15 @@ fun BookImage(imageUri: Uri? = null, onPickImage: () -> Unit) {
             Image(
                 painter = rememberAsyncImagePainter(model = imageUri),
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(100.dp)
-                    .clip(CircleShape),
+                modifier = Modifier.size(100.dp).clip(CircleShape),
                 contentDescription = "Book image"
             )
         } else {
-            Box(modifier = Modifier
-                .size(100.dp)
-                .clip(CircleShape)
-                .background(Color.LightGray))
+            Box(modifier = Modifier.size(100.dp).clip(CircleShape).background(Color.LightGray))
         }
         Box(
             modifier =
-                Modifier
-                    .align(Alignment.BottomEnd)
+                Modifier.align(Alignment.BottomEnd)
                     .size(36.dp)
                     .clip(CircleShape)
                     .background(MaterialTheme.colorScheme.background)
