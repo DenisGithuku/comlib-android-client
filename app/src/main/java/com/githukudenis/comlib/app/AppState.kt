@@ -45,9 +45,7 @@ data class AppState(
     fun navigate(route: String, popUpTo: String? = null, inclusive: Boolean = false) {
         navController.navigate(route) {
             if (popUpTo != null) {
-                this.popUpTo(popUpTo) {
-                    this.inclusive = inclusive
-                }
+                this.popUpTo(popUpTo) { this.inclusive = inclusive }
             } else {
                 navController.popBackStack()
             }
