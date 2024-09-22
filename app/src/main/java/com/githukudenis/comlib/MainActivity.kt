@@ -69,11 +69,11 @@ class MainActivity : ComponentActivity() {
                             if (
                                 appState.currentDestination?.route == HomeDestination.Home.route ||
                                     appState.currentDestination?.route == HomeDestination.Books.route ||
-                                    appState.currentDestination?.route == HomeDestination.Clubs.route
+                                    appState.currentDestination?.route == HomeDestination.Groups.route
                             ) {
                                 NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
                                     val homeGraphDestinations =
-                                        listOf(HomeDestination.Home, HomeDestination.Books, HomeDestination.Clubs)
+                                        listOf(HomeDestination.Home, HomeDestination.Books, HomeDestination.Groups)
                                     homeGraphDestinations.forEach { destination ->
                                         NavigationBarItem(
                                             onClick = { appState.navigate(destination.route) },

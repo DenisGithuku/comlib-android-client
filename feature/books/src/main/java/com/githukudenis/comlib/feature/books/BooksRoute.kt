@@ -34,11 +34,17 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -64,37 +70,58 @@ import com.githukudenis.comlib.feature.books.components.BookComponent
 import kotlinx.coroutines.launch
 
 @Composable
-fun BooksRoute(viewModel: BooksViewModel = hiltViewModel(), onOpenBook: (String) -> Unit) {
+fun BooksRoute(viewModel: BooksViewModel = hiltViewModel(), onOpenBook: (String) -> Unit, onNavigateUp: () -> Unit) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    BooksScreen(state = state, onChangeGenre = viewModel::onChangeGenre, onOpenBook = onOpenBook)
+    BooksScreen(state = state, onChangeGenre = viewModel::onChangeGenre, onOpenBook = onOpenBook, onNavigateUp = onNavigateUp)
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BooksScreen(
     state: BooksUiState,
     onChangeGenre: (String) -> Unit,
-    onOpenBook: (String) -> Unit
+    onOpenBook: (String) -> Unit,
+    onNavigateUp: () -> Unit
 ) {
-    when (state) {
-        is BooksUiState.Loading -> LoadingScreen()
-        is BooksUiState.Success -> {
-            LoadedScreen(
-                selectedGenres = state.selectedGenres,
-                genreListUiState = state.genreListUiState,
-                bookListUiState = state.bookListUiState,
-                onChangeGenre = onChangeGenre,
-                onOpenBook = onOpenBook
+    Scaffold(
+        topBar = {
+            CenterAlignedTopAppBar(
+                title = { Text(text = stringResource(R.string.all_books_title), style = MaterialTheme.typography.titleMedium) },
+                navigationIcon = {
+                    IconButton(onClick = onNavigateUp) {
+                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                    }
+                }
             )
+        },
+    ) { innerPadding ->
+        when (state) {
+            is BooksUiState.Loading -> LoadingScreen(innerPadding)
+            is BooksUiState.Success -> {
+                LoadedScreen(
+                    innerPadding = innerPadding,
+                    selectedGenres = state.selectedGenres,
+                    genreListUiState = state.genreListUiState,
+                    bookListUiState = state.bookListUiState,
+                    onChangeGenre = onChangeGenre,
+                    onOpenBook = onOpenBook
+                )
+            }
+
+            is BooksUiState.Error -> ErrorScreen()
         }
-        is BooksUiState.Error -> ErrorScreen()
     }
 }
 
 @Composable
-private fun LoadingScreen() {
+private fun LoadingScreen(
+    innerPadding: PaddingValues
+) {
     Column(
-        modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
+        modifier = Modifier.fillMaxSize()
+            .padding(innerPadding)
+            .padding(LocalDimens.current.extraLarge),
         verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
     ) {
         Row(
@@ -113,6 +140,7 @@ private fun LoadingScreen() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LoadedScreen(
+    innerPadding: PaddingValues,
     selectedGenres: List<GenreUiModel>,
     genreListUiState: GenreListUiState,
     bookListUiState: BookListUiState,
@@ -166,7 +194,9 @@ private fun LoadedScreen(
         }
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(vertical = LocalDimens.current.extraLarge)) {
+    LazyColumn(modifier = Modifier.fillMaxSize()
+        .padding(innerPadding)
+        .padding(horizontal = LocalDimens.current.extraLarge)) {
         item {
             when (genreListUiState) {
                 is GenreListUiState.Error -> {
@@ -182,11 +212,11 @@ private fun LoadedScreen(
                 }
                 is GenreListUiState.Success -> {
                     LazyRow(
-                        modifier = Modifier.padding(LocalDimens.current.small),
+//                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
-                        contentPadding = PaddingValues(LocalDimens.current.extraLarge)
+//                        contentPadding = PaddingValues(LocalDimens.current.extraLarge)
                     ) {
-                        val updatedGenres = genreListUiState.genres.take(4).toMutableList()
+                        val updatedGenres = genreListUiState.genres.take(3).toMutableList()
                         updatedGenres.add(
                             GenreUiModel(
                                 context.getString(R.string.default_more_genres_name),

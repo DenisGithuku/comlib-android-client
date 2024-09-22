@@ -24,9 +24,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.sizeIn
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
@@ -41,7 +42,7 @@ import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 @Composable
 fun LoadingBookCard() {
     Card(
-        modifier = Modifier.width(150.dp),
+        modifier = Modifier.width(190.dp),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
         border =
@@ -53,8 +54,20 @@ fun LoadingBookCard() {
         ) {
             Box(
                 modifier =
-                    Modifier.size(120.dp)
-                        .clip(CircleShape)
+                    Modifier.sizeIn(
+                        minHeight = 120.dp,
+                        minWidth = 190.dp,
+                        maxHeight = 120.dp,
+                        maxWidth = 190.dp
+                    )
+                        .clip(
+                            RoundedCornerShape(
+                                topStart = 6.dp,
+                                topEnd = 6.dp,
+                                bottomStart = 0.dp,
+                                bottomEnd = 0.dp
+                            )
+                        )
                         .background(brush = loadingBrush())
                         .align(Alignment.CenterHorizontally)
             )

@@ -29,9 +29,11 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.githukudenis.comlib.R
 import com.githukudenis.comlib.app.AppState
 import com.githukudenis.comlib.feature.books.BooksRoute
 import com.githukudenis.comlib.feature.home.HomeRoute
@@ -73,9 +75,9 @@ fun NavGraphBuilder.homeNavGraph(
                 }
             )
         }
-        composable(route = HomeDestination.Clubs.route) {
+        composable(route = HomeDestination.Groups.route) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = "Clubs")
+                Text(text = stringResource(R.string.groups_status))
             }
         }
         composable(route = HomeDestination.Books.route) {
@@ -86,6 +88,9 @@ fun NavGraphBuilder.homeNavGraph(
                         popUpTo = "${ComlibDestination.BookDetail.route}/$bookId",
                         inclusive = true
                     )
+                },
+                onNavigateUp = {
+                    appState.popBackStack()
                 }
             )
         }
@@ -114,10 +119,10 @@ sealed class HomeDestination(
             unselectedIcon = Icons.Outlined.LibraryBooks
         )
 
-    data object Clubs :
+    data object Groups :
         HomeDestination(
-            route = "clubs",
-            label = "Clubs",
+            route = "groups",
+            label = "Groups",
             selectedIcon = Icons.Filled.People,
             unselectedIcon = Icons.Outlined.People
         )

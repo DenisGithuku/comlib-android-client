@@ -24,7 +24,6 @@ import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,6 +33,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel
@@ -54,7 +54,7 @@ constructor(
         MutableStateFlow(BookListUiState.Loading)
 
     private val selectedGenres: MutableStateFlow<List<GenreUiModel>> =
-        MutableStateFlow(listOf(GenreUiModel(name = "All", id = "65eeb125703fed5c184518bf")))
+        MutableStateFlow(listOf(GenreUiModel(name = "All Genres", id = "65eeb125703fed5c184518bf")))
 
     val uiState: StateFlow<BooksUiState> =
         combine(selectedGenres, genreListUiState, bookListUiState) {
@@ -126,7 +126,7 @@ constructor(
                         val books =
                             result.data
                                 .filter { book ->
-                                    if (selectedGenres.value.map { it.name }.contains("All")) {
+                                    if (selectedGenres.value.map { it.name }.contains("All Genres")) {
                                         true
                                     } else {
                                         selectedGenres.value.map { it.id }.any { it in book.genre_ids }
@@ -176,11 +176,16 @@ constructor(
 
                     if (id in selectedGenres.first().map { it.id }) {
                         selected.remove(updatedGenre)
-                    } else {
+                    } else if (id == "65eeb125703fed5c184518bf") {
+                        selected.clear()
+                        selected.add(updatedGenre)
+                    }
+                    else {
                         selected.add(updatedGenre)
                     }
 
-                    val updatedGenrePrefs = selected.drop(1).map { it.id }.toSet()
+                    val updatedGenrePrefs = selected.
+                        dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }.toSet()
                     togglePreferredGenres(updatedGenrePrefs)
                     selectedGenres.update { selected }
                     getBookList()
