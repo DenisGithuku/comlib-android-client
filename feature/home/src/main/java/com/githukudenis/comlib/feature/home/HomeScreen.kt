@@ -104,7 +104,8 @@ fun HomeRouteContent(
 
     Scaffold { values ->
         LazyColumn(
-            modifier = Modifier.padding(values).fillMaxSize(),
+            modifier =
+                Modifier.padding(values).padding(vertical = LocalDimens.current.extraLarge).fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
@@ -140,7 +141,7 @@ fun HomeRouteContent(
                     },
                     profileImage = {
                         AsyncImage(
-                            modifier = Modifier.size(48.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
+                            modifier = Modifier.size(32.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
                             contentScale = ContentScale.Crop,
                             model =
                                 when (val user = state.user) {

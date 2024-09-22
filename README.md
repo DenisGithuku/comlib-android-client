@@ -2,6 +2,22 @@
 
 Comlib is a system that aims to complement your reading habits. You log on to the system track what you're reading, share reading materials with others and even set milestones.
 
+#### Problem statement
+The modern society needs one to keep constantly updated on many aspects that revolve around the world. The change of ideas, beliefs, opinions etc is happening at a very high rate. The young people need to be in constant awareness of what is going on in the world around us.
+
+Reading is one of the proven ways to enhance the exchange of information, especially in a world where information is all over. Establishing a strong foundation on the principles that affect our life is one of the effective ways to facilitate this exchange. But how do we make sure that we update ourselves regularly without going to the extent of having to purchase books every time which is not only expensive and time consuming.
+
+Enter **ComLib**. We strive to make easy, the process of the exchange of books for the young children. This is effective in facilitating the development of a reading culture for kids.
+
+#### Tech stack
+##### Back end
+NodeJS
+Express
+MongoDB
+
+##### Client
+Android
+
 #### Android development
 
 Comlib attempts use of the latest libraries and tools:

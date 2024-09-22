@@ -25,7 +25,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowForwardIos
 import androidx.compose.material.icons.filled.ElectricBolt
@@ -40,7 +39,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.res.stringResource
@@ -59,13 +57,7 @@ fun GoalCard(
     progress: Float? = null
 ) {
     Card(
-        modifier =
-            Modifier.padding(horizontal = 16.dp)
-                .shadow(
-                    2.dp,
-                    shape = RoundedCornerShape(6.dp),
-                    spotColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.08f)
-                ),
+        modifier = Modifier.padding(horizontal = 16.dp),
         onClick = { onOpenStreakDetails(bookId) },
         shape = MaterialTheme.shapes.small,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
@@ -77,7 +69,7 @@ fun GoalCard(
             if (hasStreak) {
                 Column(
                     modifier = Modifier.padding(12.dp).fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    verticalArrangement = Arrangement.spacedBy(0.dp)
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -129,7 +121,7 @@ fun GoalCard(
 
                         Text(
                             text = "${(progress * 100).toInt()}%",
-                            style = MaterialTheme.typography.titleSmall,
+                            style = MaterialTheme.typography.titleMedium,
                             color = MaterialTheme.colorScheme.secondary
                         )
                     }

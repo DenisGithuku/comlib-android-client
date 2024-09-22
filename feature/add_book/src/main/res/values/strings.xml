@@ -7,4 +7,6 @@
     <string name="retry">Retry</string>
     <string name="saving_book">Saving book…</string>
     <string name="book_added_successfully">Book added successfully!</string>
+    <string name="save_book">Save</string>
+    <string name="author_placeholder">Separated by commas</string>
 </resources>
