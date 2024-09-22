@@ -31,6 +31,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -84,7 +85,12 @@ class MainActivity : ComponentActivity() {
                                                 (if (destination.route == appState.currentDestination?.route) {
                                                         destination.selectedIcon
                                                     } else destination.unselectedIcon)
-                                                    ?.let { Icon(imageVector = it, contentDescription = null) }
+                                                    ?.let {
+                                                        Icon(
+                                                            painter = painterResource(it),
+                                                            contentDescription = destination.label
+                                                        )
+                                                    }
                                             },
                                             colors =
                                                 NavigationBarItemDefaults.colors(

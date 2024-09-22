@@ -16,20 +16,13 @@
 */
 package com.githukudenis.comlib.navigation
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryBooks
-import androidx.compose.material.icons.filled.People
-import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.LibraryBooks
-import androidx.compose.material.icons.outlined.People
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavGraphBuilder
@@ -104,30 +97,30 @@ fun NavGraphBuilder.homeNavGraph(
 sealed class HomeDestination(
     val route: String,
     val label: String? = null,
-    val selectedIcon: ImageVector? = null,
-    val unselectedIcon: ImageVector? = null
+    @DrawableRes val selectedIcon: Int? = null,
+    @DrawableRes val unselectedIcon: Int? = null
 ) {
     data object Home :
         HomeDestination(
             route = "home",
             label = "Home",
-            selectedIcon = Icons.Filled.Home,
-            unselectedIcon = Icons.Outlined.Home
+            selectedIcon = R.drawable.home_filled,
+            unselectedIcon = R.drawable.home_outlined
         )
 
     data object Books :
         HomeDestination(
             route = "books",
             label = "Books",
-            selectedIcon = Icons.Filled.LibraryBooks,
-            unselectedIcon = Icons.Outlined.LibraryBooks
+            selectedIcon = R.drawable.library_filled,
+            unselectedIcon = R.drawable.library_outlined
         )
 
     data object Groups :
         HomeDestination(
             route = "groups",
             label = "Groups",
-            selectedIcon = Icons.Filled.People,
-            unselectedIcon = Icons.Outlined.People
+            selectedIcon = R.drawable.people_filled,
+            unselectedIcon = R.drawable.people_outlined
         )
 }
