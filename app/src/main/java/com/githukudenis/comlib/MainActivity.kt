@@ -76,7 +76,9 @@ class MainActivity : ComponentActivity() {
                                         listOf(HomeDestination.Home, HomeDestination.Books, HomeDestination.Groups)
                                     homeGraphDestinations.forEach { destination ->
                                         NavigationBarItem(
-                                            onClick = { appState.navigate(destination.route) },
+                                            onClick = {
+                                                appState.navigate(destination.route, destination.route, inclusive = true)
+                                            },
                                             selected = appState.currentDestination?.route == destination.route,
                                             icon = {
                                                 (if (destination.route == appState.currentDestination?.route) {

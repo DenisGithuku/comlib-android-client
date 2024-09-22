@@ -24,6 +24,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -33,7 +34,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel
@@ -179,13 +179,12 @@ constructor(
                     } else if (id == "65eeb125703fed5c184518bf") {
                         selected.clear()
                         selected.add(updatedGenre)
-                    }
-                    else {
+                    } else {
                         selected.add(updatedGenre)
                     }
 
-                    val updatedGenrePrefs = selected.
-                        dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }.toSet()
+                    val updatedGenrePrefs =
+                        selected.dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }.toSet()
                     togglePreferredGenres(updatedGenrePrefs)
                     selectedGenres.update { selected }
                     getBookList()

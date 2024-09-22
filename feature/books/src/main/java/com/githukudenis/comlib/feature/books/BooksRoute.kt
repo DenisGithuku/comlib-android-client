@@ -70,10 +70,19 @@ import com.githukudenis.comlib.feature.books.components.BookComponent
 import kotlinx.coroutines.launch
 
 @Composable
-fun BooksRoute(viewModel: BooksViewModel = hiltViewModel(), onOpenBook: (String) -> Unit, onNavigateUp: () -> Unit) {
+fun BooksRoute(
+    viewModel: BooksViewModel = hiltViewModel(),
+    onOpenBook: (String) -> Unit,
+    onNavigateUp: () -> Unit
+) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
 
-    BooksScreen(state = state, onChangeGenre = viewModel::onChangeGenre, onOpenBook = onOpenBook, onNavigateUp = onNavigateUp)
+    BooksScreen(
+        state = state,
+        onChangeGenre = viewModel::onChangeGenre,
+        onOpenBook = onOpenBook,
+        onNavigateUp = onNavigateUp
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -87,14 +96,22 @@ fun BooksScreen(
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
-                title = { Text(text = stringResource(R.string.all_books_title), style = MaterialTheme.typography.titleMedium) },
+                title = {
+                    Text(
+                        text = stringResource(R.string.all_books_title),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.back)
+                        )
                     }
                 }
             )
-        },
+        }
     ) { innerPadding ->
         when (state) {
             is BooksUiState.Loading -> LoadingScreen(innerPadding)
@@ -108,20 +125,15 @@ fun BooksScreen(
                     onOpenBook = onOpenBook
                 )
             }
-
             is BooksUiState.Error -> ErrorScreen()
         }
     }
 }
 
 @Composable
-private fun LoadingScreen(
-    innerPadding: PaddingValues
-) {
+private fun LoadingScreen(innerPadding: PaddingValues) {
     Column(
-        modifier = Modifier.fillMaxSize()
-            .padding(innerPadding)
-            .padding(LocalDimens.current.extraLarge),
+        modifier = Modifier.fillMaxSize().padding(innerPadding).padding(LocalDimens.current.extraLarge),
         verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
     ) {
         Row(
@@ -194,9 +206,7 @@ private fun LoadedScreen(
         }
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()
-        .padding(innerPadding)
-        .padding(horizontal = LocalDimens.current.extraLarge)) {
+    LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
         item {
             when (genreListUiState) {
                 is GenreListUiState.Error -> {
@@ -212,9 +222,8 @@ private fun LoadedScreen(
                 }
                 is GenreListUiState.Success -> {
                     LazyRow(
-//                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
-                        horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
-//                        contentPadding = PaddingValues(LocalDimens.current.extraLarge)
+                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
+                        horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                     ) {
                         val updatedGenres = genreListUiState.genres.take(3).toMutableList()
                         updatedGenres.add(

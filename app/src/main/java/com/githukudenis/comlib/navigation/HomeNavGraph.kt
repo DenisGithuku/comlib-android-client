@@ -18,6 +18,7 @@ package com.githukudenis.comlib.navigation
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryBooks
@@ -30,11 +31,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
 import com.githukudenis.comlib.R
 import com.githukudenis.comlib.app.AppState
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.books.BooksRoute
 import com.githukudenis.comlib.feature.home.HomeRoute
 
@@ -76,8 +79,11 @@ fun NavGraphBuilder.homeNavGraph(
             )
         }
         composable(route = HomeDestination.Groups.route) {
-            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text(text = stringResource(R.string.groups_status))
+            Box(
+                modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = stringResource(R.string.groups_status), textAlign = TextAlign.Center)
             }
         }
         composable(route = HomeDestination.Books.route) {
@@ -89,9 +95,7 @@ fun NavGraphBuilder.homeNavGraph(
                         inclusive = true
                     )
                 },
-                onNavigateUp = {
-                    appState.popBackStack()
-                }
+                onNavigateUp = { appState.popBackStack() }
             )
         }
     }

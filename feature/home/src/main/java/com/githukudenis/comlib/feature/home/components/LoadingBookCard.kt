@@ -55,11 +55,11 @@ fun LoadingBookCard() {
             Box(
                 modifier =
                     Modifier.sizeIn(
-                        minHeight = 120.dp,
-                        minWidth = 190.dp,
-                        maxHeight = 120.dp,
-                        maxWidth = 190.dp
-                    )
+                            minHeight = 120.dp,
+                            minWidth = 190.dp,
+                            maxHeight = 120.dp,
+                            maxWidth = 190.dp
+                        )
                         .clip(
                             RoundedCornerShape(
                                 topStart = 6.dp,

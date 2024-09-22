@@ -51,19 +51,20 @@ fun SelectablePillComponent(
         color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
         onClick = { onToggleSelection(id) }
     ) {
-            Text(
-                text = value,
-                style = MaterialTheme.typography.bodyLarge,
-                color =
-                    if (isSelected) {
-                        MaterialTheme.colorScheme.onPrimaryContainer
-                    } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
-                modifier = Modifier.padding(
-                   vertical = LocalDimens.current.eight,
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyLarge,
+            color =
+                if (isSelected) {
+                    MaterialTheme.colorScheme.onPrimaryContainer
+                } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+            modifier =
+                Modifier.padding(
+                    vertical = LocalDimens.current.eight,
                     horizontal = LocalDimens.current.twelve
                 )
-            )
-        }
+        )
+    }
 }
 
 @Preview
