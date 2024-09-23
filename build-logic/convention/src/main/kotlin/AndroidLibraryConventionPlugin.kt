@@ -1,4 +1,5 @@
 import com.android.build.api.dsl.LibraryExtension
+import com.githukudenis.comlib.AndroidSdk
 import com.githukudenis.comlib.configureKotlinAndroid
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -17,7 +18,7 @@ class AndroidLibraryConventionPlugin: Plugin<Project> {
 
             extensions.configure<LibraryExtension> {
                 configureKotlinAndroid(this)
-                defaultConfig.targetSdk = 34
+                defaultConfig.targetSdk = AndroidSdk.targetSdk
             }
 
             dependencies {

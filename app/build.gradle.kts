@@ -1,3 +1,6 @@
+import com.githukudenis.comlib.AndroidSdk
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.comlib.android.application)
     alias(libs.plugins.comlib.android.application.compose)
@@ -5,13 +8,17 @@ plugins {
     alias(libs.plugins.comlib.android.application.firebase)
 }
 
+val keystoreFile: File = project.rootProject.file("local.properties")
+val properties: Properties = Properties()
+properties.load(keystoreFile.inputStream())
+
 android {
-    namespace = "com.githukudenis.comlib"
+    namespace = AndroidSdk.namespace
 
     defaultConfig {
-        applicationId = "com.githukudenis.comlib"
-        versionCode = 1
-        versionName = "1.0-alpha01"
+        applicationId = AndroidSdk.applicationId
+        versionCode = AndroidSdk.versionCode
+        versionName = AndroidSdk.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
@@ -19,10 +26,10 @@ android {
 
     signingConfigs {
         getByName("debug") {
-            storeFile = file("../keystore/comlibdebug.keystore")
-            keyAlias = "comlib"
-            keyPassword = "comlibdroid"
-            storePassword = "04uth50ft!5f4"
+            storeFile = file(properties["keystoreFile"] as String)
+            keyAlias = properties["keyAlias"] as String
+            keyPassword = properties["keyPassword"] as String
+            storePassword = properties["storePassword"] as String
         }
     }
     buildTypes {
