@@ -27,10 +27,10 @@ android {
 
     signingConfigs {
         getByName("debug") {
-            storeFile = file(properties["keystoreFile"] as String)
-            keyAlias = properties["keyAlias"] as String
-            keyPassword = properties["keyPassword"] as String
-            storePassword = properties["storePassword"] as String
+            storeFile = file("../keystore/comlibdebug.keystore")
+            keyAlias = "comlib"
+            keyPassword = "comlibdroid"
+            storePassword = "04uth50ft!5f4"
         }
     }
     buildTypes {
