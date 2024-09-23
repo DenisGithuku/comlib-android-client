@@ -1,5 +1,4 @@
 import com.githukudenis.comlib.AndroidSdk
-import java.util.Properties
 
 plugins {
     alias(libs.plugins.comlib.android.application)
@@ -7,11 +6,6 @@ plugins {
     alias(libs.plugins.comlib.android.hilt)
     alias(libs.plugins.comlib.android.application.firebase)
 }
-
-val keystoreFile: File = project.rootProject.file("local.properties")
-val properties: Properties = Properties()
-
-properties.load(keystoreFile.inputStream())
 
 android {
     namespace = AndroidSdk.namespace
