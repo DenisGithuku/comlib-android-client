@@ -4,7 +4,10 @@ plugins {
     alias(libs.plugins.comlib.android.hilt)
 }
 
-android { namespace = "com.githukudenis.comlib.core.testing" }
+android {
+    namespace = "com.githukudenis.comlib.core.testing"
+    hilt { enableAggregatingTask = true }
+}
 
 dependencies {
     api(libs.androidx.activity.compose)

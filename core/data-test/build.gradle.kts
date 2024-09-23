@@ -3,7 +3,10 @@ plugins {
     alias(libs.plugins.comlib.android.hilt)
 }
 
-android { namespace = "com.githukudenis.comlib.core.data_test" }
+android {
+    namespace = "com.githukudenis.comlib.core.data_test"
+    hilt { enableAggregatingTask = true }
+}
 
 dependencies {
     api(project(":core:data"))

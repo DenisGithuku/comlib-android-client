@@ -6,18 +6,7 @@ plugins {
 
 android {
     namespace = "com.githukudenis.comlib.feature.profile"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

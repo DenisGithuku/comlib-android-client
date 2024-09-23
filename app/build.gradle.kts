@@ -1,3 +1,5 @@
+import com.githukudenis.comlib.AndroidSdk
+
 plugins {
     alias(libs.plugins.comlib.android.application)
     alias(libs.plugins.comlib.android.application.compose)
@@ -6,12 +8,12 @@ plugins {
 }
 
 android {
-    namespace = "com.githukudenis.comlib"
+    namespace = AndroidSdk.namespace
 
     defaultConfig {
-        applicationId = "com.githukudenis.comlib"
-        versionCode = 1
-        versionName = "1.0-alpha01"
+        applicationId = AndroidSdk.applicationId
+        versionCode = AndroidSdk.versionCode
+        versionName = AndroidSdk.versionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables { useSupportLibrary = true }
@@ -43,6 +45,7 @@ android {
         buildConfig = true
     }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

@@ -3,21 +3,7 @@ plugins {
     alias(libs.plugins.comlib.android.feature)
 }
 
-android {
-    namespace = "com.githukudenis.comlib.core.domain"
-
-    defaultConfig {
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-}
+android { namespace = "com.githukudenis.comlib.core.domain" }
 
 dependencies {
     implementation(project(":core:common"))

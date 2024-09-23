@@ -75,9 +75,9 @@ class FakeUserRepository : UserRepository {
         users.removeIf { it.id == userId }
     }
 
-    override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<String> {
+    override suspend fun uploadUserImage(imageUri: Uri, authId: String): ResponseResult<String> {
         return try {
-            val pos = users.indexOf(users.find { it.id == userId })
+            val pos = users.indexOf(users.find { it.id == authId })
             users.set(pos, users[pos].copy(image = imageUri.lastPathSegment))
             ResponseResult.Success("success")
         } catch (e: Exception) {
