@@ -31,6 +31,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
@@ -69,20 +70,27 @@ class MainActivity : ComponentActivity() {
                             if (
                                 appState.currentDestination?.route == HomeDestination.Home.route ||
                                     appState.currentDestination?.route == HomeDestination.Books.route ||
-                                    appState.currentDestination?.route == HomeDestination.Clubs.route
+                                    appState.currentDestination?.route == HomeDestination.Groups.route
                             ) {
                                 NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
                                     val homeGraphDestinations =
-                                        listOf(HomeDestination.Home, HomeDestination.Books, HomeDestination.Clubs)
+                                        listOf(HomeDestination.Home, HomeDestination.Books, HomeDestination.Groups)
                                     homeGraphDestinations.forEach { destination ->
                                         NavigationBarItem(
-                                            onClick = { appState.navigate(destination.route) },
+                                            onClick = {
+                                                appState.navigate(destination.route, destination.route, inclusive = true)
+                                            },
                                             selected = appState.currentDestination?.route == destination.route,
                                             icon = {
                                                 (if (destination.route == appState.currentDestination?.route) {
                                                         destination.selectedIcon
                                                     } else destination.unselectedIcon)
-                                                    ?.let { Icon(imageVector = it, contentDescription = null) }
+                                                    ?.let {
+                                                        Icon(
+                                                            painter = painterResource(it),
+                                                            contentDescription = destination.label
+                                                        )
+                                                    }
                                             },
                                             colors =
                                                 NavigationBarItemDefaults.colors(

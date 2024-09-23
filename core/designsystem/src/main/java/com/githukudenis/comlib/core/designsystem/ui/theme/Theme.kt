@@ -81,7 +81,12 @@ fun ComLibTheme(
             small = 4.dp,
             medium = 6.dp,
             large = 12.dp,
-            extraLarge = 16.dp
+            extraLarge = 16.dp,
+            four = 4.dp,
+            eight = 8.dp,
+            twelve = 12.dp,
+            sixteen = 16.dp,
+            twentyFour = 24.dp
         )
     val colorScheme =
         when {

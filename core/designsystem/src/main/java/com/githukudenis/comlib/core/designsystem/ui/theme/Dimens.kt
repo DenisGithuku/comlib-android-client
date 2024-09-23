@@ -26,7 +26,12 @@ data class Dimens(
     val small: Dp = 0.dp,
     val medium: Dp = 0.dp,
     val large: Dp = 0.dp,
-    val extraLarge: Dp = 0.dp
+    val extraLarge: Dp = 0.dp,
+    val four: Dp = 0.dp,
+    val eight: Dp = 0.dp,
+    val twelve: Dp = 0.dp,
+    val sixteen: Dp = 0.dp,
+    val twentyFour: Dp = 0.dp
 )
 
 val LocalDimens = staticCompositionLocalOf { Dimens() }

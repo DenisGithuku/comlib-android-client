@@ -64,7 +64,7 @@ fun BookCard(
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.background),
         border =
             BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)),
-        modifier = Modifier.width(150.dp),
+        modifier = Modifier.width(190.dp),
         onClick = { onClick(bookUiModel.book.id) }
     ) {
         Column {
@@ -72,9 +72,9 @@ fun BookCard(
                 modifier =
                     Modifier.sizeIn(
                             minHeight = 120.dp,
-                            minWidth = 150.dp,
+                            minWidth = 190.dp,
                             maxHeight = 120.dp,
-                            maxWidth = 150.dp
+                            maxWidth = 190.dp
                         )
                         .clip(
                             RoundedCornerShape(
@@ -141,7 +141,7 @@ fun BookCard(
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
                 )
                 CLibButton(
-                    shape = MaterialTheme.shapes.medium,
+                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier.fillMaxWidth(),
                     onClick = { onReserve(bookUiModel.book.id) }
                 ) {

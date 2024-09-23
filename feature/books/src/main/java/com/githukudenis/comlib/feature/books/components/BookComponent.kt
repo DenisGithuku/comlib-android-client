@@ -37,9 +37,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.githukudenis.comlib.core.common.capitalize
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.books.BookItemUiModel
+import com.githukudenis.comlib.feature.books.R
 
 @Composable
 fun BookComponent(bookItemUiModel: BookItemUiModel, onOpenBookDetails: (String) -> Unit) {
@@ -47,7 +52,7 @@ fun BookComponent(bookItemUiModel: BookItemUiModel, onOpenBookDetails: (String) 
         modifier =
             Modifier.fillMaxWidth()
                 .clickable { onOpenBookDetails(bookItemUiModel.id) }
-                .padding(vertical = 16.dp, horizontal = 8.dp),
+                .padding(LocalDimens.current.extraLarge),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -55,20 +60,32 @@ fun BookComponent(bookItemUiModel: BookItemUiModel, onOpenBookDetails: (String) 
             AsyncImage(
                 modifier = Modifier.size(50.dp).clip(CircleShape),
                 model = bookItemUiModel.imageUrl,
-                contentDescription = null,
+                contentDescription = stringResource(R.string.book_image),
                 contentScale = ContentScale.Crop
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(text = bookItemUiModel.title, style = MaterialTheme.typography.titleMedium)
                 Text(
-                    text = buildString { bookItemUiModel.authors.map { author -> append(author) } },
-                    style = MaterialTheme.typography.bodyMedium
+                    text =
+                        buildString {
+                            bookItemUiModel.authors.forEachIndexed { index, author ->
+                                append(author.capitalize())
+                                if (index != bookItemUiModel.authors.lastIndex) append("\u2022")
+                            }
+                        },
+                    style = MaterialTheme.typography.bodyMedium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
         IconButton(onClick = { onOpenBookDetails(bookItemUiModel.id) }) {
-            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = "Open book details")
+            Icon(
+                imageVector = Icons.Default.ChevronRight,
+                contentDescription = "Open book details",
+                tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
+            )
         }
     }
 }
