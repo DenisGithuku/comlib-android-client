@@ -1,35 +1,147 @@
 ## Comlib (work in progress 👷 🛠️)
 
+<p align = "center">
+<img src = "https://github.com/user-attachments/assets/75a9c995-c8bc-48c2-9754-d09b46109e58" />
+</p>
+
 Comlib is a system that aims to complement your reading habits. You log on to the system track what you're reading, share reading materials with others and even set milestones.
 
 #### Problem statement
-The modern society needs one to keep constantly updated on many aspects that revolve around the world. The change of ideas, beliefs, opinions etc is happening at a very high rate. The young people need to be in constant awareness of what is going on in the world around us.
 
-Reading is one of the proven ways to enhance the exchange of information, especially in a world where information is all over. Establishing a strong foundation on the principles that affect our life is one of the effective ways to facilitate this exchange. But how do we make sure that we update ourselves regularly without going to the extent of having to purchase books every time which is not only expensive and time consuming.
+The modern society requires individuals to stay constantly updated on various aspects of the world. The exchange of ideas, beliefs, and opinions is happening at a rapid pace. Young people need to be consistently aware of what is happening in the world around them.
 
-Enter **ComLib**. We strive to make easy, the process of the exchange of books for the young children. This is effective in facilitating the development of a reading culture for kids.
+Reading is one of the proven ways to enhance the exchange of information, especially in a world where information is ubiquitous. Establishing a strong foundation in the principles that shape our lives is an effective way to promote this exchange. But how do we ensure that we regularly update ourselves without the need to purchase books every time, which can be both expensive and time-consuming?
+
+Enter **ComLib**. We strive to simplify the process of book exchange for readers, effectively fostering the development of a reading culture.
 
 #### Tech stack
-##### Back end
-NodeJS
-Express
-MongoDB
 
-##### Client
-Android
+```mermaid
+graph TD
+Comlib-->Backend
+Comlib-->Frontend
+Backend-->NodeJS+Express+MongoDB
+Frontend-->Android
+```
+
+##### 
 
 #### Android development
 
 Comlib attempts use of the latest libraries and tools:
 
 - Entirely written in [Kotlin](https://kotlinlang.org/)
-  
+
 - Ui is completely written in [Jetpack compose](https://developer.android.com/jetpack/compose)
-  
-- Uses [Hilt]() for Dependency Injection.
-  
+
+- Uses [Hilt](https://developer.android.com/training/dependency-injection/hilt-android) for Dependency Injection.
+
 - Uses [Recommended architecture](https://developer.android.com/topic/architecture/recommendations) and Architectural components - Room, Lifecycle, Navigation throughout.
-  
+
+### Modules
+
+<table>
+<thead>
+<tr>
+    <th>Module</th>
+    <th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+    <td>:app</td>
+    <td>Serves as the entry point</td>
+</tr>
+<tr>
+    <td>:core:designsystem</td>
+    <td>Contains all things design</td>
+</tr>
+<tr>
+    <td>:core:util</td>
+    <td>Contains all utilities eg String extension functions</td>
+</tr>
+<tr>
+    <td>:core:ui</td>
+    <td>Contains common ui components</td>
+</tr>
+<tr>
+    <td>:core:auth</td>
+    <td>Contains all logic for authentication flow</td>
+</tr>
+<tr>
+    <td>:core:common</td>
+    <td>Contains logic that is shared commonly in more than one module</td>
+</tr>
+<tr>
+    <td>:core:data</td>
+    <td>Combines all the data from the various sources</td>
+</tr>
+<tr>
+    <td>:core:database</td>
+    <td>Contains database implementations</td>
+</tr>
+<tr>
+    <td>:core:data-test</td>
+    <td>Contains all testing logic for data module</td>
+</tr>
+<tr>
+    <td>:core:datastore</td>
+    <td>Contains data from the datastore prefs</td>
+</tr>
+<tr>
+    <td>:core:testing</td>
+    <td>Contains testing logic that is common in more several modules</td>
+</tr>
+<tr>
+    <td>:core:local</td>
+    <td>Contains data from disk eg. usage statistics</td>
+</tr>
+<tr>
+    <td>:core:model</td>
+    <td>Contains all data model definitions</td>
+</tr>
+<tr>
+    <td>:core:network</td>
+    <td>Contains logic for making API interface definitions.</td>
+</tr>
+<tr>
+    <td>:core:domain</td>
+    <td>Contains use case implementation</td>
+</tr>
+<tr>
+    <td>:feauture:auth</td>
+    <td>Auth ui logic</td>
+</tr>
+<tr>
+    <td>:feature:add_book</td>
+    <td>UI logic for adding new books to the library</td>
+</tr>
+<tr>
+    <td>:feature:book_detail</td>
+    <td>Book detail ui</td>
+</tr>
+<tr>
+    <td>:feature:books</td>
+    <td>List of available books</td>
+</tr>
+<tr>
+    <td>:feature:genre_setup</td>
+    <td>Preferred genres selection</td>
+</tr>
+<tr>
+    <td>:feature:my_books</td>
+    <td>Books belonging to current user</td>
+</tr>
+<tr>
+    <td>:feature:profile</td>
+    <td>User profile and setting information</td>
+</tr>
+<tr>
+    <td>:feature:streak</td>
+    <td>UI logic for creating a new reading streak.</td>
+</tr>
+</tbody>
+</table>
 
 #### Development setup
 
@@ -37,9 +149,11 @@ You need to be using the latest Android studio (Hedgehog and newer) to build and
 
 #### Code style
 
-Comlib employs the use of [Gradle conventional plugins](https://medium.com/@yudistirosaputro/gradle-convention-plugins-a-powerful-tool-for-reusing-build-configuration-ba2b250d9063#:~:text=Gradle%20convention%20plugins%20are%20a,build%20management%20and%20increase%20efficiency.) for faster and efficient build times
+Comlib employs the use of [Gradle conventional plugins](https://medium.com/@yudistirosaputro/gradle-convention-plugins-a-powerful-tool-for-reusing-build-configuration-ba2b250d9063#:~:text=Gradle%20convention%20plugins%20are%20a,build%20management%20and%20increase%20efficiency.) for faster and efficient build times.
 
-The default Android linter is used to catch bugs before they propagate in production.
+### Linting
+
+ComLib uses [Spotless](https://github.com/diffplug/spotless) and [Ktlint](https://github.com/JLLeitschuh/ktlint-gradle) is used to catch bugs before they propagate in production.
 
 #### Contributing
 
@@ -66,3 +180,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 ```
+
+### Planned
+
+- [ ] Streak state widget
+
+- [ ] Ask Gemini - summary and book plot.
+
+- [ ] Port to multiplatform
+
+- [ ] Periodic reminders
