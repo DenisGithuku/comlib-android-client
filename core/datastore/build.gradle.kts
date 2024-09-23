@@ -5,6 +5,7 @@ plugins {
 
 android {
     namespace = "com.githukudenis.comlib.core.datastore"
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

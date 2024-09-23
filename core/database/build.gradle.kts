@@ -6,6 +6,7 @@ plugins {
 
 android {
     namespace = "com.githukudenis.comlib.core.database"
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

@@ -8,6 +8,7 @@ plugins {
 
 android {
     namespace = "com.githukudenis.comlib.core.auth"
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

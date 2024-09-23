@@ -6,6 +6,7 @@ plugins {
 
 android {
     namespace = "com.githukudenis.comlib.feature.home"
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

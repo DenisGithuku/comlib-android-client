@@ -10,6 +10,7 @@ plugins {
 
 val keystoreFile: File = project.rootProject.file("local.properties")
 val properties: Properties = Properties()
+
 properties.load(keystoreFile.inputStream())
 
 android {
@@ -50,9 +51,7 @@ android {
         buildConfig = true
     }
     packaging { resources { excludes += "/META-INF/{AL2.0,LGPL2.1}" } }
-    hilt {
-        enableAggregatingTask = true
-    }
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

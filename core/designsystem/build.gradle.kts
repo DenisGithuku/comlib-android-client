@@ -4,9 +4,7 @@ plugins {
     alias(libs.plugins.comlib.android.library.compose)
 }
 
-android {
-    namespace = "com.githukudenis.comlib.core.designsystem"
-}
+android { namespace = "com.githukudenis.comlib.core.designsystem" }
 
 dependencies {
     implementation(libs.androidx.compose.ui.tooling)

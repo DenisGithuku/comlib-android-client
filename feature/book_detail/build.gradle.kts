@@ -7,6 +7,7 @@ plugins {
 
 android {
     namespace = "com.githukudenis.comlib.feature.book_detail"
+    hilt { enableAggregatingTask = true }
 }
 
 dependencies {

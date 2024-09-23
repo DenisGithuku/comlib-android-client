@@ -3,9 +3,7 @@ plugins {
     id("kotlinx-serialization")
 }
 
-android {
-    namespace = "com.githukudenis.comlib.core.model"
-}
+android { namespace = "com.githukudenis.comlib.core.model" }
 
 dependencies {
     implementation(libs.ktor.serialization)

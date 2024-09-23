@@ -3,9 +3,7 @@ plugins {
     alias(libs.plugins.comlib.android.feature)
 }
 
-android {
-    namespace = "com.githukudenis.comlib.core.domain"
-}
+android { namespace = "com.githukudenis.comlib.core.domain" }
 
 dependencies {
     implementation(project(":core:common"))

@@ -31,7 +31,6 @@ import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
 fun SelectablePillComponent(
-    modifier: Modifier = Modifier,
     value: String,
     id: String,
     isSelected: Boolean,
