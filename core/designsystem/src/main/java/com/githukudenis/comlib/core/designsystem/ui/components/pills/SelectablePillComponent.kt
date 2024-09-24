@@ -45,7 +45,7 @@ fun SelectablePillComponent(
                 color =
                     if (isSelected) {
                         Color.Transparent
-                    } else MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
+                    } else MaterialTheme.colorScheme.onSecondaryContainer
             ),
         color = if (isSelected) MaterialTheme.colorScheme.secondaryContainer else Color.Transparent,
         onClick = { onToggleSelection(id) }

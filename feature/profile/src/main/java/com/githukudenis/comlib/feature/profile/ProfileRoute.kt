@@ -20,7 +20,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,6 +47,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -55,7 +56,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
@@ -64,9 +64,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertContentDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
+import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.feature.profile.components.ProfileImage
 import com.githukudenis.comlib.feature.profile.components.ProfileListItem
 
@@ -93,7 +95,7 @@ fun ProfileRoute(
     val imagePickLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
-                viewModel.onChangeUserImage(uri)
+                viewModel.onEvent(ProfileUiEvent.ChangeUserImage(uri))
             } else {
                 Toast.makeText(context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT)
                     .show()
@@ -105,23 +107,25 @@ fun ProfileRoute(
         versionName = versionName,
         onNavigateUp = onBackPressed,
         onOpenMyBooks = onOpenMyBooks,
-        onSignOut = viewModel::onSignOut,
-        onToggleCacheDialog = viewModel::onToggleCache,
+        onSignOut = { viewModel.onEvent(ProfileUiEvent.SignOut) },
+        onToggleCacheDialog = { viewModel.onEvent(ProfileUiEvent.ToggleCache(it)) },
         onClearCache = {
             if (context.cacheDir.deleteRecursively()) {
                 Toast.makeText(context, "Cache cleared", Toast.LENGTH_SHORT).show()
-                viewModel.onToggleCache(false)
+                viewModel.onEvent(ProfileUiEvent.ToggleCache(false))
             } else {
                 Toast.makeText(context, "Failed to clear cache", Toast.LENGTH_SHORT).show()
             }
         },
-        onToggleSignOutDialog = viewModel::onToggleSignOut,
+        onToggleSignOutDialog = { viewModel.onEvent(ProfileUiEvent.ToggleSignOut(it)) },
         onEditProfile = onEditProfile,
         onChangeImage = {
             imagePickLauncher.launch(
                 PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
             )
-        }
+        },
+        onChangeTheme = { viewModel.onEvent(ProfileUiEvent.ChangeTheme(it)) },
+        onToggleThemeDialog = { viewModel.onEvent(ProfileUiEvent.ToggleThemeDialog(it)) }
     )
 }
 
@@ -137,7 +141,9 @@ private fun ProfileScreen(
     onClearCache: () -> Unit,
     onToggleSignOutDialog: (Boolean) -> Unit,
     onEditProfile: () -> Unit,
-    onChangeImage: () -> Unit
+    onChangeImage: () -> Unit,
+    onChangeTheme: (ThemeConfig) -> Unit,
+    onToggleThemeDialog: (Boolean) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -163,6 +169,33 @@ private fun ProfileScreen(
             return@Scaffold
         }
 
+        if (state.isThemeDialogOpen) {
+            CLibAlertContentDialog(
+                title = { Text(text = "App theme", style = MaterialTheme.typography.titleLarge) },
+                content = {
+                    Column {
+                        state.availableThemes.forEach { availableTheme ->
+                            Row(
+                                modifier = Modifier.clickable { onChangeTheme(availableTheme) }.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                            ) {
+                                RadioButton(
+                                    selected = availableTheme == state.selectedTheme,
+                                    onClick = { onChangeTheme(availableTheme) }
+                                )
+                                Text(
+                                    text = availableTheme.name.lowercase().replaceFirstChar { it.uppercase() },
+                                    style = MaterialTheme.typography.bodyMedium
+                                )
+                            }
+                        }
+                    }
+                },
+                onDismissRequest = { onToggleThemeDialog(false) }
+            )
+        }
+
         if (state.isClearCache) {
             CLibAlertDialog(
                 title = stringResource(id = R.string.clear_cache_dialog_title),
@@ -182,7 +215,7 @@ private fun ProfileScreen(
         }
 
         Column(
-            modifier = Modifier.fillMaxSize().background(Color(0xFFF5F5F5)).padding(innerPadding),
+            modifier = Modifier.fillMaxSize().padding(innerPadding),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
@@ -235,7 +268,7 @@ private fun ProfileScreen(
                     )
                     ProfileListItem(
                         leading = Icons.Default.WbSunny,
-                        onClick = {},
+                        onClick = { onToggleThemeDialog(true) },
                         title = stringResource(R.string.display)
                     )
                     Divider(

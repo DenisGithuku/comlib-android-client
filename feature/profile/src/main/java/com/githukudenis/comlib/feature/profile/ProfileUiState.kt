@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib.feature.profile
 
+import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.user.User
 
 data class ProfileUiState(
@@ -24,7 +25,11 @@ data class ProfileUiState(
     val error: String? = null,
     val isSignedOut: Boolean = false,
     val isClearCache: Boolean = false,
-    val isSignout: Boolean = false
+    val isSignout: Boolean = false,
+    val isThemeDialogOpen: Boolean = false,
+    val availableThemes: List<ThemeConfig> =
+        listOf(ThemeConfig.SYSTEM, ThemeConfig.LIGHT, ThemeConfig.DARK),
+    val selectedTheme: ThemeConfig = ThemeConfig.SYSTEM
 )
 
 data class Profile(

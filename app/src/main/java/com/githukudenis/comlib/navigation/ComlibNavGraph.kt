@@ -34,10 +34,13 @@ import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
 import com.githukudenis.comlib.feature.streak.StreakScreen
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
+import com.githukudenis.comlib.splashScreen
+import com.githukudenis.comlib.splashScreenRoute
 
 @Composable
 fun ComlibNavGraph(appState: AppState, startDestination: String) {
-    NavHost(navController = appState.navController, startDestination = startDestination) {
+    NavHost(navController = appState.navController, startDestination = splashScreenRoute) {
+        splashScreen(onTimeout = { appState.navigate(startDestination, splashScreenRoute) })
         authGraph(
             snackbarHostState = appState.snackbarHostState,
             onLoginComplete = {

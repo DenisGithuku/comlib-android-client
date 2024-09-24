@@ -26,6 +26,9 @@ import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -40,39 +43,64 @@ class ProfileViewModelTest {
     lateinit var getUserProfileUseCase: GetUserProfileUseCase
     lateinit var signOutUseCase: SignOutUseCase
     lateinit var userRepository: UserRepository
+    lateinit var userPrefsRepository: FakeUserPrefsRepository
 
     @Before
     fun setup() {
         userRepository = FakeUserRepository()
-        getUserPrefsUseCase = GetUserPrefsUseCase(FakeUserPrefsRepository())
+        userPrefsRepository = FakeUserPrefsRepository()
+        getUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
         getUserProfileUseCase = GetUserProfileUseCase(userRepository)
         signOutUseCase = SignOutUseCase(FakeAuthRepository())
 
         viewModel =
-            ProfileViewModel(getUserPrefsUseCase, getUserProfileUseCase, signOutUseCase, userRepository)
+            ProfileViewModel(
+                getUserPrefsUseCase,
+                getUserProfileUseCase,
+                signOutUseCase,
+                userRepository,
+                userPrefsRepository
+            )
     }
 
     @Test
     fun testStateInitialization() = runTest {
+        // Create an empty collector for the StateFlow
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+
         val state = viewModel.uiState.value
         assert(state.profile?.email == "5@gmail.com")
     }
 
     @Test
     fun onSignOut() = runTest {
-        viewModel.onSignOut()
+        // Create an empty collector for the StateFlow
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+        viewModel.onEvent(ProfileUiEvent.SignOut)
         assertTrue(viewModel.uiState.value.isSignedOut)
     }
 
     @Test
     fun onToggleCache() = runTest {
-        viewModel.onToggleCache(true)
+        // Create an empty collector for the StateFlow
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+        viewModel.onEvent(ProfileUiEvent.ToggleCache(true))
         assertTrue(viewModel.uiState.value.isClearCache)
     }
 
     @Test
     fun onToggleSignOut() = runTest {
-        viewModel.onToggleSignOut(true)
+        // Create an empty collector for the StateFlow
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+        viewModel.onEvent(ProfileUiEvent.ToggleSignOut(true))
         assertTrue(viewModel.uiState.value.isSignout)
+    }
+
+    @Test
+    fun onToggleThemeDialog() = runTest {
+        // Create an empty collector for the StateFlow
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
+        viewModel.onEvent(ProfileUiEvent.ToggleThemeDialog(true))
+        assertTrue(viewModel.uiState.value.isThemeDialogOpen)
     }
 }
