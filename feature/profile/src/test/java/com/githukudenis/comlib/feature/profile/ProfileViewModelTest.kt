@@ -21,6 +21,7 @@ import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
 import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
@@ -40,16 +41,24 @@ class ProfileViewModelTest {
     lateinit var getUserProfileUseCase: GetUserProfileUseCase
     lateinit var signOutUseCase: SignOutUseCase
     lateinit var userRepository: UserRepository
+    lateinit var userPrefsRepository: UserPrefsRepository
 
     @Before
     fun setup() {
         userRepository = FakeUserRepository()
-        getUserPrefsUseCase = GetUserPrefsUseCase(FakeUserPrefsRepository())
+        userPrefsRepository = FakeUserPrefsRepository()
+        getUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
         getUserProfileUseCase = GetUserProfileUseCase(userRepository)
         signOutUseCase = SignOutUseCase(FakeAuthRepository())
 
         viewModel =
-            ProfileViewModel(getUserPrefsUseCase, getUserProfileUseCase, signOutUseCase, userRepository)
+            ProfileViewModel(
+                getUserPrefsUseCase,
+                getUserProfileUseCase,
+                signOutUseCase,
+                userRepository,
+                userPrefsRepository
+            )
     }
 
     @Test
@@ -60,19 +69,19 @@ class ProfileViewModelTest {
 
     @Test
     fun onSignOut() = runTest {
-        viewModel.onSignOut()
+        viewModel.onEvent(ProfileUiEvent.SignOut)
         assertTrue(viewModel.uiState.value.isSignedOut)
     }
 
     @Test
     fun onToggleCache() = runTest {
-        viewModel.onToggleCache(true)
+        viewModel.onEvent(ProfileUiEvent.ToggleCache(true))
         assertTrue(viewModel.uiState.value.isClearCache)
     }
 
     @Test
     fun onToggleSignOut() = runTest {
-        viewModel.onToggleSignOut(true)
+        viewModel.onEvent(ProfileUiEvent.ToggleSignOut(true))
         assertTrue(viewModel.uiState.value.isSignout)
     }
 }
