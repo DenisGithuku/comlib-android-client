@@ -47,14 +47,19 @@ constructor(
     private val userPrefsRepository: UserPrefsRepository
 ) : ViewModel() {
 
-    private var _uiState = MutableStateFlow(ProfileUiState())
+    private val _uiState = MutableStateFlow(ProfileUiState())
+    private val _userPrefs = getUserPrefsUseCase()
 
     val uiState: StateFlow<ProfileUiState> =
-        combine(_uiState, getUserPrefsUseCase()) { uiState, prefs ->
+        combine(_uiState, _userPrefs) { uiState, prefs ->
                 val profile = prefs.authId?.let { id -> getProfileDetails(id) }
                 uiState.copy(profile = profile, selectedTheme = prefs.themeConfig)
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), ProfileUiState())
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = ProfileUiState()
+            )
 
     fun onEvent(profileUiEvent: ProfileUiEvent) {
         when (profileUiEvent) {
@@ -79,8 +84,8 @@ constructor(
         }
     }
 
-    private suspend fun getProfileDetails(userId: String): Profile {
-        val user = getUserProfileUseCase(userId)
+    private suspend fun getProfileDetails(authId: String): Profile {
+        val user = getUserProfileUseCase(authId)
         return user?.toProfile() ?: Profile()
     }
 
