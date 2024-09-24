@@ -21,6 +21,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -31,17 +32,24 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.githukudenis.comlib.app.rememberAppState
 import com.githukudenis.comlib.core.designsystem.ui.theme.ComLibTheme
+import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.navigation.ComlibDestination
 import com.githukudenis.comlib.navigation.ComlibNavGraph
 import com.githukudenis.comlib.navigation.HomeDestination
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -49,9 +57,13 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val viewModel: MainActivityViewModel by viewModels<MainActivityViewModel>()
 
-        // Enable support for SplashScreen API
-        // for proper Android+ support
-        installSplashScreen()
+        var uiState: MainActivityUiState by mutableStateOf(MainActivityUiState())
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.RESUMED) {
+                viewModel.state.onEach { uiState = it }.collect()
+            }
+        }
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -59,9 +71,12 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             val appState = rememberAppState()
-            val state by viewModel.state.collectAsStateWithLifecycle()
 
-            ComLibTheme(darkTheme = false) {
+            ComLibTheme(darkTheme = systemInDarkTheme(uiState)) {
+                setSystemTheme(uiState = uiState)
+                WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                    !systemInDarkTheme(uiState)
+
                 Surface {
                     Scaffold(
                         snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
@@ -116,17 +131,36 @@ class MainActivity : ComponentActivity() {
                             appState = appState,
                             startDestination =
                                 when {
-                                    state.isLoggedIn && state.isSetup -> {
-                                        ComlibDestination.HomeGraph.route
-                                    }
-                                    !state.isLoggedIn -> {
-                                        ComlibDestination.GetStarted.route
-                                    }
+                                    shouldHideOnBoarding(uiState) -> ComlibDestination.HomeGraph.route
                                     else -> ComlibDestination.GenreSetup.route
                                 }
                         )
                     }
                 }
+            }
+        }
+    }
+
+    private fun shouldHideOnBoarding(uiState: MainActivityUiState): Boolean {
+        return when {
+            uiState.isLoading -> false
+            uiState.isLoggedIn -> true
+            else -> false
+        }
+    }
+
+    private fun systemInDarkTheme(uiState: MainActivityUiState): Boolean {
+        return when {
+            uiState.isLoading -> false
+            uiState.themeConfig == ThemeConfig.DARK -> true
+            else -> false
+        }
+    }
+
+    private fun setSystemTheme(uiState: MainActivityUiState) {
+        when {
+            uiState.themeConfig == ThemeConfig.SYSTEM -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
     }

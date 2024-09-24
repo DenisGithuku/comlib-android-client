@@ -27,7 +27,7 @@ import androidx.compose.ui.text.style.LineHeightStyle.Trim
 import androidx.compose.ui.unit.sp
 import com.githukudenis.comlib.core.designsystem.R
 
-val PoppinsFamily =
+internal val PoppinsFamily =
     FontFamily(
         Font(resId = R.font.poppins_black, weight = FontWeight.Black),
         Font(resId = R.font.poppins_regular, weight = FontWeight.Normal),

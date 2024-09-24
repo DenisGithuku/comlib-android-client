@@ -206,7 +206,9 @@ private fun LoadedScreen(
         }
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(innerPadding).padding(top = LocalDimens.current.small)
+    ) {
         item {
             when (genreListUiState) {
                 is GenreListUiState.Error -> {
@@ -222,7 +224,12 @@ private fun LoadedScreen(
                 }
                 is GenreListUiState.Success -> {
                     LazyRow(
-                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
+                        modifier =
+                            Modifier.padding(
+                                start = LocalDimens.current.extraLarge,
+                                end = LocalDimens.current.extraLarge,
+                                bottom = LocalDimens.current.small
+                            ),
                         horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                     ) {
                         val updatedGenres = genreListUiState.genres.take(3).toMutableList()

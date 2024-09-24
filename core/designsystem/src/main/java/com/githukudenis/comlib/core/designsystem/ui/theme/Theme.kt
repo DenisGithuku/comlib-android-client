@@ -46,7 +46,8 @@ private val DarkColorScheme =
         onTertiary = SnowDrift,
         onBackground = SnowDrift,
         onSurface = IvoryWhisper,
-        secondaryContainer = IvoryWhisper
+        secondaryContainer = SpringGreen,
+        onSecondaryContainer = CharcoalGray
     )
 
 private val LightColorScheme =
@@ -64,7 +65,8 @@ private val LightColorScheme =
         primaryContainer = PastelGreen,
         tertiaryContainer = LimeGreen,
         surfaceVariant = SnowDrift,
-        secondaryContainer = SpringGreen
+        secondaryContainer = SpringGreen,
+        onSecondaryContainer = CharcoalGray
     )
 
 @Composable
@@ -86,7 +88,8 @@ fun ComLibTheme(
             eight = 8.dp,
             twelve = 12.dp,
             sixteen = 16.dp,
-            twentyFour = 24.dp
+            twentyFour = 24.dp,
+            fiftySix = 56.dp
         )
     val colorScheme =
         when {
