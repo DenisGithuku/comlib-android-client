@@ -39,13 +39,14 @@ private val DarkColorScheme =
         primary = PastelGreen,
         secondary = MossGreen,
         tertiary = MossGreen,
-        background = CharcoalGray,
-        surface = Color(0xFF626262),
+        background = DarkBackground,
+        surface = DarkSurface,
         onPrimary = SnowDrift,
         onSecondary = SnowDrift,
         onTertiary = SnowDrift,
         onBackground = SnowDrift,
         onSurface = IvoryWhisper,
+        primaryContainer = DeepGreen,
         secondaryContainer = SpringGreen,
         onSecondaryContainer = CharcoalGray
     )

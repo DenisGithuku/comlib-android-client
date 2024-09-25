@@ -30,6 +30,7 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextB
 @Composable
 fun CLibAlertDialog(title: String, text: String, onDismiss: () -> Unit, onConfirm: () -> Unit) {
     AlertDialog(
+        containerColor = MaterialTheme.colorScheme.surface,
         title = { Text(text = title) },
         text = { Text(text = text) },
         icon = {

@@ -24,7 +24,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.githukudenis.comlib.core.designsystem.R
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import kotlinx.coroutines.delay
@@ -53,6 +54,7 @@ fun CLibAlertContentDialog(
     val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) { launch { animateTrigger.value = true } }
     Dialog(
+        properties = DialogProperties(usePlatformDefaultWidth = false),
         onDismissRequest = {
             scope.launch {
                 animateTrigger.value = false
@@ -64,10 +66,10 @@ fun CLibAlertContentDialog(
         AnimatedScaleInTransition(visible = animateTrigger.value) {
             Box(
                 modifier =
-                    Modifier.wrapContentWidth()
+                    Modifier.fillMaxWidth(fraction = 0.8f)
                         .wrapContentHeight()
                         .background(
-                            color = MaterialTheme.colorScheme.surface,
+                            color = AlertDialogDefaults.containerColor,
                             shape = MaterialTheme.shapes.large
                         )
             ) {

@@ -165,11 +165,11 @@ private fun GenreSetupContent(
                     horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
                     verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
                 ) {
-                    state.genres.map { item ->
+                    state.genres.take(5).map { item ->
                         SelectablePillComponent(
                             value = item.genre.name.untangle("-"),
                             isSelected = item.isSelected,
-                            hasIcon = true,
+                            icon = if (item.isSelected) R.drawable.ic_check else null,
                             id = item.genre.id,
                             onToggleSelection = onToggleGenreSelection
                         )

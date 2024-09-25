@@ -19,6 +19,7 @@ package com.githukudenis.comlib.core.designsystem.ui.theme
 import androidx.compose.ui.graphics.Color
 
 val PastelGreen = Color(0xFF53CA81)
+val DeepGreen = Color(0xFF2A854D)
 val ForestGreen = Color(0xFF0F6136)
 val LimeGreen = Color(0xFF99D420)
 val MossGreen = Color(0xFF6D9D17)
@@ -26,4 +27,6 @@ val SpringGreen = Color(0xFF99D420)
 val SnowDrift = Color(0xFFF5F5F5)
 val IvoryWhisper = Color(0xFFFAF9F6)
 val CharcoalGray = Color(0xFF333333)
+val DarkBackground = Color(0xFF121212)
+val DarkSurface = Color(0xFF1E1E1E)
 val Critical = Color(0xFFFC4236)
