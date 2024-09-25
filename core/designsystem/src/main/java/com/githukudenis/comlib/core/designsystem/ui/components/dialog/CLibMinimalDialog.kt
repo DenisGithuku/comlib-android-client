@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -41,7 +42,12 @@ fun CLibMinimalDialog(title: String, text: String, onDismissRequest: () -> Unit)
     Dialog(onDismissRequest = { onDismissRequest() }) {
         Card(
             modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.extraLarge),
-            shape = MaterialTheme.shapes.extraLarge
+            shape = MaterialTheme.shapes.extraLarge,
+            colors =
+                CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = MaterialTheme.colorScheme.onSurface
+                )
         ) {
             Column(modifier = Modifier.padding(LocalDimens.current.extraLarge)) {
                 Icon(

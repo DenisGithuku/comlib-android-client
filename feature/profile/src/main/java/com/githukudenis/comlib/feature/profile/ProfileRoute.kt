@@ -34,10 +34,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material.icons.filled.NotificationsNone
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -171,7 +169,7 @@ private fun ProfileScreen(
 
         if (state.isThemeDialogOpen) {
             CLibAlertContentDialog(
-                title = { Text(text = "App theme", style = MaterialTheme.typography.titleLarge) },
+                title = { Text(text = "Select theme", style = MaterialTheme.typography.headlineSmall) },
                 content = {
                     Column {
                         state.availableThemes.forEach { availableTheme ->
@@ -256,11 +254,11 @@ private fun ProfileScreen(
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
                         modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
                     )
-                    ProfileListItem(
-                        leading = Icons.Default.FavoriteBorder,
-                        onClick = {},
-                        title = stringResource(R.string.favourites)
-                    )
+                    //                    ProfileListItem(
+                    //                        leading = Icons.Default.FavoriteBorder,
+                    //                        onClick = {},
+                    //                        title = stringResource(R.string.favourites)
+                    //                    )
                     Divider(
                         thickness = 0.4.dp,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
@@ -276,11 +274,11 @@ private fun ProfileScreen(
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
                         modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
                     )
-                    ProfileListItem(
-                        leading = Icons.Default.NotificationsNone,
-                        onClick = {},
-                        title = stringResource(R.string.notifications)
-                    )
+                    //                    ProfileListItem(
+                    //                        leading = Icons.Default.NotificationsNone,
+                    //                        onClick = {},
+                    //                        title = stringResource(R.string.notifications)
+                    //                    )
                 }
                 Spacer(modifier = Modifier.height(LocalDimens.current.extraLarge))
                 Card(

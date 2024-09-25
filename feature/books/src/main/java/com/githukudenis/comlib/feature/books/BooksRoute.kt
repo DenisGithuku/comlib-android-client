@@ -243,7 +243,6 @@ private fun LoadedScreen(
                             SelectablePillComponent(
                                 value = genre.name.untangle("-"),
                                 isSelected = genre.id in selectedGenres.map { it.id },
-                                hasIcon = false,
                                 id = genre.id,
                                 onToggleSelection = {
                                     if (it == context.getString(R.string.default_more_genres_id)) {
