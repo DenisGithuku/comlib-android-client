@@ -40,7 +40,7 @@ import com.githukudenis.comlib.splashScreenRoute
 @Composable
 fun ComlibNavGraph(appState: AppState, startDestination: String) {
     NavHost(navController = appState.navController, startDestination = splashScreenRoute) {
-        splashScreen(onTimeout = { appState.navigate(startDestination, splashScreenRoute) })
+        splashScreen(onTimeout = { appState.navigate(startDestination, splashScreenRoute, true) })
         authGraph(
             snackbarHostState = appState.snackbarHostState,
             onLoginComplete = {
