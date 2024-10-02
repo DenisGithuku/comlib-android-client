@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -47,19 +48,15 @@ import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 @Composable
 fun OnBoardingScreen(onGetStarted: () -> Unit) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-                horizontal = LocalDimens.current.sixteen
-            ), verticalArrangement = Arrangement.SpaceAround
+        modifier = Modifier.fillMaxSize().padding(horizontal = LocalDimens.current.sixteen),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         OnBoardingAnimation()
-        Column(
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
             Text(
                 modifier = Modifier.padding(top = LocalDimens.current.sixteen),
-                text = stringResource(id = R.string.onboarding_text),
+                text =
+                    stringResource(id = R.string.onboarding_text, stringResource(id = R.string.app_name)),
                 style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
@@ -70,50 +67,43 @@ fun OnBoardingScreen(onGetStarted: () -> Unit) {
                 shape = MaterialTheme.shapes.small
             ) {
                 Text(
-                    text = stringResource(
-                        id = R.string.get_started_btn_text, "Comlib"
-                    ), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp)
+                    text = stringResource(id = R.string.get_started_btn_text),
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(4.dp)
                 )
             }
         }
     }
 }
 
-
 @Composable
-fun OnBoardingAnimation(
-    modifier: Modifier = Modifier
-) {
-    val isPlaying by remember {
-        mutableStateOf(true)
-    }
+fun OnBoardingAnimation(modifier: Modifier = Modifier) {
+    val isPlaying by remember { mutableStateOf(true) }
 
-    val speed by remember {
-        mutableStateOf(0.5f)
-    }
+    val speed by remember { mutableStateOf(0.5f) }
 
     // rememeber lottie composition for the json
     // which accepts the lottie composition result
-    val composition by rememberLottieComposition(
-        LottieCompositionSpec.RawRes(R.raw.onboarding_animation)
-    )
+    val composition by
+        rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.onboarding_animation))
 
     // to control the animation
-    val progress by animateLottieCompositionAsState(
-        // pass composition created above
-        composition = composition,
-        //iterates forever
-        iterations = LottieConstants.IterateForever,
+    val progress by
+        animateLottieCompositionAsState(
+            // pass composition created above
+            composition = composition,
+            // iterates forever
+            iterations = LottieConstants.IterateForever,
 
-        //pass is playing which controls the animation play/pause
-        isPlaying = isPlaying,
+            // pass is playing which controls the animation play/pause
+            isPlaying = isPlaying,
 
-        // pass speed we can set it to change the speed of animation
-        speed = speed,
+            // pass speed we can set it to change the speed of animation
+            speed = speed,
 
-        // restart on play if we pause and play again
-        restartOnPlay = false
-    )
+            // restart on play if we pause and play again
+            restartOnPlay = false
+        )
 
     LottieAnimation(
         composition = composition,
