@@ -35,6 +35,7 @@ kotlin = "1.9.10"
 ktlint = "11.6.1"
 ksp = "1.9.10-1.0.13"
 lifecycle-runtime-ktx = "2.6.2"
+lottie = "6.5.0"
 perfPlugin = "1.4.2"
 room = "2.6.0"
 kotlinxCoroutines = "1.7.3"
@@ -117,6 +118,7 @@ kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-seria
 ktor-client = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor"}
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor"}
 ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor"}
+lottie-files = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie"}
 perf-plugin = { module = "com.google.firebase:perf-plugin", version.ref = "perfPlugin" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }

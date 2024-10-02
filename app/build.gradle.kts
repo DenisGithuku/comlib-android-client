@@ -78,6 +78,7 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.timber)
     implementation(libs.work.runtime)
+    implementation(libs.lottie.files)
 
     coreLibraryDesugaring(libs.android.desugarJdkLibs)
 

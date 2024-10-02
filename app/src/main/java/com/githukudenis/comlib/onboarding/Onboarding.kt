@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -16,70 +15,110 @@
 */
 package com.githukudenis.comlib.onboarding
 
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec
+import com.airbnb.lottie.compose.LottieConstants
+import com.airbnb.lottie.compose.animateLottieCompositionAsState
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.githukudenis.comlib.R
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
 fun OnBoardingScreen(onGetStarted: () -> Unit) {
-    Box(modifier = Modifier.fillMaxSize()) {
-        Image(
-            painter = painterResource(id = R.drawable.onboarding_bg),
-            contentDescription = null,
-            modifier = Modifier.matchParentSize(),
-            contentScale = ContentScale.FillHeight
-        )
-        Box(
-            modifier =
-                Modifier.matchParentSize()
-                    .background(
-                        brush =
-                            Brush.verticalGradient(
-                                colors = listOf(Color.Transparent, Color.Black.copy(alpha = 0.7f))
-                            )
-                    )
-        )
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(
+                horizontal = LocalDimens.current.sixteen
+            ), verticalArrangement = Arrangement.SpaceAround
+    ) {
+        OnBoardingAnimation()
         Column(
-            modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
-                text = stringResource(R.string.onboarding_text, "Comlib"),
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.onPrimary,
+                modifier = Modifier.padding(top = LocalDimens.current.sixteen),
+                text = stringResource(id = R.string.onboarding_text),
+                style = MaterialTheme.typography.bodyLarge,
                 textAlign = TextAlign.Center
             )
+            Spacer(modifier = Modifier.height(LocalDimens.current.twentyFour))
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onGetStarted,
                 shape = MaterialTheme.shapes.small
             ) {
                 Text(
-                    text = stringResource(id = R.string.get_started_btn_text),
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier.padding(4.dp)
+                    text = stringResource(
+                        id = R.string.get_started_btn_text, "Comlib"
+                    ), style = MaterialTheme.typography.bodyLarge, modifier = Modifier.padding(4.dp)
                 )
             }
         }
     }
+}
+
+
+@Composable
+fun OnBoardingAnimation(
+    modifier: Modifier = Modifier
+) {
+    val isPlaying by remember {
+        mutableStateOf(true)
+    }
+
+    val speed by remember {
+        mutableStateOf(0.5f)
+    }
+
+    // rememeber lottie composition for the json
+    // which accepts the lottie composition result
+    val composition by rememberLottieComposition(
+        LottieCompositionSpec.RawRes(R.raw.onboarding_animation)
+    )
+
+    // to control the animation
+    val progress by animateLottieCompositionAsState(
+        // pass composition created above
+        composition = composition,
+        //iterates forever
+        iterations = LottieConstants.IterateForever,
+
+        //pass is playing which controls the animation play/pause
+        isPlaying = isPlaying,
+
+        // pass speed we can set it to change the speed of animation
+        speed = speed,
+
+        // restart on play if we pause and play again
+        restartOnPlay = false
+    )
+
+    LottieAnimation(
+        composition = composition,
+        contentScale = ContentScale.Crop,
+        progress = { progress },
+        modifier = modifier.size(400.dp)
+    )
 }
