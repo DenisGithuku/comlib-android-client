@@ -75,8 +75,7 @@ constructor(
     private fun getAvailableBooks() {
         update { copy(availableState = FetchItemState.Loading) }
         viewModelScope.launch {
-            val result = booksRepository.getAllBooks()
-            when(result) {
+            when(val result = booksRepository.getAllBooks()) {
                 is ResponseResult.Failure -> {
                     update { copy(availableState = FetchItemState.Error(message = result.error.message)) }
                 }
@@ -92,8 +91,7 @@ constructor(
     }
 
     private suspend fun getUserProfile(userId: String) {
-        val profile = userRepository.getUserById(userId)
-        when(profile) {
+        when(val profile = userRepository.getUserById(userId)) {
             is ResponseResult.Failure -> {
                 update { copy(user = FetchItemState.Error(message = profile.error.message)) }
             }

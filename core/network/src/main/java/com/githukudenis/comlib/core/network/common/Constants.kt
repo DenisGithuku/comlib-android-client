@@ -35,19 +35,37 @@ sealed class Endpoints(private val path: String) {
             }
         }
 
-    data object Login : Endpoints("api/v1/users/login")
+    sealed class Auth(route: String = "api/v1/users", param: String? = null, val path: String? = null) : Endpoints(route + (param?.let { "/$it" } ?: "") + (path?.let { "/$it" } ?: "")) {
+        data object Login : Auth(path = "/login")
 
-    data object SignUp : Endpoints("api/v1/users/signup")
+        data object SignUp : Auth(path = "/signup")
 
-    data object ResetPassword : Endpoints("api/v1/users/reset-password")
+        data object ResetPassword : Auth(path = "reset-password")
+    }
 
-    data object Books : Endpoints("api/v1/books")
+    sealed class Books(route: String = "api/v1/books", private val param: String? = null) : Endpoints(route + (param?.let { "/$it" } ?: "")) {
+        data object GetAll : Books()
 
-    data class Book(private val id: String) : Endpoints("api/v1/books/$id")
+        data object Add : Books()
 
-    data object Users : Endpoints("api/v1/users")
+        data class GetById(private val bookId: String): Books(param = bookId)
+    }
 
-    data class User(private val id: String) : Endpoints("api/v1/users/$id")
+    sealed class Users(route: String = "api/v1/users", private val param: String? = null, val path: String? = null) : Endpoints(route + (param?.let { "/$it" } ?: "" ) + (path?.let { "/$it" } ?: "")) {
+
+        // Represents the route to get all read books
+        data class GetReadBooks(val userId: String) : Users(param = userId, path = "read-books")
+
+        // Represents the route to get a user by their ID
+        data class GetById(val userId: String) : Users(param = userId)
+
+        // Represents the route to update a user's data
+        data class Update(val userId: String) : Users(param = userId)
+
+        // Represents the route to delete a user by their ID
+        data class Delete(val userId: String) : Users(param = userId)
+    }
+
 
     data object Genres : Endpoints("api/v1/genres")
 

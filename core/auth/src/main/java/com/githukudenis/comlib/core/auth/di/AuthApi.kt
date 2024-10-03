@@ -16,7 +16,7 @@ import javax.inject.Inject
 class AuthApi @Inject constructor(private val httpClient: HttpClient) {
     suspend fun login(userLoginDTO: UserLoginDTO): ResponseResult<UserLoginResponse> {
         return safeApiCall {
-            httpClient.post(urlString = Endpoints.Login.url) {
+            httpClient.post(urlString = Endpoints.Auth.Login.url) {
                 setBody(userLoginDTO)
             }
         }
@@ -24,7 +24,7 @@ class AuthApi @Inject constructor(private val httpClient: HttpClient) {
 
     suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
         return safeApiCall {
-            httpClient.post(urlString = Endpoints.SignUp.url) {
+            httpClient.post(urlString = Endpoints.Auth.SignUp.url) {
                 setBody(userSignUpDTO)
             }
         }
@@ -32,7 +32,7 @@ class AuthApi @Inject constructor(private val httpClient: HttpClient) {
 
     suspend fun resetPassword(email: String): ResponseResult<ResetPasswordResponse> {
         return safeApiCall {
-            httpClient.post(urlString = Endpoints.ResetPassword.url) {
+            httpClient.post(urlString = Endpoints.Auth.ResetPassword.url) {
                 setBody(email)
             }
         }

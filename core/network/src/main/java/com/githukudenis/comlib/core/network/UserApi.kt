@@ -40,14 +40,14 @@ constructor(
 
     suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
         return safeApiCall {
-            httpClient.get(urlString = Endpoints.User(userId).url)
+            httpClient.get(urlString = Endpoints.Users.GetById(userId).url)
         }
     }
 
     suspend fun updateUser(user: User): ResponseResult<UpdateUserResponse> {
         return safeApiCall {
             user.id?.let {
-                httpClient.patch(urlString = Endpoints.User(it).url) {
+                httpClient.patch(urlString = Endpoints.Users.Update(it).url) {
                     contentType(ContentType.Application.Json)
                     setBody(user)
                 }
@@ -57,7 +57,7 @@ constructor(
 
     suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
         return safeApiCall {
-            httpClient.delete(urlString = Endpoints.User(userId).url)
+            httpClient.delete(urlString = Endpoints.Users.Delete(userId).url)
         }
     }
 }

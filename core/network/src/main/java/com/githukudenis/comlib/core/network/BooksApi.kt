@@ -33,15 +33,15 @@ class BooksApi
     private val httpClient: HttpClient
 ) {
     suspend fun getBooks(): ResponseResult<AllBooksResponse> = safeApiCall {
-        httpClient.get(Endpoints.Books.url)
+        httpClient.get(Endpoints.Books.GetAll.url)
     }
 
     suspend fun getBookById(bookId: String): ResponseResult<SingleBookResponse> = safeApiCall {
-        httpClient.get(Endpoints.Book(bookId).url)
+        httpClient.get(Endpoints.Books.GetById(bookId).url)
     }
 
 
     suspend fun addNewBook(book: BookDTO): ResponseResult<AddBookResponse> = safeApiCall {
-        httpClient.post(Endpoints.Books.url) { setBody(book) }
+        httpClient.post(Endpoints.Books.Add.url) { setBody(book) }
     }
 }
