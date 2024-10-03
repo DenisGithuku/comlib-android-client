@@ -23,7 +23,5 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.timber)
     implementation(libs.firebase.storage)
-    implementation(libs.ktor.serialization)
-    implementation(libs.ktor.client)
-    implementation(libs.ktor.logging)
+    implementation(libs.bundles.ktor)
 }

@@ -37,18 +37,18 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideUserApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): UserApi =
-        UserApi(httpClient, dispatchers)
+    fun provideUserApi(httpClient: HttpClient): UserApi =
+        UserApi(httpClient)
 
     @Provides
     @Singleton
-    fun provideBooksApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): BooksApi =
-        BooksApi(httpClient, dispatchers)
+    fun provideBooksApi(httpClient: HttpClient): BooksApi =
+        BooksApi(httpClient)
 
     @Provides
     @Singleton
-    fun provideGenresApi(httpClient: HttpClient, dispatchers: ComlibCoroutineDispatchers): GenresApi =
-        GenresApi(httpClient, dispatchers)
+    fun provideGenresApi(httpClient: HttpClient): GenresApi =
+        GenresApi(httpClient)
 
     @Provides @Singleton fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
 

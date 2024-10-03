@@ -18,21 +18,19 @@ package com.githukudenis.comlib.feature.edit
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
-import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
 import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
     val userId: String? = null,
-    val authId: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
     val username: String? = null,
@@ -45,9 +43,7 @@ data class EditProfileUiState(
 class EditProfileViewModel
 @Inject
 constructor(
-    private val updateUserUseCase: UpdateUserUseCase,
-    private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val userPrefsRepository: UserPrefsRepository,
     private val userRepository: UserRepository
 ) : StatefulViewModel<EditProfileUiState>(EditProfileUiState()) {
 
@@ -57,36 +53,46 @@ constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            val userId: String = checkNotNull(getUserPrefsUseCase().first().authId)
+            val userId: String = checkNotNull(userPrefsRepository.userPrefs.first().userId)
             update { copy(isLoading = true) }
-            getUserProfileUseCase(userId).also { user ->
-                val newState: EditProfileUiState =
-                    user?.let {
-                        EditProfileUiState(
-                            isLoading = false,
-                            userId = user.id,
-                            firstname = user.firstname,
-                            username = user.username,
-                            lastname = user.lastname,
-                            profileUrl = user.image,
-                            authId = user.authId
-                        )
+            val result = userRepository.getUserById(userId)
+                when(result) {
+                    is ResponseResult.Failure ->  {
+                        update { copy(isLoading = false, error = result.error.message) }
                     }
-                        ?: EditProfileUiState(
-                            isLoading = false,
-                            error = "Couldn't fetch profile. Please try again!"
-                        )
-                update { newState }
+                    is ResponseResult.Success -> {
+                        val newState: EditProfileUiState =
+                            EditProfileUiState(
+                                isLoading = false,
+                                userId = result.data.data.user.id,
+                                firstname = result.data.data.user.firstname,
+                                username = result.data.data.user.username,
+                                lastname = result.data.data.user.lastname,
+                                profileUrl = result.data.data.user.image
+                            )
+                        update { newState }
+                    }
+                }
+
+
             }
         }
-    }
 
     fun updateUser() {
         viewModelScope.launch {
             update { copy(isUpdating = true) }
             val user = User(firstname = state.value.firstname, lastname = state.value.lastname)
-            state.value.userId?.let { updateUserUseCase(it, user) }
-            update { copy(isUpdating = false) }
+            state.value.userId?.let {
+                val result = userRepository.updateUser(user)
+                when(result) {
+                    is ResponseResult.Failure -> {
+                        update { copy(isUpdating = false, error = result.error.message) }
+                    }
+                    is ResponseResult.Success -> {
+                        update { copy(isUpdating = false) }
+                    }
+                }
+            }
         }
     }
 

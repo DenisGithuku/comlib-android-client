@@ -22,7 +22,6 @@ import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
@@ -41,7 +40,6 @@ class LoginViewModelTest {
         viewModel =
             LoginViewModel(
                 authRepository = FakeAuthRepository(),
-                userRepository = FakeUserRepository(),
                 userPrefsRepository = FakeUserPrefsRepository()
             )
     }

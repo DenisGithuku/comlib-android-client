@@ -21,7 +21,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.auth)
     implementation(libs.timber)
-    implementation(libs.ktor.serialization)
+    implementation(libs.bundles.ktor)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))

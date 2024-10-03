@@ -42,7 +42,7 @@ kotlinxCoroutines = "1.7.3"
 kotlinxDatetime = "0.4.1"
 kotlinxSerializationJson = "1.6.0"
 kotlinx-serialization = "1.0.1"
-ktor = "1.5.0"
+ktor = "2.3.2"
 material = "1.10.0"
 spotlessPluginGradle = "6.25.0"
 timber = "5.0.1"
@@ -115,9 +115,12 @@ kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-co
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinxCoroutines" }
 kotlinx-datetime = { group = "org.jetbrains.kotlinx", name = "kotlinx-datetime", version.ref = "kotlinxDatetime" }
 kotlinx-serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization", version.ref = "kotlinx-serialization"}
-ktor-client = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor"}
+ktor-client-android = { group = "io.ktor", name = "ktor-client-android", version.ref = "ktor"}
 ktor-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor"}
-ktor-serialization = { group = "io.ktor", name = "ktor-client-serialization", version.ref = "ktor"}
+ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor"}
+ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor"}
+ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
+ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
 lottie-files = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie"}
 perf-plugin = { module = "com.google.firebase:perf-plugin", version.ref = "perfPlugin" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -160,3 +163,13 @@ comlib-android-library = { id = "comlib.android.library", version = "unspecified
 comlib-android-room = { id = "comlib.android.room", version = "unspecified" }
 comlib-android-test = { id = "comlib.android.test", version = "unspecified" }
 com-diffplug-spotless = { id = "com.diffplug.spotless", version.ref = "spotlessPluginGradle" }
+
+[bundles]
+ktor = [
+    "ktor-client-android",
+    "ktor-content-negotiation",
+    "ktor-logging",
+    "ktor-core",
+    "ktor-serialization",
+    "ktor-client-okhttp"
+]

@@ -17,25 +17,26 @@
 package com.githukudenis.comlib.feature.home
 
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
-import com.githukudenis.comlib.core.domain.usecases.TimePeriod
-import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
 import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.data.repository.BookMilestoneRepository
+import com.githukudenis.comlib.data.repository.BooksRepository
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+
+enum class TimePeriod {
+    MORNING, AFTERNOON, EVENING
+}
 
 data class HomeScreenState(
     val user: FetchItemState<User?> = FetchItemState.Loading,
@@ -50,13 +51,10 @@ data class HomeScreenState(
 class HomeViewModel
 @Inject
 constructor(
-    private val getReadBooksUseCase: GetReadBooksUseCase,
-    private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getBookmarkedBooksUseCase: GetBookmarkedBooksUseCase,
-    private val toggleBookMarkUseCase: ToggleBookMarkUseCase,
-    private val getStreakUseCase: GetStreakUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase
+    private val userPrefsRepository: UserPrefsRepository,
+    private val booksRepository: BooksRepository,
+    private val userRepository: UserRepository,
+    private val bookMilestoneRepository: BookMilestoneRepository
 ) : StatefulViewModel<HomeScreenState>(HomeScreenState()) {
 
     init {
@@ -70,36 +68,38 @@ constructor(
 
     private fun getReadBooks() {
         viewModelScope.launch {
-            getReadBooksUseCase().collectLatest { update { copy(reads = it.toList()) } }
+            userPrefsRepository.userPrefs.mapLatest { it.readBooks }.collectLatest { update { copy(reads = it.toList()) } }
         }
     }
 
     private fun getAvailableBooks() {
+        update { copy(availableState = FetchItemState.Loading) }
         viewModelScope.launch {
-            getAllBooksUseCase().collectLatest { result ->
-                val value =
-                    when (result) {
-                        DataResult.Empty -> FetchItemState.Success(emptyList())
-                        is DataResult.Error -> FetchItemState.Error(message = result.message)
-                        is DataResult.Loading -> FetchItemState.Loading
-                        is DataResult.Success ->
-                            FetchItemState.Success(
-                                result.data.map {
-                                    BookUiModel(book = it, isFavourite = it.id in state.value.bookmarks)
-                                }
-                            )
-                    }
-                update { copy(availableState = value) }
+            val result = booksRepository.getAllBooks()
+            when(result) {
+                is ResponseResult.Failure -> {
+                    update { copy(availableState = FetchItemState.Error(message = result.error.message)) }
+                }
+                is ResponseResult.Success -> {
+                    update { copy(availableState = FetchItemState.Success(
+                        result.data.data.books.map {
+                            BookUiModel(book = it, isFavourite = it.id in state.value.bookmarks)
+                        }
+                    )) }
+                }
             }
         }
     }
 
     private suspend fun getUserProfile(userId: String) {
-        val profile = getUserProfileUseCase(userId)
-        if (profile == null) {
-            update { copy(user = FetchItemState.Error(message = "Could not fetch profile")) }
-        } else {
-            update { copy(FetchItemState.Success(data = profile)) }
+        val profile = userRepository.getUserById(userId)
+        when(profile) {
+            is ResponseResult.Failure -> {
+                update { copy(user = FetchItemState.Error(message = profile.error.message)) }
+            }
+            is ResponseResult.Success -> {
+                update { copy(user = FetchItemState.Success(data = profile.data.data.user)) }
+            }
         }
     }
 
@@ -113,14 +113,14 @@ constructor(
 
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
-            val bookMarks = getBookmarkedBooksUseCase().first()
+            val bookMarks = userPrefsRepository.userPrefs.mapLatest { it.bookmarkedBooks }.first()
             val updatedBookMarkSet =
                 if (id in bookMarks) {
                     bookMarks.minus(id)
                 } else {
                     bookMarks.plus(id)
                 }
-            toggleBookMarkUseCase(updatedBookMarkSet)
+            userPrefsRepository.setBookMarks(updatedBookMarkSet)
 
             update { copy(bookmarks = updatedBookMarkSet.toList()) }
             onRefreshAvailableBooks()
@@ -129,7 +129,8 @@ constructor(
 
     private fun getStreakState() {
         viewModelScope.launch {
-            getStreakUseCase().collectLatest {
+            bookMilestoneRepository.bookMilestone
+                .collectLatest {
                 update { copy(streakState = StreakState(bookMilestone = it)) }
             }
         }
@@ -137,13 +138,14 @@ constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            getUserPrefsUseCase().collectLatest { prefs -> prefs.authId?.let { getUserProfile(it) } }
+            userPrefsRepository.userPrefs
+                .collectLatest { prefs -> prefs.userId?.let { getUserProfile(it) } }
         }
     }
 
     private fun getBookmarkedBooks() {
         viewModelScope.launch {
-            val bookmarks = getBookmarkedBooksUseCase().first()
+            val bookmarks = userPrefsRepository.userPrefs.mapLatest { it.bookmarkedBooks }.first()
             update { copy(bookmarks = bookmarks.toList()) }
         }
     }

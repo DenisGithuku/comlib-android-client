@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -17,71 +16,120 @@
 package com.githukudenis.comlib.data.repository.fake
 
 import android.net.Uri
+import com.githukudenis.comlib.core.common.ErrorResponse
 import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.model.user.Data
+import com.githukudenis.comlib.core.model.user.DeactivateUserResponse
+import com.githukudenis.comlib.core.model.user.DeleteUserResponse
+import com.githukudenis.comlib.core.model.user.SingleUserResponse
+import com.githukudenis.comlib.core.model.user.UpdateUserResponse
+import com.githukudenis.comlib.core.model.user.UploadUserResponse
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.UserRepository
 
 class FakeUserRepository : UserRepository {
 
-    val users =
-        (1..10)
-            .map {
-                User(
-                    _id = "owner@$it",
-                    clubs = listOf("club1", "club2", "club3"),
-                    currentBooks = listOf(),
-                    email = "$it@gmail.com",
-                    preferredGenres = listOf(),
-                    authId = "$it",
-                    firstname = "$it.firstname",
-                    id = "owner@$it",
-                    lastname = "$it.lastname"
+    val users = (1..10).map {
+        User(
+            _id = "owner@$it",
+            clubs = listOf("club1", "club2", "club3"),
+            currentBooks = listOf(),
+            email = "$it@gmail.com",
+            preferredGenres = listOf(),
+            firstname = "$it.firstname",
+            id = "owner@$it",
+            lastname = "$it.lastname"
+        )
+    }.toMutableList()
+
+    override suspend fun deactivateAccount(userId: String): ResponseResult<DeactivateUserResponse> {
+        return try {
+            users.removeIf { it.id == userId }
+            ResponseResult.Success(
+                DeactivateUserResponse(
+                    status = "success", message = "success"
                 )
-            }
-            .toMutableList()
-
-    override suspend fun getUsersByClub(clubId: String): ResponseResult<List<User>> {
-        return ResponseResult.Success(data = users.filter { clubId in it.clubs })
-    }
-
-    override suspend fun addNewUser(user: User): ResponseResult<String> {
-        return try {
-            users.add(user)
-            ResponseResult.Success(data = "success")
+            )
         } catch (e: Exception) {
-            ResponseResult.Failure(e)
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "Could not deactivate user", status = "fail"
+                )
+            )
         }
     }
 
-    override suspend fun updateUser(id: String, user: User): ResponseResult<String> {
+    override suspend fun updateUser(user: User): ResponseResult<UpdateUserResponse> {
         return try {
-            val pos = users.indexOf(users.find { it.id == id })
+            val pos = users.indexOf(users.find { it.id == user.id })
             users[pos] = user
-            ResponseResult.Success("success")
+            ResponseResult.Success(
+                UpdateUserResponse(
+                    status = "success", message = "success"
+                )
+            )
         } catch (e: Exception) {
-            ResponseResult.Failure(e)
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "Could not update user", status = "fail"
+                )
+            )
         }
     }
 
-    override suspend fun getUserById(userId: String): ResponseResult<User> {
+    override suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
         return try {
-            ResponseResult.Success(users.first { it.id == userId })
+            ResponseResult.Success(
+                SingleUserResponse(
+                    status = "success", data = Data(
+                        user = users.find { it.id == userId }!!
+                    )
+                )
+            )
         } catch (e: Exception) {
-            ResponseResult.Failure(e)
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "User not found", status = "fail"
+                )
+            )
         }
     }
 
-    override suspend fun deleteUser(userId: String) {
-        users.removeIf { it.id == userId }
+    override suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
+        return try {
+            users.removeIf { it.id == userId }
+            ResponseResult.Success(
+                DeleteUserResponse(
+                    status = "success", message = "success"
+                )
+            )
+        } catch (e: Exception) {
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "Could not delete user", status = "fail"
+                )
+            )
+        }
     }
 
-    override suspend fun uploadUserImage(imageUri: Uri, authId: String): ResponseResult<String> {
+    override suspend fun uploadUserImage(
+        imageUri: Uri,
+        authId: String
+    ): ResponseResult<UploadUserResponse> {
         return try {
             val pos = users.indexOf(users.find { it.id == authId })
-            users.set(pos, users[pos].copy(image = imageUri.lastPathSegment))
-            ResponseResult.Success("success")
+            users[pos] = users[pos].copy(image = imageUri.lastPathSegment)
+            ResponseResult.Success(
+                UploadUserResponse(
+                    status = "success", message = "success"
+                )
+            )
         } catch (e: Exception) {
-            ResponseResult.Failure(e)
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "Could not upload image", status = "fail"
+                )
+            )
         }
     }
 }

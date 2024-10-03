@@ -26,21 +26,17 @@ class FakeUserPrefsRepository : UserPrefsRepository {
 
     private var prefs =
         UserPrefs(
-            authId = "owner@5",
             readBooks = setOf("1", "2", "3"),
             themeConfig = ThemeConfig.SYSTEM,
             bookmarkedBooks = setOf("1", "2", "3"),
             isSetup = false,
             preferredGenres = setOf("genre1", "genre2"),
-            userId = "owner@5"
+            token = "token",
+            userId = "userId"
         )
 
     override val userPrefs: Flow<UserPrefs>
         get() = flowOf(prefs)
-
-    override suspend fun setAuthId(authId: String) {
-        prefs = prefs.copy(authId = authId)
-    }
 
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
         prefs = prefs.copy(themeConfig = themeConfig)
@@ -58,11 +54,15 @@ class FakeUserPrefsRepository : UserPrefsRepository {
         prefs = prefs.copy(preferredGenres = genres)
     }
 
-    override suspend fun setUserId(userId: String) {
-        prefs = prefs.copy(userId = userId)
+    override suspend fun clearSession() {
+        prefs = prefs.copy(token = null, themeConfig = ThemeConfig.SYSTEM)
     }
 
-    override suspend fun clearSession() {
-        prefs = prefs.copy(authId = null, userId = null, themeConfig = ThemeConfig.SYSTEM)
+    override suspend fun setToken(token: String) {
+        prefs = prefs.copy(token = token)
+    }
+
+    override suspend fun setUserId(userId: String) {
+        prefs = prefs.copy(userId = userId)
     }
 }

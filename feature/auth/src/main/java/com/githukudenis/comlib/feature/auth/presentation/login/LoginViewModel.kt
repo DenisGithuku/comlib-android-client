@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -20,32 +19,27 @@ import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
-import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.core.model.user.UserLoginDTO
 import com.githukudenis.comlib.data.repository.AuthRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
-import com.githukudenis.comlib.data.repository.UserRepository
-import com.githukudenis.comlib.feature.auth.presentation.SignInResult
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.CapitalLetter
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.Length
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.Number
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.SpecialCharacter
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel
-@Inject
-constructor(
+@Inject constructor(
     private val authRepository: AuthRepository,
-    private val userRepository: UserRepository,
     private val userPrefsRepository: UserPrefsRepository
 ) : ViewModel() {
 
@@ -58,24 +52,31 @@ constructor(
             is LoginUiEvent.ChangeEmail -> {
                 changeEmail(event.email)
             }
+
             is LoginUiEvent.ChangePassword -> {
                 changePassword(event.password)
             }
+
             is LoginUiEvent.GoogleSignIn -> {
-                onSignInResult(event.signInResult)
+//                onSignInResult(event.signInResult)
             }
+
             is LoginUiEvent.DismissUserMessage -> {
                 dismissUserMessage(event.id)
             }
+
             LoginUiEvent.SubmitData -> {
                 login()
             }
+
             is LoginUiEvent.TogglePassword -> {
                 togglePassword(event.isVisible)
             }
+
             is LoginUiEvent.ToggleRememberMe -> {
                 toggleRememberMe(event.remember)
             }
+
             LoginUiEvent.ResetState -> {
                 resetState()
             }
@@ -91,11 +92,9 @@ constructor(
 
     private fun changeEmail(value: String) {
         _state.update { prevState ->
-            val formState =
-                prevState.formState.copy(
-                    email = value,
-                    isEmailValid = PatternsCompat.EMAIL_ADDRESS.matcher(value).matches()
-                )
+            val formState = prevState.formState.copy(
+                email = value, isEmailValid = PatternsCompat.EMAIL_ADDRESS.matcher(value).matches()
+            )
             prevState.copy(formState = formState)
         }
     }
@@ -116,7 +115,8 @@ constructor(
             if (password.any { it in specialSymbolsRegex }) {
                 requirements.add(SpecialCharacter)
             }
-            val formState = prevState.formState.copy(password = password, requirements = requirements)
+            val formState =
+                prevState.formState.copy(password = password, requirements = requirements)
             prevState.copy(formState = formState)
         }
     }
@@ -133,36 +133,36 @@ constructor(
         }
     }
 
-    private fun onSignInResult(signInResult: SignInResult) {
-        viewModelScope.launch {
-            _state.update { prevState -> prevState.copy(isLoading = true) }
-            if (signInResult.errorMessage != null) {
-                _state.update { prevState ->
-                    val userMessages = prevState.userMessages.toMutableList()
-                    userMessages.add(UserMessage(message = signInResult.errorMessage))
-                    prevState.copy(isLoading = false, loginSuccess = true, userMessages = userMessages)
-                }
-                return@launch
-            }
-            val user =
-                signInResult.userData?.run {
-                    User(email = email, username = username, image = profilePictureUrl, authId = authId)
-                }
-            val result = userRepository.addNewUser(user = user ?: return@launch)
-            when (result) {
-                is ResponseResult.Failure -> Unit
-                is ResponseResult.Success -> {
-                    user.authId?.let { userPrefsRepository.setAuthId(it) }
-                }
-            }
-
-            _state.update { prevState ->
-                val userMessages = prevState.userMessages.toMutableList()
-                userMessages.add(UserMessage(message = "Signed in successfully"))
-                prevState.copy(isLoading = false, loginSuccess = true, userMessages = userMessages)
-            }
-        }
-    }
+//    private fun onSignInResult(signInResult: SignInResult) {
+//        viewModelScope.launch {
+//            _state.update { prevState -> prevState.copy(isLoading = true) }
+//            if (signInResult.errorMessage != null) {
+//                _state.update { prevState ->
+//                    val userMessages = prevState.userMessages.toMutableList()
+//                    userMessages.add(UserMessage(message = signInResult.errorMessage))
+//                    prevState.copy(isLoading = false, loginSuccess = true, userMessages = userMessages)
+//                }
+//                return@launch
+//            }
+//            val user =
+//                signInResult.userData?.run {
+//                    User(email = email, username = username, image = profilePictureUrl, authId = authId)
+//                }
+//            val result = authRepository.signUp(user = user ?: return@launch)
+//            when (result) {
+//                is ResponseResult.Failure -> Unit
+//                is ResponseResult.Success -> {
+//                    user.authId?.let { userPrefsRepository.setAuthId(it) }
+//                }
+//            }
+//
+//            _state.update { prevState ->
+//                val userMessages = prevState.userMessages.toMutableList()
+//                userMessages.add(UserMessage(message = "Signed in successfully"))
+//                prevState.copy(isLoading = false, loginSuccess = true, userMessages = userMessages)
+//            }
+//        }
+//    }
 
     private fun login() {
         viewModelScope.launch {
@@ -171,7 +171,10 @@ constructor(
                 _state.update { prevState ->
                     val userMessages = prevState.userMessages.toMutableList()
                     userMessages.add(
-                        UserMessage(message = "Please check your details", messageType = MessageType.ERROR)
+                        UserMessage(
+                            message = "Please check your details",
+                            messageType = MessageType.ERROR
+                        )
                     )
                     prevState.copy(userMessages = userMessages)
                 }
@@ -180,23 +183,28 @@ constructor(
 
             _state.update { prevState -> prevState.copy(isLoading = true) }
 
-            authRepository.login(
-                email,
-                password,
-                onSuccess = { authId ->
-                    userPrefsRepository.setAuthId(authId)
-                    _state.update { prevState -> prevState.copy(isLoading = false, loginSuccess = true) }
+            authRepository.login(userLogInDTO = UserLoginDTO(email = email, password = password),
+                onSuccess = { response ->
+                    userPrefsRepository.setToken(response.token)
+                    userPrefsRepository.setUserId(response.id)
+                    _state.update { prevState ->
+                        prevState.copy(
+                            isLoading = false,
+                            loginSuccess = true
+                        )
+                    }
                 },
                 onError = { error ->
-                    if (error != null) {
-                        val userMessages = _state.value.userMessages.toMutableList()
-                        userMessages.add(UserMessage(message = error.message))
-                        _state.update { prevState ->
-                            prevState.copy(isLoading = false, loginSuccess = false, userMessages = userMessages)
-                        }
+                    val userMessages = _state.value.userMessages.toMutableList()
+                    userMessages.add(UserMessage(message = error))
+                    _state.update { prevState ->
+                        prevState.copy(
+                            isLoading = false,
+                            loginSuccess = false,
+                            userMessages = userMessages
+                        )
                     }
-                }
-            )
+                })
         }
     }
 

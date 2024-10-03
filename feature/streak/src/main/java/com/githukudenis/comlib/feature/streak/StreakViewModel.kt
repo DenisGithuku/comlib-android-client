@@ -18,19 +18,16 @@ package com.githukudenis.comlib.feature.streak
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.DataResult
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
-import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
-import com.githukudenis.comlib.core.domain.usecases.UpdateStreakUseCase
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookMilestone
+import com.githukudenis.comlib.data.repository.BookMilestoneRepository
+import com.githukudenis.comlib.data.repository.BooksRepository
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -39,6 +36,7 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
+import javax.inject.Inject
 
 data class StreakUiState(
     val isLoading: Boolean = false,
@@ -62,11 +60,9 @@ fun Book.asStreakBook(): StreakBook = StreakBook(id, title, pages)
 class StreakViewModel
 @Inject
 constructor(
-    private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val getReadBooksUseCase: GetReadBooksUseCase,
-    private val saveStreakUseCase: SaveStreakUseCase,
-    private val getStreakUseCase: GetStreakUseCase,
-    private val updateStreakUseCase: UpdateStreakUseCase,
+    private val userPrefsRepository: UserPrefsRepository,
+    private val bookMilestoneRepository: BookMilestoneRepository,
+    private val booksRepository: BooksRepository,
     private val savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<StreakUiState>(StreakUiState()) {
 
@@ -78,19 +74,21 @@ constructor(
     private fun getStreakDetails(bookId: String?) {
         if (bookId == null) return
         viewModelScope.launch {
-            val bookMilestone = getStreakUseCase().first()
-            bookMilestone?.let { bookMilestone ->
+            val bookMilestone = bookMilestoneRepository
+                .bookMilestone
+                .first()
+            bookMilestone?.let { milestone ->
                 update {
                     copy(
-                        milestoneId = bookMilestone.id,
+                        milestoneId = milestone.id,
                         selectedBook =
                             StreakBook(
-                                id = bookMilestone.bookId,
-                                title = bookMilestone.bookName,
-                                pages = bookMilestone.pages
+                                id = milestone.bookId,
+                                title = milestone.bookName,
+                                pages = milestone.pages
                             ),
-                        startDate = bookMilestone.startDate?.toLocalDate()!!,
-                        endDate = bookMilestone.endDate?.toLocalDate()!!
+                        startDate = milestone.startDate?.toLocalDate()!!,
+                        endDate = milestone.endDate?.toLocalDate()!!
                     )
                 }
             }
@@ -99,18 +97,19 @@ constructor(
 
     private fun getAvailableBooks() {
         viewModelScope.launch {
-            val readBooks = getReadBooksUseCase().first()
-            getAllBooksUseCase().collectLatest { result ->
-                when (result) {
-                    DataResult.Empty -> {
-                        update { copy(isLoading = false, error = "No books available") }
+            update { copy(isLoading = true) }
+            val readBooks = userPrefsRepository.userPrefs.mapLatest { it.readBooks }.first()
+            val result = booksRepository
+                .getAllBooks()
+
+            when(result) {
+                is ResponseResult.Failure -> {
+                    update { copy(isLoading = false, error = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    update {
+                        copy(isLoading = false, availableBooks = result.data.data.books.filterNot { it.id in readBooks })
                     }
-                    is DataResult.Error -> update { copy(error = result.message, isLoading = false) }
-                    is DataResult.Loading -> update { copy(isLoading = true) }
-                    is DataResult.Success ->
-                        update {
-                            copy(isLoading = false, availableBooks = result.data.filterNot { it.id in readBooks })
-                        }
                 }
             }
         }
@@ -137,9 +136,9 @@ constructor(
                     pages = state.value.selectedBook?.pages
                 )
             if (savedStateHandle.get<String>("bookId") == null) {
-                saveStreakUseCase(milestone)
+                bookMilestoneRepository.insertBookMilestone(milestone)
             } else {
-                updateStreakUseCase(milestone.copy(id = state.value.milestoneId))
+                bookMilestoneRepository.updateBookMilestone(milestone.copy(id = state.value.milestoneId))
             }
             update { copy(saveSuccess = true) }
         }

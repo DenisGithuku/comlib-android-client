@@ -24,7 +24,7 @@ interface UserPrefsRepository {
 
     val userPrefs: Flow<UserPrefs>
 
-    suspend fun setAuthId(authId: String)
+    suspend fun setToken(token: String)
 
     suspend fun setUserId(userId: String)
 

@@ -22,10 +22,10 @@ import com.githukudenis.comlib.core.common.MessageType
 import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @HiltViewModel
 class ResetPasswordViewModel @Inject constructor(private val authRepository: AuthRepository) :
@@ -50,7 +50,7 @@ class ResetPasswordViewModel @Inject constructor(private val authRepository: Aut
                 onError = {
                     state.update { prevState ->
                         prevState.copy(
-                            error = UserMessage(message = it?.message, messageType = MessageType.ERROR)
+                            error = UserMessage(message = it, messageType = MessageType.ERROR)
                         )
                     }
                 }

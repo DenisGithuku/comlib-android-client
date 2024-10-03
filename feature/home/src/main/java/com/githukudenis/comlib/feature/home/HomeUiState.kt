@@ -17,7 +17,6 @@
 package com.githukudenis.comlib.feature.home
 
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.core.domain.usecases.TimePeriod
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookMilestone
 import com.githukudenis.comlib.core.model.user.User

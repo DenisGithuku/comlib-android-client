@@ -16,68 +16,48 @@
 */
 package com.githukudenis.comlib.data.repository
 
-import com.githukudenis.comlib.core.auth.AuthDataSource
+import com.githukudenis.comlib.core.auth.di.AuthApi
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.model.UserAuthData
-import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.core.model.user.AddUserResponse
+import com.githukudenis.comlib.core.model.user.ResetPasswordResponse
+import com.githukudenis.comlib.core.model.user.UserLoginDTO
+import com.githukudenis.comlib.core.model.user.UserLoginResponse
+import com.githukudenis.comlib.core.model.user.UserSignUpDTO
 import javax.inject.Inject
-import timber.log.Timber
 
 class AuthRepositoryImpl
 @Inject
 constructor(
-    private val authDataSource: AuthDataSource,
-    private val userRepository: UserRepository,
+    private val authApi: AuthApi,
     private val userPrefsRepository: UserPrefsRepository
 ) : AuthRepository {
-    override suspend fun signUpWithEmail(userAuthData: UserAuthData): ResponseResult<String?> {
-        return when (val result = authDataSource.signUpWithEmail(userAuthData)) {
-            is ResponseResult.Failure -> result
-            is ResponseResult.Success -> {
-                val (email, firstname, lastname) = userAuthData
-                val authId = result.data
-                val response =
-                    userRepository.addNewUser(
-                        User(email = email, firstname = firstname, lastname = lastname, authId = result.data)
-                    )
-                val userId =
-                    when (response) {
-                        is ResponseResult.Failure -> null
-                        is ResponseResult.Success -> response.data
-                    }
-                Timber.d("user id", userId)
-
-                if (userId != null && authId != null) {
-                    userPrefsRepository.setUserId(userId)
-                    userPrefsRepository.setAuthId(authId)
-                    ResponseResult.Success("User added successfully")
-                } else {
-                    authDataSource.deleteUser()
-                    ResponseResult.Failure(Throwable("Could not add user"))
-                }
-            }
-        }
+    override suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
+        return authApi.signUp(userSignUpDTO)
     }
 
     override suspend fun login(
-        email: String,
-        password: String,
-        onSuccess: suspend (String) -> Unit,
-        onError: (Throwable?) -> Unit
+        userLogInDTO: UserLoginDTO,
+        onSuccess: suspend (UserLoginResponse) -> Unit,
+        onError: (String) -> Unit
     ) {
-        authDataSource.login(email, password, onSuccess, onError)
+        return when(val result = authApi.login(userLogInDTO)) {
+            is ResponseResult.Success -> onSuccess(result.data)
+           is ResponseResult.Failure -> onError(result.error.message)
+       }
     }
 
     override suspend fun signOut() {
         userPrefsRepository.clearSession()
-        authDataSource.signOut()
     }
 
     override suspend fun resetPassword(
         email: String,
-        onSuccess: (String) -> Unit,
-        onError: (Throwable?) -> Unit
+        onSuccess: (ResetPasswordResponse) -> Unit,
+        onError: (String) -> Unit
     ) {
-        authDataSource.resetPassword(email, onSuccess, onError)
+        return when(val result = authApi.resetPassword(email)) {
+            is ResponseResult.Success -> onSuccess(result.data)
+            is ResponseResult.Failure -> onError(result.error.message)
+        }
     }
 }

@@ -17,16 +17,15 @@
 package com.githukudenis.comlib.feature.auth.presentation.signup
 
 import androidx.test.filters.MediumTest
-import com.githukudenis.comlib.core.domain.usecases.SignUpUseCase
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import junit.framework.TestCase.assertTrue
-import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import kotlin.test.assertEquals
 
 @MediumTest
 class SignUpViewModelTest {
@@ -34,12 +33,12 @@ class SignUpViewModelTest {
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: SignUpViewModel
-    lateinit var signUpUseCase: SignUpUseCase
+    lateinit var authRepository: FakeAuthRepository
 
     @Before
     fun setUp() {
-        signUpUseCase = SignUpUseCase(FakeAuthRepository())
-        viewModel = SignUpViewModel(signUpUseCase)
+        authRepository = FakeAuthRepository()
+        viewModel = SignUpViewModel(authRepository)
     }
 
     @Test

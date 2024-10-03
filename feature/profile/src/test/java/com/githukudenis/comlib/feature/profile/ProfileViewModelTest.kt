@@ -17,9 +17,6 @@
 package com.githukudenis.comlib.feature.profile
 
 import androidx.test.filters.MediumTest
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
-import com.githukudenis.comlib.core.domain.usecases.SignOutUseCase
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.UserRepository
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
@@ -39,27 +36,21 @@ class ProfileViewModelTest {
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: ProfileViewModel
-    lateinit var getUserPrefsUseCase: GetUserPrefsUseCase
-    lateinit var getUserProfileUseCase: GetUserProfileUseCase
-    lateinit var signOutUseCase: SignOutUseCase
     lateinit var userRepository: UserRepository
     lateinit var userPrefsRepository: FakeUserPrefsRepository
+    lateinit var authRepository: FakeAuthRepository
 
     @Before
     fun setup() {
         userRepository = FakeUserRepository()
         userPrefsRepository = FakeUserPrefsRepository()
-        getUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
-        getUserProfileUseCase = GetUserProfileUseCase(userRepository)
-        signOutUseCase = SignOutUseCase(FakeAuthRepository())
+        authRepository = FakeAuthRepository()
 
         viewModel =
             ProfileViewModel(
-                getUserPrefsUseCase,
-                getUserProfileUseCase,
-                signOutUseCase,
-                userRepository,
-                userPrefsRepository
+                userPrefsRepository = userPrefsRepository,
+                userRepository = userRepository,
+                authRepository = authRepository
             )
     }
 

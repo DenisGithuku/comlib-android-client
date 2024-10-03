@@ -17,9 +17,13 @@
 package com.githukudenis.comlib.data.repository.fake
 
 import android.net.Uri
+import com.githukudenis.comlib.core.common.ErrorResponse
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.model.book.AddBookResponse
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookDTO
+import com.githukudenis.comlib.core.model.book.BooksByUserResponse
 import com.githukudenis.comlib.core.model.book.BooksData
 import com.githukudenis.comlib.core.model.book.Data
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
@@ -50,39 +54,46 @@ class FakeBooksRepository : BooksRepository {
             }
             .toMutableList()
 
-    enum class MutationResult {
-        SUCCESS,
-        FAIL
-    }
-
-    override suspend fun getAllBooks(): AllBooksResponse {
+    override suspend fun getAllBooks(): ResponseResult<AllBooksResponse> {
         delay(1000L)
-        return AllBooksResponse(
+        return ResponseResult.Success(AllBooksResponse(
             data = BooksData(books.map { it.toBook() }),
             requestedAt = "now",
             results = books.size,
             status = "Ok"
-        )
+        ))
     }
 
-    override suspend fun getBookById(id: String): SingleBookResponse {
-        return SingleBookResponse(
-            data = Data(book = books.first { it.id == id }.toBook()),
-            status = "Ok"
-        )
-    }
-
-    override suspend fun addNewBook(imageUri: Uri, book: BookDTO): String {
-        return try {
-            books.add(book)
-            MutationResult.SUCCESS.name
-        } catch (e: Exception) {
-            e.printStackTrace()
-            MutationResult.FAIL.name
+    override suspend fun getBookById(id: String): ResponseResult<SingleBookResponse> {
+        return if (books.none { it.id == id }) {
+            ResponseResult.Failure(ErrorResponse(status = "fail", message = "Book not found"))
+        } else {
+            ResponseResult.Success(SingleBookResponse(
+                data = Data(book = books.first { it.id == id }.toBook()),
+                status = "Ok"))
         }
     }
 
-    override suspend fun getBooksByUser(userId: String): List<Book> {
-        return books.filter { it.owner == userId }.map { it.toBook() }
+    override suspend fun addNewBook(imageUri: Uri, book: BookDTO): ResponseResult<AddBookResponse> {
+        return try {
+            books.add(book)
+            ResponseResult.Success(AddBookResponse(status = "Ok", message = "Book added successfully"))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            ResponseResult.Failure(ErrorResponse(status = "fail", message = e.message ?: "Unknown error"))
+        }
+    }
+
+    override suspend fun getBooksByUser(userId: String): ResponseResult<BooksByUserResponse> {
+        return if (books.none { it.owner == userId }) {
+            ResponseResult.Failure(ErrorResponse(status = "fail", message = "Books not found"))
+        } else {
+            ResponseResult.Success(BooksByUserResponse(
+                status = "Ok",
+                requestedAt = "now",
+                results = books.filter { it.owner == userId }.size,
+                data = BooksData(books.filter { it.owner == userId }.map { it.toBook() })
+            ))
+        }
     }
 }

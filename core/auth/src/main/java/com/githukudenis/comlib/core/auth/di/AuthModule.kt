@@ -16,14 +16,11 @@
 */
 package com.githukudenis.comlib.core.auth.di
 
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.auth
-import com.google.firebase.auth.ktx.auth
-import com.google.firebase.ktx.Firebase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import io.ktor.client.HttpClient
 import javax.inject.Singleton
 
 @Module
@@ -32,7 +29,9 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideFirebaseAuth(): FirebaseAuth {
-        return Firebase.auth
+    fun provideAuthApi(
+        httpClient: HttpClient
+    ): AuthApi {
+        return AuthApi(httpClient)
     }
 }

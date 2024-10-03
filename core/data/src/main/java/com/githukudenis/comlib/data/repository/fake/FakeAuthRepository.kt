@@ -16,35 +16,69 @@
 */
 package com.githukudenis.comlib.data.repository.fake
 
-import com.githukudenis.comlib.core.auth.di.FakeAuthDataSource
+import com.githukudenis.comlib.core.common.ErrorResponse
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.core.model.user.AddUserResponse
+import com.githukudenis.comlib.core.model.user.ResetPasswordResponse
+import com.githukudenis.comlib.core.model.user.UserLoginDTO
+import com.githukudenis.comlib.core.model.user.UserLoginResponse
+import com.githukudenis.comlib.core.model.user.UserSignUpDTO
 import com.githukudenis.comlib.data.repository.AuthRepository
 
 class FakeAuthRepository : AuthRepository {
 
-    private val authDataSource: FakeAuthDataSource = FakeAuthDataSource()
+    val users: MutableList<UserSignUpDTO> = mutableListOf()
 
-    override suspend fun signUpWithEmail(userAuthData: UserAuthData): ResponseResult<String?> {
-        return authDataSource.signUpWithEmail(userAuthData)
+    override suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
+        return try {
+            users.add(userSignUpDTO)
+            ResponseResult.Success(
+                AddUserResponse(
+                    token = "token",
+                    status = "success",
+                    id = "id"
+                )
+            )
+        } catch (e: Exception) {
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "Could not sign up user",
+                    status = "fail"
+                )
+            )
+        }
     }
 
     override suspend fun login(
-        email: String,
-        password: String,
-        onSuccess: suspend (String) -> Unit,
-        onError: (Throwable?) -> Unit
+        userLogInDTO: UserLoginDTO,
+        onSuccess: suspend (UserLoginResponse) -> Unit,
+        onError: (String) -> Unit
     ) {
-        authDataSource.login(email, password, onSuccess, onError)
+        try {
+            val user = users.find { it.email == userLogInDTO.email }
+            if (user == null) {
+                onError("User not found")
+                return
+            }
+
+        } catch (e: Exception) {
+            onError(
+                ErrorResponse(
+                    message = "Could not login user",
+                    status = "fail"
+                ).message
+            )
+        }
+
     }
 
     override suspend fun signOut() {}
 
     override suspend fun resetPassword(
         email: String,
-        onSuccess: (String) -> Unit,
-        onError: (Throwable?) -> Unit
+        onSuccess: (ResetPasswordResponse) -> Unit,
+        onError: (String) -> Unit
     ) {
-        authDataSource.resetPassword(email, onSuccess, onError)
+
     }
 }

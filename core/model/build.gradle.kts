@@ -6,7 +6,7 @@ plugins {
 android { namespace = "com.githukudenis.comlib.core.model" }
 
 dependencies {
-    implementation(libs.ktor.serialization)
+    implementation(libs.bundles.ktor)
     implementation(libs.timber)
 
     implementation(libs.androidx.core.ktx)

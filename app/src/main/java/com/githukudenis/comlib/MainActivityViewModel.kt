@@ -16,32 +16,30 @@
 */
 package com.githukudenis.comlib
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.model.ThemeConfig
-import com.google.firebase.auth.FirebaseAuth
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
+import javax.inject.Inject
 
 @HiltViewModel
 class MainActivityViewModel
 @Inject
-constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase
-) : ViewModel() {
+constructor(userPrefsRepository: UserPrefsRepository) : ViewModel() {
 
     val state: StateFlow<MainActivityUiState> =
-        getUserPrefsUseCase()
+        userPrefsRepository.userPrefs
             .mapLatest { userPrefs ->
+                Log.d("userPrefs", "$userPrefs")
                 MainActivityUiState(
                     isLoading = false,
-                    isLoggedIn = firebaseAuth.currentUser != null,
+                    isLoggedIn = userPrefs.token != null && userPrefs.userId != null,
                     isSetup = userPrefs.isSetup,
                     themeConfig = userPrefs.themeConfig
                 )

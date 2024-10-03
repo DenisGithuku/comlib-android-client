@@ -17,23 +17,26 @@
 package com.githukudenis.comlib.data.repository
 
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.model.UserAuthData
+import com.githukudenis.comlib.core.model.user.AddUserResponse
+import com.githukudenis.comlib.core.model.user.ResetPasswordResponse
+import com.githukudenis.comlib.core.model.user.UserLoginDTO
+import com.githukudenis.comlib.core.model.user.UserLoginResponse
+import com.githukudenis.comlib.core.model.user.UserSignUpDTO
 
 interface AuthRepository {
-    suspend fun signUpWithEmail(userAuthData: UserAuthData): ResponseResult<String?>
+    suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse>
 
     suspend fun login(
-        email: String,
-        password: String,
-        onSuccess: suspend (String) -> Unit,
-        onError: (Throwable?) -> Unit
+        userLogInDTO: UserLoginDTO,
+        onSuccess: suspend (UserLoginResponse) -> Unit,
+        onError: (String) -> Unit
     )
 
     suspend fun signOut()
 
     suspend fun resetPassword(
         email: String,
-        onSuccess: (String) -> Unit,
-        onError: (Throwable?) -> Unit
+        onSuccess: (ResetPasswordResponse) -> Unit,
+        onError: (String) -> Unit
     )
 }

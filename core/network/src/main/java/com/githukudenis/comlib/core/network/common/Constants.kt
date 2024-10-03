@@ -35,6 +35,12 @@ sealed class Endpoints(private val path: String) {
             }
         }
 
+    data object Login : Endpoints("api/v1/users/login")
+
+    data object SignUp : Endpoints("api/v1/users/signup")
+
+    data object ResetPassword : Endpoints("api/v1/users/reset-password")
+
     data object Books : Endpoints("api/v1/books")
 
     data class Book(private val id: String) : Endpoints("api/v1/books/$id")

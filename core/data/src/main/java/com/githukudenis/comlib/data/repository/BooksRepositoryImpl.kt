@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -17,40 +16,69 @@
 package com.githukudenis.comlib.data.repository
 
 import android.net.Uri
+import com.githukudenis.comlib.core.common.ErrorResponse
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
+import com.githukudenis.comlib.core.model.book.AddBookResponse
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
-import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookDTO
+import com.githukudenis.comlib.core.model.book.BooksByUserResponse
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
-import com.githukudenis.comlib.core.network.BooksRemoteDataSource
+import com.githukudenis.comlib.core.model.book.asBooksByUserResponse
+import com.githukudenis.comlib.core.network.BooksApi
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 class BooksRepositoryImpl
-@Inject
-constructor(
-    private val booksRemoteDataSource: BooksRemoteDataSource,
+@Inject constructor(
+    private val booksApi: BooksApi,
+    private val dispatchers: ComlibCoroutineDispatchers,
     private val imagesRemoteDataSource: ImagesRemoteDataSource
 ) : BooksRepository {
-    override suspend fun getAllBooks(): AllBooksResponse {
-        return booksRemoteDataSource.getBooks()
+    override suspend fun getAllBooks(): ResponseResult<AllBooksResponse> {
+        return withContext(dispatchers.io) { booksApi.getBooks() }
     }
 
-    override suspend fun getBookById(id: String): SingleBookResponse {
-        return booksRemoteDataSource.getBook(id)
+    override suspend fun getBookById(id: String): ResponseResult<SingleBookResponse> {
+        return withContext(dispatchers.io) { booksApi.getBookById(id) }
     }
 
-    override suspend fun addNewBook(imageUri: Uri, book: BookDTO): String {
-        val imagePath = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
+    override suspend fun addNewBook(imageUri: Uri, book: BookDTO): ResponseResult<AddBookResponse> {
+        return withContext(dispatchers.io) {
+            val imagePath = ImageStorageRef.Books(imageUri.lastPathSegment ?: "").ref
 
-        val bookImage = imagesRemoteDataSource.addImage(imageUri, imagePath)
-        return bookImage.getOrNull()?.let { path ->
-            val updatedBook = book.copy(image = path)
-            booksRemoteDataSource.addNewBook(updatedBook)
-        } ?: ""
+            val result = imagesRemoteDataSource.addImage(imageUri, imagePath)
+            if (result.isSuccess) {
+                booksApi.addNewBook(book)
+            } else {
+                ResponseResult.Failure(
+                    ErrorResponse(
+                        status = "fail",
+                        message = result.exceptionOrNull()?.message ?: "Unknown error"
+                    )
+                )
+            }
+        }
     }
 
-    override suspend fun getBooksByUser(userId: String): List<Book> {
-        return booksRemoteDataSource.getBooks().data.books.filter { it.owner == userId }
+
+    override suspend fun getBooksByUser(userId: String): ResponseResult<BooksByUserResponse> {
+        return withContext(dispatchers.io) {
+            when (val result = booksApi.getBooks()) {
+                is ResponseResult.Failure -> {
+                    ResponseResult.Failure(
+                        result.error
+                    )
+                }
+
+                is ResponseResult.Success -> {
+                    ResponseResult.Success(
+                        data = result.data.asBooksByUserResponse(userId)
+                    )
+                }
+            }
+        }
     }
 }

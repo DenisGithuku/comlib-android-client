@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -16,8 +15,9 @@
 */
 package com.githukudenis.comlib.core.network
 
-import android.util.Log
-import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.common.safeApiCall
+import com.githukudenis.comlib.core.model.book.AddBookResponse
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
@@ -25,33 +25,23 @@ import com.githukudenis.comlib.core.network.common.Endpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import javax.inject.Inject
-import kotlinx.coroutines.withContext
 
 class BooksApi
-@Inject
-constructor(
-    private val httpClient: HttpClient,
-    private val dispatchers: ComlibCoroutineDispatchers
+@Inject constructor(
+    private val httpClient: HttpClient
 ) {
-    suspend fun getBooks(): AllBooksResponse {
-        return withContext(dispatchers.io) {
-            val books = httpClient.get<AllBooksResponse>(Endpoints.Books.url)
-            Log.d("books", books.data.books.toString())
-            books
-        }
+    suspend fun getBooks(): ResponseResult<AllBooksResponse> = safeApiCall {
+        httpClient.get(Endpoints.Books.url)
     }
 
-    suspend fun getBookById(bookId: String): SingleBookResponse {
-        return withContext(dispatchers.io) {
-            val book = httpClient.get<SingleBookResponse>(Endpoints.Book(bookId).url)
-            book
-        }
+    suspend fun getBookById(bookId: String): ResponseResult<SingleBookResponse> = safeApiCall {
+        httpClient.get(Endpoints.Book(bookId).url)
     }
 
-    suspend fun addNewBook(book: BookDTO): String {
-        return withContext(dispatchers.io) {
-            httpClient.post<String>(Endpoints.Books.url) { body = book }
-        }
+
+    suspend fun addNewBook(book: BookDTO): ResponseResult<AddBookResponse> = safeApiCall {
+        httpClient.post(Endpoints.Books.url) { setBody(book) }
     }
 }

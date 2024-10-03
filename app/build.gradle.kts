@@ -51,8 +51,8 @@ android {
 dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:home"))
-    implementation(project(":core:domain"))
     implementation(project(":core:model"))
+    implementation(project(":core:data"))
     implementation(project(":feature:book_detail"))
     implementation(project(":feature:books"))
     implementation(project(":feature:profile"))

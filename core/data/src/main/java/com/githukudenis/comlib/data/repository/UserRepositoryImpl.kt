@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -17,105 +16,108 @@
 package com.githukudenis.comlib.data.repository
 
 import android.net.Uri
+import com.githukudenis.comlib.core.common.ErrorResponse
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
+import com.githukudenis.comlib.core.model.user.DeactivateUserResponse
+import com.githukudenis.comlib.core.model.user.DeleteUserResponse
+import com.githukudenis.comlib.core.model.user.SingleUserResponse
+import com.githukudenis.comlib.core.model.user.UpdateUserResponse
+import com.githukudenis.comlib.core.model.user.UploadUserResponse
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
 import com.githukudenis.comlib.core.network.common.FirebaseExt
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
-import javax.inject.Inject
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.withContext
 import timber.log.Timber
+import javax.inject.Inject
 
 class UserRepositoryImpl
-@Inject
-constructor(
+@Inject constructor(
     private val userApi: UserApi,
     private val dispatchers: ComlibCoroutineDispatchers,
     private val imagesRemoteDataSource: ImagesRemoteDataSource
 ) : UserRepository {
-    override suspend fun getUsersByClub(clubId: String): ResponseResult<List<User>> {
+
+    override suspend fun updateUser(user: User): ResponseResult<UpdateUserResponse> {
         return withContext(dispatchers.io) {
-            try {
-                val users = userApi.getUsersInClub(clubId)
-                ResponseResult.Success(users)
-            } catch (e: Exception) {
-                Timber.e(e)
-                if (e is CancellationException) throw e
-                ResponseResult.Failure(e)
-            }
+            userApi.updateUser(user)
         }
     }
 
-    override suspend fun addNewUser(user: User): ResponseResult<String> {
+    override suspend fun deactivateAccount(userId: String): ResponseResult<DeactivateUserResponse> {
+        TODO("Not yet implemented")
+    }
+
+    override suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
         return withContext(dispatchers.io) {
-            try {
-                val userId = userApi.addUser(user)
-                ResponseResult.Success(userId)
-            } catch (e: Exception) {
-                Timber.e(e)
-                if (e is CancellationException) throw e
-                ResponseResult.Failure(e)
-            }
+            userApi.getUserById(userId)
         }
     }
 
-    override suspend fun updateUser(id: String, user: User): ResponseResult<String> {
+    override suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
         return withContext(dispatchers.io) {
-            try {
-                userApi.updateUser(id, user)
-                ResponseResult.Success("User added successfully")
-            } catch (e: Exception) {
-                Timber.e(e)
-                if (e is CancellationException) throw e
-                ResponseResult.Failure(e)
-            }
-        }
-    }
-
-    override suspend fun getUserById(userId: String): ResponseResult<User> {
-        return withContext(dispatchers.io) {
-            try {
-                val user = userApi.getUserById(userId).data.user
-                ResponseResult.Success(user)
-            } catch (e: Exception) {
-                Timber.e(e)
-                if (e is CancellationException) throw e
-                ResponseResult.Failure(e)
-            }
-        }
-    }
-
-    override suspend fun deleteUser(userId: String) {
-        withContext(dispatchers.io) {
-            val user = userApi.getUserById(userId).data.user
-            user.image?.let { imagesRemoteDataSource.deleteImage(it) }
-            userApi.deleteUser(userId)
-        }
-    }
-
-    override suspend fun uploadUserImage(imageUri: Uri, authId: String): ResponseResult<String> {
-        return withContext(dispatchers.io) {
-            try {
-                // Delete existing image first
-                userApi.getUserById(authId).data.user.image?.let {
-                    imagesRemoteDataSource.deleteImage(imagePath = FirebaseExt.getFilePathFromUrl(it))
+            when (val result = userApi.getUserById(userId)) {
+                is ResponseResult.Failure -> {
+                    ResponseResult.Failure(result.error)
                 }
 
-                val imagePath = ImageStorageRef.Users(imageUri.lastPathSegment ?: "").ref
-                val userImage = imagesRemoteDataSource.addImage(imageUri, imagePath)
+                is ResponseResult.Success -> {
+                    result.data.data.user.image?.let {
+                        imagesRemoteDataSource.deleteImage(
+                            imagePath = FirebaseExt.getFilePathFromUrl(
+                                it
+                            )
+                        )
+                    }
+                    userApi.deleteUser(userId)
+                }
+            }
 
-                userImage.getOrNull()?.let {
-                    val updatedUser = userApi.getUserById(authId).data.user.copy(image = it)
-                    userApi.updateUser(updatedUser.id ?: "", updatedUser)
-                    ResponseResult.Success("success")
-                } ?: ResponseResult.Failure(Exception("Image upload failed"))
-            } catch (e: Exception) {
-                Timber.e(e)
-                if (e is CancellationException) throw e
-                ResponseResult.Failure(e)
+        }
+    }
+
+    override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<UploadUserResponse> {
+        return withContext(dispatchers.io) {
+            when (val result = userApi.getUserById(userId)) {
+                is ResponseResult.Failure -> {
+                    Timber.e(result.error.message)
+                    ResponseResult.Failure(
+                        result.error
+                    )
+                }
+
+                is ResponseResult.Success -> {
+                    // Delete existing image first
+                    result.data.data.user.image?.let {
+                        imagesRemoteDataSource.deleteImage(
+                            imagePath = FirebaseExt.getFilePathFromUrl(
+                                it
+                            )
+                        )
+
+                        val imagePath = ImageStorageRef.Users(imageUri.lastPathSegment ?: "").ref
+                        val userImage = imagesRemoteDataSource.addImage(imageUri, imagePath)
+
+                        userImage.getOrNull()?.let {
+                            val updatedUser = result.data.data.user.copy(image = it)
+                            when(val updateResult = userApi.updateUser(updatedUser)) {
+                                is ResponseResult.Failure -> {
+                                    ResponseResult.Failure(updateResult.error)
+                                }
+                                is ResponseResult.Success -> {
+                                    ResponseResult.Success(UploadUserResponse(status = "success", message = "success"))
+                                }
+                            }
+                        }
+                    }  ?: ResponseResult.Failure(
+                        ErrorResponse(
+                            message = "Could not upload image",
+                            status = "fail"
+                        )
+                    )
+                }
             }
         }
     }

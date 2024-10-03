@@ -17,15 +17,15 @@
 package com.githukudenis.comlib.feature.my_books
 
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.DataResult
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.GetBooksByUserUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
 import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.data.repository.BooksRepository
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class MyBooksUiState(
     val isLoading: Boolean = false,
@@ -37,8 +37,8 @@ data class MyBooksUiState(
 class MyBooksViewModel
 @Inject
 constructor(
-    private val getBooksByUserUseCase: GetBooksByUserUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase
+    private val userPrefsRepository: UserPrefsRepository,
+    private val booksRepository: BooksRepository,
 ) : StatefulViewModel<MyBooksUiState>(MyBooksUiState()) {
 
     init {
@@ -47,22 +47,18 @@ constructor(
 
     private fun getBooks() {
         viewModelScope.launch {
-            getUserPrefsUseCase().collectLatest { prefs ->
-                requireNotNull(prefs.userId).run {
-                    when (val result = getBooksByUserUseCase(this)) {
-                        DataResult.Empty -> {
-                            update { copy(books = emptyList(), isLoading = false) }
-                        }
-                        is DataResult.Error -> {
-                            update { copy(isLoading = false, error = result.message) }
-                        }
-                        is DataResult.Loading -> {
-                            update { copy(isLoading = true) }
-                        }
-                        is DataResult.Success -> {
-                            update { copy(isLoading = false, books = result.data) }
-                        }
-                    }
+            update { copy(isLoading = true) }
+            val books = booksRepository.getAllBooks()
+            val userId = userPrefsRepository.userPrefs.first().userId
+            when (books) {
+                is ResponseResult.Failure -> {
+                    update { copy(isLoading = false, error = books.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    update { copy(isLoading = false, books = books.data.data.books
+                        .filter { it.owner == userId }
+                        .sortedBy { it.title }
+                    ) }
                 }
             }
         }

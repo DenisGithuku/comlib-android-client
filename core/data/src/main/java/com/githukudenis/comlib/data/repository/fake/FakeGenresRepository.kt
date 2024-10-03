@@ -16,6 +16,8 @@
 */
 package com.githukudenis.comlib.data.repository.fake
 
+import com.githukudenis.comlib.core.common.ErrorResponse
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.model.genre.AllGenresResponse
 import com.githukudenis.comlib.core.model.genre.Data
 import com.githukudenis.comlib.core.model.genre.DataX
@@ -26,16 +28,25 @@ import com.githukudenis.comlib.data.repository.GenresRepository
 class FakeGenresRepository : GenresRepository {
     val genres = (1..10).map { Genre(_id = "$it", id = "$it", name = "Genre$it") }
 
-    override suspend fun getGenres(): AllGenresResponse {
-        return AllGenresResponse(
+    override suspend fun getGenres(): ResponseResult<AllGenresResponse> {
+        return ResponseResult.Success(AllGenresResponse(
             data = DataX(genres),
             requestedAt = "now",
             results = genres.size,
             status = "Ok"
-        )
+        ))
     }
 
-    override suspend fun getGenreById(id: String): SingleGenreResponse {
-        return SingleGenreResponse(data = Data(genre = genres.first { it.id == id }), status = "Ok")
+    override suspend fun getGenreById(id: String): ResponseResult<SingleGenreResponse> {
+        return try {
+            ResponseResult.Success(SingleGenreResponse(data = Data(genre = genres.first { it.id == id }), status = "Ok"))
+        } catch (e: Exception) {
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = e.message ?: "Unknown error",
+                    status = "error"
+                )
+            )
+        }
     }
 }

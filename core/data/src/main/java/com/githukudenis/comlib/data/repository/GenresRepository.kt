@@ -16,11 +16,12 @@
 */
 package com.githukudenis.comlib.data.repository
 
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.model.genre.AllGenresResponse
 import com.githukudenis.comlib.core.model.genre.SingleGenreResponse
 
 interface GenresRepository {
-    suspend fun getGenres(): AllGenresResponse
+    suspend fun getGenres(): ResponseResult<AllGenresResponse>
 
-    suspend fun getGenreById(id: String): SingleGenreResponse
+    suspend fun getGenreById(id: String): ResponseResult<SingleGenreResponse>
 }
