@@ -40,7 +40,7 @@ constructor(userPrefsRepository: UserPrefsRepository) : ViewModel() {
                 MainActivityUiState(
                     isLoading = false,
                     isLoggedIn = userPrefs.token != null && userPrefs.userId != null,
-                    isSetup = userPrefs.isSetup,
+                    isSetupComplete = userPrefs.isSetup,
                     themeConfig = userPrefs.themeConfig
                 )
             }
@@ -50,6 +50,6 @@ constructor(userPrefsRepository: UserPrefsRepository) : ViewModel() {
 data class MainActivityUiState(
     val isLoading: Boolean = true,
     val isLoggedIn: Boolean = false,
-    val isSetup: Boolean = false,
+    val isSetupComplete: Boolean = false,
     val themeConfig: ThemeConfig = ThemeConfig.SYSTEM
 )
