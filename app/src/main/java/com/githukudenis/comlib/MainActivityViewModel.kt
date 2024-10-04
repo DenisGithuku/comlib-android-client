@@ -22,16 +22,15 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
-import javax.inject.Inject
 
 @HiltViewModel
-class MainActivityViewModel
-@Inject
-constructor(userPrefsRepository: UserPrefsRepository) : ViewModel() {
+class MainActivityViewModel @Inject constructor(userPrefsRepository: UserPrefsRepository) :
+    ViewModel() {
 
     val state: StateFlow<MainActivityUiState> =
         userPrefsRepository.userPrefs

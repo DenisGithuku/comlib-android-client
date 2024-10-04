@@ -21,19 +21,18 @@ import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.model.genre.AllGenresResponse
 import com.githukudenis.comlib.core.model.genre.SingleGenreResponse
 import com.githukudenis.comlib.core.network.GenresApi
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlinx.coroutines.withContext
 
 class GenresRepositoryImpl
 @Inject
-constructor(private val genresApi: GenresApi, private val dispatchers: ComlibCoroutineDispatchers) : GenresRepository {
+constructor(private val genresApi: GenresApi, private val dispatchers: ComlibCoroutineDispatchers) :
+    GenresRepository {
     override suspend fun getGenres(): ResponseResult<AllGenresResponse> {
         return withContext(dispatchers.io) { genresApi.getGenres() }
     }
 
     override suspend fun getGenreById(id: String): ResponseResult<SingleGenreResponse> {
-        return withContext(dispatchers.io) {
-            genresApi.getGenreById(genreId = id)
-        }
+        return withContext(dispatchers.io) { genresApi.getGenreById(genreId = id) }
     }
 }

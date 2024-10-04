@@ -35,6 +35,8 @@ data class FormState(
     val requirements: List<PasswordRequirements> = emptyList()
 ) {
     val formIsValid: Boolean
-        get() = email.isNotEmpty() && password.isNotEmpty() &&
+        get() =
+            email.isNotEmpty() &&
+                password.isNotEmpty() &&
                 requirements.containsAll(PasswordRequirements.entries.toList())
 }

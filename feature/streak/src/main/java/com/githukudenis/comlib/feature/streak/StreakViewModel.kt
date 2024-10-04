@@ -26,6 +26,7 @@ import com.githukudenis.comlib.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
@@ -36,7 +37,6 @@ import kotlinx.datetime.TimeZone
 import kotlinx.datetime.atStartOfDayIn
 import kotlinx.datetime.plus
 import kotlinx.datetime.todayIn
-import javax.inject.Inject
 
 data class StreakUiState(
     val isLoading: Boolean = false,
@@ -74,9 +74,7 @@ constructor(
     private fun getStreakDetails(bookId: String?) {
         if (bookId == null) return
         viewModelScope.launch {
-            val bookMilestone = bookMilestoneRepository
-                .bookMilestone
-                .first()
+            val bookMilestone = bookMilestoneRepository.bookMilestone.first()
             bookMilestone?.let { milestone ->
                 update {
                     copy(
@@ -99,16 +97,18 @@ constructor(
         viewModelScope.launch {
             update { copy(isLoading = true) }
             val readBooks = userPrefsRepository.userPrefs.mapLatest { it.readBooks }.first()
-            val result = booksRepository
-                .getAllBooks()
+            val result = booksRepository.getAllBooks()
 
-            when(result) {
+            when (result) {
                 is ResponseResult.Failure -> {
                     update { copy(isLoading = false, error = result.error.message) }
                 }
                 is ResponseResult.Success -> {
                     update {
-                        copy(isLoading = false, availableBooks = result.data.data.books.filterNot { it.id in readBooks })
+                        copy(
+                            isLoading = false,
+                            availableBooks = result.data.data.books.filterNot { it.id in readBooks }
+                        )
                     }
                 }
             }

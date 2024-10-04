@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -40,10 +41,10 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
-import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
+import kotlinx.serialization.json.Json
+import timber.log.Timber
 
 private const val TIMEOUT = 60_000L
 
@@ -58,56 +59,58 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTokenInterceptor(userPrefsDataSource: UserPrefsDatasource): TokenInterceptor = TokenInterceptor(userPrefsDataSource)
+    fun provideTokenInterceptor(userPrefsDataSource: UserPrefsDatasource): TokenInterceptor =
+        TokenInterceptor(userPrefsDataSource)
 
     @Provides
     @Singleton
     fun provideHttpClient(
-        networkMonitor: NetworkMonitor, tokenInterceptor: TokenInterceptor
+        networkMonitor: NetworkMonitor,
+        tokenInterceptor: TokenInterceptor
     ): HttpClient {
-        val httpClient = HttpClient(OkHttp) {
-
-            install(ContentNegotiation) {
-                json(json = Json {
-                    encodeDefaults = true
-                    ignoreUnknownKeys = true
-                    prettyPrint = true
-                    isLenient = true
-                })
-            }
-
-
-            defaultRequest {
-                header(HttpHeaders.ContentType, ContentType.Application.Json)
-            }
-
-            engine {
-                config {
-                    retryOnConnectionFailure(true)
-                    connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
-                    addInterceptor(NetworkInterceptor(networkMonitor))
-
-                    // Add a token change aware interceptor to prevent null value exceptions
-                    addInterceptor(tokenInterceptor)
+        val httpClient =
+            HttpClient(OkHttp) {
+                install(ContentNegotiation) {
+                    json(
+                        json =
+                            Json {
+                                encodeDefaults = true
+                                ignoreUnknownKeys = true
+                                prettyPrint = true
+                                isLenient = true
+                            }
+                    )
                 }
-            }
 
-            install(Logging) {
-                logger = object : Logger {
-                    override fun log(message: String) {
-                        Timber.tag("Logger Ktor => ").v(message)
+                defaultRequest { header(HttpHeaders.ContentType, ContentType.Application.Json) }
+
+                engine {
+                    config {
+                        retryOnConnectionFailure(true)
+                        connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                        readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                        writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                        addInterceptor(NetworkInterceptor(networkMonitor))
+
+                        // Add a token change aware interceptor to prevent null value exceptions
+                        addInterceptor(tokenInterceptor)
                     }
                 }
-                level = LogLevel.ALL
-            }
 
-            install(ResponseObserver) {
-                onResponse { response -> Timber.tag("HTTP status: ").d("${response.status.value}") }
-            }
+                install(Logging) {
+                    logger =
+                        object : Logger {
+                            override fun log(message: String) {
+                                Timber.tag("Logger Ktor => ").v(message)
+                            }
+                        }
+                    level = LogLevel.ALL
+                }
 
-        }
+                install(ResponseObserver) {
+                    onResponse { response -> Timber.tag("HTTP status: ").d("${response.status.value}") }
+                }
+            }
         return httpClient
     }
 

@@ -350,7 +350,6 @@ fun AddBookFormItem(
     trailingIcon: (@Composable () -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
-
     CLibOutlinedTextField(
         modifier = modifier,
         singleLine = singleLine,

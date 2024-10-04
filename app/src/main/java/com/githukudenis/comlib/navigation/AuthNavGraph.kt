@@ -74,12 +74,8 @@ fun NavGraphBuilder.authGraph(
             ResetPasswordRoute(snackbarHostState = snackbarHostState, onReset = onResetComplete)
         }
 
-        composable(
-            route = AuthDestination.CompleteProfile.route,
-        ) {
-            CompleteProfileRoute(
-                onUpdateComplete = onProceedToSetupGenre
-            )
+        composable(route = AuthDestination.CompleteProfile.route) {
+            CompleteProfileRoute(onUpdateComplete = onProceedToSetupGenre)
         }
     }
 }
@@ -91,5 +87,5 @@ sealed class AuthDestination(val route: String) {
 
     data object ForgotPassword : AuthDestination("forgot_password")
 
-    data object CompleteProfile: AuthDestination("complete_profile")
+    data object CompleteProfile : AuthDestination("complete_profile")
 }

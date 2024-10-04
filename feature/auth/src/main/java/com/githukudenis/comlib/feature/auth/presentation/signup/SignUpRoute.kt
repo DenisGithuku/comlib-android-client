@@ -243,7 +243,6 @@ private fun SignUpScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
 
             item {
@@ -265,7 +264,6 @@ private fun SignUpScreen(
                     isError = !state.formState.isEmailValid && isEmailFocused
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
             item {
                 CLibOutlinedTextField(
@@ -306,7 +304,6 @@ private fun SignUpScreen(
                     isError = state.formState.requirements.size < 4 && isPasswordFocused
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
             item {
                 CLibOutlinedTextField(
@@ -347,7 +344,6 @@ private fun SignUpScreen(
                     isError = state.formState.password != state.formState.confirmPassword && isConfirmFocused
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
             item {
                 CLibButton(
@@ -362,7 +358,6 @@ private fun SignUpScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
             item {
                 Row(
@@ -377,9 +372,9 @@ private fun SignUpScreen(
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
-
             }
-//            item { AuthProviderButton(onClick = onGoogleSignIn, icon = R.drawable.ic_google) }
+            //            item { AuthProviderButton(onClick = onGoogleSignIn, icon = R.drawable.ic_google)
+            // }
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

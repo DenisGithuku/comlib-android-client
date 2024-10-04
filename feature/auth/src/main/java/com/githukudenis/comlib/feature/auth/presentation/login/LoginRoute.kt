@@ -300,7 +300,7 @@ private fun LoginScreen(
                 }
             }
 
-//            AuthProviderButton(icon = R.drawable.ic_google, onClick = onGoogleSignIn)
+            //            AuthProviderButton(icon = R.drawable.ic_google, onClick = onGoogleSignIn)
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(

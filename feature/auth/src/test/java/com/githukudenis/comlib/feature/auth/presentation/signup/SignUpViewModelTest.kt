@@ -21,12 +21,12 @@ import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import junit.framework.TestCase.assertTrue
+import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
 
 @MediumTest
 class SignUpViewModelTest {
@@ -40,10 +40,8 @@ class SignUpViewModelTest {
     @Before
     fun setUp() {
         authRepository = FakeAuthRepository()
-        viewModel = SignUpViewModel(
-            authRepository = authRepository,
-            userPrefsRepository = userPrefsRepository
-        )
+        viewModel =
+            SignUpViewModel(authRepository = authRepository, userPrefsRepository = userPrefsRepository)
     }
 
     @Test

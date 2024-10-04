@@ -17,7 +17,6 @@
 package com.githukudenis.comlib.core.network
 
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
 import com.githukudenis.comlib.core.common.safeApiCall
 import com.githukudenis.comlib.core.model.genre.AllGenresResponse
 import com.githukudenis.comlib.core.model.genre.SingleGenreResponse
@@ -26,18 +25,12 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.get
 import javax.inject.Inject
 
-class GenresApi
-@Inject
-constructor(
-    private val httpClient: HttpClient,
-) {
-    suspend fun getGenres(): ResponseResult<AllGenresResponse> =
-        safeApiCall {
-            httpClient.get(Endpoints.Genres.url)
-        }
+class GenresApi @Inject constructor(private val httpClient: HttpClient) {
+    suspend fun getGenres(): ResponseResult<AllGenresResponse> = safeApiCall {
+        httpClient.get(Endpoints.Genres.url)
+    }
 
-    suspend fun getGenreById(genreId: String): ResponseResult<SingleGenreResponse> =
-        safeApiCall {
-                httpClient.get(Endpoints.Genre(genreId).url)
-        }
+    suspend fun getGenreById(genreId: String): ResponseResult<SingleGenreResponse> = safeApiCall {
+        httpClient.get(Endpoints.Genre(genreId).url)
+    }
 }

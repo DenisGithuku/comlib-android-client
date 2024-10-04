@@ -30,31 +30,21 @@ import io.ktor.client.request.patch
 import io.ktor.client.request.setBody
 import javax.inject.Inject
 
-class UserApi
-@Inject
-constructor(
-    private val httpClient: HttpClient
-) {
+class UserApi @Inject constructor(private val httpClient: HttpClient) {
 
     suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
-        return safeApiCall {
-            httpClient.get(urlString = Endpoints.Users.GetById(userId).url)
-        }
+        return safeApiCall { httpClient.get(urlString = Endpoints.Users.GetById(userId).url) }
     }
 
     suspend fun updateUser(user: User): ResponseResult<UpdateUserResponse> {
         return safeApiCall {
             user.id?.let {
-                httpClient.patch(urlString = Endpoints.Users.Update(it).url) {
-                    setBody(user)
-                }
+                httpClient.patch(urlString = Endpoints.Users.Update(it).url) { setBody(user) }
             } ?: throw IllegalArgumentException("User id cannot be null")
         }
     }
 
     suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
-        return safeApiCall {
-            httpClient.delete(urlString = Endpoints.Users.Delete(userId).url)
-        }
+        return safeApiCall { httpClient.delete(urlString = Endpoints.Users.Delete(userId).url) }
     }
 }

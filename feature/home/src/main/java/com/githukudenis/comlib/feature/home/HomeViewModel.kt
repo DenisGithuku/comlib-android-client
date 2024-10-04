@@ -26,16 +26,18 @@ import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.Instant
+import java.time.ZoneId
+import javax.inject.Inject
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.launch
-import java.time.Instant
-import java.time.ZoneId
-import javax.inject.Inject
 
 enum class TimePeriod {
-    MORNING, AFTERNOON, EVENING
+    MORNING,
+    AFTERNOON,
+    EVENING
 }
 
 data class HomeScreenState(
@@ -68,30 +70,37 @@ constructor(
 
     private fun getReadBooks() {
         viewModelScope.launch {
-            userPrefsRepository.userPrefs.mapLatest { it.readBooks }.collectLatest { update { copy(reads = it.toList()) } }
+            userPrefsRepository.userPrefs
+                .mapLatest { it.readBooks }
+                .collectLatest { update { copy(reads = it.toList()) } }
         }
     }
 
     private fun getAvailableBooks() {
         update { copy(availableState = FetchItemState.Loading) }
         viewModelScope.launch {
-            when(val result = booksRepository.getAllBooks()) {
+            when (val result = booksRepository.getAllBooks()) {
                 is ResponseResult.Failure -> {
                     update { copy(availableState = FetchItemState.Error(message = result.error.message)) }
                 }
                 is ResponseResult.Success -> {
-                    update { copy(availableState = FetchItemState.Success(
-                        result.data.data.books.map {
-                            BookUiModel(book = it, isFavourite = it.id in state.value.bookmarks)
-                        }
-                    )) }
+                    update {
+                        copy(
+                            availableState =
+                                FetchItemState.Success(
+                                    result.data.data.books.map {
+                                        BookUiModel(book = it, isFavourite = it.id in state.value.bookmarks)
+                                    }
+                                )
+                        )
+                    }
                 }
             }
         }
     }
 
     private suspend fun getUserProfile(userId: String) {
-        when(val profile = userRepository.getUserById(userId)) {
+        when (val profile = userRepository.getUserById(userId)) {
             is ResponseResult.Failure -> {
                 update { copy(user = FetchItemState.Error(message = profile.error.message)) }
             }
@@ -127,8 +136,7 @@ constructor(
 
     private fun getStreakState() {
         viewModelScope.launch {
-            bookMilestoneRepository.bookMilestone
-                .collectLatest {
+            bookMilestoneRepository.bookMilestone.collectLatest {
                 update { copy(streakState = StreakState(bookMilestone = it)) }
             }
         }
@@ -136,8 +144,9 @@ constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            userPrefsRepository.userPrefs
-                .collectLatest { prefs -> prefs.userId?.let { getUserProfile(it) } }
+            userPrefsRepository.userPrefs.collectLatest { prefs ->
+                prefs.userId?.let { getUserProfile(it) }
+            }
         }
     }
 

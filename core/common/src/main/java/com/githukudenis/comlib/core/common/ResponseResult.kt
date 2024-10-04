@@ -21,7 +21,7 @@ import io.ktor.client.statement.HttpResponse
 import io.ktor.http.isSuccess
 import timber.log.Timber
 
-suspend inline fun <reified T: Any> safeApiCall(block: () -> HttpResponse): ResponseResult<T> {
+suspend inline fun <reified T : Any> safeApiCall(block: () -> HttpResponse): ResponseResult<T> {
     return try {
         val response = block()
         if (!response.status.isSuccess()) {
@@ -33,15 +33,13 @@ suspend inline fun <reified T: Any> safeApiCall(block: () -> HttpResponse): Resp
     } catch (e: Exception) {
         Timber.e(e)
         ResponseResult.Failure(
-            ErrorResponse(
-                status = "error",
-                message = e.message ?: "An unknown error occurred"
-            )
+            ErrorResponse(status = "error", message = e.message ?: "An unknown error occurred")
         )
     }
 }
-sealed interface ResponseResult<out T: Any> {
-    data class Success<out T: Any>(val data: T) : ResponseResult<T>
+
+sealed interface ResponseResult<out T : Any> {
+    data class Success<out T : Any>(val data: T) : ResponseResult<T>
 
     data class Failure(val error: ErrorResponse) : ResponseResult<Nothing>
 }

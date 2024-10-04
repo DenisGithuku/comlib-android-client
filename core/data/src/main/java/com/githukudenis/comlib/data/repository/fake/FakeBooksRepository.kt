@@ -56,21 +56,23 @@ class FakeBooksRepository : BooksRepository {
 
     override suspend fun getAllBooks(): ResponseResult<AllBooksResponse> {
         delay(1000L)
-        return ResponseResult.Success(AllBooksResponse(
-            data = BooksData(books.map { it.toBook() }),
-            requestedAt = "now",
-            results = books.size,
-            status = "Ok"
-        ))
+        return ResponseResult.Success(
+            AllBooksResponse(
+                data = BooksData(books.map { it.toBook() }),
+                requestedAt = "now",
+                results = books.size,
+                status = "Ok"
+            )
+        )
     }
 
     override suspend fun getBookById(id: String): ResponseResult<SingleBookResponse> {
         return if (books.none { it.id == id }) {
             ResponseResult.Failure(ErrorResponse(status = "fail", message = "Book not found"))
         } else {
-            ResponseResult.Success(SingleBookResponse(
-                data = Data(book = books.first { it.id == id }.toBook()),
-                status = "Ok"))
+            ResponseResult.Success(
+                SingleBookResponse(data = Data(book = books.first { it.id == id }.toBook()), status = "Ok")
+            )
         }
     }
 
@@ -88,12 +90,14 @@ class FakeBooksRepository : BooksRepository {
         return if (books.none { it.owner == userId }) {
             ResponseResult.Failure(ErrorResponse(status = "fail", message = "Books not found"))
         } else {
-            ResponseResult.Success(BooksByUserResponse(
-                status = "Ok",
-                requestedAt = "now",
-                results = books.filter { it.owner == userId }.size,
-                data = BooksData(books.filter { it.owner == userId }.map { it.toBook() })
-            ))
+            ResponseResult.Success(
+                BooksByUserResponse(
+                    status = "Ok",
+                    requestedAt = "now",
+                    results = books.filter { it.owner == userId }.size,
+                    data = BooksData(books.filter { it.owner == userId }.map { it.toBook() })
+                )
+            )
         }
     }
 }

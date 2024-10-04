@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -28,33 +29,28 @@ import com.githukudenis.comlib.data.repository.UserRepository
 
 class FakeUserRepository : UserRepository {
 
-    val users = (1..10).map {
-        User(
-            _id = "owner@$it",
-            clubs = listOf("club1", "club2", "club3"),
-            currentBooks = listOf(),
-            email = "$it@gmail.com",
-            preferredGenres = listOf(),
-            firstname = "$it.firstname",
-            id = "owner@$it",
-            lastname = "$it.lastname"
-        )
-    }.toMutableList()
+    val users =
+        (1..10)
+            .map {
+                User(
+                    _id = "owner@$it",
+                    clubs = listOf("club1", "club2", "club3"),
+                    currentBooks = listOf(),
+                    email = "$it@gmail.com",
+                    preferredGenres = listOf(),
+                    firstname = "$it.firstname",
+                    id = "owner@$it",
+                    lastname = "$it.lastname"
+                )
+            }
+            .toMutableList()
 
     override suspend fun deactivateAccount(userId: String): ResponseResult<DeactivateUserResponse> {
         return try {
             users.removeIf { it.id == userId }
-            ResponseResult.Success(
-                DeactivateUserResponse(
-                    status = "success", message = "success"
-                )
-            )
+            ResponseResult.Success(DeactivateUserResponse(status = "success", message = "success"))
         } catch (e: Exception) {
-            ResponseResult.Failure(
-                ErrorResponse(
-                    message = "Could not deactivate user", status = "fail"
-                )
-            )
+            ResponseResult.Failure(ErrorResponse(message = "Could not deactivate user", status = "fail"))
         }
     }
 
@@ -62,16 +58,10 @@ class FakeUserRepository : UserRepository {
         return try {
             val pos = users.indexOf(users.find { it.id == user.id })
             users[pos] = user
-            ResponseResult.Success(
-                UpdateUserResponse(
-                    status = "success", message = "success"
-                )
-            )
+            ResponseResult.Success(UpdateUserResponse(status = "success", message = "success"))
         } catch (e: Exception) {
             ResponseResult.Failure(
-                ErrorResponse(
-                    message = "Could not complete_profile user", status = "fail"
-                )
+                ErrorResponse(message = "Could not complete_profile user", status = "fail")
             )
         }
     }
@@ -79,35 +69,19 @@ class FakeUserRepository : UserRepository {
     override suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
         return try {
             ResponseResult.Success(
-                SingleUserResponse(
-                    status = "success", data = Data(
-                        user = users.find { it.id == userId }!!
-                    )
-                )
+                SingleUserResponse(status = "success", data = Data(user = users.find { it.id == userId }!!))
             )
         } catch (e: Exception) {
-            ResponseResult.Failure(
-                ErrorResponse(
-                    message = "User not found", status = "fail"
-                )
-            )
+            ResponseResult.Failure(ErrorResponse(message = "User not found", status = "fail"))
         }
     }
 
     override suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
         return try {
             users.removeIf { it.id == userId }
-            ResponseResult.Success(
-                DeleteUserResponse(
-                    status = "success", message = "success"
-                )
-            )
+            ResponseResult.Success(DeleteUserResponse(status = "success", message = "success"))
         } catch (e: Exception) {
-            ResponseResult.Failure(
-                ErrorResponse(
-                    message = "Could not delete user", status = "fail"
-                )
-            )
+            ResponseResult.Failure(ErrorResponse(message = "Could not delete user", status = "fail"))
         }
     }
 
@@ -119,15 +93,9 @@ class FakeUserRepository : UserRepository {
         return try {
             val pos = users.indexOf(users.find { it.id == userId })
             users[pos] = users[pos].copy(image = imageUri.lastPathSegment)
-            ResponseResult.Success(
-                "success"
-            )
+            ResponseResult.Success("success")
         } catch (e: Exception) {
-            ResponseResult.Failure(
-                ErrorResponse(
-                    message = "Could not upload image", status = "fail"
-                )
-            )
+            ResponseResult.Failure(ErrorResponse(message = "Could not upload image", status = "fail"))
         }
     }
 }

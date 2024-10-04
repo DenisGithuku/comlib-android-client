@@ -21,12 +21,12 @@ import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import junit.framework.TestCase.assertTrue
+import kotlin.test.assertEquals
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
 
 @MediumTest
 class EditProfileViewModelTest {

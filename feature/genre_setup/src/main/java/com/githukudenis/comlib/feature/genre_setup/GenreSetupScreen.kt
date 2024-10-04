@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -89,9 +90,7 @@ private fun GenreSetupContent(
 ) {
     if (state.isLoading) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(LocalDimens.current.extraLarge),
+            modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
             contentAlignment = Alignment.Center
         ) {
             Column(
@@ -113,9 +112,7 @@ private fun GenreSetupContent(
 
     if (state.error?.isNotEmpty() == true) {
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(LocalDimens.current.extraLarge),
+            modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
@@ -137,9 +134,7 @@ private fun GenreSetupContent(
 
     if (state.genres.isEmpty()) {
         Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(LocalDimens.current.extraLarge),
+            modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -153,17 +148,12 @@ private fun GenreSetupContent(
     }
 
     if (state.isSaving) {
-        CLibLoadingDialog(
-            label = stringResource(id = R.string.saving_genres_label)
-        )
+        CLibLoadingDialog(label = stringResource(id = R.string.saving_genres_label))
     }
 
     LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(
-            horizontal = LocalDimens.current.sixteen
-        ), verticalArrangement = Arrangement.SpaceAround
+        modifier = Modifier.fillMaxSize().padding(horizontal = LocalDimens.current.sixteen),
+        verticalArrangement = Arrangement.SpaceAround
     ) {
         item {
             Row(
@@ -215,18 +205,20 @@ private fun GenreSetupContent(
 @Composable
 private fun SkipButton(onSkip: () -> Unit) {
     Box(
-        modifier = Modifier
-            .background(
-                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
-                shape = CircleShape
-            )
-            .clickable(onClick = onSkip), contentAlignment = Alignment.Center
+        modifier =
+            Modifier.background(
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
+                    shape = CircleShape
+                )
+                .clickable(onClick = onSkip),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-            modifier = Modifier.padding(
-                vertical = LocalDimens.current.eight,
-                horizontal = LocalDimens.current.twelve
-            ),
+            modifier =
+                Modifier.padding(
+                    vertical = LocalDimens.current.eight,
+                    horizontal = LocalDimens.current.twelve
+                ),
             text = stringResource(id = R.string.skip_label),
             style = MaterialTheme.typography.labelSmall,
             color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)

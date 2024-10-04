@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -24,6 +25,7 @@ import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.GenresRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -34,11 +36,11 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class BookDetailViewModel
-@Inject constructor(
+@Inject
+constructor(
     private val userPreferencesRepository: UserPrefsRepository,
     private val booksRepository: BooksRepository,
     private val genresRepository: GenresRepository,
@@ -51,12 +53,15 @@ class BookDetailViewModel
 
     private val bookId: String? = savedStateHandle.get<String>("bookId")
 
-    val isFavourite: StateFlow<Boolean> = userPreferencesRepository.userPrefs.distinctUntilChanged()
-        .mapLatest { userPrefs -> userPrefs.bookmarkedBooks.contains(bookId) }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = false
-        )
+    val isFavourite: StateFlow<Boolean> =
+        userPreferencesRepository.userPrefs
+            .distinctUntilChanged()
+            .mapLatest { userPrefs -> userPrefs.bookmarkedBooks.contains(bookId) }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = false
+            )
 
     init {
         savedStateHandle.get<String>("bookId")?.let { bookId -> getBook(bookId) }
@@ -68,23 +73,20 @@ class BookDetailViewModel
                 is ResponseResult.Failure -> {
                     _state.update { BookDetailUiState.Error(result.error.message) }
                 }
-
                 is ResponseResult.Success -> {
                     val isRead =
                         userPreferencesRepository.userPrefs.first().readBooks.contains(result.data.data.book.id)
                     _state.update {
-                        val bookUiModel = result.data.data.book.toBookUiModel(isRead = isRead,
-                            getGenre = { genreId ->
-                                fetchGenreById(genreId) ?: Genre(
-                                    _id = genreId,
-                                    id = genreId,
-                                    name = "Unknown"
-                                )
-                            })
+                        val bookUiModel =
+                            result.data.data.book.toBookUiModel(
+                                isRead = isRead,
+                                getGenre = { genreId ->
+                                    fetchGenreById(genreId) ?: Genre(_id = genreId, id = genreId, name = "Unknown")
+                                }
+                            )
                         BookDetailUiState.Success(bookUiModel = bookUiModel)
                     }
                 }
-
             }
         }
     }
@@ -96,7 +98,7 @@ class BookDetailViewModel
     }
 
     private suspend fun fetchGenreById(genreId: String): Genre? {
-        return when(val result = genresRepository.getGenreById(genreId)) {
+        return when (val result = genresRepository.getGenreById(genreId)) {
             is ResponseResult.Failure -> {
                 null
             }
@@ -109,11 +111,12 @@ class BookDetailViewModel
     fun toggleBookmark(bookId: String) {
         viewModelScope.launch {
             val bookMarks = userPreferencesRepository.userPrefs.mapLatest { it.bookmarkedBooks }.first()
-            val updatedBookmarkSet = if (bookMarks.contains(bookId)) {
-                bookMarks.minus(bookId)
-            } else {
-                bookMarks.plus(bookId)
-            }
+            val updatedBookmarkSet =
+                if (bookMarks.contains(bookId)) {
+                    bookMarks.minus(bookId)
+                } else {
+                    bookMarks.plus(bookId)
+                }
             userPreferencesRepository.setBookMarks(updatedBookmarkSet)
         }
     }

@@ -25,11 +25,11 @@ import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.GenresRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class AddBookViewModel
@@ -56,9 +56,7 @@ constructor(
                     state.update { it.copy(genreState = GenreUiState.Error(result.error.message)) }
                 }
                 is ResponseResult.Success -> {
-                    val genres = result.data
-                        .data
-                        .genres
+                    val genres = result.data.data.genres
                     state.update { it.copy(genreState = GenreUiState.Success(genres)) }
                 }
             }

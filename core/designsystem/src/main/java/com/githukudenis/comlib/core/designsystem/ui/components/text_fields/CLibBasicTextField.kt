@@ -32,10 +32,11 @@ fun CLibBasicTextField(
     modifier: Modifier = Modifier,
     value: String,
     label: String? = null,
-    colors: TextFieldColors = TextFieldDefaults.colors(
-        focusedIndicatorColor = Color.Transparent,
-        unfocusedIndicatorColor = Color.Transparent
-    ),
+    colors: TextFieldColors =
+        TextFieldDefaults.colors(
+            focusedIndicatorColor = Color.Transparent,
+            unfocusedIndicatorColor = Color.Transparent
+        ),
     onValueChange: (String) -> Unit,
     onDone: () -> Unit
 ) {

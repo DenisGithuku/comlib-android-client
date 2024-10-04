@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -22,6 +23,7 @@ import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.GenresRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -32,11 +34,11 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class BooksViewModel
-@Inject constructor(
+@Inject
+constructor(
     private val userPrefsRepository: UserPrefsRepository,
     private val booksRepository: BooksRepository,
     private val genresRepository: GenresRepository
@@ -53,21 +55,22 @@ class BooksViewModel
     private val selectedGenres: MutableStateFlow<List<GenreUiModel>> =
         MutableStateFlow(listOf(GenreUiModel(name = "All Genres", id = "65eeb125703fed5c184518bf")))
 
-    val uiState: StateFlow<BooksUiState> = combine(
-        selectedGenres,
-        genreListUiState,
-        bookListUiState
-    ) { selectedGenres, genreState, bookListState ->
-        BooksUiState.Success(
-            selectedGenres = selectedGenres,
-            genreListUiState = genreState,
-            bookListUiState = bookListState
-        )
-    }.stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = BooksUiState.Loading
-        )
+    val uiState: StateFlow<BooksUiState> =
+        combine(selectedGenres, genreListUiState, bookListUiState) {
+                selectedGenres,
+                genreState,
+                bookListState ->
+                BooksUiState.Success(
+                    selectedGenres = selectedGenres,
+                    genreListUiState = genreState,
+                    bookListUiState = bookListState
+                )
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000),
+                initialValue = BooksUiState.Loading
+            )
 
     init {
         getGenreList()
@@ -81,12 +84,14 @@ class BooksViewModel
                 is ResponseResult.Failure -> {
                     genreListUiState.update { GenreListUiState.Error(message = result.error.message) }
                 }
-
                 is ResponseResult.Success -> {
                     // map genre to genre ui model
 
-                    val genres = result.data.data.genres.map { genre -> genre.toGenreUiModel() }
-                        .sortedBy { it.name }.toMutableList()
+                    val genres =
+                        result.data.data.genres
+                            .map { genre -> genre.toGenreUiModel() }
+                            .sortedBy { it.name }
+                            .toMutableList()
 
                     genres.add(0, selectedGenres.value.first())
                     genres.add(genres.size, moreGenreModel)
@@ -104,21 +109,25 @@ class BooksViewModel
                 is ResponseResult.Failure -> {
                     bookListUiState.update { BookListUiState.Error(message = result.error.message) }
                 }
-
                 is ResponseResult.Success -> {
                     // map book to book ui model
 
-                    val books = result.data.data.books.filter { book ->
-                            if (selectedGenres.value.map { it.name }.contains("All Genres")) {
-                                true
-                            } else {
-                                selectedGenres.value.map { it.id }.any { it in book.genre_ids }
+                    val books =
+                        result.data.data.books
+                            .filter { book ->
+                                if (selectedGenres.value.map { it.name }.contains("All Genres")) {
+                                    true
+                                } else {
+                                    selectedGenres.value.map { it.id }.any { it in book.genre_ids }
+                                }
                             }
-                        }.map { book -> book.toBookItemUiModel() }.sortedBy { it.title }
+                            .map { book -> book.toBookItemUiModel() }
+                            .sortedBy { it.title }
 
-                    val updatedState = if (books.isEmpty()) {
-                        BookListUiState.Empty
-                    } else BookListUiState.Success(books)
+                    val updatedState =
+                        if (books.isEmpty()) {
+                            BookListUiState.Empty
+                        } else BookListUiState.Success(books)
 
                     bookListUiState.update { updatedState }
                 }
@@ -128,7 +137,9 @@ class BooksViewModel
 
     private fun getPreferredGenreList(genres: List<GenreUiModel>) {
         viewModelScope.launch {
-            userPrefsRepository.userPrefs.mapLatest { it.preferredGenres }.collectLatest { preferred ->
+            userPrefsRepository.userPrefs
+                .mapLatest { it.preferredGenres }
+                .collectLatest { preferred ->
                     selectedGenres.update { prevState ->
                         val newList = prevState.toMutableList()
                         newList.addAll(genres.filter { it.id in preferred })
@@ -160,8 +171,7 @@ class BooksViewModel
                     }
 
                     val updatedGenrePrefs =
-                        selected.dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }
-                            .toSet()
+                        selected.dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }.toSet()
                     userPrefsRepository.setPreferredGenres(updatedGenrePrefs)
                     selectedGenres.update { selected }
                     getBookList()

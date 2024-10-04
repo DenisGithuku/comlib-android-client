@@ -49,7 +49,10 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
             snackbarHostState = appState.snackbarHostState,
             onLoginComplete = {
                 appState.navigate(
-                    route = if (isSetupComplete) ComlibDestination.HomeGraph.route else AuthDestination.CompleteProfile.route,
+                    route =
+                        if (isSetupComplete) {
+                            ComlibDestination.HomeGraph.route
+                        } else AuthDestination.CompleteProfile.route,
                     popUpTo = ComlibDestination.AuthGraph.route,
                     inclusive = true
                 )
@@ -63,7 +66,9 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
             },
             onResetComplete = { appState.navigate(route = AuthDestination.Login.route) },
             onForgotPassword = { appState.navigate(route = AuthDestination.ForgotPassword.route) },
-            onSignUpComplete = { appState.navigate(route = AuthDestination.Login.route, AuthDestination.SignUp.route) },
+            onSignUpComplete = {
+                appState.navigate(route = AuthDestination.Login.route, AuthDestination.SignUp.route)
+            },
             onSignInInstead = { appState.popBackStack() },
             onProceedToSetupGenre = {
                 appState.navigate(
@@ -181,9 +186,10 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
             enterTransition = {
                 scaleIn(initialScale = 0.8f, animationSpec = tween(durationMillis = 500))
             },
-            exitTransition = { scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300)) + slideOutOfContainer(
-                towards = AnimatedContentTransitionScope.SlideDirection.Down,
-            ) }
+            exitTransition = {
+                scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300)) +
+                    slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Down)
+            }
         ) {
             GenreSetupScreen(
                 onSkip = {

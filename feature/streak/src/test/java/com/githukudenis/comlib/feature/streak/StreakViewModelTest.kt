@@ -23,13 +23,13 @@ import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import junit.framework.TestCase.assertEquals
+import kotlin.test.assertTrue
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import kotlinx.datetime.LocalDate
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertTrue
 
 @MediumTest
 class StreakViewModelTest {

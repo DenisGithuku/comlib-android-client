@@ -20,12 +20,12 @@ import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
+import kotlin.test.Test
+import kotlin.test.assertEquals
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
-import kotlin.test.Test
-import kotlin.test.assertEquals
 
 @MediumTest
 class MyBooksViewModelTest {
@@ -40,10 +40,8 @@ class MyBooksViewModelTest {
     fun setUp() {
         booksRepository = FakeBooksRepository()
         userPrefsRepository = FakeUserPrefsRepository()
-        viewModel = MyBooksViewModel(
-            userPrefsRepository = userPrefsRepository,
-            booksRepository = booksRepository
-        )
+        viewModel =
+            MyBooksViewModel(userPrefsRepository = userPrefsRepository, booksRepository = booksRepository)
     }
 
     @Test

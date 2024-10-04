@@ -1,3 +1,19 @@
+
+/*
+* Copyright 2023 Denis Githuku
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+* https://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 package com.githukudenis.comlib.feature.auth.presentation.complete_profile
 
 import android.net.Uri
@@ -51,7 +67,6 @@ fun CompleteProfileRoute(
     viewModel: CompleteProfileViewModel = hiltViewModel(),
     onUpdateComplete: () -> Unit
 ) {
-
     val state by viewModel.state.collectAsState()
     CompleteProfileScreen(
         state = state,
@@ -73,27 +88,21 @@ internal fun CompleteProfileScreen(
     onDismissUserMessage: () -> Unit
 ) {
     Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(LocalDimens.current.sixteen),
+        modifier = Modifier.fillMaxSize().padding(LocalDimens.current.sixteen),
         verticalArrangement = Arrangement.SpaceAround,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         val context = LocalContext.current
 
         if (state.isLoading) {
-            CLibLoadingDialog(
-                label = stringResource(id = R.string.update_label)
-            )
+            CLibLoadingDialog(label = stringResource(id = R.string.update_label))
         }
 
         val updateComplete by rememberUpdatedState(onUpdateComplete)
 
         LaunchedEffect(state.userMessages, state.isSuccess) {
             if (state.userMessages.isNotEmpty()) {
-                Toast.makeText(
-                    context, state.userMessages.first().message, Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, state.userMessages.first().message, Toast.LENGTH_SHORT).show()
                 delay(3000)
                 onDismissUserMessage()
                 if (state.isSuccess) {
@@ -109,24 +118,16 @@ internal fun CompleteProfileScreen(
 
             Spacer(modifier = Modifier.height(LocalDimens.current.twentyFour))
 
-            UsernameComponent(
-                username = state.userName,
-                onUsernameChange = onSelectUserName
-            )
+            UsernameComponent(username = state.userName, onUsernameChange = onSelectUserName)
         }
 
-        CLibButton(
-            modifier = Modifier.fillMaxWidth(),
-            onClick = onSubmit,
-            enabled = state.isUiValid
-        ) {
+        CLibButton(modifier = Modifier.fillMaxWidth(), onClick = onSubmit, enabled = state.isUiValid) {
             Text(
                 text = stringResource(id = R.string.complete_profile_btn_txt),
                 style = MaterialTheme.typography.bodyLarge,
                 modifier = Modifier.padding(4.dp)
             )
         }
-
     }
 }
 
@@ -140,58 +141,54 @@ fun Title() {
 }
 
 @Composable
-fun ImageComponent(
-    uri: Uri?, onSelectImage: (Uri) -> Unit
-) {
+fun ImageComponent(uri: Uri?, onSelectImage: (Uri) -> Unit) {
     val context = LocalContext.current
     val imagePickLauncher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
             if (uri != null) {
                 onSelectImage(uri)
             } else {
-                Toast.makeText(
-                    context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT)
+                    .show()
             }
         }
 
     Box {
         if (uri != null) {
-            AsyncImage(model = uri,
+            AsyncImage(
+                model = uri,
                 contentDescription = null,
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(200.dp)
-                    .clip(CircleShape)
-                    .clickable {
+                modifier =
+                    Modifier.size(200.dp).clip(CircleShape).clickable {
                         imagePickLauncher.launch(
                             PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                         )
-                    })
+                    }
+            )
         } else {
-            Box(modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
-                .background(Color.Black.copy(alpha = 0.08f))
-                .clickable {
-                    imagePickLauncher.launch(
-                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
-                    )
-                })
+            Box(
+                modifier =
+                    Modifier.size(200.dp)
+                        .clip(CircleShape)
+                        .background(Color.Black.copy(alpha = 0.08f))
+                        .clickable {
+                            imagePickLauncher.launch(
+                                PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                            )
+                        }
+            )
         }
 
         IconButton(
-            colors =  IconButtonDefaults.iconButtonColors(
-                containerColor = MaterialTheme.colorScheme.onPrimary,
-            ),
-            modifier = Modifier.align(
-                Alignment.BottomEnd
-            ),
+            colors =
+                IconButtonDefaults.iconButtonColors(containerColor = MaterialTheme.colorScheme.onPrimary),
+            modifier = Modifier.align(Alignment.BottomEnd),
             onClick = {
                 imagePickLauncher.launch(
                     PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
                 )
-            },
+            }
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_camera),
@@ -203,10 +200,7 @@ fun ImageComponent(
 }
 
 @Composable
-fun UsernameComponent(
-    username: String,
-    onUsernameChange: (String) -> Unit,
-) {
+fun UsernameComponent(username: String, onUsernameChange: (String) -> Unit) {
     CLibOutlinedTextField(
         modifier = Modifier.fillMaxWidth(),
         value = username,

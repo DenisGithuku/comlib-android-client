@@ -29,23 +29,24 @@ class FakeGenresRepository : GenresRepository {
     val genres = (1..10).map { Genre(_id = "$it", id = "$it", name = "Genre$it") }
 
     override suspend fun getGenres(): ResponseResult<AllGenresResponse> {
-        return ResponseResult.Success(AllGenresResponse(
-            data = DataX(genres),
-            requestedAt = "now",
-            results = genres.size,
-            status = "Ok"
-        ))
+        return ResponseResult.Success(
+            AllGenresResponse(
+                data = DataX(genres),
+                requestedAt = "now",
+                results = genres.size,
+                status = "Ok"
+            )
+        )
     }
 
     override suspend fun getGenreById(id: String): ResponseResult<SingleGenreResponse> {
         return try {
-            ResponseResult.Success(SingleGenreResponse(data = Data(genre = genres.first { it.id == id }), status = "Ok"))
+            ResponseResult.Success(
+                SingleGenreResponse(data = Data(genre = genres.first { it.id == id }), status = "Ok")
+            )
         } catch (e: Exception) {
             ResponseResult.Failure(
-                ErrorResponse(
-                    message = e.message ?: "Unknown error",
-                    status = "error"
-                )
+                ErrorResponse(message = e.message ?: "Unknown error", status = "error")
             )
         }
     }

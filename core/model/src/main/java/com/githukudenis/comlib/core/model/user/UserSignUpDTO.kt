@@ -26,5 +26,3 @@ data class UserSignUpDTO(
     val password: String,
     val passwordConfirm: String
 )
-
-

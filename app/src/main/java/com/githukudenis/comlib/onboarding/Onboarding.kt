@@ -61,10 +61,7 @@ fun OnBoardingScreen(onGetStarted: () -> Unit) {
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(LocalDimens.current.twentyFour))
-            CLibButton(
-                modifier = Modifier.fillMaxWidth(),
-                onClick = onGetStarted,
-            ) {
+            CLibButton(modifier = Modifier.fillMaxWidth(), onClick = onGetStarted) {
                 Text(
                     text = stringResource(id = R.string.get_started_btn_text),
                     style = MaterialTheme.typography.bodyLarge,

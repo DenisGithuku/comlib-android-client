@@ -19,8 +19,8 @@ package com.githukudenis.comlib.data.repository
 import com.githukudenis.comlib.core.datastore.UserPrefsDatasource
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 class UserPrefsRepositoryImpl
 @Inject
@@ -34,7 +34,6 @@ constructor(private val userPrefsDataSource: UserPrefsDatasource) : UserPrefsRep
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
         userPrefsDataSource.setThemeConfig(themeConfig)
     }
-
 
     override suspend fun setBookMarks(bookMarks: Set<String>) {
         userPrefsDataSource.setBookmarkedBooks(bookMarks)

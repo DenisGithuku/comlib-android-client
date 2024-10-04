@@ -24,9 +24,9 @@ import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 data class EditProfileUiState(
     val isLoading: Boolean = false,
@@ -56,27 +56,25 @@ constructor(
             val userId: String = checkNotNull(userPrefsRepository.userPrefs.first().userId)
             update { copy(isLoading = true) }
             val result = userRepository.getUserById(userId)
-                when(result) {
-                    is ResponseResult.Failure ->  {
-                        update { copy(isLoading = false, error = result.error.message) }
-                    }
-                    is ResponseResult.Success -> {
-                        val newState: EditProfileUiState =
-                            EditProfileUiState(
-                                isLoading = false,
-                                userId = result.data.data.user.id,
-                                firstname = result.data.data.user.firstname,
-                                username = result.data.data.user.username,
-                                lastname = result.data.data.user.lastname,
-                                profileUrl = result.data.data.user.image
-                            )
-                        update { newState }
-                    }
+            when (result) {
+                is ResponseResult.Failure -> {
+                    update { copy(isLoading = false, error = result.error.message) }
                 }
-
-
+                is ResponseResult.Success -> {
+                    val newState: EditProfileUiState =
+                        EditProfileUiState(
+                            isLoading = false,
+                            userId = result.data.data.user.id,
+                            firstname = result.data.data.user.firstname,
+                            username = result.data.data.user.username,
+                            lastname = result.data.data.user.lastname,
+                            profileUrl = result.data.data.user.image
+                        )
+                    update { newState }
+                }
             }
         }
+    }
 
     fun updateUser() {
         viewModelScope.launch {
@@ -84,7 +82,7 @@ constructor(
             val user = User(firstname = state.value.firstname, lastname = state.value.lastname)
             state.value.userId?.let {
                 val result = userRepository.updateUser(user)
-                when(result) {
+                when (result) {
                     is ResponseResult.Failure -> {
                         update { copy(isUpdating = false, error = result.error.message) }
                     }
@@ -114,48 +112,31 @@ constructor(
                 is ResponseResult.Failure -> {
                     update { copy(error = result.error.message) }
                 }
-
                 is ResponseResult.Success -> {
-
                     // Upload image to store first
-                    val uploadImageRes = value.let {
-                        userRepository.uploadUserImage(
-                            imageUri = value,
-                            userId = state.value.userId ?: return@launch, isNewUser = false
-                        )
-                    }
+                    val uploadImageRes =
+                        value.let {
+                            userRepository.uploadUserImage(
+                                imageUri = value,
+                                userId = state.value.userId ?: return@launch,
+                                isNewUser = false
+                            )
+                        }
 
                     when (uploadImageRes) {
                         is ResponseResult.Failure -> {
-                            update {
-                                copy(
-                                    error = uploadImageRes.error.message,
-                                    isLoading = false
-                                )
-                            }
+                            update { copy(error = uploadImageRes.error.message, isLoading = false) }
                         }
-
                         is ResponseResult.Success -> {
-                            val updatedUser = result.data.data.user.copy(
-                                image = uploadImageRes.data
-                            )
+                            val updatedUser = result.data.data.user.copy(image = uploadImageRes.data)
 
                             // Update user with new image
-                            when (val updateUserResult =
-                                userRepository.updateUser(updatedUser)) {
+                            when (val updateUserResult = userRepository.updateUser(updatedUser)) {
                                 is ResponseResult.Failure -> {
-                                    update {
-                                        copy(
-                                            error  = updateUserResult.error.message,
-                                            isLoading = false
-                                        )
-                                    }
+                                    update { copy(error = updateUserResult.error.message, isLoading = false) }
                                 }
-
                                 is ResponseResult.Success -> {
-                                    update {
-                                        copy(isLoading = false)
-                                    }
+                                    update { copy(isLoading = false) }
                                 }
                             }
                         }

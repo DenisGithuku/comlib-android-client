@@ -29,9 +29,7 @@ object AuthModule {
 
     @Provides
     @Singleton
-    fun provideAuthApi(
-        httpClient: HttpClient
-    ): AuthApi {
+    fun provideAuthApi(httpClient: HttpClient): AuthApi {
         return AuthApi(httpClient)
     }
 }

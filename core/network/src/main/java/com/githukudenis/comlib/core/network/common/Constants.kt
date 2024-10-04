@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -73,7 +74,6 @@ sealed class Endpoints(private val path: String) {
         // Represents the route to delete a user by their ID
         data class Delete(val userId: String) : Users(param = userId)
     }
-
 
     data object Genres : Endpoints("api/v1/genres")
 

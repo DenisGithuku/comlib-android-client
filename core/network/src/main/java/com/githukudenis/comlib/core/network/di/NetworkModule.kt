@@ -35,20 +35,13 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
 
-    @Provides
-    @Singleton
-    fun provideUserApi(httpClient: HttpClient): UserApi =
-        UserApi(httpClient)
+    @Provides @Singleton fun provideUserApi(httpClient: HttpClient): UserApi = UserApi(httpClient)
+
+    @Provides @Singleton fun provideBooksApi(httpClient: HttpClient): BooksApi = BooksApi(httpClient)
 
     @Provides
     @Singleton
-    fun provideBooksApi(httpClient: HttpClient): BooksApi =
-        BooksApi(httpClient)
-
-    @Provides
-    @Singleton
-    fun provideGenresApi(httpClient: HttpClient): GenresApi =
-        GenresApi(httpClient)
+    fun provideGenresApi(httpClient: HttpClient): GenresApi = GenresApi(httpClient)
 
     @Provides @Singleton fun provideFirebaseStorage(): FirebaseStorage = Firebase.storage
 

@@ -23,9 +23,9 @@ import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 data class MyBooksUiState(
     val isLoading: Boolean = false,
@@ -38,7 +38,7 @@ class MyBooksViewModel
 @Inject
 constructor(
     private val userPrefsRepository: UserPrefsRepository,
-    private val booksRepository: BooksRepository,
+    private val booksRepository: BooksRepository
 ) : StatefulViewModel<MyBooksUiState>(MyBooksUiState()) {
 
     init {
@@ -55,10 +55,12 @@ constructor(
                     update { copy(isLoading = false, error = books.error.message) }
                 }
                 is ResponseResult.Success -> {
-                    update { copy(isLoading = false, books = books.data.data.books
-                        .filter { it.owner == userId }
-                        .sortedBy { it.title }
-                    ) }
+                    update {
+                        copy(
+                            isLoading = false,
+                            books = books.data.data.books.filter { it.owner == userId }.sortedBy { it.title }
+                        )
+                    }
                 }
             }
         }

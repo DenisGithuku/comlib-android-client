@@ -26,10 +26,10 @@ data class AllBooksResponse(
     val status: String
 )
 
-
-fun AllBooksResponse.asBooksByUserResponse(userId: String) = BooksByUserResponse(
-    data = data.copy(books = data.books.filter { it.owner == userId }),
-    requestedAt = requestedAt,
-    results = results,
-    status = status
-)
+fun AllBooksResponse.asBooksByUserResponse(userId: String) =
+    BooksByUserResponse(
+        data = data.copy(books = data.books.filter { it.owner == userId }),
+        requestedAt = requestedAt,
+        results = results,
+        status = status
+    )

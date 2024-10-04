@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -29,21 +30,20 @@ import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
 import com.githukudenis.comlib.core.network.common.FirebaseExt
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
+import javax.inject.Inject
 import kotlinx.coroutines.withContext
 import timber.log.Timber
-import javax.inject.Inject
 
 class UserRepositoryImpl
-@Inject constructor(
+@Inject
+constructor(
     private val userApi: UserApi,
     private val dispatchers: ComlibCoroutineDispatchers,
     private val imagesRemoteDataSource: ImagesRemoteDataSource
 ) : UserRepository {
 
     override suspend fun updateUser(user: User): ResponseResult<UpdateUserResponse> {
-        return withContext(dispatchers.io) {
-            userApi.updateUser(user)
-        }
+        return withContext(dispatchers.io) { userApi.updateUser(user) }
     }
 
     override suspend fun deactivateAccount(userId: String): ResponseResult<DeactivateUserResponse> {
@@ -51,9 +51,7 @@ class UserRepositoryImpl
     }
 
     override suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
-        return withContext(dispatchers.io) {
-            userApi.getUserById(userId)
-        }
+        return withContext(dispatchers.io) { userApi.getUserById(userId) }
     }
 
     override suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
@@ -62,19 +60,13 @@ class UserRepositoryImpl
                 is ResponseResult.Failure -> {
                     ResponseResult.Failure(result.error)
                 }
-
                 is ResponseResult.Success -> {
                     result.data.data.user.image?.let {
-                        imagesRemoteDataSource.deleteImage(
-                            imagePath = FirebaseExt.getFilePathFromUrl(
-                                it
-                            )
-                        )
+                        imagesRemoteDataSource.deleteImage(imagePath = FirebaseExt.getFilePathFromUrl(it))
                     }
                     userApi.deleteUser(userId)
                 }
             }
-
         }
     }
 
@@ -90,7 +82,6 @@ class UserRepositoryImpl
                     Timber.e(userResult.error.message)
                     return@withContext ResponseResult.Failure(userResult.error)
                 }
-
                 is ResponseResult.Success -> {
                     val user = userResult.data.data.user
                     val currentImage = user.image
@@ -108,12 +99,11 @@ class UserRepositoryImpl
                     Log.d("Image add path", imagePath)
                     val uploadResult = imagesRemoteDataSource.addImage(imageUri, imagePath)
 
-                    val uploadedImageUrl = uploadResult.getOrNull()
-                        ?: return@withContext ResponseResult.Failure(
-                            ErrorResponse(
-                                message = "Could not upload image", status = "fail"
+                    val uploadedImageUrl =
+                        uploadResult.getOrNull()
+                            ?: return@withContext ResponseResult.Failure(
+                                ErrorResponse(message = "Could not upload image", status = "fail")
                             )
-                        )
 
                     // Step 4: Return success with the new image URL
                     return@withContext ResponseResult.Success(uploadedImageUrl)
@@ -121,5 +111,4 @@ class UserRepositoryImpl
             }
         }
     }
-
 }

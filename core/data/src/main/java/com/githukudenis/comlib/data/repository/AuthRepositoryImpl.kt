@@ -27,10 +27,8 @@ import javax.inject.Inject
 
 class AuthRepositoryImpl
 @Inject
-constructor(
-    private val authApi: AuthApi,
-    private val userPrefsRepository: UserPrefsRepository
-) : AuthRepository {
+constructor(private val authApi: AuthApi, private val userPrefsRepository: UserPrefsRepository) :
+    AuthRepository {
     override suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
         return authApi.signUp(userSignUpDTO)
     }
@@ -40,10 +38,10 @@ constructor(
         onSuccess: suspend (UserLoginResponse) -> Unit,
         onError: (String) -> Unit
     ) {
-        return when(val result = authApi.login(userLogInDTO)) {
+        return when (val result = authApi.login(userLogInDTO)) {
             is ResponseResult.Success -> onSuccess(result.data)
-           is ResponseResult.Failure -> onError(result.error.message)
-       }
+            is ResponseResult.Failure -> onError(result.error.message)
+        }
     }
 
     override suspend fun signOut() {
@@ -55,7 +53,7 @@ constructor(
         onSuccess: (ResetPasswordResponse) -> Unit,
         onError: (String) -> Unit
     ) {
-        return when(val result = authApi.resetPassword(email)) {
+        return when (val result = authApi.resetPassword(email)) {
             is ResponseResult.Success -> onSuccess(result.data)
             is ResponseResult.Failure -> onError(result.error.message)
         }

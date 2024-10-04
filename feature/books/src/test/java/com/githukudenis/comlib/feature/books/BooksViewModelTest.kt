@@ -21,12 +21,12 @@ import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeGenresRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import kotlinx.coroutines.test.runTest
-import org.junit.Before
-import org.junit.Rule
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlinx.coroutines.test.runTest
+import org.junit.Before
+import org.junit.Rule
 
 @MediumTest
 class BooksViewModelTest {

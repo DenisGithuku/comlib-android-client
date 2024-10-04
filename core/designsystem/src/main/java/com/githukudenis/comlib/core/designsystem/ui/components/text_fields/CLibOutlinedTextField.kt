@@ -59,7 +59,7 @@ fun CLibOutlinedTextField(
             unfocusedContainerColor = Color.Transparent,
             focusedContainerColor = Color.Transparent,
             focusedIndicatorColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.8f),
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
+            unfocusedIndicatorColor = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
         ),
     visualTransformation: VisualTransformation = VisualTransformation.None
 ) {

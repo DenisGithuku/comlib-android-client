@@ -22,14 +22,14 @@ import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
+import kotlin.test.assertContains
+import kotlin.test.assertEquals
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertContains
-import kotlin.test.assertEquals
 
 @MediumTest
 class HomeViewModelTest {

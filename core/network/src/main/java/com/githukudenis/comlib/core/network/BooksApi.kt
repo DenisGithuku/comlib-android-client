@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -28,10 +29,7 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
 
-class BooksApi
-@Inject constructor(
-    private val httpClient: HttpClient
-) {
+class BooksApi @Inject constructor(private val httpClient: HttpClient) {
     suspend fun getBooks(): ResponseResult<AllBooksResponse> = safeApiCall {
         httpClient.get(Endpoints.Books.GetAll.url)
     }
@@ -39,7 +37,6 @@ class BooksApi
     suspend fun getBookById(bookId: String): ResponseResult<SingleBookResponse> = safeApiCall {
         httpClient.get(Endpoints.Books.GetById(bookId).url)
     }
-
 
     suspend fun addNewBook(book: BookDTO): ResponseResult<AddBookResponse> = safeApiCall {
         httpClient.post(Endpoints.Books.Add.url) { setBody(book) }

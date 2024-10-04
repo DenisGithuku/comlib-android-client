@@ -34,5 +34,9 @@ interface UserRepository {
 
     suspend fun deactivateAccount(userId: String): ResponseResult<DeactivateUserResponse>
 
-    suspend fun uploadUserImage(imageUri: Uri, userId: String, isNewUser: Boolean): ResponseResult<String>
+    suspend fun uploadUserImage(
+        imageUri: Uri,
+        userId: String,
+        isNewUser: Boolean
+    ): ResponseResult<String>
 }

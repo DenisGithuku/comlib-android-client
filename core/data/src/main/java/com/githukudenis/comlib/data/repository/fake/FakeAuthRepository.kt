@@ -32,20 +32,9 @@ class FakeAuthRepository : AuthRepository {
     override suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
         return try {
             users.add(userSignUpDTO)
-            ResponseResult.Success(
-                AddUserResponse(
-                    token = "token",
-                    status = "success",
-                    id = "id"
-                )
-            )
+            ResponseResult.Success(AddUserResponse(token = "token", status = "success", id = "id"))
         } catch (e: Exception) {
-            ResponseResult.Failure(
-                ErrorResponse(
-                    message = "Could not sign up user",
-                    status = "fail"
-                )
-            )
+            ResponseResult.Failure(ErrorResponse(message = "Could not sign up user", status = "fail"))
         }
     }
 
@@ -60,16 +49,9 @@ class FakeAuthRepository : AuthRepository {
                 onError("User not found")
                 return
             }
-
         } catch (e: Exception) {
-            onError(
-                ErrorResponse(
-                    message = "Could not login user",
-                    status = "fail"
-                ).message
-            )
+            onError(ErrorResponse(message = "Could not login user", status = "fail").message)
         }
-
     }
 
     override suspend fun signOut() {}
@@ -78,7 +60,5 @@ class FakeAuthRepository : AuthRepository {
         email: String,
         onSuccess: (ResetPasswordResponse) -> Unit,
         onError: (String) -> Unit
-    ) {
-
-    }
+    ) {}
 }
