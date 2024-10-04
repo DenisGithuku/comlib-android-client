@@ -40,6 +40,7 @@ class SignUpViewModelTest {
     @Before
     fun setUp() {
         authRepository = FakeAuthRepository()
+        userPrefsRepository = FakeUserPrefsRepository()
         viewModel =
             SignUpViewModel(authRepository = authRepository, userPrefsRepository = userPrefsRepository)
     }
