@@ -23,6 +23,7 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.model.user.UserSignUpDTO
 import com.githukudenis.comlib.data.repository.AuthRepository
+import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +35,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val userPrefsRepository: UserPrefsRepository
 ) : ViewModel() {
 
     private val _state: MutableStateFlow<SignUpUiState> = MutableStateFlow(SignUpUiState())
@@ -130,7 +132,7 @@ class SignUpViewModel @Inject constructor(
     private fun signUp() {
         viewModelScope.launch {
             _state.update { prevState -> prevState.copy(isLoading = true) }
-            val signUpResult =
+            val response =
                 authRepository.signUp(
                     UserSignUpDTO(
                         firstname = _state.value.formState.firstname.trim(),
@@ -140,15 +142,17 @@ class SignUpViewModel @Inject constructor(
                         passwordConfirm = _state.value.formState.confirmPassword.trim()
                     )
                 )
-            when (signUpResult) {
+            when (response) {
                 is ResponseResult.Failure -> {
                     _state.update { prevState ->
                         val userMessages = prevState.userMessages.toMutableList()
-                        userMessages.add(UserMessage(message = signUpResult.error.message))
+                        userMessages.add(UserMessage(message = response.error.message))
                         prevState.copy(isLoading = false, userMessages = userMessages)
                     }
                 }
                 is ResponseResult.Success -> {
+                    userPrefsRepository.setToken(response.data.token)
+                    userPrefsRepository.setUserId(response.data.id)
                     _state.update { prevState -> prevState.copy(isLoading = false, signUpSuccess = true) }
                 }
             }
@@ -157,11 +161,11 @@ class SignUpViewModel @Inject constructor(
 
     //    private fun onSignInResult(signInResult: SignInResult) {
     //        viewModelScope.launch {
-    //            _state.update { prevState ->
+    //            _state.complete_profile { prevState ->
     //                prevState.copy(isLoading = true)
     //            }
     //            if (signInResult.errorMessage != null) {
-    //                _state.update { prevState ->
+    //                _state.complete_profile { prevState ->
     //                    val userMessages = prevState.userMessages.toMutableList()
     //                    userMessages.add(UserMessage(message = signInResult.errorMessage))
     //                    prevState.copy(
@@ -183,7 +187,7 @@ class SignUpViewModel @Inject constructor(
     //            userRepository.addNewUser(
     //                user = user ?: return@launch
     //            )
-    //            _state.update { prevState ->
+    //            _state.complete_profile { prevState ->
     //                val userMessages = prevState.userMessages.toMutableList()
     //                userMessages.add(UserMessage(message = "Signed in successfully"))
     //                prevState.copy(

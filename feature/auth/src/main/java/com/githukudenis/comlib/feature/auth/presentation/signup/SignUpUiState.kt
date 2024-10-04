@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -39,11 +38,9 @@ data class SignUpFormState(
     val requirements: List<PasswordRequirements> = emptyList()
 ) {
     val formIsValid: Boolean
-        get() =
-            firstname.trim().isNotEmpty() &&
-                lastname.trim().isNotEmpty() &&
-                email.trim().isNotEmpty() &&
-                password.trim().isNotEmpty() &&
-                password == confirmPassword &&
-                acceptedTerms
+        get() = firstname.trim().isNotEmpty() && lastname.trim().isNotEmpty() && email.trim()
+            .isNotEmpty() && password.trim()
+            .isNotEmpty() && password == confirmPassword && requirements.containsAll(
+            PasswordRequirements.entries.toList()
+        ) && acceptedTerms
 }

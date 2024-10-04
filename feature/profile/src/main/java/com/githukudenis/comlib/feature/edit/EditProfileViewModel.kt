@@ -109,6 +109,59 @@ constructor(
     }
 
     fun onChangePhoto(value: Uri) {
-        viewModelScope.launch { state.value.userId?.let { userRepository.uploadUserImage(value, it) } }
+        viewModelScope.launch {
+            when (val result = userRepository.getUserById(state.value.userId ?: return@launch)) {
+                is ResponseResult.Failure -> {
+                    update { copy(error = result.error.message) }
+                }
+
+                is ResponseResult.Success -> {
+
+                    // Upload image to store first
+                    val uploadImageRes = value.let {
+                        userRepository.uploadUserImage(
+                            imageUri = value,
+                            userId = state.value.userId ?: return@launch, isNewUser = false
+                        )
+                    }
+
+                    when (uploadImageRes) {
+                        is ResponseResult.Failure -> {
+                            update {
+                                copy(
+                                    error = uploadImageRes.error.message,
+                                    isLoading = false
+                                )
+                            }
+                        }
+
+                        is ResponseResult.Success -> {
+                            val updatedUser = result.data.data.user.copy(
+                                image = uploadImageRes.data
+                            )
+
+                            // Update user with new image
+                            when (val updateUserResult =
+                                userRepository.updateUser(updatedUser)) {
+                                is ResponseResult.Failure -> {
+                                    update {
+                                        copy(
+                                            error  = updateUserResult.error.message,
+                                            isLoading = false
+                                        )
+                                    }
+                                }
+
+                                is ResponseResult.Success -> {
+                                    update {
+                                        copy(isLoading = false)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

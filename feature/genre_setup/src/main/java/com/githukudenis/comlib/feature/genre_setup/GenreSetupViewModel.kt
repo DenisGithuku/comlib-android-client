@@ -35,10 +35,11 @@ data class GenreSetupUiState(
     val isLoading: Boolean = false,
     val genres: List<SelectableGenreItem> = emptyList(),
     val isSetupComplete: Boolean = false,
-    val error: String? = null
+    val error: String? = null,
+    val isSaving: Boolean = false
 ) {
     val screenIsValid: Boolean
-        get() = genres.filter { it.isSelected }.size >= 3
+        get() = genres.any { it.isSelected }
 }
 
 @HiltViewModel
@@ -67,7 +68,9 @@ class GenreSetupViewModel
                 is ResponseResult.Success -> {
                     update {
                         copy(isLoading = false,
-                            genres = genres.data.data.genres.map { SelectableGenreItem(genre = it) })
+                            genres = genres.data.data.genres
+                                .take(10)
+                                .map { SelectableGenreItem(genre = it) })
                     }
                 }
             }
@@ -80,12 +83,12 @@ class GenreSetupViewModel
 
     fun onCompleteSetup() {
         viewModelScope.launch {
-            update { copy(isLoading = true) }
+            update { copy(isSaving = true) }
             if (state.value.genres.any { it.isSelected }) {
                 onUpdateUser()
             }
             userPrefsRepository.setSetupStatus(isComplete = true)
-            update { copy(isSetupComplete = true, isLoading = false) }
+            update { copy(isSetupComplete = true, isSaving = false) }
         }
     }
 

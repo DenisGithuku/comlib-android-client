@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -38,8 +37,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel
-@Inject
-constructor(
+@Inject constructor(
     private val userPrefsRepository: UserPrefsRepository,
     private val userRepository: UserRepository,
     private val authRepository: AuthRepository
@@ -48,34 +46,37 @@ constructor(
     private val _uiState = MutableStateFlow(ProfileUiState())
     private val _userPrefs = userPrefsRepository.userPrefs
 
-    val uiState: StateFlow<ProfileUiState> =
-        combine(_uiState, _userPrefs) { uiState, prefs ->
-                val profile = prefs.userId?.let { id -> getProfileDetails(id) }
-                uiState.copy(profile = profile, selectedTheme = prefs.themeConfig)
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = ProfileUiState()
-            )
+    val uiState: StateFlow<ProfileUiState> = combine(_uiState, _userPrefs) { uiState, prefs ->
+        val profile = prefs.userId?.let { id -> getProfileDetails(id) }
+        uiState.copy(profile = profile, selectedTheme = prefs.themeConfig)
+    }.stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5_000),
+            initialValue = ProfileUiState()
+        )
 
     fun onEvent(profileUiEvent: ProfileUiEvent) {
         when (profileUiEvent) {
             is ProfileUiEvent.ChangeTheme -> {
                 toggleTheme(profileUiEvent.theme)
             }
+
             is ProfileUiEvent.ChangeUserImage -> {
                 onChangeUserImage(profileUiEvent.imageUri)
             }
+
             ProfileUiEvent.SignOut -> {
                 onSignOut()
             }
+
             is ProfileUiEvent.ToggleCache -> {
                 onToggleCache(profileUiEvent.isVisible)
             }
+
             is ProfileUiEvent.ToggleSignOut -> {
                 onToggleSignOut(profileUiEvent.isSignOut)
             }
+
             is ProfileUiEvent.ToggleThemeDialog -> {
                 toggleThemeDialog(profileUiEvent.isVisible)
             }
@@ -83,7 +84,7 @@ constructor(
     }
 
     private suspend fun getProfileDetails(userId: String): Profile? {
-       return  when(val result = userRepository.getUserById(userId)) {
+        return when (val result = userRepository.getUserById(userId)) {
             is ResponseResult.Failure -> null
             is ResponseResult.Success -> result.data.data.user.toProfile()
         }
@@ -112,12 +113,65 @@ constructor(
     private fun onChangeUserImage(imageUri: Uri) {
         viewModelScope.launch {
             val userId = _userPrefs.mapLatest { it.userId }.first()
-            checkNotNull(userId).also { userRepository.uploadUserImage(imageUri, userId) }
+            checkNotNull(userId).run {
+                uploadUserImage(imageUri = imageUri, userId = this)
+            }
         }
     }
 
     private fun toggleTheme(theme: ThemeConfig) {
         viewModelScope.launch { userPrefsRepository.setThemeConfig(theme) }
+    }
+
+    private suspend fun uploadUserImage(imageUri: Uri, userId: String) {
+        when (val result = userRepository.getUserById(userId)) {
+            is ResponseResult.Failure -> {
+                _uiState.update { it.copy(error = result.error.message) }
+            }
+
+            is ResponseResult.Success -> {
+
+                // Upload image to store first
+                val uploadImageRes = userId.let {
+                    userRepository.uploadUserImage(
+                        imageUri = imageUri, userId = userId, isNewUser = false
+                    )
+                }
+
+                when (uploadImageRes) {
+                    is ResponseResult.Failure -> {
+                        _uiState.update {
+                            it.copy(
+                                error = uploadImageRes.error.message, isLoading = false
+                            )
+                        }
+                    }
+
+                    is ResponseResult.Success -> {
+                        val updatedUser = result.data.data.user.copy(
+                            image = uploadImageRes.data
+                        )
+
+                        // Update user with new image
+                        when (val updateUserResult = userRepository.updateUser(updatedUser)) {
+                            is ResponseResult.Failure -> {
+                                _uiState.update {
+                                    it.copy(
+                                        error = updateUserResult.error.message, isLoading = false
+                                    )
+                                }
+                            }
+
+                            is ResponseResult.Success -> {
+                                _uiState.update {
+                                    it.copy(isLoading = false)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

@@ -135,9 +135,9 @@ class LoginViewModel
 
 //    private fun onSignInResult(signInResult: SignInResult) {
 //        viewModelScope.launch {
-//            _state.update { prevState -> prevState.copy(isLoading = true) }
+//            _state.complete_profile { prevState -> prevState.copy(isLoading = true) }
 //            if (signInResult.errorMessage != null) {
-//                _state.update { prevState ->
+//                _state.complete_profile { prevState ->
 //                    val userMessages = prevState.userMessages.toMutableList()
 //                    userMessages.add(UserMessage(message = signInResult.errorMessage))
 //                    prevState.copy(isLoading = false, loginSuccess = true, userMessages = userMessages)
@@ -156,7 +156,7 @@ class LoginViewModel
 //                }
 //            }
 //
-//            _state.update { prevState ->
+//            _state.complete_profile { prevState ->
 //                val userMessages = prevState.userMessages.toMutableList()
 //                userMessages.add(UserMessage(message = "Signed in successfully"))
 //                prevState.copy(isLoading = false, loginSuccess = true, userMessages = userMessages)
@@ -167,7 +167,7 @@ class LoginViewModel
     private fun login() {
         viewModelScope.launch {
             val (email, password) = _state.value.formState
-            if (email.isEmpty() || password.isEmpty()) {
+            if (email.trim().isEmpty() || password.trim().isEmpty()) {
                 _state.update { prevState ->
                     val userMessages = prevState.userMessages.toMutableList()
                     userMessages.add(
@@ -183,7 +183,7 @@ class LoginViewModel
 
             _state.update { prevState -> prevState.copy(isLoading = true) }
 
-            authRepository.login(userLogInDTO = UserLoginDTO(email = email, password = password),
+            authRepository.login(userLogInDTO = UserLoginDTO(email = email.trim(), password = password.trim()),
                 onSuccess = { response ->
                     userPrefsRepository.setToken(response.token)
                     userPrefsRepository.setUserId(response.id)
