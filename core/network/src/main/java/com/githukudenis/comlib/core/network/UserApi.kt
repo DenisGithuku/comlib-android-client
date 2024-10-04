@@ -28,8 +28,6 @@ import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
 import io.ktor.client.request.setBody
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
 import javax.inject.Inject
 
 class UserApi
@@ -48,7 +46,6 @@ constructor(
         return safeApiCall {
             user.id?.let {
                 httpClient.patch(urlString = Endpoints.Users.Update(it).url) {
-                    contentType(ContentType.Application.Json)
                     setBody(user)
                 }
             } ?: throw IllegalArgumentException("User id cannot be null")

@@ -19,6 +19,7 @@ package com.githukudenis.comlib.feature.auth.presentation.signup
 import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
+import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
@@ -34,11 +35,15 @@ class SignUpViewModelTest {
 
     lateinit var viewModel: SignUpViewModel
     lateinit var authRepository: FakeAuthRepository
+    lateinit var userPrefsRepository: FakeUserPrefsRepository
 
     @Before
     fun setUp() {
         authRepository = FakeAuthRepository()
-        viewModel = SignUpViewModel(authRepository)
+        viewModel = SignUpViewModel(
+            authRepository = authRepository,
+            userPrefsRepository = userPrefsRepository
+        )
     }
 
     @Test

@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -35,7 +34,11 @@ sealed class Endpoints(private val path: String) {
             }
         }
 
-    sealed class Auth(route: String = "api/v1/users", param: String? = null, val path: String? = null) : Endpoints(route + (param?.let { "/$it" } ?: "") + (path?.let { "/$it" } ?: "")) {
+    sealed class Auth(
+        route: String = "api/v1/users",
+        param: String? = null,
+        val path: String? = null
+    ) : Endpoints(route + (param?.let { "/$it" } ?: "") + (path?.let { "/$it" } ?: "")) {
         data object Login : Auth(path = "/login")
 
         data object SignUp : Auth(path = "/signup")
@@ -43,15 +46,20 @@ sealed class Endpoints(private val path: String) {
         data object ResetPassword : Auth(path = "reset-password")
     }
 
-    sealed class Books(route: String = "api/v1/books", private val param: String? = null) : Endpoints(route + (param?.let { "/$it" } ?: "")) {
+    sealed class Books(route: String = "api/v1/books", private val param: String? = null) :
+        Endpoints(route + (param?.let { "/$it" } ?: "")) {
         data object GetAll : Books()
 
         data object Add : Books()
 
-        data class GetById(private val bookId: String): Books(param = bookId)
+        data class GetById(private val bookId: String) : Books(param = bookId)
     }
 
-    sealed class Users(route: String = "api/v1/users", private val param: String? = null, val path: String? = null) : Endpoints(route + (param?.let { "/$it" } ?: "" ) + (path?.let { "/$it" } ?: "")) {
+    sealed class Users(
+        route: String = "api/v1/users",
+        private val param: String? = null,
+        val path: String? = null
+    ) : Endpoints(route + (param?.let { "/$it" } ?: "") + (path?.let { "/$it" } ?: "")) {
 
         // Represents the route to get all read books
         data class GetReadBooks(val userId: String) : Users(param = userId, path = "read-books")
@@ -59,7 +67,7 @@ sealed class Endpoints(private val path: String) {
         // Represents the route to get a user by their ID
         data class GetById(val userId: String) : Users(param = userId)
 
-        // Represents the route to update a user's data
+        // Represents the route to complete_profile a user's data
         data class Update(val userId: String) : Users(param = userId)
 
         // Represents the route to delete a user by their ID
@@ -74,7 +82,12 @@ sealed class Endpoints(private val path: String) {
 
 object FirebaseExt {
     fun getFilePathFromUrl(fileUrl: String): String {
+        // Extract everything after "/o/" and before "?" (the storage path)
+        val regex = Regex("/o/(.+?)\\?")
+        val matchResult = regex.find(fileUrl)
+
         // Parse the storage bucket URL from the download URL
-        return fileUrl.substringAfterLast("/")
+        return matchResult?.groupValues?.get(1)?.replace("%2F", "/")
+            ?: throw IllegalArgumentException("Invalid file URL")
     }
 }
