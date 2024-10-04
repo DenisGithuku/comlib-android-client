@@ -121,6 +121,7 @@ ktor-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor"
 ktor-serialization = { group = "io.ktor", name = "ktor-serialization-kotlinx-json", version.ref = "ktor"}
 ktor-content-negotiation = { group = "io.ktor", name = "ktor-client-content-negotiation", version.ref = "ktor" }
 ktor-client-okhttp = { group = "io.ktor", name = "ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-auth = { group = "io.ktor", name = "ktor-client-auth", version.ref = "ktor"}
 lottie-files = { module = "com.airbnb.android:lottie-compose", version.ref = "lottie"}
 perf-plugin = { module = "com.google.firebase:perf-plugin", version.ref = "perfPlugin" }
 room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
@@ -169,6 +170,7 @@ ktor = [
     "ktor-client-android",
     "ktor-content-negotiation",
     "ktor-logging",
+    "ktor-client-auth",
     "ktor-core",
     "ktor-serialization",
     "ktor-client-okhttp"

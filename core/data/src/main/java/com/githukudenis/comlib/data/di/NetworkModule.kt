@@ -16,13 +16,13 @@
 package com.githukudenis.comlib.data.di
 
 import android.content.Context
-import android.util.Log
 import com.githukudenis.comlib.core.common.ComlibConnectivityManager
 import com.githukudenis.comlib.core.datastore.UserPrefsDatasource
 import com.githukudenis.comlib.data.utils.FirebaseStorageHandlerImpl
 import com.githukudenis.comlib.data.utils.NetworkInterceptor
 import com.githukudenis.comlib.data.utils.NetworkMonitor
 import com.githukudenis.comlib.data.utils.NetworkMonitorImpl
+import com.githukudenis.comlib.data.utils.TokenInterceptor
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,15 +40,12 @@ import io.ktor.client.request.header
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.serialization.kotlinx.json.json
-import io.ktor.util.InternalAPI
-import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.json.Json
 import timber.log.Timber
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
-private const val TIMEOUT = 60_000
+private const val TIMEOUT = 60_000L
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -59,11 +56,14 @@ object NetworkModule {
     fun provideNetworkImpl(@ApplicationContext context: Context): NetworkMonitor =
         NetworkMonitorImpl(context)
 
-    @OptIn(InternalAPI::class)
+    @Provides
+    @Singleton
+    fun provideTokenInterceptor(userPrefsDataSource: UserPrefsDatasource): TokenInterceptor = TokenInterceptor(userPrefsDataSource)
+
     @Provides
     @Singleton
     fun provideHttpClient(
-        networkMonitor: NetworkMonitor, userPrefsDataSource: UserPrefsDatasource
+        networkMonitor: NetworkMonitor, tokenInterceptor: TokenInterceptor
     ): HttpClient {
         val httpClient = HttpClient(OkHttp) {
 
@@ -76,16 +76,21 @@ object NetworkModule {
                 })
             }
 
-            val accessToken = runBlocking { userPrefsDataSource.userPrefs.map { it.token }.first() }
-            Log.d("token", accessToken.toString())
+
             defaultRequest {
                 header(HttpHeaders.ContentType, ContentType.Application.Json)
-                header(HttpHeaders.Authorization, "Bearer $accessToken")
             }
 
             engine {
                 config {
+                    retryOnConnectionFailure(true)
+                    connectTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    readTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
+                    writeTimeout(TIMEOUT, TimeUnit.MILLISECONDS)
                     addInterceptor(NetworkInterceptor(networkMonitor))
+
+                    // Add a token change aware interceptor to prevent null value exceptions
+                    addInterceptor(tokenInterceptor)
                 }
             }
 
@@ -95,7 +100,7 @@ object NetworkModule {
                         Timber.tag("Logger Ktor => ").v(message)
                     }
                 }
-                level = LogLevel.BODY
+                level = LogLevel.ALL
             }
 
             install(ResponseObserver) {

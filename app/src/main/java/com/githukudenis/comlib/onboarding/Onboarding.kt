@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,6 +42,7 @@ import com.airbnb.lottie.compose.LottieConstants
 import com.airbnb.lottie.compose.animateLottieCompositionAsState
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.githukudenis.comlib.R
+import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 
 @Composable
@@ -61,10 +61,9 @@ fun OnBoardingScreen(onGetStarted: () -> Unit) {
                 textAlign = TextAlign.Center
             )
             Spacer(modifier = Modifier.height(LocalDimens.current.twentyFour))
-            Button(
+            CLibButton(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onGetStarted,
-                shape = MaterialTheme.shapes.small
             ) {
                 Text(
                     text = stringResource(id = R.string.get_started_btn_text),

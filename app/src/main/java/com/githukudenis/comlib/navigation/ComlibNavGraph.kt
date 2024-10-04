@@ -38,7 +38,7 @@ import com.githukudenis.comlib.splashScreen
 import com.githukudenis.comlib.splashScreenRoute
 
 @Composable
-fun ComlibNavGraph(appState: AppState, startDestination: String) {
+fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete: Boolean) {
     NavHost(navController = appState.navController, startDestination = splashScreenRoute) {
         splashScreen(
             onTimeout = {
@@ -49,7 +49,7 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             snackbarHostState = appState.snackbarHostState,
             onLoginComplete = {
                 appState.navigate(
-                    ComlibDestination.HomeGraph.route,
+                    route = if (isSetupComplete) ComlibDestination.HomeGraph.route else AuthDestination.CompleteProfile.route,
                     popUpTo = ComlibDestination.AuthGraph.route,
                     inclusive = true
                 )
@@ -63,8 +63,15 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             },
             onResetComplete = { appState.navigate(route = AuthDestination.Login.route) },
             onForgotPassword = { appState.navigate(route = AuthDestination.ForgotPassword.route) },
-            onSignUpComplete = { appState.navigate(route = AuthDestination.Login.route) },
-            onSignInInstead = { appState.popBackStack() }
+            onSignUpComplete = { appState.navigate(route = AuthDestination.Login.route, AuthDestination.SignUp.route) },
+            onSignInInstead = { appState.popBackStack() },
+            onProceedToSetupGenre = {
+                appState.navigate(
+                    route = ComlibDestination.GenreSetup.route,
+                    popUpTo = ComlibDestination.AuthGraph.route,
+                    inclusive = true
+                )
+            }
         )
         composable(
             enterTransition = {
@@ -174,7 +181,9 @@ fun ComlibNavGraph(appState: AppState, startDestination: String) {
             enterTransition = {
                 scaleIn(initialScale = 0.8f, animationSpec = tween(durationMillis = 500))
             },
-            exitTransition = { scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300)) }
+            exitTransition = { scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300)) + slideOutOfContainer(
+                towards = AnimatedContentTransitionScope.SlideDirection.Down,
+            ) }
         ) {
             GenreSetupScreen(
                 onSkip = {

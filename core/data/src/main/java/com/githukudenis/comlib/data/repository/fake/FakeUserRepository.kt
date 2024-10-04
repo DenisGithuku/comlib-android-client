@@ -23,7 +23,6 @@ import com.githukudenis.comlib.core.model.user.DeactivateUserResponse
 import com.githukudenis.comlib.core.model.user.DeleteUserResponse
 import com.githukudenis.comlib.core.model.user.SingleUserResponse
 import com.githukudenis.comlib.core.model.user.UpdateUserResponse
-import com.githukudenis.comlib.core.model.user.UploadUserResponse
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.data.repository.UserRepository
 
@@ -71,7 +70,7 @@ class FakeUserRepository : UserRepository {
         } catch (e: Exception) {
             ResponseResult.Failure(
                 ErrorResponse(
-                    message = "Could not update user", status = "fail"
+                    message = "Could not complete_profile user", status = "fail"
                 )
             )
         }
@@ -114,15 +113,14 @@ class FakeUserRepository : UserRepository {
 
     override suspend fun uploadUserImage(
         imageUri: Uri,
-        authId: String
-    ): ResponseResult<UploadUserResponse> {
+        userId: String,
+        isNewUser: Boolean
+    ): ResponseResult<String> {
         return try {
-            val pos = users.indexOf(users.find { it.id == authId })
+            val pos = users.indexOf(users.find { it.id == userId })
             users[pos] = users[pos].copy(image = imageUri.lastPathSegment)
             ResponseResult.Success(
-                UploadUserResponse(
-                    status = "success", message = "success"
-                )
+                "success"
             )
         } catch (e: Exception) {
             ResponseResult.Failure(

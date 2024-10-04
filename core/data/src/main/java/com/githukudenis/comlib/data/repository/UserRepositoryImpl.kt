@@ -16,6 +16,7 @@
 package com.githukudenis.comlib.data.repository
 
 import android.net.Uri
+import android.util.Log
 import com.githukudenis.comlib.core.common.ErrorResponse
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
@@ -23,7 +24,6 @@ import com.githukudenis.comlib.core.model.user.DeactivateUserResponse
 import com.githukudenis.comlib.core.model.user.DeleteUserResponse
 import com.githukudenis.comlib.core.model.user.SingleUserResponse
 import com.githukudenis.comlib.core.model.user.UpdateUserResponse
-import com.githukudenis.comlib.core.model.user.UploadUserResponse
 import com.githukudenis.comlib.core.model.user.User
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.UserApi
@@ -78,47 +78,48 @@ class UserRepositoryImpl
         }
     }
 
-    override suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<UploadUserResponse> {
+    override suspend fun uploadUserImage(
+        imageUri: Uri,
+        userId: String,
+        isNewUser: Boolean
+    ): ResponseResult<String> {
         return withContext(dispatchers.io) {
-            when (val result = userApi.getUserById(userId)) {
+            // Step 1: Fetch user by ID
+            when (val userResult = userApi.getUserById(userId)) {
                 is ResponseResult.Failure -> {
-                    Timber.e(result.error.message)
-                    ResponseResult.Failure(
-                        result.error
-                    )
+                    Timber.e(userResult.error.message)
+                    return@withContext ResponseResult.Failure(userResult.error)
                 }
 
                 is ResponseResult.Success -> {
-                    // Delete existing image first
-                    result.data.data.user.image?.let {
-                        imagesRemoteDataSource.deleteImage(
-                            imagePath = FirebaseExt.getFilePathFromUrl(
-                                it
+                    val user = userResult.data.data.user
+                    val currentImage = user.image
+
+                    // Step 2: Delete existing image if the user is not new and has an image
+                    if (!isNewUser && !currentImage.isNullOrEmpty()) {
+                        Log.d("Image", "Deletes image....")
+                        val imagePath = FirebaseExt.getFilePathFromUrl(currentImage)
+                        Log.d("Image path", imagePath)
+                        imagesRemoteDataSource.deleteImage(imagePath)
+                    }
+
+                    // Step 3: Upload new image
+                    val imagePath = ImageStorageRef.Users(imageUri.lastPathSegment ?: "").ref
+                    Log.d("Image add path", imagePath)
+                    val uploadResult = imagesRemoteDataSource.addImage(imageUri, imagePath)
+
+                    val uploadedImageUrl = uploadResult.getOrNull()
+                        ?: return@withContext ResponseResult.Failure(
+                            ErrorResponse(
+                                message = "Could not upload image", status = "fail"
                             )
                         )
 
-                        val imagePath = ImageStorageRef.Users(imageUri.lastPathSegment ?: "").ref
-                        val userImage = imagesRemoteDataSource.addImage(imageUri, imagePath)
-
-                        userImage.getOrNull()?.let {
-                            val updatedUser = result.data.data.user.copy(image = it)
-                            when(val updateResult = userApi.updateUser(updatedUser)) {
-                                is ResponseResult.Failure -> {
-                                    ResponseResult.Failure(updateResult.error)
-                                }
-                                is ResponseResult.Success -> {
-                                    ResponseResult.Success(UploadUserResponse(status = "success", message = "success"))
-                                }
-                            }
-                        }
-                    }  ?: ResponseResult.Failure(
-                        ErrorResponse(
-                            message = "Could not upload image",
-                            status = "fail"
-                        )
-                    )
+                    // Step 4: Return success with the new image URL
+                    return@withContext ResponseResult.Success(uploadedImageUrl)
                 }
             }
         }
     }
+
 }

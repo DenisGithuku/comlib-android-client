@@ -22,7 +22,6 @@ import com.githukudenis.comlib.core.model.user.DeactivateUserResponse
 import com.githukudenis.comlib.core.model.user.DeleteUserResponse
 import com.githukudenis.comlib.core.model.user.SingleUserResponse
 import com.githukudenis.comlib.core.model.user.UpdateUserResponse
-import com.githukudenis.comlib.core.model.user.UploadUserResponse
 import com.githukudenis.comlib.core.model.user.User
 
 interface UserRepository {
@@ -35,5 +34,5 @@ interface UserRepository {
 
     suspend fun deactivateAccount(userId: String): ResponseResult<DeactivateUserResponse>
 
-    suspend fun uploadUserImage(imageUri: Uri, userId: String): ResponseResult<UploadUserResponse>
+    suspend fun uploadUserImage(imageUri: Uri, userId: String, isNewUser: Boolean): ResponseResult<String>
 }

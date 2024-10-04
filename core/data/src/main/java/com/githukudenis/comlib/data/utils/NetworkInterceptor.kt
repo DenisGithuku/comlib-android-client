@@ -57,7 +57,7 @@ class NetworkInterceptor @Inject constructor(private val networkMonitor: Network
     }
 }
 
-/*
-Custom implementation of a specific network exception
- */
+/**
+* Custom implementation of a specific network exception
+**/
 class NoNetworkException(message: String) : IOException(message)
