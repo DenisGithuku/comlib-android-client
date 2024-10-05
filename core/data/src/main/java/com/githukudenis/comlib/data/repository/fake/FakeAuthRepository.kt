@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -27,14 +26,43 @@ import com.githukudenis.comlib.data.repository.AuthRepository
 
 class FakeAuthRepository : AuthRepository {
 
-    val users: MutableList<UserSignUpDTO> = mutableListOf()
+    /**
+     * Fake data source for testing
+     **/
+
+    private val users = mutableListOf(
+        UserSignUpDTO(
+            email = "william.henry.moody@my-own-personal-domain.com",
+            password = "password",
+            passwordConfirm = "password",
+            firstname = "William",
+            lastname = "Henry"
+        ), UserSignUpDTO(
+            email = "james.wilson@example-pet-store.com",
+            password = "password",
+            passwordConfirm = "password",
+            firstname = "James",
+            lastname = "Wilson"
+        ), UserSignUpDTO(
+            email = "alice.doe@example-pet-store.com",
+            password = "password",
+            passwordConfirm = "password",
+            firstname = "Alice",
+            lastname = "Doe"
+        )
+    )
 
     override suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
         return try {
             users.add(userSignUpDTO)
             ResponseResult.Success(AddUserResponse(token = "token", status = "success", id = "id"))
         } catch (e: Exception) {
-            ResponseResult.Failure(ErrorResponse(message = "Could not sign up user", status = "fail"))
+            ResponseResult.Failure(
+                ErrorResponse(
+                    message = "Could not sign up user",
+                    status = "fail"
+                )
+            )
         }
     }
 
@@ -44,21 +72,18 @@ class FakeAuthRepository : AuthRepository {
         onError: (String) -> Unit
     ) {
         try {
-            val user = users.find { it.email == userLogInDTO.email }
-            if (user == null) {
-                onError("User not found")
-                return
-            }
+            val userExists = users.any { it.email == userLogInDTO.email && it.password == userLogInDTO.password }
+            if (userExists) onSuccess(UserLoginResponse(token = "token", status = "success", id = "id"))
+            else onError("Could not find user with those details")
         } catch (e: Exception) {
-            onError(ErrorResponse(message = "Could not login user", status = "fail").message)
+            onError(ErrorResponse(message = e.localizedMessage ?: "Unknown error", status = "fail").message)
         }
     }
 
     override suspend fun signOut() {}
 
     override suspend fun resetPassword(
-        email: String,
-        onSuccess: (ResetPasswordResponse) -> Unit,
-        onError: (String) -> Unit
-    ) {}
+        email: String, onSuccess: (ResetPasswordResponse) -> Unit, onError: (String) -> Unit
+    ) {
+    }
 }
