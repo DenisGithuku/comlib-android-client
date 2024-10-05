@@ -54,6 +54,14 @@ class FakeAuthRepository : AuthRepository {
 
     override suspend fun signUp(userSignUpDTO: UserSignUpDTO): ResponseResult<AddUserResponse> {
         return try {
+            if (users.any { it.email == userSignUpDTO.email }) {
+                return ResponseResult.Failure(
+                    ErrorResponse(
+                        message = "User already exists",
+                        status = "fail"
+                    )
+                )
+            }
             users.add(userSignUpDTO)
             ResponseResult.Success(AddUserResponse(token = "token", status = "success", id = "id"))
         } catch (e: Exception) {
