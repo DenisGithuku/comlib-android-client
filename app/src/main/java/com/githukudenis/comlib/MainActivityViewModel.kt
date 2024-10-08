@@ -18,9 +18,8 @@ package com.githukudenis.comlib
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.ThemeConfig
-import com.google.firebase.auth.FirebaseAuth
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -29,20 +28,16 @@ import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
-class MainActivityViewModel
-@Inject
-constructor(
-    private val firebaseAuth: FirebaseAuth,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase
-) : ViewModel() {
+class MainActivityViewModel @Inject constructor(userPrefsRepository: UserPrefsRepository) :
+    ViewModel() {
 
     val state: StateFlow<MainActivityUiState> =
-        getUserPrefsUseCase()
+        userPrefsRepository.userPrefs
             .mapLatest { userPrefs ->
                 MainActivityUiState(
                     isLoading = false,
-                    isLoggedIn = firebaseAuth.currentUser != null,
-                    isSetup = userPrefs.isSetup,
+                    isLoggedIn = userPrefs.token != null && userPrefs.userId != null,
+                    isSetupComplete = userPrefs.isSetup,
                     themeConfig = userPrefs.themeConfig
                 )
             }
@@ -52,6 +47,6 @@ constructor(
 data class MainActivityUiState(
     val isLoading: Boolean = true,
     val isLoggedIn: Boolean = false,
-    val isSetup: Boolean = false,
+    val isSetupComplete: Boolean = false,
     val themeConfig: ThemeConfig = ThemeConfig.SYSTEM
 )

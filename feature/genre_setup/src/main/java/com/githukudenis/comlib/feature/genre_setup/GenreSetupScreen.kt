@@ -41,10 +41,13 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.githukudenis.comlib.core.common.untangle
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButton
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.components.pills.SelectablePillComponent
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
@@ -90,7 +93,19 @@ private fun GenreSetupContent(
             modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
             contentAlignment = Alignment.Center
         ) {
-            CLibCircularProgressBar()
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
+                Text(
+                    text = stringResource(id = R.string.loading_genres),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+                )
+                Spacer(modifier = Modifier.height(LocalDimens.current.eight))
+                CLibCircularProgressBar()
+            }
         }
         return
     }
@@ -117,71 +132,61 @@ private fun GenreSetupContent(
         return
     }
 
-    Box(modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge)) {
-        LazyColumn(
-            modifier =
-                Modifier.padding(
-                    top = LocalDimens.current.extraLarge,
-                    bottom = LocalDimens.current.extraLarge * 3
-                ),
-            verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
+    if (state.genres.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
+            contentAlignment = Alignment.Center
         ) {
-            item {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        text = stringResource(id = R.string.genre_setup_title),
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
-                    )
-                    Box(
-                        modifier =
-                            Modifier.background(
-                                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
-                                    shape = CircleShape
-                                )
-                                .clickable(onClick = onSkip),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            modifier =
-                                Modifier.padding(
-                                    vertical = LocalDimens.current.small,
-                                    horizontal = LocalDimens.current.medium
-                                ),
-                            text = stringResource(id = R.string.skip_label),
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-                        )
-                    }
-                }
+            Text(
+                text = stringResource(id = R.string.no_genres_found),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f),
+                textAlign = TextAlign.Center
+            )
+        }
+        return
+    }
+
+    if (state.isSaving) {
+        CLibLoadingDialog(label = stringResource(id = R.string.saving_genres_label))
+    }
+
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().padding(horizontal = LocalDimens.current.sixteen),
+        verticalArrangement = Arrangement.SpaceAround
+    ) {
+        item {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Text(
+                    text = stringResource(id = R.string.genre_setup_title),
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f)
+                )
+                SkipButton(onSkip)
             }
-            item {
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
-                    verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
-                ) {
-                    state.genres.take(5).map { item ->
-                        SelectablePillComponent(
-                            value = item.genre.name.untangle("-"),
-                            isSelected = item.isSelected,
-                            icon = if (item.isSelected) R.drawable.ic_check else null,
-                            id = item.genre.id,
-                            onToggleSelection = onToggleGenreSelection
-                        )
-                    }
+        }
+        item {
+            FlowRow(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
+                verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium)
+            ) {
+                state.genres.map { item ->
+                    SelectablePillComponent(
+                        value = item.genre.name.untangle("-"),
+                        isSelected = item.isSelected,
+                        icon = if (item.isSelected) R.drawable.ic_check else null,
+                        id = item.genre.id,
+                        onToggleSelection = onToggleGenreSelection
+                    )
                 }
             }
         }
-        Box(
-            modifier =
-                Modifier.align(Alignment.BottomCenter)
-                    .background(color = MaterialTheme.colorScheme.background)
-        ) {
+        item {
             CLibButton(
                 modifier = Modifier.fillMaxWidth(),
                 enabled = state.screenIsValid,
@@ -189,9 +194,34 @@ private fun GenreSetupContent(
             ) {
                 Text(
                     text = stringResource(id = R.string.complete_btn_label),
-                    style = MaterialTheme.typography.bodyMedium
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(4.dp)
                 )
             }
         }
+    }
+}
+
+@Composable
+private fun SkipButton(onSkip: () -> Unit) {
+    Box(
+        modifier =
+            Modifier.background(
+                    color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.07f),
+                    shape = CircleShape
+                )
+                .clickable(onClick = onSkip),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            modifier =
+                Modifier.padding(
+                    vertical = LocalDimens.current.eight,
+                    horizontal = LocalDimens.current.twelve
+                ),
+            text = stringResource(id = R.string.skip_label),
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
+        )
     }
 }

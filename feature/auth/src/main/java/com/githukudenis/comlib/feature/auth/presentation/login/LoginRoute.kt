@@ -79,7 +79,6 @@ import com.githukudenis.comlib.core.designsystem.ui.theme.Critical
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
-import com.githukudenis.comlib.feature.auth.presentation.common.AuthProviderButton
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.delay
@@ -204,9 +203,9 @@ private fun LoginScreen(
             Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = stringResource(id = R.string.login_header_description),
-                style = MaterialTheme.typography.labelMedium
+                style = MaterialTheme.typography.labelLarge
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(LocalDimens.current.sixteen))
 
             CLibOutlinedTextField(
                 value = state.formState.email,
@@ -268,12 +267,12 @@ private fun LoginScreen(
             CLibButton(
                 onClick = onSubmit,
                 enabled = state.formState.formIsValid,
-                shape = MaterialTheme.shapes.small,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = stringResource(id = R.string.login_button_txt),
-                    style = MaterialTheme.typography.titleMedium
+                    style = MaterialTheme.typography.bodyLarge,
+                    modifier = Modifier.padding(4.dp)
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))
@@ -301,7 +300,7 @@ private fun LoginScreen(
                 }
             }
 
-            AuthProviderButton(icon = R.drawable.ic_google, onClick = onGoogleSignIn)
+            //            AuthProviderButton(icon = R.drawable.ic_google, onClick = onGoogleSignIn)
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
@@ -317,7 +316,8 @@ private fun LoginScreen(
                 CLibTextButton(onClick = onSignUpInstead) {
                     Text(
                         text = stringResource(id = R.string.sign_up_txt),
-                        style = MaterialTheme.typography.labelMedium
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(4.dp)
                     )
                 }
             }

@@ -1,0 +1,1 @@
+com.githukudenis.comlib.core.domain

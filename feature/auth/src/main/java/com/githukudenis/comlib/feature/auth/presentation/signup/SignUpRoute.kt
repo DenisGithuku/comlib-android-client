@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -57,7 +58,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -74,7 +74,6 @@ import com.githukudenis.comlib.core.designsystem.ui.theme.Critical
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.auth.R
 import com.githukudenis.comlib.feature.auth.presentation.GoogleAuthUiClient
-import com.githukudenis.comlib.feature.auth.presentation.common.AuthProviderButton
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.google.android.gms.auth.api.identity.Identity
 import kotlinx.coroutines.delay
@@ -211,14 +210,15 @@ private fun SignUpScreen(
                             end = 16.dp
                         )
                     ),
-            verticalArrangement = Arrangement.spacedBy(LocalDimens.current.medium),
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             item {
                 Text(
                     text = stringResource(id = R.string.signup_header_title),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.labelLarge
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
                 Row(
@@ -242,6 +242,7 @@ private fun SignUpScreen(
                         modifier = Modifier.weight(1f)
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             item {
@@ -262,6 +263,7 @@ private fun SignUpScreen(
                     },
                     isError = !state.formState.isEmailValid && isEmailFocused
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
                 CLibOutlinedTextField(
@@ -301,6 +303,7 @@ private fun SignUpScreen(
                     },
                     isError = state.formState.requirements.size < 4 && isPasswordFocused
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
                 CLibOutlinedTextField(
@@ -340,19 +343,21 @@ private fun SignUpScreen(
                     },
                     isError = state.formState.password != state.formState.confirmPassword && isConfirmFocused
                 )
+                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
                 CLibButton(
                     onClick = onSubmit,
                     enabled = state.formState.formIsValid,
-                    shape = MaterialTheme.shapes.small,
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
                         text = stringResource(id = R.string.signup_button_txt),
-                        style = MaterialTheme.typography.titleMedium
+                        style = MaterialTheme.typography.bodyLarge,
+                        modifier = Modifier.padding(4.dp)
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
             }
             item {
                 Row(
@@ -366,8 +371,10 @@ private fun SignUpScreen(
                         style = MaterialTheme.typography.labelMedium
                     )
                 }
+                Spacer(modifier = Modifier.height(8.dp))
             }
-            item { AuthProviderButton(onClick = onGoogleSignIn, icon = R.drawable.ic_google) }
+            //            item { AuthProviderButton(onClick = onGoogleSignIn, icon = R.drawable.ic_google)
+            // }
             item {
                 Row(
                     modifier = Modifier.fillMaxWidth(),

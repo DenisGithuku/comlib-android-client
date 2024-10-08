@@ -18,15 +18,10 @@ package com.githukudenis.comlib.feature.streak
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.filters.MediumTest
-import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetStreakUseCase
-import com.githukudenis.comlib.core.domain.usecases.SaveStreakUseCase
-import com.githukudenis.comlib.core.domain.usecases.UpdateStreakUseCase
+import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeMilestoneRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
-import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import junit.framework.TestCase.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -42,27 +37,22 @@ class StreakViewModelTest {
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: StreakViewModel
-    lateinit var getAllBooksUseCase: GetAllBooksUseCase
-    lateinit var getReadBooksUseCase: GetReadBooksUseCase
-    lateinit var saveStreakUseCase: SaveStreakUseCase
-    lateinit var getStreakUseCase: GetStreakUseCase
-    lateinit var updateStreakUseCase: UpdateStreakUseCase
+    lateinit var booksRepository: FakeBooksRepository
+    lateinit var milestoneRepository: FakeMilestoneRepository
+    lateinit var userPrefsRepository: FakeUserPrefsRepository
 
     @Before
     fun setUp() {
-        getAllBooksUseCase = GetAllBooksUseCase(FakeBooksRepository())
-        getReadBooksUseCase = GetReadBooksUseCase(FakeUserPrefsRepository())
-        saveStreakUseCase = SaveStreakUseCase(FakeMilestoneRepository())
-        getStreakUseCase = GetStreakUseCase(FakeMilestoneRepository())
-        updateStreakUseCase = UpdateStreakUseCase(FakeMilestoneRepository())
+        booksRepository = FakeBooksRepository()
+        milestoneRepository = FakeMilestoneRepository()
+        userPrefsRepository = FakeUserPrefsRepository()
+
         viewModel =
             StreakViewModel(
-                getAllBooksUseCase = getAllBooksUseCase,
-                getReadBooksUseCase = getReadBooksUseCase,
-                saveStreakUseCase = saveStreakUseCase,
-                getStreakUseCase = getStreakUseCase,
                 savedStateHandle = SavedStateHandle(mapOf("bookId" to "1")),
-                updateStreakUseCase = updateStreakUseCase
+                bookMilestoneRepository = milestoneRepository,
+                userPrefsRepository = userPrefsRepository,
+                booksRepository = booksRepository
             )
     }
 

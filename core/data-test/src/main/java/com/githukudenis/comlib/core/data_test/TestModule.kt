@@ -16,8 +16,8 @@
 */
 package com.githukudenis.comlib.core.data_test
 
-import com.githukudenis.comlib.data.repository.AuthRepository
-import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
+import com.githukudenis.comlib.core.data.repository.AuthRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

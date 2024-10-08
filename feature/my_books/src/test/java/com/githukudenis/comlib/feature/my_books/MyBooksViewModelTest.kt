@@ -17,11 +17,9 @@
 package com.githukudenis.comlib.feature.my_books
 
 import androidx.test.filters.MediumTest
-import com.githukudenis.comlib.core.domain.usecases.GetBooksByUserUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
+import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -34,15 +32,16 @@ class MyBooksViewModelTest {
 
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
-    lateinit var getBooksByUserUseCase: GetBooksByUserUseCase
-    lateinit var userPrefsUseCase: GetUserPrefsUseCase
+    lateinit var booksRepository: FakeBooksRepository
+    lateinit var userPrefsRepository: FakeUserPrefsRepository
     lateinit var viewModel: MyBooksViewModel
 
     @Before
     fun setUp() {
-        getBooksByUserUseCase = GetBooksByUserUseCase(FakeBooksRepository())
-        userPrefsUseCase = GetUserPrefsUseCase(FakeUserPrefsRepository())
-        viewModel = MyBooksViewModel(getBooksByUserUseCase, userPrefsUseCase)
+        booksRepository = FakeBooksRepository()
+        userPrefsRepository = FakeUserPrefsRepository()
+        viewModel =
+            MyBooksViewModel(userPrefsRepository = userPrefsRepository, booksRepository = booksRepository)
     }
 
     @Test

@@ -35,13 +35,45 @@ sealed class Endpoints(private val path: String) {
             }
         }
 
-    data object Books : Endpoints("api/v1/books")
+    sealed class Auth(
+        route: String = "api/v1/users",
+        param: String? = null,
+        val path: String? = null
+    ) : Endpoints(route + (param?.let { "/$it" } ?: "") + (path?.let { "/$it" } ?: "")) {
+        data object Login : Auth(path = "/login")
 
-    data class Book(private val id: String) : Endpoints("api/v1/books/$id")
+        data object SignUp : Auth(path = "/signup")
 
-    data object Users : Endpoints("api/v1/users")
+        data object ResetPassword : Auth(path = "reset-password")
+    }
 
-    data class User(private val id: String) : Endpoints("api/v1/users/$id")
+    sealed class Books(route: String = "api/v1/books", private val param: String? = null) :
+        Endpoints(route + (param?.let { "/$it" } ?: "")) {
+        data object GetAll : Books()
+
+        data object Add : Books()
+
+        data class GetById(private val bookId: String) : Books(param = bookId)
+    }
+
+    sealed class Users(
+        route: String = "api/v1/users",
+        private val param: String? = null,
+        val path: String? = null
+    ) : Endpoints(route + (param?.let { "/$it" } ?: "") + (path?.let { "/$it" } ?: "")) {
+
+        // Represents the route to get all read books
+        data class GetReadBooks(val userId: String) : Users(param = userId, path = "read-books")
+
+        // Represents the route to get a user by their ID
+        data class GetById(val userId: String) : Users(param = userId)
+
+        // Represents the route to complete_profile a user's data
+        data class Update(val userId: String) : Users(param = userId)
+
+        // Represents the route to delete a user by their ID
+        data class Delete(val userId: String) : Users(param = userId)
+    }
 
     data object Genres : Endpoints("api/v1/genres")
 
@@ -50,7 +82,12 @@ sealed class Endpoints(private val path: String) {
 
 object FirebaseExt {
     fun getFilePathFromUrl(fileUrl: String): String {
+        // Extract everything after "/o/" and before "?" (the storage path)
+        val regex = Regex("/o/(.+?)\\?")
+        val matchResult = regex.find(fileUrl)
+
         // Parse the storage bucket URL from the download URL
-        return fileUrl.substringAfterLast("/")
+        return matchResult?.groupValues?.get(1)?.replace("%2F", "/")
+            ?: throw IllegalArgumentException("Invalid file URL")
     }
 }

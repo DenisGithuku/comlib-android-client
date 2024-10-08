@@ -16,8 +16,9 @@
 */
 package com.githukudenis.comlib.core.network
 
-import com.githukudenis.comlib.core.common.di.ComlibCoroutineDispatchers
-import com.githukudenis.comlib.core.model.user.AddUserResponse
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.common.safeApiCall
+import com.githukudenis.comlib.core.model.user.DeleteUserResponse
 import com.githukudenis.comlib.core.model.user.SingleUserResponse
 import com.githukudenis.comlib.core.model.user.UpdateUserResponse
 import com.githukudenis.comlib.core.model.user.User
@@ -26,44 +27,24 @@ import io.ktor.client.HttpClient
 import io.ktor.client.request.delete
 import io.ktor.client.request.get
 import io.ktor.client.request.patch
-import io.ktor.client.request.post
-import io.ktor.http.ContentType
-import io.ktor.http.contentType
+import io.ktor.client.request.setBody
 import javax.inject.Inject
-import kotlinx.coroutines.withContext
 
-class UserApi
-@Inject
-constructor(
-    private val httpClient: HttpClient,
-    private val dispatchers: ComlibCoroutineDispatchers
-) {
+class UserApi @Inject constructor(private val httpClient: HttpClient) {
 
-    suspend fun addUser(user: User): String {
-        return withContext(dispatchers.io) {
-            val response = httpClient.post<AddUserResponse>(Endpoints.Users.url) { body = user }
-            response.id
+    suspend fun getUserById(userId: String): ResponseResult<SingleUserResponse> {
+        return safeApiCall { httpClient.get(urlString = Endpoints.Users.GetById(userId).url) }
+    }
+
+    suspend fun updateUser(user: User): ResponseResult<UpdateUserResponse> {
+        return safeApiCall {
+            user.id?.let {
+                httpClient.patch(urlString = Endpoints.Users.Update(it).url) { setBody(user) }
+            } ?: throw IllegalArgumentException("User id cannot be null")
         }
     }
 
-    suspend fun getUsersInClub(clubId: String): List<User> {
-        return withContext(dispatchers.io) { httpClient.get(Endpoints.Users.url) }
-    }
-
-    suspend fun getUserById(userId: String): SingleUserResponse {
-        return withContext(dispatchers.io) { httpClient.get(urlString = Endpoints.User(userId).url) }
-    }
-
-    suspend fun updateUser(id: String, user: User) {
-        withContext(dispatchers.io) {
-            httpClient.patch<UpdateUserResponse>(urlString = Endpoints.User(id).url) {
-                contentType(ContentType.Application.Json)
-                body = user
-            }
-        }
-    }
-
-    suspend fun deleteUser(userId: String) {
-        withContext(dispatchers.io) { httpClient.delete<User>(urlString = Endpoints.User(userId).url) }
+    suspend fun deleteUser(userId: String): ResponseResult<DeleteUserResponse> {
+        return safeApiCall { httpClient.delete(urlString = Endpoints.Users.Delete(userId).url) }
     }
 }

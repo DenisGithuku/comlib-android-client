@@ -16,37 +16,30 @@
 */
 package com.githukudenis.comlib.core.common
 
-import java.net.UnknownHostException
+import io.ktor.client.call.body
+import io.ktor.client.statement.HttpResponse
+import io.ktor.http.isSuccess
 import timber.log.Timber
 
-sealed class ResponseResult<out T> {
-    data class Success<out T>(val data: T) : ResponseResult<T>()
-
-    data class Failure<out T>(val error: Throwable) : ResponseResult<T>()
-}
-
-suspend fun <T> safeApiCall(block: suspend () -> ResponseResult<T>): ResponseResult<T> {
+suspend inline fun <reified T : Any> safeApiCall(block: () -> HttpResponse): ResponseResult<T> {
     return try {
-        block.invoke()
-    } catch (e: UnknownHostException) {
-        Timber.e(e)
-        ResponseResult.Failure(
-            Throwable(
-                message = "Could not connect to service. Please check your internet connection!",
-                cause = e
-            )
-        )
-    } catch (e: OperationException.NoInternetException) {
-        Timber.e(e)
-        ResponseResult.Failure(Throwable(e.message))
-    } catch (e: OperationException.AuthenticationException) {
-        Timber.e(e)
-        ResponseResult.Failure(Throwable(e.message))
-    } catch (e: OperationException.UnauthorizedException) {
-        Timber.e(e)
-        ResponseResult.Failure(Throwable(e.message))
+        val response = block()
+        if (!response.status.isSuccess()) {
+            val error: ErrorResponse = response.body()
+            return ResponseResult.Failure(error = error)
+        }
+        val data: T = response.body()
+        ResponseResult.Success(data)
     } catch (e: Exception) {
         Timber.e(e)
-        ResponseResult.Failure(e)
+        ResponseResult.Failure(
+            ErrorResponse(status = "error", message = e.message ?: "An unknown error occurred")
+        )
     }
+}
+
+sealed interface ResponseResult<out T : Any> {
+    data class Success<out T : Any>(val data: T) : ResponseResult<T>
+
+    data class Failure(val error: ErrorResponse) : ResponseResult<Nothing>
 }

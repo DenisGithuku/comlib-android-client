@@ -21,7 +21,7 @@ dependencies {
     implementation(libs.firebase.crashlytics)
     implementation(libs.firebase.auth)
     implementation(libs.timber)
-    implementation(libs.ktor.serialization)
+    implementation(libs.bundles.ktor)
 
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -33,5 +33,13 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit4)
+    testImplementation(libs.androidx.test.core)
+    testImplementation(libs.androidx.test.espresso.core)
+    testImplementation(libs.androidx.test.rules)
+    testImplementation(libs.androidx.test.runner)
+    testImplementation(libs.hilt.android.testing)
+    testImplementation(libs.turbine)
+    testImplementation(libs.junit4)
+    testImplementation(libs.kotlinx.coroutines.test)
     androidTestImplementation(libs.androidx.test.ext.junit)
 }
