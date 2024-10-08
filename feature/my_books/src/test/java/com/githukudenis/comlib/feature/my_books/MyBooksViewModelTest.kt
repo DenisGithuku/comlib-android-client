@@ -17,9 +17,9 @@
 package com.githukudenis.comlib.feature.my_books
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.advanceUntilIdle

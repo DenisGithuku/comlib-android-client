@@ -17,11 +17,15 @@
 package com.githukudenis.comlib.feature.auth.presentation.reset
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
+import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
-import kotlin.test.assertEquals
-import kotlin.test.assertNull
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -33,10 +37,12 @@ class ResetPasswordViewModelTest {
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: ResetPasswordViewModel
+    lateinit var authRepository: FakeAuthRepository
 
     @Before
     fun setUp() {
-        viewModel = ResetPasswordViewModel(FakeAuthRepository())
+        authRepository = FakeAuthRepository()
+        viewModel = ResetPasswordViewModel(authRepository)
     }
 
     @Test
@@ -47,15 +53,19 @@ class ResetPasswordViewModelTest {
 
     @Test
     fun onResetWithWrongDetailsReturnsError() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         viewModel.onEmailChange("wrong.test.mail@mail.com")
         viewModel.onReset()
+        advanceUntilIdle()
         assertEquals(viewModel.state.value.error?.message, "Couldn't find that user!")
     }
 
     @Test
     fun onResetWithValidEmailReturnsSuccess() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         viewModel.onEmailChange("william.henry.moody@my-own-personal-domain.com")
         viewModel.onReset()
+        advanceUntilIdle()
         assertTrue(viewModel.state.value.isSuccess)
     }
 

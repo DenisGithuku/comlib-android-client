@@ -17,11 +17,11 @@
 package com.githukudenis.comlib.feature.profile
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.UserRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.UserRepository
-import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch

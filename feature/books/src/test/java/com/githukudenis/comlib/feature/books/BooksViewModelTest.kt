@@ -17,10 +17,10 @@
 package com.githukudenis.comlib.feature.books
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeGenresRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
-import com.githukudenis.comlib.data.repository.fake.FakeGenresRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import kotlin.test.Test
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
@@ -33,10 +33,10 @@ class BooksViewModelTest {
 
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
-    lateinit var viewModel: BooksViewModel
-    lateinit var userPrefsRepository: FakeUserPrefsRepository
-    lateinit var booksRepository: FakeBooksRepository
-    lateinit var genresRepository: FakeGenresRepository
+    private lateinit var viewModel: BooksViewModel
+    private lateinit var userPrefsRepository: FakeUserPrefsRepository
+    private lateinit var booksRepository: FakeBooksRepository
+    private lateinit var genresRepository: FakeGenresRepository
 
     @Before
     fun setUp() {
@@ -75,10 +75,9 @@ class BooksViewModelTest {
     }
 
     @Test
-    fun onChangeGenre() {
+    fun onChangeGenre() = runTest {
         viewModel.onChangeGenre("5")
-        val state = viewModel.uiState.value
-        when (state) {
+        when (val state = viewModel.uiState.value) {
             is BooksUiState.Error -> Unit
             BooksUiState.Loading -> Unit
             is BooksUiState.Success -> {

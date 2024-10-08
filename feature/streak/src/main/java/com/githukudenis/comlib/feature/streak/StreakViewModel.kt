@@ -20,11 +20,11 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
+import com.githukudenis.comlib.core.data.repository.BookMilestoneRepository
+import com.githukudenis.comlib.core.data.repository.BooksRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookMilestone
-import com.githukudenis.comlib.data.repository.BookMilestoneRepository
-import com.githukudenis.comlib.data.repository.BooksRepository
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first

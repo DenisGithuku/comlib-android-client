@@ -20,11 +20,11 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
+import com.githukudenis.comlib.core.data.repository.BookMilestoneRepository
+import com.githukudenis.comlib.core.data.repository.BooksRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.User
-import com.githukudenis.comlib.data.repository.BookMilestoneRepository
-import com.githukudenis.comlib.data.repository.BooksRepository
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
-import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
 import java.time.ZoneId

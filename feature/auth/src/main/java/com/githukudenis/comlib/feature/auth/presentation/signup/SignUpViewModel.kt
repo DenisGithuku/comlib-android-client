@@ -21,9 +21,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
+import com.githukudenis.comlib.core.data.repository.AuthRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.user.UserSignUpDTO
-import com.githukudenis.comlib.data.repository.AuthRepository
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject

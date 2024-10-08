@@ -18,10 +18,10 @@ package com.githukudenis.comlib.feature.streak
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeMilestoneRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
-import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import junit.framework.TestCase.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.advanceUntilIdle

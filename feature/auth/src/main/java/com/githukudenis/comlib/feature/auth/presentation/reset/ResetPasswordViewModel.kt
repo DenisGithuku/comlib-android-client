@@ -20,10 +20,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
 import com.githukudenis.comlib.core.common.UserMessage
-import com.githukudenis.comlib.data.repository.AuthRepository
+import com.githukudenis.comlib.core.data.repository.AuthRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -31,24 +33,25 @@ import kotlinx.coroutines.launch
 class ResetPasswordViewModel @Inject constructor(private val authRepository: AuthRepository) :
     ViewModel() {
 
-    var state: MutableStateFlow<ResetUiState> = MutableStateFlow(ResetUiState())
-        private set
+    private val _state: MutableStateFlow<ResetUiState> = MutableStateFlow(ResetUiState())
+    val state: StateFlow<ResetUiState>
+        get() = _state.asStateFlow()
 
     fun onEmailChange(newValue: String) {
-        state.update { prevState -> prevState.copy(email = newValue) }
+        _state.update { prevState -> prevState.copy(email = newValue) }
     }
 
     fun onReset() {
         viewModelScope.launch {
             val email = state.value.email
-            state.update { prevState -> prevState.copy(isLoading = true) }
+            _state.update { prevState -> prevState.copy(isLoading = true) }
             authRepository.resetPassword(
                 email,
                 onSuccess = {
-                    state.update { prevState -> prevState.copy(isLoading = false, isSuccess = true) }
+                    _state.update { prevState -> prevState.copy(isLoading = false, isSuccess = true) }
                 },
                 onError = {
-                    state.update { prevState ->
+                    _state.update { prevState ->
                         prevState.copy(error = UserMessage(message = it, messageType = MessageType.ERROR))
                     }
                 }
@@ -57,6 +60,6 @@ class ResetPasswordViewModel @Inject constructor(private val authRepository: Aut
     }
 
     fun onErrorShown() {
-        state.update { it.copy(error = null) }
+        _state.update { it.copy(error = null) }
     }
 }

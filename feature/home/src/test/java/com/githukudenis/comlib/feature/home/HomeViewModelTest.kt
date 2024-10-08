@@ -17,11 +17,11 @@
 package com.githukudenis.comlib.feature.home
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeMilestoneRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeBooksRepository
-import com.githukudenis.comlib.data.repository.fake.FakeMilestoneRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -44,6 +44,11 @@ class HomeViewModelTest {
 
     @Before
     fun setup() {
+        userPrefsRepository = FakeUserPrefsRepository()
+        userRepository = FakeUserRepository()
+        booksRepository = FakeBooksRepository()
+        bookMilestoneRepository = FakeMilestoneRepository()
+
         homeViewModel =
             HomeViewModel(
                 userPrefsRepository = userPrefsRepository,

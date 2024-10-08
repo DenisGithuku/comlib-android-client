@@ -16,11 +16,10 @@
 */
 package com.githukudenis.comlib
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.ThemeConfig
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
@@ -35,7 +34,6 @@ class MainActivityViewModel @Inject constructor(userPrefsRepository: UserPrefsRe
     val state: StateFlow<MainActivityUiState> =
         userPrefsRepository.userPrefs
             .mapLatest { userPrefs ->
-                Log.d("userPrefs", "$userPrefs")
                 MainActivityUiState(
                     isLoading = false,
                     isLoggedIn = userPrefs.token != null && userPrefs.userId != null,

@@ -17,10 +17,12 @@
 package com.githukudenis.comlib.feature.auth.presentation.signup
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
 import junit.framework.TestCase.assertTrue
+import kotlin.test.assertEquals
+import kotlin.test.assertSame
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -30,13 +32,11 @@ import org.junit.Assert.assertFalse
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertSame
 
 @MediumTest
 class SignUpViewModelTest {
 
-    @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
+    @get:Rule val coroutineRule: MainCoroutineRule = MainCoroutineRule()
 
     lateinit var viewModel: SignUpViewModel
     lateinit var authRepository: FakeAuthRepository
@@ -98,9 +98,7 @@ class SignUpViewModelTest {
 
     @Test
     fun testSignUpWithInvalidDetailsReturnsError() = runTest {
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.state.collect()
-        }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         viewModel.onEvent(SignUpUiEvent.ChangeEmail("alice.doe@example-pet-store.com"))
         viewModel.onEvent(SignUpUiEvent.ChangeFirstname("firstname"))
         viewModel.onEvent(SignUpUiEvent.ChangeLastname("lastname"))
@@ -108,20 +106,14 @@ class SignUpViewModelTest {
         viewModel.onEvent(SignUpUiEvent.ChangeConfirmPassword("password"))
         viewModel.onEvent(SignUpUiEvent.ToggleTerms(true))
 
-
         viewModel.onEvent(SignUpUiEvent.Submit)
         advanceUntilIdle()
-        assertSame(
-            viewModel.state.value.userMessages.first().message,
-            "User already exists"
-        )
+        assertSame(viewModel.state.value.userMessages.first().message, "User already exists")
     }
 
     @Test
     fun testSignUpWithValidDetailsReturnsSuccess() = runTest {
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
-            viewModel.state.collect()
-        }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         viewModel.onEvent(SignUpUiEvent.ChangeEmail("john.doe@example-pet-store.com"))
         viewModel.onEvent(SignUpUiEvent.ChangeFirstname("firstname"))
         viewModel.onEvent(SignUpUiEvent.ChangeLastname("lastname"))

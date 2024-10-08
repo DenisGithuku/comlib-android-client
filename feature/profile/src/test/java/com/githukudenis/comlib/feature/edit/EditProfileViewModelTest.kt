@@ -17,11 +17,14 @@
 package com.githukudenis.comlib.feature.edit
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import junit.framework.TestCase.assertTrue
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -56,8 +59,11 @@ class EditProfileViewModelTest {
 
     @Test
     fun testUpdateUser() = runTest {
-        viewModel.update { copy(firstname = "test.firstname", lastname = "test.lastname") }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
+        viewModel.onChangeFirstname("test.firstname")
+        viewModel.onChangeLastname("test.lastname")
         viewModel.updateUser()
+        advanceUntilIdle()
         assertTrue(
             userRepository.users.any {
                 it.firstname == "test.firstname" && it.lastname == "test.lastname"

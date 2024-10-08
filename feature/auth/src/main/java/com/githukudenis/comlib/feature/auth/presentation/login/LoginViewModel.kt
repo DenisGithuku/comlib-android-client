@@ -21,9 +21,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
 import com.githukudenis.comlib.core.common.UserMessage
+import com.githukudenis.comlib.core.data.repository.AuthRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.user.UserLoginDTO
-import com.githukudenis.comlib.data.repository.AuthRepository
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.CapitalLetter
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.Length

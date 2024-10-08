@@ -20,9 +20,9 @@ import android.net.Uri
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.User
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
-import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -55,8 +55,7 @@ constructor(
         viewModelScope.launch {
             val userId: String = checkNotNull(userPrefsRepository.userPrefs.first().userId)
             update { copy(isLoading = true) }
-            val result = userRepository.getUserById(userId)
-            when (result) {
+            when (val result = userRepository.getUserById(userId)) {
                 is ResponseResult.Failure -> {
                     update { copy(isLoading = false, error = result.error.message) }
                 }
@@ -79,16 +78,19 @@ constructor(
     fun updateUser() {
         viewModelScope.launch {
             update { copy(isUpdating = true) }
-            val user = User(firstname = state.value.firstname, lastname = state.value.lastname)
-            state.value.userId?.let {
-                val result = userRepository.updateUser(user)
-                when (result) {
-                    is ResponseResult.Failure -> {
-                        update { copy(isUpdating = false, error = result.error.message) }
-                    }
-                    is ResponseResult.Success -> {
-                        update { copy(isUpdating = false) }
-                    }
+            val user =
+                User(
+                    firstname = state.value.firstname,
+                    lastname = state.value.lastname,
+                    id = state.value.userId
+                )
+
+            when (val result = userRepository.updateUser(user)) {
+                is ResponseResult.Failure -> {
+                    update { copy(isUpdating = false, error = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    update { copy(isUpdating = false) }
                 }
             }
         }
