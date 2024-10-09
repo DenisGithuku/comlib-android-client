@@ -22,8 +22,7 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.GenresRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
-import com.githukudenis.comlib.core.model.book.Book
-import com.githukudenis.comlib.core.model.book.toBookDTO
+import com.githukudenis.comlib.core.model.book.BookDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,8 +49,7 @@ constructor(
     private fun loadGenres() {
         viewModelScope.launch {
             state.update { it.copy(genreState = GenreUiState.Loading) }
-            val result = genresRepository.getGenres()
-            when (result) {
+            when (val result = genresRepository.getGenres()) {
                 is ResponseResult.Failure -> {
                     state.update { it.copy(genreState = GenreUiState.Error(result.error.message)) }
                 }
@@ -110,19 +108,25 @@ constructor(
             state.update { it.copy(isLoading = true) }
 
             val book =
-                Book(
+                BookDTO(
                     title = state.value.title,
                     authors = state.value.authors.split(','),
                     pages = state.value.pages.toInt(),
-                    genre_ids = listOf(state.value.selectedGenre.id),
+                    genreIds = listOf(state.value.selectedGenre.id),
                     owner = userPrefsRepository.userPrefs.first().userId ?: return@launch,
                     edition = state.value.edition,
                     description = state.value.description
                 )
             state.value.photoUri?.let { uri ->
-                booksRepository.addNewBook(imageUri = uri, book = book.toBookDTO())
+                when (val result = booksRepository.addNewBook(imageUri = uri, book = book)) {
+                    is ResponseResult.Failure -> {
+                        state.update { it.copy(isLoading = false, message = result.error.message) }
+                    }
+                    is ResponseResult.Success -> {
+                        state.update { it.copy(isLoading = false, isSuccess = true) }
+                    }
+                }
             }
-            state.update { it.copy(isLoading = false, isSuccess = true) }
         }
     }
 

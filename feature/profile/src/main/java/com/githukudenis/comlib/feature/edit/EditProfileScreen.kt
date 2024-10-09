@@ -141,7 +141,8 @@ fun EditProfileContent(
         if (sheetIsOpen) {
             ModalBottomSheet(
                 onDismissRequest = { sheetIsOpen = false },
-                windowInsets = WindowInsets.ime
+                //                windowInsets = WindowInsets.ime
+                contentWindowInsets = { WindowInsets.ime }
             ) {
                 when (selectedProfileItem) {
                     ProfileItem.NOTHING -> {

@@ -53,7 +53,13 @@ constructor(
 
             val result = imagesRemoteDataSource.addImage(imageUri, imagePath)
             if (result.isSuccess) {
-                booksApi.addNewBook(book)
+                result.getOrNull()?.let {
+                    val bookWithImage = book.copy(image = it)
+                    booksApi.addNewBook(bookWithImage)
+                }
+                    ?: ResponseResult.Failure(
+                        ErrorResponse(status = "fail", message = "Could not upload image. Please try again")
+                    )
             } else {
                 ResponseResult.Failure(
                     ErrorResponse(

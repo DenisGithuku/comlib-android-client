@@ -29,28 +29,26 @@ import com.githukudenis.comlib.core.model.book.BooksData
 import com.githukudenis.comlib.core.model.book.Data
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 import com.githukudenis.comlib.core.model.book.toBook
-import com.githukudenis.comlib.core.model.book.toBookDTO
 import kotlinx.coroutines.delay
 
 class FakeBooksRepository : BooksRepository {
-    val books: MutableList<BookDTO> =
+    val books: MutableList<Book> =
         (1..5)
             .map {
                 Book(
-                        _id = "$it",
-                        authors = listOf("Sam", "Peter", "Charlie"),
-                        currentHolder = "",
-                        edition = "",
-                        description = "",
-                        genre_ids = listOf("1", "2"),
-                        id = "$it",
-                        image = "",
-                        owner = "owner@$it",
-                        pages = it,
-                        reserved = listOf(),
-                        title = "Title $it"
-                    )
-                    .toBookDTO()
+                    _id = "$it",
+                    authors = listOf("Sam", "Peter", "Charlie"),
+                    currentHolder = "",
+                    edition = "",
+                    description = "",
+                    genreIds = listOf("1", "2"),
+                    id = "$it",
+                    image = "",
+                    owner = "owner@$it",
+                    pages = it,
+                    reserved = listOf(),
+                    title = "Title $it"
+                )
             }
             .toMutableList()
 
@@ -58,7 +56,7 @@ class FakeBooksRepository : BooksRepository {
         delay(1000L)
         return ResponseResult.Success(
             AllBooksResponse(
-                data = BooksData(books.map { it.toBook() }),
+                data = BooksData(books),
                 requestedAt = "now",
                 results = books.size,
                 status = "Ok"
@@ -71,14 +69,14 @@ class FakeBooksRepository : BooksRepository {
             ResponseResult.Failure(ErrorResponse(status = "fail", message = "Book not found"))
         } else {
             ResponseResult.Success(
-                SingleBookResponse(data = Data(book = books.first { it.id == id }.toBook()), status = "Ok")
+                SingleBookResponse(data = Data(book = books.first { it.id == id }), status = "Ok")
             )
         }
     }
 
     override suspend fun addNewBook(imageUri: Uri, book: BookDTO): ResponseResult<AddBookResponse> {
         return try {
-            books.add(book)
+            books.add(book.toBook())
             ResponseResult.Success(AddBookResponse(status = "Ok", message = "Book added successfully"))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -95,7 +93,7 @@ class FakeBooksRepository : BooksRepository {
                     status = "Ok",
                     requestedAt = "now",
                     results = books.filter { it.owner == userId }.size,
-                    data = BooksData(books.filter { it.owner == userId }.map { it.toBook() })
+                    data = BooksData(books.filter { it.owner == userId })
                 )
             )
         }

@@ -45,7 +45,7 @@ suspend fun Book.toBookUiModel(isRead: Boolean, getGenre: suspend (String) -> Ge
         id = id,
         title = title,
         authors = authors,
-        genres = mapGenres(genre_ids, block = { genreId -> getGenre(genreId) }),
+        genres = mapGenres(genreIds, block = { genreId -> getGenre(genreId) }),
         description = description,
         imageUrl = image,
         isRead = isRead,
