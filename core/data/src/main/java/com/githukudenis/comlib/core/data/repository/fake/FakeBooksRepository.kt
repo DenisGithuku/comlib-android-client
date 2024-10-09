@@ -29,7 +29,6 @@ import com.githukudenis.comlib.core.model.book.BooksData
 import com.githukudenis.comlib.core.model.book.Data
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 import com.githukudenis.comlib.core.model.book.toBook
-import com.githukudenis.comlib.core.model.book.toBookDTO
 import kotlinx.coroutines.delay
 
 class FakeBooksRepository : BooksRepository {
@@ -57,7 +56,7 @@ class FakeBooksRepository : BooksRepository {
         delay(1000L)
         return ResponseResult.Success(
             AllBooksResponse(
-                data = BooksData(books.map { it.toBook() }),
+                data = BooksData(books),
                 requestedAt = "now",
                 results = books.size,
                 status = "Ok"
@@ -70,14 +69,14 @@ class FakeBooksRepository : BooksRepository {
             ResponseResult.Failure(ErrorResponse(status = "fail", message = "Book not found"))
         } else {
             ResponseResult.Success(
-                SingleBookResponse(data = Data(book = books.first { it.id == id }.toBook()), status = "Ok")
+                SingleBookResponse(data = Data(book = books.first { it.id == id }), status = "Ok")
             )
         }
     }
 
     override suspend fun addNewBook(imageUri: Uri, book: BookDTO): ResponseResult<AddBookResponse> {
         return try {
-            books.add(book)
+            books.add(book.toBook())
             ResponseResult.Success(AddBookResponse(status = "Ok", message = "Book added successfully"))
         } catch (e: Exception) {
             e.printStackTrace()
@@ -94,7 +93,7 @@ class FakeBooksRepository : BooksRepository {
                     status = "Ok",
                     requestedAt = "now",
                     results = books.filter { it.owner == userId }.size,
-                    data = BooksData(books.filter { it.owner == userId }.map { it.toBook() })
+                    data = BooksData(books.filter { it.owner == userId })
                 )
             )
         }

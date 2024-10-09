@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -28,12 +29,12 @@ import com.githukudenis.comlib.core.model.book.asBooksByUserResponse
 import com.githukudenis.comlib.core.network.BooksApi
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import kotlinx.coroutines.withContext
 
 class BooksRepositoryImpl
-@Inject constructor(
+@Inject
+constructor(
     private val booksApi: BooksApi,
     private val dispatchers: ComlibCoroutineDispatchers,
     private val imagesRemoteDataSource: ImagesRemoteDataSource
@@ -55,11 +56,10 @@ class BooksRepositoryImpl
                 result.getOrNull()?.let {
                     val bookWithImage = book.copy(image = it)
                     booksApi.addNewBook(bookWithImage)
-                } ?: ResponseResult.Failure(
-                    ErrorResponse(
-                        status = "fail", message = "Could not upload image. Please try again"
+                }
+                    ?: ResponseResult.Failure(
+                        ErrorResponse(status = "fail", message = "Could not upload image. Please try again")
                     )
-                )
             } else {
                 ResponseResult.Failure(
                     ErrorResponse(
@@ -77,7 +77,6 @@ class BooksRepositoryImpl
                 is ResponseResult.Failure -> {
                     ResponseResult.Failure(result.error)
                 }
-
                 is ResponseResult.Success -> {
                     ResponseResult.Success(data = result.data.asBooksByUserResponse(userId))
                 }

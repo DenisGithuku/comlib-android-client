@@ -118,7 +118,7 @@ constructor(
                                 if (selectedGenres.value.map { it.name }.contains("All Genres")) {
                                     true
                                 } else {
-                                    selectedGenres.value.map { it.id }.any { it in book.genre_ids }
+                                    selectedGenres.value.map { it.id }.any { it in book.genreIds }
                                 }
                             }
                             .map { book -> book.toBookItemUiModel() }
