@@ -36,19 +36,19 @@ class FakeBooksRepository : BooksRepository {
         (1..5)
             .map {
                 Book(
-                        _id = "$it",
-                        authors = listOf("Sam", "Peter", "Charlie"),
-                        currentHolder = "",
-                        edition = "",
-                        description = "",
-                        genreIds = listOf("1", "2"),
-                        id = "$it",
-                        image = "",
-                        owner = "owner@$it",
-                        pages = it,
-                        reserved = listOf(),
-                        title = "Title $it"
-                    )
+                    _id = "$it",
+                    authors = listOf("Sam", "Peter", "Charlie"),
+                    currentHolder = "",
+                    edition = "",
+                    description = "",
+                    genreIds = listOf("1", "2"),
+                    id = "$it",
+                    image = "",
+                    owner = "owner@$it",
+                    pages = it,
+                    reserved = listOf(),
+                    title = "Title $it"
+                )
             }
             .toMutableList()
 

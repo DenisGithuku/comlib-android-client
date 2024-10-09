@@ -20,7 +20,6 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.ConnectivityManager.NetworkCallback
 import android.net.Network
-import android.os.Build
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -57,9 +56,9 @@ class ComlibConnectivityManagerImpl(context: Context) : ComlibConnectivityManage
                         }
                     }
 
-            connectivityManager.registerDefaultNetworkCallback(connectionCallback)
+                connectivityManager.registerDefaultNetworkCallback(connectionCallback)
 
-            awaitClose { connectivityManager.unregisterNetworkCallback(connectionCallback) }
+                awaitClose { connectivityManager.unregisterNetworkCallback(connectionCallback) }
             }
             .distinctUntilChanged()
 }

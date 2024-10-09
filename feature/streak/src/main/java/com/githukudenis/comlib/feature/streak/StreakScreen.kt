@@ -115,15 +115,16 @@ private fun StreakContent(
             initialSelectedStartDateMillis = state.startDate.toMillisLong(),
             initialSelectedEndDateMillis = state.endDate.toMillisLong(),
             yearRange = IntRange(start = yearToday, endInclusive = yearToday + 1),
-            selectableDates = object : SelectableDates {
-                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
-                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
-                }
+            selectableDates =
+                object : SelectableDates {
+                    override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                        return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                    }
 
-                override fun isSelectableYear(year: Int): Boolean {
-                    return year >= yearToday
+                    override fun isSelectableYear(year: Int): Boolean {
+                        return year >= yearToday
+                    }
                 }
-            }
         )
 
     if (bottomSheetIsVisible) {
@@ -207,8 +208,9 @@ private fun StreakContent(
                     )
                 },
                 modifier = Modifier.padding(LocalDimens.current.extraLarge),
-                state = dateRangePickerState,
-//                dateValidator = { timestamp -> timestamp >= Clock.System.now().toEpochMilliseconds() }
+                state = dateRangePickerState
+                //                dateValidator = { timestamp -> timestamp >=
+                // Clock.System.now().toEpochMilliseconds() }
             )
         }
     }

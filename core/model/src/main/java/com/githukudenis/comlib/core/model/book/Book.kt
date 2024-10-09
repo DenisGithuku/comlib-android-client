@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -34,16 +35,17 @@ data class Book(
     val title: String
 )
 
-fun BookDTO.toBook(): Book = Book(
-    authors = authors,
-    description = description,
-    edition = edition,
-    genreIds = genreIds,
-    owner = owner,
-    pages = pages,
-    reserved = reserved,
-    title = title
-)
+fun BookDTO.toBook(): Book =
+    Book(
+        authors = authors,
+        description = description,
+        edition = edition,
+        genreIds = genreIds,
+        owner = owner,
+        pages = pages,
+        reserved = reserved,
+        title = title
+    )
 
 @Serializable
 data class BookDTO(
