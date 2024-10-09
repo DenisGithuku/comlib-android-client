@@ -21,7 +21,7 @@ import com.githukudenis.comlib.core.model.user.User
 
 data class ProfileUiState(
     val isLoading: Boolean = false,
-    val profile: Profile? = null,
+    val profileItemState: ProfileItemState = ProfileItemState.Loading,
     val error: String? = null,
     val isSignedOut: Boolean = false,
     val isClearCache: Boolean = false,
@@ -38,6 +38,14 @@ data class Profile(
     val email: String? = null,
     val imageUrl: String? = null
 )
+
+sealed interface ProfileItemState {
+    data object Loading : ProfileItemState
+
+    data class Success(val profile: Profile) : ProfileItemState
+
+    data class Error(val message: String) : ProfileItemState
+}
 
 fun User.toProfile(): Profile {
     return Profile(firstname = firstname, lastname = lastname, email = email, imageUrl = image)

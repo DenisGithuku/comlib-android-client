@@ -32,16 +32,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.Logout
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.DeleteOutline
-import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.filled.MenuBook
 import androidx.compose.material.icons.filled.WbSunny
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -154,7 +154,7 @@ private fun ProfileScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -217,26 +217,11 @@ private fun ProfileScreen(
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = LocalDimens.current.extraLarge),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    ProfileImage(imageUrl = state.profile?.imageUrl, onChangeImage = onChangeImage)
-                    Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
-                    Column(modifier = Modifier) {
-                        Text(
-                            text =
-                                "${state.profile?.firstname?.capitalize()} ${state.profile?.lastname?.capitalize()}",
-                            style = MaterialTheme.typography.titleSmall
-                        )
-                        state.profile?.email?.let {
-                            Text(text = state.profile.email, style = MaterialTheme.typography.bodyMedium)
-                        }
-                        CLibOutlinedButton(onClick = onEditProfile) {
-                            Text(text = "Edit", style = MaterialTheme.typography.bodySmall)
-                        }
-                    }
-                }
+                ProfileSection(
+                    profileItemState = state.profileItemState,
+                    onChangeImage = onChangeImage,
+                    onEditProfile = onEditProfile
+                )
                 Spacer(modifier = Modifier.height(LocalDimens.current.extraLarge))
                 Card(
                     shape = MaterialTheme.shapes.large,
@@ -245,34 +230,34 @@ private fun ProfileScreen(
                     modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
                 ) {
                     ProfileListItem(
-                        leading = Icons.Default.MenuBook,
+                        leading = Icons.AutoMirrored.Filled.MenuBook,
                         onClick = onOpenMyBooks,
                         title = stringResource(R.string.my_books)
                     )
-                    Divider(
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                         thickness = 0.4.dp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
-                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
                     )
                     //                    ProfileListItem(
                     //                        leading = Icons.Default.FavoriteBorder,
                     //                        onClick = {},
                     //                        title = stringResource(R.string.favourites)
                     //                    )
-                    Divider(
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                         thickness = 0.4.dp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
-                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
                     )
                     ProfileListItem(
                         leading = Icons.Default.WbSunny,
                         onClick = { onToggleThemeDialog(true) },
                         title = stringResource(R.string.display)
                     )
-                    Divider(
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
                         thickness = 0.4.dp,
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
-                        modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
+                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f)
                     )
                     //                    ProfileListItem(
                     //                        leading = Icons.Default.NotificationsNone,
@@ -292,13 +277,13 @@ private fun ProfileScreen(
                         title = stringResource(R.string.clear_cache),
                         onClick = { onToggleCacheDialog(true) }
                     )
-                    Divider(
+                    HorizontalDivider(
                         thickness = 0.4.dp,
                         color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.1f),
                         modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge)
                     )
                     ProfileListItem(
-                        leading = Icons.Default.Logout,
+                        leading = Icons.AutoMirrored.Filled.Logout,
                         title = stringResource(R.string.logout),
                         onClick = { onToggleSignOutDialog(true) }
                     )
@@ -311,6 +296,56 @@ private fun ProfileScreen(
                 modifier = Modifier.fillMaxWidth().padding(bottom = LocalDimens.current.extraLarge),
                 textAlign = TextAlign.Center
             )
+        }
+    }
+}
+
+@Composable
+fun ProfileSection(
+    modifier: Modifier = Modifier,
+    profileItemState: ProfileItemState,
+    onChangeImage: () -> Unit,
+    onEditProfile: () -> Unit
+) {
+    when (profileItemState) {
+        is ProfileItemState.Error -> Text(text = profileItemState.message)
+        ProfileItemState.Loading -> ProfileLoader()
+        is ProfileItemState.Success ->
+            ProfileLoaded(
+                profile = profileItemState.profile,
+                onChangeImage = onChangeImage,
+                onEditProfile = onEditProfile
+            )
+    }
+}
+
+@Composable
+fun ProfileLoader(modifier: Modifier = Modifier) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.sixteen),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        CLibCircularProgressBar()
+        Spacer(modifier = Modifier.height(LocalDimens.current.extraLarge))
+        Text(text = stringResource(R.string.fetching_profile_indicator))
+    }
+}
+
+@Composable
+fun ProfileLoaded(profile: Profile, onChangeImage: () -> Unit, onEditProfile: () -> Unit) {
+    Row(modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.sixteen)) {
+        ProfileImage(imageUrl = profile.imageUrl, onChangeImage = onChangeImage)
+        Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
+        Column(modifier = Modifier) {
+            Text(
+                text = "${profile.firstname?.capitalize()} ${profile.lastname?.capitalize()}",
+                style = MaterialTheme.typography.titleSmall
+            )
+            profile.email?.let { Text(text = profile.email, style = MaterialTheme.typography.bodyMedium) }
+            CLibOutlinedButton(onClick = onEditProfile) {
+                Text(text = "Edit", style = MaterialTheme.typography.bodySmall)
+            }
         }
     }
 }

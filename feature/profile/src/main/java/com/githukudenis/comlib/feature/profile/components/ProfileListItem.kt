@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.profile.R
 
 @Composable
@@ -45,7 +46,10 @@ fun ProfileListItem(
     title: String
 ) {
     Row(
-        modifier = Modifier.fillMaxWidth().clickable(clickable) { onClick.invoke() }.padding(16.dp),
+        modifier =
+            Modifier.fillMaxWidth()
+                .clickable(clickable) { onClick.invoke() }
+                .padding(LocalDimens.current.sixteen),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {

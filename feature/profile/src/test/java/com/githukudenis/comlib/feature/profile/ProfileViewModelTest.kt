@@ -26,6 +26,7 @@ import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -60,7 +61,8 @@ class ProfileViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
 
         val state = viewModel.uiState.value
-        assert(state.profile?.email == "5@gmail.com")
+        advanceUntilIdle()
+        assert((state.profileItemState as ProfileItemState.Success).profile.email == "5@gmail.com")
     }
 
     @Test
