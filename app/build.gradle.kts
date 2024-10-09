@@ -1,10 +1,19 @@
 import com.githukudenis.comlib.AndroidSdk
+import java.io.FileInputStream
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.comlib.android.application)
     alias(libs.plugins.comlib.android.application.compose)
     alias(libs.plugins.comlib.android.hilt)
     alias(libs.plugins.comlib.android.application.firebase)
+}
+
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+val keystoreProperties = Properties()
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(FileInputStream(keystorePropertiesFile))
 }
 
 android {
@@ -20,11 +29,11 @@ android {
     }
 
     signingConfigs {
-        getByName("debug") {
-            storeFile = file("../keystore/comlibdebug.keystore")
-            keyAlias = "comlib"
-            keyPassword = "comlibdroid"
-            storePassword = "04uth50ft!5f4"
+        create("release") {
+            storeFile = file("../keystore.jks")
+            storePassword = System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyAlias = System.getenv("RELEASE_KEYSTORE_ALIAS")
+            keyPassword = System.getenv("RELEASE_KEY_PASSWORD")
         }
     }
     buildTypes {
