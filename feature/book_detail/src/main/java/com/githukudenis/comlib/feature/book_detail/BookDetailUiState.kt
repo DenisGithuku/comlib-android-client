@@ -40,7 +40,11 @@ data class BookUiModel(
     val isFavourite: Boolean = false
 )
 
-suspend fun Book.toBookUiModel(isRead: Boolean, getGenre: suspend (String) -> Genre): BookUiModel {
+suspend fun Book.toBookUiModel(
+    isRead: Boolean,
+    isFavourite: Boolean,
+    getGenre: suspend (String) -> Genre
+): BookUiModel {
     return BookUiModel(
         id = id,
         title = title,
@@ -49,6 +53,7 @@ suspend fun Book.toBookUiModel(isRead: Boolean, getGenre: suspend (String) -> Ge
         description = description,
         imageUrl = image,
         isRead = isRead,
+        isFavourite = isFavourite,
         reservedBy = reserved,
         pages = pages
     )
