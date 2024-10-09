@@ -39,4 +39,14 @@
     <string name="logging_in_txt">Logging you in…</string>
     <string name="sign_up_success_txt">Yay! You\'re a reader now!</string>
     <string name="signing_up_txt">Adding you to readers. Please wait...</string>
+    <string name="no_media_selected">You have not selected any image</string>
+    <string name="update_success">Details updated successfully!</string>
+    <string name="edit">Edit image</string>
+    <string name="update_label">Updating details.</string>
+    <string name="complete_profile_btn_txt">Complete</string>
+    <string name="add_username">Username</string>
+    <string name="skip">Skip</string>
+    <string name="complete_profile_title">Complete your profile.</string>
+    <string name="username_label">Unique username</string>
+    <string name="invalid_ui_text">Details are invalid please check details!</string>
 </resources>

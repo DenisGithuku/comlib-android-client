@@ -18,12 +18,11 @@ package com.githukudenis.comlib.feature.edit
 
 import android.net.Uri
 import androidx.lifecycle.viewModelScope
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.StatefulViewModel
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
-import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.User
-import com.githukudenis.comlib.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
@@ -32,7 +31,6 @@ import kotlinx.coroutines.launch
 data class EditProfileUiState(
     val isLoading: Boolean = false,
     val userId: String? = null,
-    val authId: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
     val username: String? = null,
@@ -45,9 +43,7 @@ data class EditProfileUiState(
 class EditProfileViewModel
 @Inject
 constructor(
-    private val updateUserUseCase: UpdateUserUseCase,
-    private val getUserProfileUseCase: GetUserProfileUseCase,
-    private val getUserPrefsUseCase: GetUserPrefsUseCase,
+    private val userPrefsRepository: UserPrefsRepository,
     private val userRepository: UserRepository
 ) : StatefulViewModel<EditProfileUiState>(EditProfileUiState()) {
 
@@ -57,26 +53,24 @@ constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            val userId: String = checkNotNull(getUserPrefsUseCase().first().authId)
+            val userId: String = checkNotNull(userPrefsRepository.userPrefs.first().userId)
             update { copy(isLoading = true) }
-            getUserProfileUseCase(userId).also { user ->
-                val newState: EditProfileUiState =
-                    user?.let {
+            when (val result = userRepository.getUserById(userId)) {
+                is ResponseResult.Failure -> {
+                    update { copy(isLoading = false, error = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    val newState: EditProfileUiState =
                         EditProfileUiState(
                             isLoading = false,
-                            userId = user.id,
-                            firstname = user.firstname,
-                            username = user.username,
-                            lastname = user.lastname,
-                            profileUrl = user.image,
-                            authId = user.authId
+                            userId = result.data.data.user.id,
+                            firstname = result.data.data.user.firstname,
+                            username = result.data.data.user.username,
+                            lastname = result.data.data.user.lastname,
+                            profileUrl = result.data.data.user.image
                         )
-                    }
-                        ?: EditProfileUiState(
-                            isLoading = false,
-                            error = "Couldn't fetch profile. Please try again!"
-                        )
-                update { newState }
+                    update { newState }
+                }
             }
         }
     }
@@ -84,9 +78,21 @@ constructor(
     fun updateUser() {
         viewModelScope.launch {
             update { copy(isUpdating = true) }
-            val user = User(firstname = state.value.firstname, lastname = state.value.lastname)
-            state.value.userId?.let { updateUserUseCase(it, user) }
-            update { copy(isUpdating = false) }
+            val user =
+                User(
+                    firstname = state.value.firstname,
+                    lastname = state.value.lastname,
+                    id = state.value.userId
+                )
+
+            when (val result = userRepository.updateUser(user)) {
+                is ResponseResult.Failure -> {
+                    update { copy(isUpdating = false, error = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    update { copy(isUpdating = false) }
+                }
+            }
         }
     }
 
@@ -103,6 +109,42 @@ constructor(
     }
 
     fun onChangePhoto(value: Uri) {
-        viewModelScope.launch { state.value.userId?.let { userRepository.uploadUserImage(value, it) } }
+        viewModelScope.launch {
+            when (val result = userRepository.getUserById(state.value.userId ?: return@launch)) {
+                is ResponseResult.Failure -> {
+                    update { copy(error = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    // Upload image to store first
+                    val uploadImageRes =
+                        value.let {
+                            userRepository.uploadUserImage(
+                                imageUri = value,
+                                userId = state.value.userId ?: return@launch,
+                                isNewUser = false
+                            )
+                        }
+
+                    when (uploadImageRes) {
+                        is ResponseResult.Failure -> {
+                            update { copy(error = uploadImageRes.error.message, isLoading = false) }
+                        }
+                        is ResponseResult.Success -> {
+                            val updatedUser = result.data.data.user.copy(image = uploadImageRes.data)
+
+                            // Update user with new image
+                            when (val updateUserResult = userRepository.updateUser(updatedUser)) {
+                                is ResponseResult.Failure -> {
+                                    update { copy(error = updateUserResult.error.message, isLoading = false) }
+                                }
+                                is ResponseResult.Success -> {
+                                    update { copy(isLoading = false) }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }

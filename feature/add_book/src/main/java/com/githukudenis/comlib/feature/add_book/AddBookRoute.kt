@@ -50,7 +50,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -78,6 +77,7 @@ import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibButto
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibTextButton
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
+import com.githukudenis.comlib.core.designsystem.ui.components.text_fields.CLibOutlinedTextField
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import kotlinx.coroutines.delay
 
@@ -350,7 +350,7 @@ fun AddBookFormItem(
     trailingIcon: (@Composable () -> Unit)? = null,
     onValueChange: (String) -> Unit
 ) {
-    OutlinedTextField(
+    CLibOutlinedTextField(
         modifier = modifier,
         singleLine = singleLine,
         value = value,
@@ -365,7 +365,7 @@ fun AddBookFormItem(
         minLines = minLines,
         trailingIcon = trailingIcon,
         onValueChange = onValueChange,
-        label = { Text(text = title, style = MaterialTheme.typography.labelSmall) },
+        label = title,
         placeholder = {
             if (placeholder != null) {
                 Text(text = placeholder, style = MaterialTheme.typography.labelSmall)

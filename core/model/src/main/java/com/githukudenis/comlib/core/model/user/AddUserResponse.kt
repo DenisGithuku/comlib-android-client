@@ -18,4 +18,8 @@ package com.githukudenis.comlib.core.model.user
 
 import kotlinx.serialization.Serializable
 
-@Serializable data class AddUserResponse(val id: String, val status: String)
+@Serializable data class AddUserResponse(val status: String, val token: String, val id: String)
+
+@Serializable data class ResetPasswordResponse(val status: String, val message: String)
+
+@Serializable data class UserLoginResponse(val status: String, val token: String, val id: String)

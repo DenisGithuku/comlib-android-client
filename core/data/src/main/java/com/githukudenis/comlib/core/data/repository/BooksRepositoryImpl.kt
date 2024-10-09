@@ -30,9 +30,12 @@ import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
 import com.githukudenis.comlib.core.network.common.ImageStorageRef
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlinx.coroutines.withContext
 
 class BooksRepositoryImpl
 @Inject constructor(
+@Inject
+constructor(
     private val booksApi: BooksApi,
     private val dispatchers: ComlibCoroutineDispatchers,
     private val imagesRemoteDataSource: ImagesRemoteDataSource

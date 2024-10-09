@@ -19,12 +19,15 @@ package com.githukudenis.comlib.feature.auth.presentation.login
 import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.common.MessageType
 import com.githukudenis.comlib.core.common.UserMessage
+import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeAuthRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -41,7 +44,6 @@ class LoginViewModelTest {
         viewModel =
             LoginViewModel(
                 authRepository = FakeAuthRepository(),
-                userRepository = FakeUserRepository(),
                 userPrefsRepository = FakeUserPrefsRepository()
             )
     }
@@ -96,9 +98,27 @@ class LoginViewModelTest {
 
     @Test
     fun testLoginWithValidDetailsReturnsSuccess() = runTest {
+        // create an empty collector
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         viewModel.onEvent(LoginUiEvent.ChangeEmail("william.henry.moody@my-own-personal-domain.com"))
         viewModel.onEvent(LoginUiEvent.ChangePassword("password"))
         viewModel.onEvent(LoginUiEvent.SubmitData)
+        advanceUntilIdle()
         assertTrue(viewModel.state.value.loginSuccess)
+    }
+
+    @Test
+    fun testLoginWithInvalidDetailsReturnsError() = runTest {
+        // create an empty collector
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
+        viewModel.onEvent(LoginUiEvent.ChangeEmail("james.c.mcreynolds@example-pet-store.com"))
+        viewModel.onEvent(LoginUiEvent.ChangePassword("password"))
+        viewModel.onEvent(LoginUiEvent.SubmitData)
+        advanceUntilIdle()
+        assertEquals(
+            viewModel.state.value.userMessages.first(),
+            UserMessage(message = "Could not find user with those details")
+        )
+        assertEquals(viewModel.state.value.loginSuccess, false)
     }
 }

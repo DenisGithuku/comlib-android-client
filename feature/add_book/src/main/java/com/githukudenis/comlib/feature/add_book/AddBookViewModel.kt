@@ -18,24 +18,15 @@ package com.githukudenis.comlib.feature.add_book
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-<<<<<<< Updated upstream
-import com.githukudenis.comlib.core.common.DataResult
-import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
-import com.githukudenis.comlib.core.model.book.Book
-import com.githukudenis.comlib.core.model.book.toBookDTO
-import com.githukudenis.comlib.data.repository.BooksRepository
-import com.githukudenis.comlib.data.repository.UserPrefsRepository
-=======
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.GenresRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
-import com.githukudenis.comlib.core.model.book.BookDTO
->>>>>>> Stashed changes
+import com.githukudenis.comlib.core.model.book.Book
+import com.githukudenis.comlib.core.model.book.toBookDTO
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -45,8 +36,8 @@ class AddBookViewModel
 @Inject
 constructor(
     private val booksRepository: BooksRepository,
-    private val genresUseCase: GetGenresUseCase,
-    private val userPrefsRepository: UserPrefsRepository
+    private val userPrefsRepository: UserPrefsRepository,
+    private val genresRepository: GenresRepository
 ) : ViewModel() {
 
     var state = MutableStateFlow(AddBookUiState())
@@ -59,18 +50,8 @@ constructor(
     private fun loadGenres() {
         viewModelScope.launch {
             state.update { it.copy(genreState = GenreUiState.Loading) }
-<<<<<<< Updated upstream
-            genresUseCase().collectLatest { result ->
-                val genreState =
-                    when (result) {
-                        DataResult.Empty -> GenreUiState.Error("Could not find any genre")
-                        is DataResult.Error -> GenreUiState.Error(result.message)
-                        is DataResult.Loading -> GenreUiState.Loading
-                        is DataResult.Success -> GenreUiState.Success(result.data)
-                    }
-                state.update { it.copy(genreState = genreState) }
-=======
-            when (val result = genresRepository.getGenres()) {
+            val result = genresRepository.getGenres()
+            when (result) {
                 is ResponseResult.Failure -> {
                     state.update { it.copy(genreState = GenreUiState.Error(result.error.message)) }
                 }
@@ -78,7 +59,6 @@ constructor(
                     val genres = result.data.data.genres
                     state.update { it.copy(genreState = GenreUiState.Success(genres)) }
                 }
->>>>>>> Stashed changes
             }
         }
     }

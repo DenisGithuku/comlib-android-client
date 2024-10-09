@@ -45,5 +45,6 @@ data class SignUpFormState(
                 email.trim().isNotEmpty() &&
                 password.trim().isNotEmpty() &&
                 password == confirmPassword &&
+                requirements.containsAll(PasswordRequirements.entries.toList()) &&
                 acceptedTerms
 }

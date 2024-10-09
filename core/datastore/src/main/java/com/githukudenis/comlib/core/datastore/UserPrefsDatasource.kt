@@ -37,12 +37,12 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
                     ThemeConfigConverter.toThemeConfig(
                         prefs[PreferenceKeys.themeConfigPreferenceKey] ?: ThemeConfig.SYSTEM.name
                     ),
-                authId = prefs[PreferenceKeys.authIdPreferenceKey],
-                userId = prefs[PreferenceKeys.userIdPreferenceKey],
+                token = prefs[PreferenceKeys.tokenPreferenceKey],
                 readBooks = prefs[PreferenceKeys.readBooks]?.toSet() ?: emptySet(),
                 bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
                 isSetup = prefs[PreferenceKeys.isSetup] ?: false,
-                preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet()
+                preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet(),
+                userId = prefs[PreferenceKeys.userIdPrefsKey]
             )
         }
 
@@ -53,12 +53,8 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
         }
     }
 
-    suspend fun setAuthId(authId: String) {
-        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.authIdPreferenceKey] = authId }
-    }
-
-    suspend fun setUserId(userId: String) {
-        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.userIdPreferenceKey] = userId }
+    suspend fun setToken(token: String) {
+        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.tokenPreferenceKey] = token }
     }
 
     suspend fun setReadBooks(readBooks: Set<String>) {
@@ -79,18 +75,23 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
 
     suspend fun clearSession() {
         prefsDataStore.edit { prefs ->
-            prefs.remove(PreferenceKeys.authIdPreferenceKey)
+            prefs.remove(PreferenceKeys.tokenPreferenceKey)
+            prefs.remove(PreferenceKeys.userIdPrefsKey)
             prefs.remove(PreferenceKeys.themeConfigPreferenceKey)
         }
+    }
+
+    suspend fun setUserId(userId: String) {
+        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.userIdPrefsKey] = userId }
     }
 }
 
 object PreferenceKeys {
     val themeConfigPreferenceKey = stringPreferencesKey("themeConfig")
-    val userIdPreferenceKey = stringPreferencesKey("userId")
-    val authIdPreferenceKey = stringPreferencesKey("authId")
+    val tokenPreferenceKey = stringPreferencesKey("token")
     val readBooks = stringSetPreferencesKey("readBooks")
     val bookmarkedBooks = stringSetPreferencesKey("bookmarkedBooks")
     val isSetup = booleanPreferencesKey("issetup")
     val preferredGenres = stringSetPreferencesKey("preferredGenres")
+    val userIdPrefsKey = stringPreferencesKey("userId")
 }

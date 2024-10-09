@@ -2,6 +2,7 @@
 plugins {
     alias(libs.plugins.comlib.android.library)
     alias(libs.plugins.comlib.android.hilt)
+    id("kotlinx-serialization")
 }
 
 android {
@@ -11,7 +12,7 @@ android {
 
 dependencies {
     implementation(libs.timber)
-
+    implementation(libs.bundles.ktor)
     implementation(libs.androidx.core.ktx)
     testImplementation(libs.junit4)
     androidTestImplementation(libs.androidx.test.ext.junit)

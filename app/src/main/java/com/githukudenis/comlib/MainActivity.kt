@@ -132,8 +132,9 @@ class MainActivity : ComponentActivity() {
                             startDestination =
                                 when {
                                     shouldHideOnBoarding(uiState) -> ComlibDestination.HomeGraph.route
-                                    else -> ComlibDestination.GenreSetup.route
-                                }
+                                    else -> ComlibDestination.GetStarted.route
+                                },
+                            isSetupComplete = uiState.isSetupComplete
                         )
                     }
                 }

@@ -15,7 +15,8 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:testing"))
 
-    implementation(libs.ktor.client)
+    implementation(libs.bundles.ktor)
     implementation(libs.firebase.storage)
     implementation(libs.androidx.core.ktx)
+    implementation(libs.timber)
 }

@@ -5,4 +5,7 @@
     <string name="genre_setup_title">Curate your reading list.</string>
     <string name="complete_btn_label">Complete</string>
     <string name="skip_label">Skip</string>
+    <string name="no_genres_found">There are no genres available currently. Keep coming back to check.</string>
+    <string name="loading_genres">Fetching genres. Please wait!</string>
+    <string name="saving_genres_label">Updating info...</string>
 </resources>

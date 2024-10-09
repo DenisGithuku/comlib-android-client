@@ -20,6 +20,7 @@ dependencies {
     api(libs.turbine)
     api(libs.junit4)
     api(libs.kotlinx.coroutines.test)
+    api(libs.mockito.core)
 
     debugApi(libs.androidx.compose.ui.test.manifest)
 

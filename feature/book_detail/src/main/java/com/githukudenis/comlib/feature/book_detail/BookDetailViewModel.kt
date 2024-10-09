@@ -19,12 +19,10 @@ package com.githukudenis.comlib.feature.book_detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.DataResult
-import com.githukudenis.comlib.core.domain.usecases.GetBookDetailsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetBookmarkedBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetGenreByIdUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetReadBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.ToggleBookMarkUseCase
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.data.repository.BooksRepository
+import com.githukudenis.comlib.core.data.repository.GenresRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.genre.Genre
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -43,11 +41,9 @@ import kotlinx.coroutines.launch
 class BookDetailViewModel
 @Inject
 constructor(
-    private val getBookmarkedBooksUseCase: GetBookmarkedBooksUseCase,
-    private val getBookDetailsUseCase: GetBookDetailsUseCase,
-    private val getReadBooksUseCase: GetReadBooksUseCase,
-    private val getGenreByIdUseCase: GetGenreByIdUseCase,
-    private val toggleBookMarkUseCase: ToggleBookMarkUseCase,
+    private val userPreferencesRepository: UserPrefsRepository,
+    private val booksRepository: BooksRepository,
+    private val genresRepository: GenresRepository,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -58,9 +54,9 @@ constructor(
     private val bookId: String? = savedStateHandle.get<String>("bookId")
 
     val isFavourite: StateFlow<Boolean> =
-        getBookmarkedBooksUseCase()
+        userPreferencesRepository.userPrefs
             .distinctUntilChanged()
-            .mapLatest { bookMarks -> bookMarks.contains(bookId) }
+            .mapLatest { userPrefs -> userPrefs.bookmarkedBooks.contains(bookId) }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
@@ -73,25 +69,22 @@ constructor(
 
     private fun getBook(bookId: String) {
         viewModelScope.launch {
-            getBookDetailsUseCase.invoke(bookId).collect { result ->
-                when (result) {
-                    DataResult.Empty -> Unit
-                    is DataResult.Error -> _state.update { BookDetailUiState.Error(result.message) }
-                    is DataResult.Loading -> {
-                        _state.update { BookDetailUiState.Loading }
-                    }
-                    is DataResult.Success -> {
-                        val isRead = getReadBooksUseCase().first().contains(result.data.id)
-                        _state.update {
-                            val bookUiModel =
-                                result.data.toBookUiModel(
-                                    isRead = isRead,
-                                    getGenre = { genreId ->
-                                        fetchGenreById(genreId) ?: Genre(_id = genreId, id = genreId, name = "Unknown")
-                                    }
-                                )
-                            BookDetailUiState.Success(bookUiModel = bookUiModel)
-                        }
+            when (val result = booksRepository.getBookById(bookId)) {
+                is ResponseResult.Failure -> {
+                    _state.update { BookDetailUiState.Error(result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    val isRead =
+                        userPreferencesRepository.userPrefs.first().readBooks.contains(result.data.data.book.id)
+                    _state.update {
+                        val bookUiModel =
+                            result.data.data.book.toBookUiModel(
+                                isRead = isRead,
+                                getGenre = { genreId ->
+                                    fetchGenreById(genreId) ?: Genre(_id = genreId, id = genreId, name = "Unknown")
+                                }
+                            )
+                        BookDetailUiState.Success(bookUiModel = bookUiModel)
                     }
                 }
             }
@@ -105,19 +98,26 @@ constructor(
     }
 
     private suspend fun fetchGenreById(genreId: String): Genre? {
-        return getGenreByIdUseCase(genreId)
+        return when (val result = genresRepository.getGenreById(genreId)) {
+            is ResponseResult.Failure -> {
+                null
+            }
+            is ResponseResult.Success -> {
+                result.data.data.genre
+            }
+        }
     }
 
     fun toggleBookmark(bookId: String) {
         viewModelScope.launch {
-            val bookMarks = getBookmarkedBooksUseCase().first()
+            val bookMarks = userPreferencesRepository.userPrefs.mapLatest { it.bookmarkedBooks }.first()
             val updatedBookmarkSet =
                 if (bookMarks.contains(bookId)) {
                     bookMarks.minus(bookId)
                 } else {
                     bookMarks.plus(bookId)
                 }
-            toggleBookMarkUseCase(updatedBookmarkSet)
+            userPreferencesRepository.setBookMarks(updatedBookmarkSet)
         }
     }
 }

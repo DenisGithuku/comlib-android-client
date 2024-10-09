@@ -17,14 +17,14 @@
 package com.githukudenis.comlib.feature.edit
 
 import androidx.test.filters.MediumTest
-import com.githukudenis.comlib.core.domain.usecases.GetUserPrefsUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetUserProfileUseCase
-import com.githukudenis.comlib.core.domain.usecases.UpdateUserUseCase
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
-import com.githukudenis.comlib.data.repository.fake.FakeUserPrefsRepository
-import com.githukudenis.comlib.data.repository.fake.FakeUserRepository
 import junit.framework.TestCase.assertTrue
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -37,9 +37,6 @@ class EditProfileViewModelTest {
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
     lateinit var viewModel: EditProfileViewModel
-    lateinit var getUserProfileUseCase: GetUserProfileUseCase
-    lateinit var getUserPrefsUseCase: GetUserPrefsUseCase
-    lateinit var updateUserUseCase: UpdateUserUseCase
     lateinit var userRepository: FakeUserRepository
     lateinit var userPrefsRepository: FakeUserPrefsRepository
 
@@ -47,15 +44,10 @@ class EditProfileViewModelTest {
     fun setUp() {
         userRepository = FakeUserRepository()
         userPrefsRepository = FakeUserPrefsRepository()
-        getUserProfileUseCase = GetUserProfileUseCase(userRepository)
-        updateUserUseCase = UpdateUserUseCase(userRepository)
-        getUserPrefsUseCase = GetUserPrefsUseCase(userPrefsRepository)
         viewModel =
             EditProfileViewModel(
-                updateUserUseCase,
-                getUserProfileUseCase,
-                getUserPrefsUseCase,
-                userRepository
+                userPrefsRepository = userPrefsRepository,
+                userRepository = userRepository
             )
     }
 
@@ -67,8 +59,11 @@ class EditProfileViewModelTest {
 
     @Test
     fun testUpdateUser() = runTest {
-        viewModel.update { copy(firstname = "test.firstname", lastname = "test.lastname") }
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
+        viewModel.onChangeFirstname("test.firstname")
+        viewModel.onChangeLastname("test.lastname")
         viewModel.updateUser()
+        advanceUntilIdle()
         assertTrue(
             userRepository.users.any {
                 it.firstname == "test.firstname" && it.lastname == "test.lastname"

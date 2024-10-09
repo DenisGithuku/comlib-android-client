@@ -18,11 +18,10 @@ package com.githukudenis.comlib.feature.books
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.githukudenis.comlib.core.common.DataResult
-import com.githukudenis.comlib.core.domain.usecases.GetAllBooksUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetGenresByUserUseCase
-import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
-import com.githukudenis.comlib.core.domain.usecases.TogglePreferredGenres
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.data.repository.BooksRepository
+import com.githukudenis.comlib.core.data.repository.GenresRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,6 +30,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,10 +39,9 @@ import kotlinx.coroutines.launch
 class BooksViewModel
 @Inject
 constructor(
-    private val getGenresUseCase: GetGenresUseCase,
-    private val getAllBooksUseCase: GetAllBooksUseCase,
-    private val getGenresByUserUseCase: GetGenresByUserUseCase,
-    private val togglePreferredGenres: TogglePreferredGenres
+    private val userPrefsRepository: UserPrefsRepository,
+    private val booksRepository: BooksRepository,
+    private val genresRepository: GenresRepository
 ) : ViewModel() {
 
     private val moreGenreModel = GenreUiModel("More", "65eebf0badf8c6d9a1d1db48")
@@ -80,31 +79,24 @@ constructor(
 
     private fun getGenreList() {
         viewModelScope.launch {
-            getGenresUseCase().collect { result ->
-                when (result) {
-                    DataResult.Empty -> {
-                        genreListUiState.update { GenreListUiState.Error(message = "No genres found") }
-                    }
-                    is DataResult.Loading -> {
-                        genreListUiState.update { GenreListUiState.Loading }
-                    }
-                    is DataResult.Success -> {
-                        // map genre to genre ui model
+            genreListUiState.update { GenreListUiState.Loading }
+            when (val result = genresRepository.getGenres()) {
+                is ResponseResult.Failure -> {
+                    genreListUiState.update { GenreListUiState.Error(message = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    // map genre to genre ui model
 
-                        val genres =
-                            result.data
-                                .map { genre -> genre.toGenreUiModel() }
-                                .sortedBy { it.name }
-                                .toMutableList()
+                    val genres =
+                        result.data.data.genres
+                            .map { genre -> genre.toGenreUiModel() }
+                            .sortedBy { it.name }
+                            .toMutableList()
 
-                        genres.add(0, selectedGenres.value.first())
-                        genres.add(genres.size, moreGenreModel)
-                        getPreferredGenreList(genres)
-                        genreListUiState.update { GenreListUiState.Success(genres) }
-                    }
-                    is DataResult.Error -> {
-                        genreListUiState.update { GenreListUiState.Error(result.message) }
-                    }
+                    genres.add(0, selectedGenres.value.first())
+                    genres.add(genres.size, moreGenreModel)
+                    getPreferredGenreList(genres)
+                    genreListUiState.update { GenreListUiState.Success(genres) }
                 }
             }
         }
@@ -112,49 +104,32 @@ constructor(
 
     private fun getBookList() {
         viewModelScope.launch {
-            getAllBooksUseCase().collect { result ->
-                when (result) {
-                    DataResult.Empty -> {
-                        bookListUiState.update { BookListUiState.Error(message = "No books found") }
-                    }
-                    is DataResult.Loading -> {
-                        bookListUiState.update { BookListUiState.Loading }
-                    }
-                    is DataResult.Success -> {
-                        // map book to book ui model
+            bookListUiState.update { BookListUiState.Loading }
+            when (val result = booksRepository.getAllBooks()) {
+                is ResponseResult.Failure -> {
+                    bookListUiState.update { BookListUiState.Error(message = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    // map book to book ui model
 
-<<<<<<< Updated upstream
-                        val books =
-                            result.data
-                                .filter { book ->
-                                    if (selectedGenres.value.map { it.name }.contains("All Genres")) {
-                                        true
-                                    } else {
-                                        selectedGenres.value.map { it.id }.any { it in book.genre_ids }
-                                    }
-=======
                     val books =
                         result.data.data.books
                             .filter { book ->
                                 if (selectedGenres.value.map { it.name }.contains("All Genres")) {
                                     true
                                 } else {
-                                    selectedGenres.value.map { it.id }.any { it in book.genreIds }
->>>>>>> Stashed changes
+                                    selectedGenres.value.map { it.id }.any { it in book.genre_ids }
                                 }
-                                .map { book -> book.toBookItemUiModel() }
-                                .sortedBy { it.title }
+                            }
+                            .map { book -> book.toBookItemUiModel() }
+                            .sortedBy { it.title }
 
-                        val updatedState =
-                            if (books.isEmpty()) {
-                                BookListUiState.Empty
-                            } else BookListUiState.Success(books)
+                    val updatedState =
+                        if (books.isEmpty()) {
+                            BookListUiState.Empty
+                        } else BookListUiState.Success(books)
 
-                        bookListUiState.update { updatedState }
-                    }
-                    is DataResult.Error -> {
-                        bookListUiState.update { BookListUiState.Error(result.message) }
-                    }
+                    bookListUiState.update { updatedState }
                 }
             }
         }
@@ -162,13 +137,15 @@ constructor(
 
     private fun getPreferredGenreList(genres: List<GenreUiModel>) {
         viewModelScope.launch {
-            getGenresByUserUseCase().collectLatest { preferred ->
-                selectedGenres.update { prevState ->
-                    val newList = prevState.toMutableList()
-                    newList.addAll(genres.filter { it.id in preferred })
-                    newList
+            userPrefsRepository.userPrefs
+                .mapLatest { it.preferredGenres }
+                .collectLatest { preferred ->
+                    selectedGenres.update { prevState ->
+                        val newList = prevState.toMutableList()
+                        newList.addAll(genres.filter { it.id in preferred })
+                        newList
+                    }
                 }
-            }
         }
     }
 
@@ -195,7 +172,7 @@ constructor(
 
                     val updatedGenrePrefs =
                         selected.dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }.toSet()
-                    togglePreferredGenres(updatedGenrePrefs)
+                    userPrefsRepository.setPreferredGenres(updatedGenrePrefs)
                     selectedGenres.update { selected }
                     getBookList()
                 }

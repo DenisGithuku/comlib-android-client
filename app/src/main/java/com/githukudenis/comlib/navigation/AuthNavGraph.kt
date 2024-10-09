@@ -23,6 +23,7 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
+import com.githukudenis.comlib.feature.auth.presentation.complete_profile.CompleteProfileRoute
 import com.githukudenis.comlib.feature.auth.presentation.login.LoginRoute
 import com.githukudenis.comlib.feature.auth.presentation.reset.ResetPasswordRoute
 import com.githukudenis.comlib.feature.auth.presentation.signup.SignUpRoute
@@ -34,7 +35,8 @@ fun NavGraphBuilder.authGraph(
     onSignUpComplete: () -> Unit,
     onResetComplete: () -> Unit,
     onForgotPassword: () -> Unit,
-    onSignInInstead: () -> Unit
+    onSignInInstead: () -> Unit,
+    onProceedToSetupGenre: () -> Unit
 ) {
     navigation(
         startDestination = AuthDestination.Login.route,
@@ -71,6 +73,10 @@ fun NavGraphBuilder.authGraph(
         ) {
             ResetPasswordRoute(snackbarHostState = snackbarHostState, onReset = onResetComplete)
         }
+
+        composable(route = AuthDestination.CompleteProfile.route) {
+            CompleteProfileRoute(onUpdateComplete = onProceedToSetupGenre)
+        }
     }
 }
 
@@ -80,4 +86,6 @@ sealed class AuthDestination(val route: String) {
     data object SignUp : AuthDestination("signup")
 
     data object ForgotPassword : AuthDestination("forgot_password")
+
+    data object CompleteProfile : AuthDestination("complete_profile")
 }
