@@ -57,11 +57,9 @@ class ComlibConnectivityManagerImpl(context: Context) : ComlibConnectivityManage
                         }
                     }
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    connectivityManager.registerDefaultNetworkCallback(connectionCallback)
-                }
+            connectivityManager.registerDefaultNetworkCallback(connectionCallback)
 
-                awaitClose { connectivityManager.unregisterNetworkCallback(connectionCallback) }
+            awaitClose { connectivityManager.unregisterNetworkCallback(connectionCallback) }
             }
             .distinctUntilChanged()
 }

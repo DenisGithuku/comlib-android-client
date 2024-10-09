@@ -123,6 +123,7 @@ constructor(
                     is DataResult.Success -> {
                         // map book to book ui model
 
+<<<<<<< Updated upstream
                         val books =
                             result.data
                                 .filter { book ->
@@ -131,6 +132,15 @@ constructor(
                                     } else {
                                         selectedGenres.value.map { it.id }.any { it in book.genre_ids }
                                     }
+=======
+                    val books =
+                        result.data.data.books
+                            .filter { book ->
+                                if (selectedGenres.value.map { it.name }.contains("All Genres")) {
+                                    true
+                                } else {
+                                    selectedGenres.value.map { it.id }.any { it in book.genreIds }
+>>>>>>> Stashed changes
                                 }
                                 .map { book -> book.toBookItemUiModel() }
                                 .sortedBy { it.title }

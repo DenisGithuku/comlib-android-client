@@ -62,7 +62,7 @@ fun Book.toBookItemUiModel(): BookItemUiModel {
         title = title,
         authors = authors,
         imageUrl = image,
-        genres = genre_ids
+        genres = genreIds
     )
 }
 

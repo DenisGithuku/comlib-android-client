@@ -45,6 +45,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SelectableDates
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDateRangePickerState
@@ -113,7 +114,16 @@ private fun StreakContent(
             initialDisplayMode = DisplayMode.Input,
             initialSelectedStartDateMillis = state.startDate.toMillisLong(),
             initialSelectedEndDateMillis = state.endDate.toMillisLong(),
-            yearRange = IntRange(start = yearToday, endInclusive = yearToday + 1)
+            yearRange = IntRange(start = yearToday, endInclusive = yearToday + 1),
+            selectableDates = object : SelectableDates {
+                override fun isSelectableDate(utcTimeMillis: Long): Boolean {
+                    return utcTimeMillis >= Clock.System.now().toEpochMilliseconds()
+                }
+
+                override fun isSelectableYear(year: Int): Boolean {
+                    return year >= yearToday
+                }
+            }
         )
 
     if (bottomSheetIsVisible) {
@@ -198,7 +208,7 @@ private fun StreakContent(
                 },
                 modifier = Modifier.padding(LocalDimens.current.extraLarge),
                 state = dateRangePickerState,
-                dateValidator = { timestamp -> timestamp >= Clock.System.now().toEpochMilliseconds() }
+//                dateValidator = { timestamp -> timestamp >= Clock.System.now().toEpochMilliseconds() }
             )
         }
     }

@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -16,6 +15,7 @@
 */
 package com.githukudenis.comlib.core.model.book
 
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -25,7 +25,7 @@ data class Book(
     val currentHolder: String = "",
     val description: String,
     val edition: String,
-    val genre_ids: List<String>,
+    @SerialName("genre_ids") val genreIds: List<String>,
     val id: String = "",
     val image: String = "",
     val owner: String,
@@ -34,52 +34,26 @@ data class Book(
     val title: String
 )
 
-fun Book.toBookDTO(): BookDTO {
-    return BookDTO(
-        authors = authors.joinToString(","),
-        description = description,
-        edition = edition,
-        genre_ids = genre_ids.joinToString(","),
-        owner = owner,
-        pages = pages,
-        title = title,
-        reserved = reserved.joinToString(","),
-        _id = _id,
-        currentHolder = currentHolder,
-        id = id,
-        image = image
-    )
-}
+fun BookDTO.toBook(): Book = Book(
+    authors = authors,
+    description = description,
+    edition = edition,
+    genreIds = genreIds,
+    owner = owner,
+    pages = pages,
+    reserved = reserved,
+    title = title
+)
 
 @Serializable
 data class BookDTO(
-    val _id: String = "",
-    val authors: String,
-    val currentHolder: String = "",
+    val authors: List<String> = emptyList(),
     val description: String,
     val edition: String,
-    val genre_ids: String,
-    val id: String = "",
+    @SerialName("genre_ids") val genreIds: List<String> = emptyList(),
     val image: String = "",
-    val owner: String,
-    val pages: Int,
-    val reserved: String = "",
+    val owner: String = "",
+    val pages: Int = 0,
+    val reserved: List<String> = emptyList(),
     val title: String = ""
 )
-
-fun BookDTO.toBook(): Book {
-    return Book(
-        _id = _id,
-        authors = authors.split(','),
-        currentHolder = currentHolder,
-        description = description,
-        edition = edition,
-        genre_ids = genre_ids.split(','),
-        id = id,
-        image = image,
-        owner = owner,
-        pages = pages,
-        reserved = reserved.split(','),
-        title = title
-    )
-}

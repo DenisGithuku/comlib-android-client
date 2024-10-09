@@ -57,7 +57,7 @@ class BooksRemoteDataSourceTest {
                 currentHolder = "userB",
                 description = "Good book",
                 edition = "first",
-                genre_ids = emptyList(),
+                genreIds = emptyList(),
                 id = "2",
                 image = "",
                 owner = "userA",

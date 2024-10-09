@@ -18,12 +18,20 @@ package com.githukudenis.comlib.feature.add_book
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+<<<<<<< Updated upstream
 import com.githukudenis.comlib.core.common.DataResult
 import com.githukudenis.comlib.core.domain.usecases.GetGenresUseCase
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.toBookDTO
 import com.githukudenis.comlib.data.repository.BooksRepository
 import com.githukudenis.comlib.data.repository.UserPrefsRepository
+=======
+import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.data.repository.BooksRepository
+import com.githukudenis.comlib.core.data.repository.GenresRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.core.model.book.BookDTO
+>>>>>>> Stashed changes
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -51,6 +59,7 @@ constructor(
     private fun loadGenres() {
         viewModelScope.launch {
             state.update { it.copy(genreState = GenreUiState.Loading) }
+<<<<<<< Updated upstream
             genresUseCase().collectLatest { result ->
                 val genreState =
                     when (result) {
@@ -60,6 +69,16 @@ constructor(
                         is DataResult.Success -> GenreUiState.Success(result.data)
                     }
                 state.update { it.copy(genreState = genreState) }
+=======
+            when (val result = genresRepository.getGenres()) {
+                is ResponseResult.Failure -> {
+                    state.update { it.copy(genreState = GenreUiState.Error(result.error.message)) }
+                }
+                is ResponseResult.Success -> {
+                    val genres = result.data.data.genres
+                    state.update { it.copy(genreState = GenreUiState.Success(genres)) }
+                }
+>>>>>>> Stashed changes
             }
         }
     }
@@ -111,19 +130,25 @@ constructor(
             state.update { it.copy(isLoading = true) }
 
             val book =
-                Book(
+                BookDTO(
                     title = state.value.title,
                     authors = state.value.authors.split(','),
                     pages = state.value.pages.toInt(),
-                    genre_ids = listOf(state.value.selectedGenre.id),
+                    genreIds = listOf(state.value.selectedGenre.id),
                     owner = userPrefsRepository.userPrefs.first().userId ?: return@launch,
                     edition = state.value.edition,
                     description = state.value.description
                 )
             state.value.photoUri?.let { uri ->
-                booksRepository.addNewBook(imageUri = uri, book = book.toBookDTO())
+                when (val result = booksRepository.addNewBook(imageUri = uri, book = book)) {
+                    is ResponseResult.Failure -> {
+                        state.update { it.copy(isLoading = false, message = result.error.message) }
+                    }
+                    is ResponseResult.Success -> {
+                        state.update { it.copy(isLoading = false, isSuccess = true) }
+                    }
+                }
             }
-            state.update { it.copy(isLoading = false, isSuccess = true) }
         }
     }
 
