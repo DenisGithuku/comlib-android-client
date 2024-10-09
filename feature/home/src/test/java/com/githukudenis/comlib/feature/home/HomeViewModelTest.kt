@@ -24,6 +24,9 @@ import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -62,14 +65,20 @@ class HomeViewModelTest {
 
     @Test
     fun testStateInitialization() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            homeViewModel.state.collect()
+        }
+        advanceUntilIdle()
         assertEquals(homeViewModel.state.value.bookmarks.containsAll(setOf("1", "2", "3")), true)
     }
 
     @Test
     fun onToggleFavourite() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            homeViewModel.state.collect()
+        }
         homeViewModel.onToggleFavourite("4")
         advanceUntilIdle()
-        val bookMarks = homeViewModel.state.value.bookmarks
-        assertContains(bookMarks, "4")
+        assertContains(homeViewModel.state.value.bookmarks, "4")
     }
 }

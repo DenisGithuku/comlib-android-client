@@ -50,8 +50,15 @@ constructor(
 
     val uiState: StateFlow<ProfileUiState> =
         combine(_uiState, _userPrefs) { uiState, prefs ->
-                val profile = prefs.userId?.let { id -> getProfileDetails(id) }
-                uiState.copy(profile = profile, selectedTheme = prefs.themeConfig)
+                prefs.userId?.let { id ->
+                    val profile =
+                        when (val result = userRepository.getUserById(id)) {
+                            is ResponseResult.Failure -> ProfileItemState.Error(result.error.message)
+                            is ResponseResult.Success ->
+                                ProfileItemState.Success(result.data.data.user.toProfile())
+                        }
+                    uiState.copy(profileItemState = profile, selectedTheme = prefs.themeConfig)
+                } ?: ProfileUiState()
             }
             .stateIn(
                 scope = viewModelScope,
@@ -79,13 +86,6 @@ constructor(
             is ProfileUiEvent.ToggleThemeDialog -> {
                 toggleThemeDialog(profileUiEvent.isVisible)
             }
-        }
-    }
-
-    private suspend fun getProfileDetails(userId: String): Profile? {
-        return when (val result = userRepository.getUserById(userId)) {
-            is ResponseResult.Failure -> null
-            is ResponseResult.Success -> result.data.data.user.toProfile()
         }
     }
 

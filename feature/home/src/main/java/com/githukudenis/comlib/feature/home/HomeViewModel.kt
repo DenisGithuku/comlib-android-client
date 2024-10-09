@@ -16,10 +16,10 @@
 */
 package com.githukudenis.comlib.feature.home
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
@@ -29,9 +29,14 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
-import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 enum class TimePeriod {
@@ -57,66 +62,66 @@ constructor(
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
     private val bookMilestoneRepository: BookMilestoneRepository
-) : StatefulViewModel<HomeScreenState>(HomeScreenState()) {
+) : ViewModel() {
 
-    init {
-        getTimePeriod()
-        getStreakState()
-        getBookmarkedBooks()
-        getReadBooks()
-        getUserDetails()
-        getAvailableBooks()
-    }
-
-    private fun getReadBooks() {
-        viewModelScope.launch {
-            userPrefsRepository.userPrefs
-                .mapLatest { it.readBooks }
-                .collectLatest { update { copy(reads = it.toList()) } }
-        }
-    }
-
-    private fun getAvailableBooks() {
-        update { copy(availableState = FetchItemState.Loading) }
-        viewModelScope.launch {
-            when (val result = booksRepository.getAllBooks()) {
-                is ResponseResult.Failure -> {
-                    update { copy(availableState = FetchItemState.Error(message = result.error.message)) }
+    private val _timePeriod: TimePeriod
+        get() {
+            val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
+            val time =
+                if (currHour < 12) {
+                    TimePeriod.MORNING
+                } else if (currHour < 16) {
+                    TimePeriod.AFTERNOON
+                } else {
+                    TimePeriod.EVENING
                 }
-                is ResponseResult.Success -> {
-                    update {
-                        copy(
-                            availableState =
-                                FetchItemState.Success(
-                                    result.data.data.books.map {
-                                        BookUiModel(book = it, isFavourite = it.id in state.value.bookmarks)
-                                    }
-                                )
-                        )
+            return time
+        }
+
+    private val _userProfile: Flow<FetchItemState<User?>> =
+        userPrefsRepository.userPrefs.mapLatest { prefs ->
+            prefs.userId?.let { id ->
+                when (val profile = userRepository.getUserById(id)) {
+                    is ResponseResult.Failure -> {
+                        FetchItemState.Error(message = profile.error.message)
+                    }
+                    is ResponseResult.Success -> {
+                        FetchItemState.Success(data = profile.data.data.user)
                     }
                 }
-            }
+            } ?: FetchItemState.Error(message = "User not logged in")
         }
-    }
 
-    private suspend fun getUserProfile(userId: String) {
-        when (val profile = userRepository.getUserById(userId)) {
+    private val _books: Flow<FetchItemState<List<BookUiModel>>> = flow {
+        when (val result = booksRepository.getAllBooks()) {
             is ResponseResult.Failure -> {
-                update { copy(user = FetchItemState.Error(message = profile.error.message)) }
+                emit(FetchItemState.Error(message = result.error.message))
             }
             is ResponseResult.Success -> {
-                update { copy(user = FetchItemState.Success(data = profile.data.data.user)) }
+                emit(FetchItemState.Success(result.data.data.books.map { BookUiModel(book = it) }))
             }
         }
     }
 
-    fun onClickRetryGetReads() {
-        getReadBooks()
-    }
-
-    fun onRefreshAvailableBooks() {
-        getAvailableBooks()
-    }
+    val state: StateFlow<HomeScreenState> =
+        combine(
+                userPrefsRepository.userPrefs.mapLatest { prefs ->
+                    prefs.bookmarkedBooks to prefs.readBooks
+                },
+                bookMilestoneRepository.bookMilestone,
+                _books,
+                _userProfile
+            ) { (bookmarks, read), milestone, allBooks, profile ->
+                HomeScreenState(
+                    bookmarks = bookmarks.toList(),
+                    reads = read.toList(),
+                    streakState = StreakState(bookMilestone = milestone),
+                    availableState = allBooks,
+                    user = profile,
+                    timePeriod = _timePeriod
+                )
+            }
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeScreenState())
 
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
@@ -128,45 +133,6 @@ constructor(
                     bookMarks.plus(id)
                 }
             userPrefsRepository.setBookMarks(updatedBookMarkSet)
-
-            update { copy(bookmarks = updatedBookMarkSet.toList()) }
-            onRefreshAvailableBooks()
         }
-    }
-
-    private fun getStreakState() {
-        viewModelScope.launch {
-            bookMilestoneRepository.bookMilestone.collectLatest {
-                update { copy(streakState = StreakState(bookMilestone = it)) }
-            }
-        }
-    }
-
-    private fun getUserDetails() {
-        viewModelScope.launch {
-            userPrefsRepository.userPrefs.collectLatest { prefs ->
-                prefs.userId?.let { getUserProfile(it) }
-            }
-        }
-    }
-
-    private fun getBookmarkedBooks() {
-        viewModelScope.launch {
-            val bookmarks = userPrefsRepository.userPrefs.mapLatest { it.bookmarkedBooks }.first()
-            update { copy(bookmarks = bookmarks.toList()) }
-        }
-    }
-
-    private fun getTimePeriod() {
-        val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
-        val time =
-            if (currHour < 12) {
-                TimePeriod.MORNING
-            } else if (currHour < 16) {
-                TimePeriod.AFTERNOON
-            } else {
-                TimePeriod.EVENING
-            }
-        update { copy(timePeriod = time) }
     }
 }

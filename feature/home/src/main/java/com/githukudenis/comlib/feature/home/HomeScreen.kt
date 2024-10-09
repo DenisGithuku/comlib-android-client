@@ -79,8 +79,12 @@ fun HomeRoute(
     HomeRouteContent(
         state = state,
         onOpenProfile = onOpenProfile,
-        onClickRetryGetReads = viewModel::onClickRetryGetReads,
-        onClickRetryGetAvailableBooks = viewModel::onRefreshAvailableBooks,
+        onClickRetryGetReads = {
+            //            viewModel::onClickRetryGetReads
+        },
+        onClickRetryGetAvailableBooks = {
+            //            viewModel::onRefreshAvailableBooks
+        },
         onOpenAllBooks = onOpenAllBooks,
         onOpenBookDetails = onOpenBookDetails,
         onToggleFavourite = viewModel::onToggleFavourite,
@@ -207,13 +211,16 @@ fun HomeRouteContent(
                         }
                     }
                     is FetchItemState.Success -> {
-                        val list = state.availableState.data
-                        if (list.isNotEmpty()) {
+                        val books =
+                            state.availableState.data.map { model ->
+                                model.copy(isFavourite = model.isFavourite == model.book.id in state.bookmarks)
+                            }
+                        if (books.isNotEmpty()) {
                             LazyRow(
                                 contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
                                 horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                             ) {
-                                items(list, key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
+                                items(books, key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
                                     BookCard(
                                         bookUiModel = bookUiModel,
                                         onClick = onOpenBookDetails,

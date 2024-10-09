@@ -65,13 +65,13 @@ import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicator
 @Composable
 fun BookDetailRoute(viewModel: BookDetailViewModel = hiltViewModel(), onBackPressed: () -> Unit) {
     val state by viewModel.state.collectAsStateWithLifecycle()
-    val isFavourite by viewModel.isFavourite.collectAsStateWithLifecycle()
 
     BookDetailScreen(
         state = state,
-        isFavourite = isFavourite,
         onToggleFavourite = { bookId -> viewModel.toggleBookmark(bookId) },
-        onRetry = { viewModel.onRetry() },
+        onRetry = {
+            //            viewModel.onRetry()
+        },
         onBackPressed = onBackPressed
     )
 }
@@ -79,7 +79,6 @@ fun BookDetailRoute(viewModel: BookDetailViewModel = hiltViewModel(), onBackPres
 @Composable
 fun BookDetailScreen(
     state: BookDetailUiState,
-    isFavourite: Boolean,
     onToggleFavourite: (String) -> Unit,
     onRetry: () -> Unit,
     onBackPressed: () -> Unit
@@ -90,7 +89,7 @@ fun BookDetailScreen(
         }
         is BookDetailUiState.Success -> {
             LoadedScreen(
-                bookUiModel = state.bookUiModel.copy(isFavourite = isFavourite),
+                bookUiModel = state.bookUiModel,
                 onBackPressed = onBackPressed,
                 onToggleFavourite = onToggleFavourite
             )

@@ -23,6 +23,10 @@ import com.githukudenis.comlib.core.data.repository.fake.FakeGenresRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import junit.framework.TestCase.assertTrue
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
@@ -54,13 +58,16 @@ class BookDetailViewModelTest {
 
     @Test
     fun testOnInitializeUpdatesState() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         val state = viewModel.state.value as BookDetailUiState.Success
         assert(state.bookUiModel.authors.contains("Peter"))
     }
 
     @Test
     fun toggleBookmark() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         viewModel.toggleBookmark("1")
+        advanceUntilIdle()
         val state = viewModel.state.value as BookDetailUiState.Success
 
         assertTrue(!state.bookUiModel.isFavourite)

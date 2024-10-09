@@ -20,49 +20,51 @@ import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.flow.MutableStateFlow
 
 class FakeUserPrefsRepository : UserPrefsRepository {
 
-    private var prefs =
-        UserPrefs(
-            readBooks = setOf("1", "2", "3"),
-            themeConfig = ThemeConfig.SYSTEM,
-            bookmarkedBooks = setOf("1", "2", "3"),
-            isSetup = false,
-            preferredGenres = setOf("genre1", "genre2"),
-            token = "token",
-            userId = "owner@5"
+    private var _prefs =
+        MutableStateFlow(
+            UserPrefs(
+                readBooks = setOf("1", "2", "3"),
+                themeConfig = ThemeConfig.SYSTEM,
+                bookmarkedBooks = setOf("1", "2", "3"),
+                isSetup = false,
+                preferredGenres = setOf("genre1", "genre2"),
+                token = "token",
+                userId = "owner@5"
+            )
         )
 
     override val userPrefs: Flow<UserPrefs>
-        get() = flowOf(prefs)
+        get() = _prefs
 
     override suspend fun setThemeConfig(themeConfig: ThemeConfig) {
-        prefs = prefs.copy(themeConfig = themeConfig)
+        _prefs.value = _prefs.value.copy(themeConfig = themeConfig)
     }
 
     override suspend fun setBookMarks(bookMarks: Set<String>) {
-        prefs = prefs.copy(bookmarkedBooks = bookMarks)
+        _prefs.value = _prefs.value.copy(bookmarkedBooks = bookMarks)
     }
 
     override suspend fun setSetupStatus(isComplete: Boolean) {
-        prefs = prefs.copy(isSetup = isComplete)
+        _prefs.value = _prefs.value.copy(isSetup = isComplete)
     }
 
     override suspend fun setPreferredGenres(genres: Set<String>) {
-        prefs = prefs.copy(preferredGenres = genres)
+        _prefs.value = _prefs.value.copy(preferredGenres = genres)
     }
 
     override suspend fun clearSession() {
-        prefs = prefs.copy(token = null, themeConfig = ThemeConfig.SYSTEM)
+        _prefs.value = _prefs.value.copy(token = null, themeConfig = ThemeConfig.SYSTEM)
     }
 
     override suspend fun setToken(token: String) {
-        prefs = prefs.copy(token = token)
+        _prefs.value = _prefs.value.copy(token = token)
     }
 
     override suspend fun setUserId(userId: String) {
-        prefs = prefs.copy(userId = userId)
+        _prefs.value = _prefs.value.copy(userId = userId)
     }
 }
