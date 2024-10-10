@@ -23,6 +23,7 @@ import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.book.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
@@ -41,6 +42,8 @@ constructor(
     private val booksRepository: BooksRepository
 ) : StatefulViewModel<MyBooksUiState>(MyBooksUiState()) {
 
+    private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
+
     init {
         getBooks()
     }
@@ -48,7 +51,7 @@ constructor(
     private fun getBooks() {
         viewModelScope.launch {
             update { copy(isLoading = true) }
-            val books = booksRepository.getAllBooks()
+            val books = booksRepository.getAllBooks(_pagingData.value.first, _pagingData.value.second)
             val userId = userPrefsRepository.userPrefs.first().userId
             when (books) {
                 is ResponseResult.Failure -> {

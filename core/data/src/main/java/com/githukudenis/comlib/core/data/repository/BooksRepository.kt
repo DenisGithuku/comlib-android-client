@@ -25,11 +25,11 @@ import com.githukudenis.comlib.core.model.book.BooksByUserResponse
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
 
 interface BooksRepository {
-    suspend fun getAllBooks(): ResponseResult<AllBooksResponse>
+    suspend fun getAllBooks(page: Int, limit: Int): ResponseResult<AllBooksResponse>
 
     suspend fun getBookById(id: String): ResponseResult<SingleBookResponse>
 
     suspend fun addNewBook(imageUri: Uri, book: BookDTO): ResponseResult<AddBookResponse>
 
-    suspend fun getBooksByUser(userId: String): ResponseResult<BooksByUserResponse>
+    suspend fun getBooksByUser(userId: String, page: Int, limit: Int): ResponseResult<BooksByUserResponse>
 }

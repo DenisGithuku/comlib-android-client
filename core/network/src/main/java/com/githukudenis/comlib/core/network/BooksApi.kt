@@ -30,8 +30,8 @@ import io.ktor.client.request.setBody
 import javax.inject.Inject
 
 class BooksApi @Inject constructor(private val httpClient: HttpClient) {
-    suspend fun getBooks(): ResponseResult<AllBooksResponse> = safeApiCall {
-        httpClient.get(Endpoints.Books.GetAll.url)
+    suspend fun getBooks(page: Int = 1, limit: Int = 10): ResponseResult<AllBooksResponse> = safeApiCall {
+        httpClient.get(Endpoints.Books.GetAll(page = page, limit = limit).url)
     }
 
     suspend fun getBookById(bookId: String): ResponseResult<SingleBookResponse> = safeApiCall {

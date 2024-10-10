@@ -71,10 +71,7 @@ fun GenreSetupScreen(
         state = state,
         onRefresh = viewModel::onRefresh,
         onCompleteSetup = viewModel::onCompleteSetup,
-        onSkip = {
-            viewModel.onCompleteSetup()
-            onSkip()
-        },
+        onSkip = viewModel::onCompleteSetup,
         onToggleGenreSelection = viewModel::onToggleGenreSelection
     )
 }

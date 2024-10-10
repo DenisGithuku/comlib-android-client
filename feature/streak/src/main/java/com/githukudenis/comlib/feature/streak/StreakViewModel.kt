@@ -26,6 +26,7 @@ import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.book.Book
 import com.githukudenis.comlib.core.model.book.BookMilestone
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
@@ -66,6 +67,8 @@ constructor(
     private val savedStateHandle: SavedStateHandle
 ) : StatefulViewModel<StreakUiState>(StreakUiState()) {
 
+    private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
+
     init {
         savedStateHandle.get<String>("bookId").also { getStreakDetails(it) }
         getAvailableBooks()
@@ -97,7 +100,7 @@ constructor(
         viewModelScope.launch {
             update { copy(isLoading = true) }
             val readBooks = userPrefsRepository.userPrefs.mapLatest { it.readBooks }.first()
-            val result = booksRepository.getAllBooks()
+            val result = booksRepository.getAllBooks(_pagingData.value.first, _pagingData.value.second)
 
             when (result) {
                 is ResponseResult.Failure -> {

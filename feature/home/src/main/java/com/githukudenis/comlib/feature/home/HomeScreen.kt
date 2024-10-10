@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -28,14 +27,17 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +58,7 @@ import com.githukudenis.comlib.feature.home.components.ErrorCard
 import com.githukudenis.comlib.feature.home.components.GoalCard
 import com.githukudenis.comlib.feature.home.components.HomeHeader
 import com.githukudenis.comlib.feature.home.components.LoadingBookCard
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.datetime.Clock
 import kotlinx.datetime.Instant
 import kotlinx.datetime.LocalDate
@@ -88,7 +91,8 @@ fun HomeRoute(
         onOpenAllBooks = onOpenAllBooks,
         onOpenBookDetails = onOpenBookDetails,
         onToggleFavourite = viewModel::onToggleFavourite,
-        onNavigateToStreakDetails = onNavigateToStreakDetails
+        onNavigateToStreakDetails = onNavigateToStreakDetails,
+        onRefreshPage = viewModel::onRefreshPage
     )
 }
 
@@ -102,14 +106,18 @@ fun HomeRouteContent(
     onOpenBookDetails: (String) -> Unit,
     onClickRetryGetAvailableBooks: () -> Unit,
     onToggleFavourite: (String) -> Unit,
-    onNavigateToStreakDetails: (String?) -> Unit
+    onNavigateToStreakDetails: (String?) -> Unit,
+    onRefreshPage: (PageState) -> Unit
 ) {
     val context = LocalContext.current
 
     Scaffold { values ->
         LazyColumn(
             modifier =
-                Modifier.padding(values).padding(vertical = LocalDimens.current.extraLarge).fillMaxSize(),
+            Modifier
+                .padding(values)
+                .padding(vertical = LocalDimens.current.extraLarge)
+                .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
@@ -126,13 +134,13 @@ fun HomeRouteContent(
                     title = {
                         Text(
                             text =
-                                buildString {
-                                    append("Good")
-                                    append(" ")
-                                    append(time)
-                                    append(" ")
-                                    append(username)
-                                },
+                            buildString {
+                                append("Good")
+                                append(" ")
+                                append(time)
+                                append(" ")
+                                append(username)
+                            },
                             style = MaterialTheme.typography.titleMedium
                         )
                     },
@@ -145,14 +153,17 @@ fun HomeRouteContent(
                     },
                     profileImage = {
                         AsyncImage(
-                            modifier = Modifier.size(32.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
+                            modifier = Modifier
+                                .size(32.dp)
+                                .clip(CircleShape)
+                                .clickable(onClick = onOpenProfile),
                             contentScale = ContentScale.Crop,
                             model =
-                                when (val user = state.user) {
-                                    is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
-                                    FetchItemState.Loading -> context.getDrawable(R.drawable.placeholder_no_text)
-                                    is FetchItemState.Success -> user.data?.image
-                                },
+                            when (val user = state.user) {
+                                is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
+                                FetchItemState.Loading -> context.getDrawable(R.drawable.placeholder_no_text)
+                                is FetchItemState.Success -> user.data?.image
+                            },
                             contentDescription = "User profile"
                         )
                     }
@@ -160,7 +171,9 @@ fun HomeRouteContent(
             }
             item {
                 val dateRange = buildString {
-                    append(state.streakState.bookMilestone?.startDate?.toLocalDate()?.toDayAndMonth())
+                    append(
+                        state.streakState.bookMilestone?.startDate?.toLocalDate()?.toDayAndMonth()
+                    )
                     append(" - ")
                     append(state.streakState.bookMilestone?.endDate?.toLocalDate()?.toDayAndMonth())
                 }
@@ -202,6 +215,7 @@ fun HomeRouteContent(
                             }
                         }
                     }
+
                     FetchItemState.Loading -> {
                         LazyRow(
                             contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
@@ -210,17 +224,45 @@ fun HomeRouteContent(
                             items(4) { LoadingBookCard() }
                         }
                     }
+
                     is FetchItemState.Success -> {
                         val books =
                             state.availableState.data.map { model ->
                                 model.copy(isFavourite = model.isFavourite == model.book.id in state.bookmarks)
                             }
+
                         if (books.isNotEmpty()) {
+                            val bookListState = rememberLazyListState()
+
+                            LaunchedEffect(bookListState) {
+                                snapshotFlow {
+                                    bookListState.layoutInfo.visibleItemsInfo
+                                }.collect { visibleItems ->
+                                    if (visibleItems.isNotEmpty()) {
+                                        val firstVisibleItemIndex = visibleItems.first().index
+                                        val lastVisibleItemsIndex = visibleItems.last().index
+
+                                        // Trigger loading page if we're at the bottom
+                                        if (lastVisibleItemsIndex >= state.availableState.data.size - 1) {
+                                            onRefreshPage(PageState.NEXT)
+                                        }
+
+                                        // Trigger loading previous page if we're at the top and not on the first page
+                                        if (firstVisibleItemIndex <= 1 && state.pagerState.first > 1) {
+                                            onRefreshPage(PageState.PREV)
+                                        }
+                                    }
+                                }
+                            }
+
                             LazyRow(
+                                state = bookListState,
                                 contentPadding = PaddingValues(horizontal = LocalDimens.current.extraLarge),
                                 horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
                             ) {
-                                items(books, key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
+                                items(
+                                    books,
+                                    key = { bookUiModel -> bookUiModel.book._id }) { bookUiModel ->
                                     BookCard(
                                         bookUiModel = bookUiModel,
                                         onClick = onOpenBookDetails,
@@ -228,14 +270,14 @@ fun HomeRouteContent(
                                         onToggleFavourite = {
                                             onToggleFavourite(bookUiModel.book.id)
                                             Toast.makeText(
-                                                    context,
-                                                    context.getString(
-                                                        if (bookUiModel.isFavourite) {
-                                                            R.string.remove_from_favourites
-                                                        } else R.string.add_to_favourites
-                                                    ),
-                                                    Toast.LENGTH_SHORT
-                                                )
+                                                context,
+                                                context.getString(
+                                                    if (bookUiModel.isFavourite) {
+                                                        R.string.remove_from_favourites
+                                                    } else R.string.add_to_favourites
+                                                ),
+                                                Toast.LENGTH_SHORT
+                                            )
                                                 .show()
                                         }
                                     )
@@ -275,6 +317,6 @@ private fun calculateProgress(startDate: Long, endDate: Long): Float {
             0f
         } else
             (now.dayOfYear - startDate.toLocalDate().dayOfYear).toFloat() /
-                (endDate.toLocalDate().dayOfYear - startDate.toLocalDate().dayOfYear).toFloat()
+                    (endDate.toLocalDate().dayOfYear - startDate.toLocalDate().dayOfYear).toFloat()
     return progress
 }

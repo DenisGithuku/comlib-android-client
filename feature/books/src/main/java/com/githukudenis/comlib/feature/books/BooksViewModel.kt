@@ -44,6 +44,8 @@ constructor(
     private val genresRepository: GenresRepository
 ) : ViewModel() {
 
+    private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
+
     private val moreGenreModel = GenreUiModel("More", "65eebf0badf8c6d9a1d1db48")
 
     private val genreListUiState: MutableStateFlow<GenreListUiState> =
@@ -105,7 +107,7 @@ constructor(
     private fun getBookList() {
         viewModelScope.launch {
             bookListUiState.update { BookListUiState.Loading }
-            when (val result = booksRepository.getAllBooks()) {
+            when (val result = booksRepository.getAllBooks(_pagingData.value.first, _pagingData.value.second)) {
                 is ResponseResult.Failure -> {
                     bookListUiState.update { BookListUiState.Error(message = result.error.message) }
                 }

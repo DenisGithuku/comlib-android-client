@@ -39,8 +39,8 @@ constructor(
     private val dispatchers: ComlibCoroutineDispatchers,
     private val imagesRemoteDataSource: ImagesRemoteDataSource
 ) : BooksRepository {
-    override suspend fun getAllBooks(): ResponseResult<AllBooksResponse> {
-        return withContext(dispatchers.io) { booksApi.getBooks() }
+    override suspend fun getAllBooks(page: Int, limit: Int): ResponseResult<AllBooksResponse> {
+        return withContext(dispatchers.io) { booksApi.getBooks(page, limit) }
     }
 
     override suspend fun getBookById(id: String): ResponseResult<SingleBookResponse> {
@@ -71,9 +71,9 @@ constructor(
         }
     }
 
-    override suspend fun getBooksByUser(userId: String): ResponseResult<BooksByUserResponse> {
+    override suspend fun getBooksByUser(userId: String, page: Int, limit: Int): ResponseResult<BooksByUserResponse> {
         return withContext(dispatchers.io) {
-            when (val result = booksApi.getBooks()) {
+            when (val result = booksApi.getBooks(page, limit)) {
                 is ResponseResult.Failure -> {
                     ResponseResult.Failure(result.error)
                 }

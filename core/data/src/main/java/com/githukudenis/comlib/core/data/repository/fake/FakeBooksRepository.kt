@@ -33,7 +33,7 @@ import kotlinx.coroutines.delay
 
 class FakeBooksRepository : BooksRepository {
     val books: MutableList<Book> =
-        (1..5)
+        (1..100)
             .map {
                 Book(
                     _id = "$it",
@@ -52,7 +52,7 @@ class FakeBooksRepository : BooksRepository {
             }
             .toMutableList()
 
-    override suspend fun getAllBooks(): ResponseResult<AllBooksResponse> {
+    override suspend fun getAllBooks(page: Int, limit: Int): ResponseResult<AllBooksResponse> {
         delay(1000L)
         return ResponseResult.Success(
             AllBooksResponse(
@@ -84,7 +84,7 @@ class FakeBooksRepository : BooksRepository {
         }
     }
 
-    override suspend fun getBooksByUser(userId: String): ResponseResult<BooksByUserResponse> {
+    override suspend fun getBooksByUser(userId: String, page: Int, limit: Int): ResponseResult<BooksByUserResponse> {
         return if (books.none { it.owner == userId }) {
             ResponseResult.Failure(ErrorResponse(status = "fail", message = "Books not found"))
         } else {

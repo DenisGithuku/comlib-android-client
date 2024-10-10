@@ -1,4 +1,3 @@
-
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -26,26 +25,25 @@ import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
-import java.time.Instant
-import java.time.ZoneId
-import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.mapLatest
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.time.Instant
+import java.time.ZoneId
+import javax.inject.Inject
 
 enum class TimePeriod {
-    MORNING,
-    AFTERNOON,
-    EVENING
+    MORNING, AFTERNOON, EVENING
 }
 
 data class HomeScreenState(
+    val pagerState: Pair<Int, Int> = Pair(0,0),
     val user: FetchItemState<User?> = FetchItemState.Loading,
     val reads: List<String> = emptyList(),
     val bookmarks: List<String> = emptyList(),
@@ -54,27 +52,31 @@ data class HomeScreenState(
     val timePeriod: TimePeriod = TimePeriod.MORNING
 )
 
+enum class PageState {
+    PREV, NEXT
+}
+
 @HiltViewModel
 class HomeViewModel
-@Inject
-constructor(
+@Inject constructor(
     private val userPrefsRepository: UserPrefsRepository,
     private val booksRepository: BooksRepository,
     private val userRepository: UserRepository,
     private val bookMilestoneRepository: BookMilestoneRepository
 ) : ViewModel() {
 
+    private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
+
     private val _timePeriod: TimePeriod
         get() {
             val currHour = Instant.now().atZone(ZoneId.systemDefault()).hour
-            val time =
-                if (currHour < 12) {
-                    TimePeriod.MORNING
-                } else if (currHour < 16) {
-                    TimePeriod.AFTERNOON
-                } else {
-                    TimePeriod.EVENING
-                }
+            val time = if (currHour < 12) {
+                TimePeriod.MORNING
+            } else if (currHour < 16) {
+                TimePeriod.AFTERNOON
+            } else {
+                TimePeriod.EVENING
+            }
             return time
         }
 
@@ -85,6 +87,7 @@ constructor(
                     is ResponseResult.Failure -> {
                         FetchItemState.Error(message = profile.error.message)
                     }
+
                     is ResponseResult.Success -> {
                         FetchItemState.Success(data = profile.data.data.user)
                     }
@@ -92,47 +95,58 @@ constructor(
             } ?: FetchItemState.Error(message = "User not logged in")
         }
 
-    private val _books: Flow<FetchItemState<List<BookUiModel>>> = flow {
-        when (val result = booksRepository.getAllBooks()) {
+    private val _books: Flow<FetchItemState<List<BookUiModel>>> = _pagingData.mapLatest { data ->
+        val (page, limit) = data
+        when (val result = booksRepository.getAllBooks(page = page, limit = limit)) {
             is ResponseResult.Failure -> {
-                emit(FetchItemState.Error(message = result.error.message))
+                FetchItemState.Error(message = result.error.message)
             }
+
             is ResponseResult.Success -> {
-                emit(FetchItemState.Success(result.data.data.books.map { BookUiModel(book = it) }))
+                FetchItemState.Success(result.data.data.books.map { BookUiModel(book = it) })
             }
         }
     }
 
-    val state: StateFlow<HomeScreenState> =
-        combine(
-                userPrefsRepository.userPrefs.mapLatest { prefs ->
-                    prefs.bookmarkedBooks to prefs.readBooks
-                },
-                bookMilestoneRepository.bookMilestone,
-                _books,
-                _userProfile
-            ) { (bookmarks, read), milestone, allBooks, profile ->
-                HomeScreenState(
-                    bookmarks = bookmarks.toList(),
-                    reads = read.toList(),
-                    streakState = StreakState(bookMilestone = milestone),
-                    availableState = allBooks,
-                    user = profile,
-                    timePeriod = _timePeriod
-                )
-            }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeScreenState())
+    val state: StateFlow<HomeScreenState> = combine(
+        userPrefsRepository.userPrefs.mapLatest { prefs ->
+            prefs.bookmarkedBooks to prefs.readBooks
+        }, bookMilestoneRepository.bookMilestone, _books, _userProfile, _pagingData
+    ) { (bookmarks, read), milestone, allBooks, profile, pagingData ->
+        HomeScreenState(
+            bookmarks = bookmarks.toList(),
+            reads = read.toList(),
+            streakState = StreakState(bookMilestone = milestone),
+            availableState = allBooks,
+            user = profile,
+            timePeriod = _timePeriod,
+            pagerState = pagingData
+        )
+    }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeScreenState())
 
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
             val bookMarks = userPrefsRepository.userPrefs.mapLatest { it.bookmarkedBooks }.first()
-            val updatedBookMarkSet =
-                if (id in bookMarks) {
-                    bookMarks.minus(id)
-                } else {
-                    bookMarks.plus(id)
-                }
+            val updatedBookMarkSet = if (id in bookMarks) {
+                bookMarks.minus(id)
+            } else {
+                bookMarks.plus(id)
+            }
             userPrefsRepository.setBookMarks(updatedBookMarkSet)
+        }
+    }
+
+    fun onRefreshPage(pageState: PageState) {
+        when (pageState) {
+            PageState.NEXT -> {
+                _pagingData.value = _pagingData.value.copy(first = _pagingData.value.first + 1)
+            }
+
+            PageState.PREV -> {
+                if (_pagingData.value.first > 1) {
+                    _pagingData.value = _pagingData.value.copy(first = _pagingData.value.first - 1)
+                }
+            }
         }
     }
 }
