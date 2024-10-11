@@ -35,6 +35,9 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
+private const val moreGenresId = "65eebf0badf8c6d9a1d1db48"
+private const val allGenresId = "65eeb125703fed5c184518bf"
+
 @HiltViewModel
 class BooksViewModel
 @Inject
@@ -46,7 +49,7 @@ constructor(
 
     private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
 
-    private val moreGenreModel = GenreUiModel("More", "65eebf0badf8c6d9a1d1db48")
+    private val moreGenreModel = GenreUiModel("More", moreGenresId)
 
     private val genreListUiState: MutableStateFlow<GenreListUiState> =
         MutableStateFlow(GenreListUiState.Loading)
@@ -55,7 +58,7 @@ constructor(
         MutableStateFlow(BookListUiState.Loading)
 
     private val selectedGenres: MutableStateFlow<List<GenreUiModel>> =
-        MutableStateFlow(listOf(GenreUiModel(name = "All Genres", id = "65eeb125703fed5c184518bf")))
+        MutableStateFlow(listOf(GenreUiModel(name = "All Genres", id = allGenresId)))
 
     val uiState: StateFlow<BooksUiState> =
         combine(selectedGenres, genreListUiState, bookListUiState) {
@@ -165,7 +168,7 @@ constructor(
 
                     if (id in selectedGenres.first().map { it.id }) {
                         selected.remove(updatedGenre)
-                    } else if (id == "65eeb125703fed5c184518bf") {
+                    } else if (id == allGenresId) {
                         selected.clear()
                         selected.add(updatedGenre)
                     } else {
@@ -173,7 +176,7 @@ constructor(
                     }
 
                     val updatedGenrePrefs =
-                        selected.dropWhile { it.id != "65eeb125703fed5c184518bf" }.map { it.id }.toSet()
+                        selected.dropWhile { it.id != allGenresId }.map { it.id }.toSet()
                     userPrefsRepository.setPreferredGenres(updatedGenrePrefs)
                     selectedGenres.update { selected }
                     getBookList()

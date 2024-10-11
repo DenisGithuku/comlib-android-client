@@ -43,7 +43,7 @@ enum class TimePeriod {
 }
 
 data class HomeScreenState(
-    val pagerState: Pair<Int, Int> = Pair(0,0),
+    val pagerState: Triple<PaginationState, Int, Int> = Triple(PaginationState.NotLoading, 1, 10),
     val user: FetchItemState<User?> = FetchItemState.Loading,
     val reads: List<String> = emptyList(),
     val bookmarks: List<String> = emptyList(),
@@ -52,8 +52,8 @@ data class HomeScreenState(
     val timePeriod: TimePeriod = TimePeriod.MORNING
 )
 
-enum class PageState {
-    PREV, NEXT
+enum class PaginationState {
+    Paginating, Exhausted, NotLoading
 }
 
 @HiltViewModel
@@ -65,7 +65,9 @@ class HomeViewModel
     private val bookMilestoneRepository: BookMilestoneRepository
 ) : ViewModel() {
 
-    private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
+    private val _pagingData: MutableStateFlow<Triple<PaginationState, Int, Int>> = MutableStateFlow(Triple(PaginationState.NotLoading, 1, 10))
+
+    private val _booksCache: MutableList<BookUiModel> = mutableListOf()
 
     private val _timePeriod: TimePeriod
         get() {
@@ -92,18 +94,25 @@ class HomeViewModel
                         FetchItemState.Success(data = profile.data.data.user)
                     }
                 }
-            } ?: FetchItemState.Error(message = "User not logged in")
+            } ?: FetchItemState.Error(message = "You are not logged in. Please log in to access the application")
         }
 
     private val _books: Flow<FetchItemState<List<BookUiModel>>> = _pagingData.mapLatest { data ->
-        val (page, limit) = data
+        val (_, page, limit) = data
+        _pagingData.value = _pagingData.value.copy(first = PaginationState.Paginating)
         when (val result = booksRepository.getAllBooks(page = page, limit = limit)) {
             is ResponseResult.Failure -> {
+                _pagingData.value =  _pagingData.value.copy(first = PaginationState.NotLoading)
                 FetchItemState.Error(message = result.error.message)
             }
 
             is ResponseResult.Success -> {
-                FetchItemState.Success(result.data.data.books.map { BookUiModel(book = it) })
+                val books = result.data.data.books.map { BookUiModel(book = it) }
+                if (books.isEmpty()) {
+                    _pagingData.value =  _pagingData.value.copy(first = PaginationState.Exhausted)
+                }
+                _booksCache.addAll(books)
+                FetchItemState.Success(_booksCache)
             }
         }
     }
@@ -136,17 +145,14 @@ class HomeViewModel
         }
     }
 
-    fun onRefreshPage(pageState: PageState) {
-        when (pageState) {
-            PageState.NEXT -> {
-                _pagingData.value = _pagingData.value.copy(first = _pagingData.value.first + 1)
-            }
+    fun onRefreshPage() {
+        _pagingData.value = _pagingData.value.copy(second = _pagingData.value.second + 1)
+    }
 
-            PageState.PREV -> {
-                if (_pagingData.value.first > 1) {
-                    _pagingData.value = _pagingData.value.copy(first = _pagingData.value.first - 1)
-                }
-            }
-        }
+    override fun onCleared() {
+        _booksCache.clear()
+        _pagingData.value = Triple(PaginationState.NotLoading, 1, 10)
+        _pagingData.value =  _pagingData.value.copy(first = PaginationState.NotLoading)
+        super.onCleared()
     }
 }

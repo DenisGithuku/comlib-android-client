@@ -36,7 +36,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,6 +53,7 @@ import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
+import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
@@ -107,7 +110,7 @@ fun HomeRouteContent(
     onClickRetryGetAvailableBooks: () -> Unit,
     onToggleFavourite: (String) -> Unit,
     onNavigateToStreakDetails: (String?) -> Unit,
-    onRefreshPage: (PageState) -> Unit
+    onRefreshPage: () -> Unit
 ) {
     val context = LocalContext.current
 
@@ -233,25 +236,18 @@ fun HomeRouteContent(
 
                         if (books.isNotEmpty()) {
                             val bookListState = rememberLazyListState()
+                            val shouldPaginate = remember {
+                                derivedStateOf {
+                                    val lastVisibleItem =
+                                        bookListState.layoutInfo.visibleItemsInfo.lastOrNull()?.index
+                                            ?: 9
+                                    lastVisibleItem >= bookListState.layoutInfo.totalItemsCount - 1
+                                }
+                            }
 
-                            LaunchedEffect(bookListState) {
-                                snapshotFlow {
-                                    bookListState.layoutInfo.visibleItemsInfo
-                                }.collect { visibleItems ->
-                                    if (visibleItems.isNotEmpty()) {
-                                        val firstVisibleItemIndex = visibleItems.first().index
-                                        val lastVisibleItemsIndex = visibleItems.last().index
-
-                                        // Trigger loading page if we're at the bottom
-                                        if (lastVisibleItemsIndex >= state.availableState.data.size - 1) {
-                                            onRefreshPage(PageState.NEXT)
-                                        }
-
-                                        // Trigger loading previous page if we're at the top and not on the first page
-                                        if (firstVisibleItemIndex <= 1 && state.pagerState.first > 1) {
-                                            onRefreshPage(PageState.PREV)
-                                        }
-                                    }
+                            LaunchedEffect(shouldPaginate) {
+                                if (shouldPaginate.value && state.availableState.data.size >= 10) {
+                                    onRefreshPage()
                                 }
                             }
 
@@ -281,6 +277,11 @@ fun HomeRouteContent(
                                                 .show()
                                         }
                                     )
+                                }
+                                item {
+                                    if (state.pagerState.first == PaginationState.Paginating) {
+                                        CLibLoadingSpinner()
+                                    }
                                 }
                             }
                         } else {
