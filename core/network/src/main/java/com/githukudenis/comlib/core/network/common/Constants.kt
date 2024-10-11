@@ -27,7 +27,7 @@ sealed class ImageStorageRef(val ref: String) {
 }
 
 sealed class Endpoints(private val path: String) {
-    val url: String
+    open val url: String
         get() {
             return buildString {
                 append(Constants.BASE_URL)
@@ -49,7 +49,15 @@ sealed class Endpoints(private val path: String) {
 
     sealed class Books(route: String = "api/v1/books", private val param: String? = null) :
         Endpoints(route + (param?.let { "/$it" } ?: "")) {
-        data object GetAll : Books()
+        data class GetAll(val page: Int, val limit: Int) : Books() {
+            override val url: String
+                get() {
+                    return buildString {
+                        append(super.url)
+                        append("?page=$page&limit=$limit")
+                    }
+                }
+        }
 
         data object Add : Books()
 
