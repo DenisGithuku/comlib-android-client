@@ -5,11 +5,15 @@ drawable ic_arrow_back
 drawable ic_books
 drawable ic_camera
 drawable ic_library
+drawable ic_management
 drawable ic_person
 drawable ic_profile_placeholder
 drawable ic_settings
+drawable ic_shield
 string account_desc
 string account_title
+string app_management_desc
+string app_management_title
 string change_image
 string fetching_profile_indicator
 string general_desc
@@ -17,3 +21,5 @@ string general_title
 string library_desc
 string library_title
 string settings_title
+string support_desc
+string support_title

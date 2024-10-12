@@ -32,7 +32,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.Logout
 import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material.icons.filled.DeleteOutline
@@ -155,7 +154,10 @@ private fun ProfileScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
-                        Icon(painter = painterResource(id = R.drawable.ic_arrow_back), contentDescription = "Back")
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_arrow_back),
+                            contentDescription = "Back"
+                        )
                     }
                 }
             )

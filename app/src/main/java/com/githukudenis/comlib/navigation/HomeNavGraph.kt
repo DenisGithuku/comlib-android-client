@@ -93,20 +93,25 @@ fun NavGraphBuilder.homeNavGraph(
                 onNavigateUp = { appState.popBackStack() }
             )
         }
-        composable(enterTransition = {
-            slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left)
-        }, exitTransition = {
-            slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right)
-        }, route = HomeDestination.Settings.route) {
-            SettingsRoute(onNavigateUp = {
-                appState.popBackStack()
-            }, onOpenEditProfile = {
-                appState.navigate(
-                    route = ComlibDestination.Profile.route,
-                    popUpTo = ComlibDestination.Profile.route,
-                    inclusive = true
-                )
-            })
+        composable(
+            enterTransition = {
+                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left)
+            },
+            exitTransition = {
+                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right)
+            },
+            route = HomeDestination.Settings.route
+        ) {
+            SettingsRoute(
+                onNavigateUp = { appState.popBackStack() },
+                onOpenEditProfile = {
+                    appState.navigate(
+                        route = ComlibDestination.Profile.route,
+                        popUpTo = ComlibDestination.Profile.route,
+                        inclusive = true
+                    )
+                }
+            )
         }
     }
 }
@@ -141,11 +146,11 @@ sealed class HomeDestination(
             unselectedIcon = R.drawable.people_outlined
         )
 
-    data object Settings:
-            HomeDestination(
-                route = "settings",
-                label = "Settings",
-                selectedIcon = R.drawable.settings_filled,
-                unselectedIcon = R.drawable.settings_outlined
-            )
+    data object Settings :
+        HomeDestination(
+            route = "settings",
+            label = "Settings",
+            selectedIcon = R.drawable.settings_filled,
+            unselectedIcon = R.drawable.settings_outlined
+        )
 }

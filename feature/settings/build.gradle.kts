@@ -5,9 +5,7 @@ plugins {
     alias(libs.plugins.comlib.android.hilt)
 }
 
-android {
-    namespace = "com.githukudenis.comlib.feature.settings"
-}
+android { namespace = "com.githukudenis.comlib.feature.settings" }
 
 dependencies {
     implementation(project(":core:common"))

@@ -1,3 +1,4 @@
+
 /*
 * Copyright 2023 Denis Githuku
 *
@@ -78,20 +79,22 @@ class MainActivity : ComponentActivity() {
 
             ComLibTheme(darkTheme = systemInDarkTheme(uiState)) {
                 setSystemTheme(uiState = uiState)
-                WindowCompat.getInsetsController(
-                    window, window.decorView
-                ).isAppearanceLightStatusBars = !systemInDarkTheme(uiState)
+                WindowCompat.getInsetsController(window, window.decorView).isAppearanceLightStatusBars =
+                    !systemInDarkTheme(uiState)
 
                 Surface {
-                    Scaffold(snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
-                        bottomBar = {
-                            ComlibBottomNavigationBar(appState)
-                        }) {
+                    Scaffold(
+                        snackbarHost = { SnackbarHost(hostState = appState.snackbarHostState) },
+                        bottomBar = { ComlibBottomNavigationBar(appState) }
+                    ) {
                         ComlibNavGraph(
-                            appState = appState, startDestination = when {
-                                shouldHideOnBoarding(uiState) -> ComlibDestination.HomeGraph.route
-                                else -> ComlibDestination.GetStarted.route
-                            }, isSetupComplete = uiState.isSetupComplete
+                            appState = appState,
+                            startDestination =
+                                when {
+                                    shouldHideOnBoarding(uiState) -> ComlibDestination.HomeGraph.route
+                                    else -> ComlibDestination.GetStarted.route
+                                },
+                            isSetupComplete = uiState.isSetupComplete
                         )
                     }
                 }
@@ -124,52 +127,58 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
-fun ComlibBottomNavigationBar(
-    appState: AppState
-) {
+fun ComlibBottomNavigationBar(appState: AppState) {
     // Only show bottom bar on routes in home graph
-    AnimatedVisibility(enter = slideInVertically(initialOffsetY = { fullHeight -> fullHeight } // Slide in from bottom
-    ),
-        exit = slideOutVertically(targetOffsetY = { fullHeight -> fullHeight } // Slide out downwards
-        ),
-        visible = appState.currentDestination?.route == HomeDestination.Home.route || appState.currentDestination?.route == HomeDestination.Books.route || appState.currentDestination?.route == HomeDestination.Groups.route || appState.currentDestination?.route == HomeDestination.Settings.route) {
+    AnimatedVisibility(
+        enter =
+            slideInVertically(
+                initialOffsetY = { fullHeight -> fullHeight } // Slide in from bottom
+            ),
+        exit =
+            slideOutVertically(
+                targetOffsetY = { fullHeight -> fullHeight } // Slide out downwards
+            ),
+        visible =
+            appState.currentDestination?.route == HomeDestination.Home.route ||
+                appState.currentDestination?.route == HomeDestination.Books.route ||
+                appState.currentDestination?.route == HomeDestination.Groups.route ||
+                appState.currentDestination?.route == HomeDestination.Settings.route
+    ) {
         NavigationBar(containerColor = MaterialTheme.colorScheme.background) {
-            val homeGraphDestinations = listOf(
-                HomeDestination.Home,
-                HomeDestination.Books,
-                HomeDestination.Groups,
-                HomeDestination.Settings
-            )
+            val homeGraphDestinations =
+                listOf(
+                    HomeDestination.Home,
+                    HomeDestination.Books,
+                    HomeDestination.Groups,
+                    HomeDestination.Settings
+                )
             homeGraphDestinations.forEach { destination ->
-                NavigationBarItem(onClick = {
-                    appState.navigate(
-                        destination.route, destination.route, inclusive = true
-                    )
-                }, selected = appState.currentDestination?.route == destination.route, icon = {
-                    (if (destination.route == appState.currentDestination?.route) {
-                        destination.selectedIcon
-                    } else destination.unselectedIcon)?.let {
-                        Icon(
-                            painter = painterResource(it),
-                            contentDescription = destination.label
-                        )
+                NavigationBarItem(
+                    onClick = { appState.navigate(destination.route, destination.route, inclusive = true) },
+                    selected = appState.currentDestination?.route == destination.route,
+                    icon = {
+                        (if (destination.route == appState.currentDestination?.route) {
+                                destination.selectedIcon
+                            } else destination.unselectedIcon)
+                            ?.let { Icon(painter = painterResource(it), contentDescription = destination.label) }
+                    },
+                    colors =
+                        NavigationBarItemDefaults.colors(
+                            //                                                    indicatorColor =
+                            // MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
+                        ),
+                    label = {
+                        destination.label?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.labelMedium,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
                     }
-                }, colors = NavigationBarItemDefaults.colors(
-                    //                                                    indicatorColor =
-                    // MaterialTheme.colorScheme.secondaryContainer.copy(0.4f)
-                ), label = {
-                    destination.label?.let {
-                        Text(
-                            text = it,
-                            style = MaterialTheme.typography.labelMedium,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                })
+                )
             }
         }
     }
-
 }
