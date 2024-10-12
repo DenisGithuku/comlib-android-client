@@ -57,6 +57,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -105,7 +106,7 @@ fun BooksScreen(
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            painter = painterResource(id = R.drawable.ic_arrow_back),
                             contentDescription = stringResource(R.string.back)
                         )
                     }

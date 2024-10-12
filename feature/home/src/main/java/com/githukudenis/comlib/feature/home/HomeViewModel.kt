@@ -108,7 +108,8 @@ constructor(
         }
 
     private val _books: Flow<FetchItemState<List<BookUiModel>>> =
-        _pagingData.mapLatest { data ->
+        _pagingData
+            .mapLatest { data ->
             val (_, page, limit) = data
             _pagingData.value = _pagingData.value.copy(first = PaginationState.Paginating)
             when (val result = booksRepository.getAllBooks(page = page, limit = limit)) {

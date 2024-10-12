@@ -55,6 +55,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -154,7 +155,7 @@ private fun ProfileScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
-                        Icon(imageVector = Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
+                        Icon(painter = painterResource(id = R.drawable.ic_arrow_back), contentDescription = "Back")
                     }
                 }
             )

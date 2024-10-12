@@ -59,6 +59,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.githukudenis.comlib.core.common.capitalize
@@ -228,7 +229,7 @@ private fun StreakContent(
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            painter = painterResource(id = R.drawable.ic_arrow_back),
                             contentDescription = stringResource(R.string.back)
                         )
                     }
@@ -236,7 +237,7 @@ private fun StreakContent(
                 actions = {
                     IconButton(onClick = onSaveStreak, enabled = state.isValid) {
                         Icon(
-                            imageVector = Icons.Default.Check,
+                            painter = painterResource(id = R.drawable.ic_check),
                             contentDescription = stringResource(R.string.save_streak_label)
                         )
                     }

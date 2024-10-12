@@ -1,0 +1,18 @@
+com.githukudenis.comlib.feature.settings
+drawable ic_appearance
+drawable ic_arrow_back
+drawable ic_books
+drawable ic_camera
+drawable ic_library
+drawable ic_person
+drawable ic_profile_placeholder
+drawable ic_settings
+string account_desc
+string account_title
+string change_image
+string fetching_profile_indicator
+string general_desc
+string general_title
+string library_desc
+string library_title
+string settings_title

@@ -41,6 +41,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -52,6 +53,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -114,7 +116,7 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
             ) {
                 Icon(
                     modifier = Modifier.padding(8.dp),
-                    imageVector = Icons.Default.ArrowBack,
+                    painter = painterResource(id = R.drawable.ic_arrow_back),
                     contentDescription = "Back",
                     tint = MaterialTheme.colorScheme.onBackground
                 )
@@ -154,7 +156,7 @@ fun LoadingScreen(onBackPressed: () -> Unit) {
                 )
             }
         }
-        Divider(
+        HorizontalDivider(
             modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
             color = Color.LightGray,
             thickness = 1.dp
@@ -214,7 +216,7 @@ fun LoadedScreen(
                 ) {
                     Icon(
                         modifier = Modifier.padding(8.dp),
-                        imageVector = Icons.Default.ArrowBack,
+                        painter = painterResource(id = R.drawable.ic_arrow_back),
                         contentDescription = "Back",
                         tint = MaterialTheme.colorScheme.background
                     )

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="account_desc">Account,Edit,Change password</string>
+    <string name="account_title">Account</string>
+    <string name="change_image">Change image</string>
+    <string name="fetching_profile_indicator">Fetching profile...</string>
+    <string name="general_desc">Display, Notifications</string>
+    <string name="general_title">Appearance</string>
+    <string name="library_desc">Owned, Read, Favourites</string>
+    <string name="library_title">My books</string>
+    <string name="settings_title">Settings</string>
+</resources>

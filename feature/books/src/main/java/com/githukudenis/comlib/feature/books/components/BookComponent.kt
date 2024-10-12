@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -82,7 +83,7 @@ fun BookComponent(bookItemUiModel: BookItemUiModel, onOpenBookDetails: (String) 
         }
         IconButton(onClick = { onOpenBookDetails(bookItemUiModel.id) }) {
             Icon(
-                imageVector = Icons.Default.ChevronRight,
+                painter = painterResource(id = R.drawable.ic_chevron_right),
                 contentDescription = "Open book details",
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )

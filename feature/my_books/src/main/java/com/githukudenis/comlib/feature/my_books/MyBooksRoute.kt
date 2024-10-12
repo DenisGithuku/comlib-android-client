@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -96,7 +97,7 @@ private fun MyBooksContent(
                 },
                 navigationIcon = {
                     IconButton(onClick = { onNavigateUp() }) {
-                        Icon(imageVector = Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(painter = painterResource(id = R.drawable.ic_arrow_back), contentDescription = "Back")
                     }
                 }
             )
@@ -166,7 +167,7 @@ fun BookComponent(book: Book, onOpenBookDetails: (String) -> Unit) {
             }
         }
         IconButton(onClick = { onOpenBookDetails(book.id) }) {
-            Icon(imageVector = Icons.Default.ChevronRight, contentDescription = "Open book details")
+            Icon(painter = painterResource(id = R.drawable.ic_chevron_right), contentDescription = "Open book details")
         }
     }
 }
