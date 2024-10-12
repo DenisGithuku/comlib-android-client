@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_title">Settings</string>
+    <string name="fetching_profile_indicator">Fetching profile...</string>
+    <string name="change_image">Change image</string>
+    <string name="account_title">Account</string>
+    <string name="account_desc">Edit,Logout</string>
+    <string name="library_title">My books</string>
+    <string name="library_desc">Owned, Read, Favourites</string>
+    <string name="general_title">Appearance</string>
+    <string name="general_desc">Display, Notifications</string>
+    <string name="support_title"><![CDATA[Support & Privacy]]></string>
+    <string name="support_desc">Privacy policy</string>
+    <string name="app_management_title">App management</string>
+    <string name="app_management_desc">Clear cache(Helps free up storage)</string>
+</resources>

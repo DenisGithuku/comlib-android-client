@@ -53,7 +53,6 @@ import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibLoadingSpinner
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.feature.home.components.BookCard
 import com.githukudenis.comlib.feature.home.components.EmptyDataCard
@@ -263,11 +262,6 @@ fun HomeRouteContent(
                                                 .show()
                                         }
                                     )
-                                }
-                                item {
-                                    if (state.pagerState.first == PaginationState.Paginating) {
-                                        CLibLoadingSpinner()
-                                    }
                                 }
                             }
                         } else {

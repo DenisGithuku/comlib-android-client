@@ -21,6 +21,7 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -35,12 +36,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.outlined.AccountCircle
-import androidx.compose.material.icons.outlined.CameraAlt
-import androidx.compose.material.icons.outlined.Edit
-import androidx.compose.material.icons.outlined.PhotoSizeSelectActual
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -57,8 +52,8 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -126,7 +121,7 @@ fun EditProfileContent(
                 navigationIcon = {
                     IconButton(onClick = onNavigateUp) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            painter = painterResource(id = R.drawable.ic_arrow_back),
                             contentDescription = stringResource(id = R.string.back)
                         )
                     }
@@ -211,7 +206,7 @@ fun EditProfileContent(
                     EditProfileItem(
                         title = stringResource(id = R.string.username_label),
                         value = state.username,
-                        icon = Icons.Outlined.AccountCircle,
+                        icon = R.drawable.ic_person,
                         profileItem = ProfileItem.USERNAME
                     ) {
                         selectedProfileItem = it
@@ -224,7 +219,7 @@ fun EditProfileContent(
                     EditProfileItem(
                         title = stringResource(id = R.string.firstname_label),
                         value = state.firstname,
-                        icon = Icons.Outlined.AccountCircle,
+                        icon = R.drawable.ic_person,
                         profileItem = ProfileItem.FIRSTNAME,
                         onClick = {
                             selectedProfileItem = it
@@ -238,7 +233,7 @@ fun EditProfileContent(
                     EditProfileItem(
                         title = stringResource(id = R.string.lastname_label),
                         value = state.lastname,
-                        icon = Icons.Outlined.AccountCircle,
+                        icon = R.drawable.ic_person,
                         profileItem = ProfileItem.LASTNAME,
                         onClick = {
                             selectedProfileItem = it
@@ -256,7 +251,7 @@ private fun EditProfileItem(
     title: String,
     value: String,
     description: String? = null,
-    icon: ImageVector,
+    @DrawableRes icon: Int,
     profileItem: ProfileItem,
     onClick: (ProfileItem) -> Unit
 ) {
@@ -273,7 +268,7 @@ private fun EditProfileItem(
             horizontalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             Icon(
-                imageVector = icon,
+                painter = painterResource(id = icon),
                 contentDescription = title,
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
@@ -295,7 +290,7 @@ private fun EditProfileItem(
         }
         IconButton(onClick = { onClick(profileItem) }) {
             Icon(
-                imageVector = Icons.Outlined.Edit,
+                painter = painterResource(id = R.drawable.ic_edit),
                 contentDescription = stringResource(id = R.string.edit),
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
@@ -312,19 +307,19 @@ private fun ImageChooser(onOpenGallery: () -> Unit, onOpenCamera: () -> Unit) {
     ) {
         ImageSourceComponent(
             onClick = onOpenCamera,
-            icon = Icons.Outlined.CameraAlt,
+            icon = R.drawable.ic_camera,
             label = stringResource(id = R.string.camera_label)
         )
         ImageSourceComponent(
             onClick = onOpenGallery,
-            icon = Icons.Outlined.PhotoSizeSelectActual,
+            icon = R.drawable.ic_camera,
             label = stringResource(id = R.string.gallery_label)
         )
     }
 }
 
 @Composable
-private fun ImageSourceComponent(label: String, onClick: () -> Unit, icon: ImageVector) {
+private fun ImageSourceComponent(label: String, onClick: () -> Unit, @DrawableRes icon: Int) {
     Column(
         verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -341,7 +336,7 @@ private fun ImageSourceComponent(label: String, onClick: () -> Unit, icon: Image
             contentAlignment = Alignment.Center
         ) {
             Icon(
-                imageVector = icon,
+                painter = painterResource(id = icon),
                 contentDescription = label,
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f),
                 modifier = Modifier.size(40.dp)

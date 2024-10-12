@@ -55,6 +55,7 @@ dependencies {
     implementation(project(":core:data"))
     implementation(project(":feature:book_detail"))
     implementation(project(":feature:books"))
+    implementation(project(":feature:settings"))
     implementation(project(":feature:profile"))
     implementation(project(":feature:add_book"))
     implementation(project(":feature:my_books"))
