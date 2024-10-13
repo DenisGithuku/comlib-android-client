@@ -271,7 +271,7 @@ fun ProfileLoaded(profile: Profile, onChangeImage: () -> Unit) {
 }
 
 @Composable
-fun ProfileImage(imageUrl: String?, size: Dp = 64.dp, onChangeImage: () -> Unit) {
+fun ProfileImage(imageUrl: String?, size: Dp = 80.dp, onChangeImage: () -> Unit) {
     Box(modifier = Modifier) {
         AsyncImage(
             model = imageUrl,

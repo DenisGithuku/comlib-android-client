@@ -69,9 +69,10 @@ fun CLibAlertContentDialog(
                     Modifier.fillMaxWidth(fraction = 0.8f)
                         .wrapContentHeight()
                         .background(
-                            color = AlertDialogDefaults.containerColor,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
                             shape = MaterialTheme.shapes.large
-                        )
+                        ),
+                contentAlignment = Alignment.Center
             ) {
                 Column(
                     modifier = Modifier.padding(LocalDimens.current.extraLarge),
