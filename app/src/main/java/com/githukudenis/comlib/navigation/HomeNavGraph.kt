@@ -119,11 +119,11 @@ fun NavGraphBuilder.homeNavGraph(
                     )
                 },
                 onOpenPrivacyPolicy = {
-                    //                appState.navigate(
-                    //                    route = ComlibDestination.PrivacyPolicy.route,
-                    //                    popUpTo = ComlibDestination.PrivacyPolicy.route,
-                    //                    inclusive = true
-                    //                )
+                    appState.navigate(
+                        route = ComlibDestination.PrivacyPolicy.route,
+                        popUpTo = ComlibDestination.PrivacyPolicy.route,
+                        inclusive = true
+                    )
                 }
             )
         }

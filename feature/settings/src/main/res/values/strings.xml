@@ -18,4 +18,5 @@
     <string name="theme_title">App theme</string>
     <string name="notifications">Notifications</string>
     <string name="select_theme_dialog_title">Select theme</string>
+    <string name="privacy_title">Privacy policy</string>
 </resources>

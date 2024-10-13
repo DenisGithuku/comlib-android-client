@@ -32,6 +32,7 @@ import com.githukudenis.comlib.feature.edit.EditProfileScreen
 import com.githukudenis.comlib.feature.genre_setup.GenreSetupScreen
 import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
+import com.githukudenis.comlib.feature.settings.PrivacyPolicyRoute
 import com.githukudenis.comlib.feature.streak.StreakScreen
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
 import com.githukudenis.comlib.splashScreen
@@ -222,6 +223,17 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
         composable(route = ComlibDestination.EditProfile.route) {
             EditProfileScreen(onNavigateUp = { appState.popBackStack() })
         }
+        composable(
+            enterTransition = {
+                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left)
+            },
+            exitTransition = {
+                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right)
+            },
+            route = ComlibDestination.PrivacyPolicy.route
+        ) {
+            PrivacyPolicyRoute(onNavigateUp = { appState.popBackStack() })
+        }
     }
 }
 
@@ -245,4 +257,6 @@ sealed class ComlibDestination(val route: String) {
     data object GenreSetup : ComlibDestination(route = "genre_setup")
 
     data object Streak : ComlibDestination(route = "streak")
+
+    data object PrivacyPolicy : ComlibDestination(route = "privacy_policy")
 }

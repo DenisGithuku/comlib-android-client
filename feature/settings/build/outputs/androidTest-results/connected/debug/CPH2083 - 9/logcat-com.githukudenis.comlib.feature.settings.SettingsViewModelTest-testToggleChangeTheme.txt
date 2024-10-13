@@ -1,0 +1,705 @@
+10-13 12:00:45.644 12495 12656 I TestRunner: started: testToggleChangeTheme(com.githukudenis.comlib.feature.settings.SettingsViewModelTest)
+10-13 12:00:45.644   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.645   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.645 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.648 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.648   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.649   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.649 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.650 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.650   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.651 11777 12494 D Parcel  : Parcel 0x78d441caa0: freeing with 756 capacity
+10-13 12:00:45.655 28558 28558 W unknown:WrappingUtils: Don't know how to round that drawable: android.graphics.drawable.RippleDrawable@11f537e
+10-13 12:00:45.655 28558 28558 W unknown:WrappingUtils: Don't know how to round that drawable: android.graphics.drawable.RippleDrawable@11f537e
+10-13 12:00:45.655  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 6 capacity
+10-13 12:00:45.655 11777 12494 D Parcel  : Parcel 0x78cdbc5150: freeing with 6 capacity
+10-13 12:00:45.655 12495 12656 D Parcel  : Parcel 0x759461caa0: freeing with 1176 capacity
+10-13 12:00:45.655 28558 28558 W unknown:WrappingUtils: Don't know how to round that drawable: android.graphics.drawable.RippleDrawable@11f537e
+10-13 12:00:45.661   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.662   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.662 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.664 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.667 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.667   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.667 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.668   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.668   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.668 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.674 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.678   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.679   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.680 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.683   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.683 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.683 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.684   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.684   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.684 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.691 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.695   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.695 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.696   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.699 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.699 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.700 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.700   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:45.704   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.705   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.708 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.711 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.711   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.712   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.714 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.714   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.714 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.714   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.715 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.715   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.724 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.725 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.727   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.728   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.729   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 1 is dropped, handle=0xf0baefc0
+10-13 12:00:45.731 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.731   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.731 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.731   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.731 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.731   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.741 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.742   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.742 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.746   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.747   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:45.748   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.748 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.749 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.749   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.749 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.749   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.758 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.760 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.761   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.763   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.764  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:45.765 11492 11919 D Parcel  : Parcel 0x759461f4a0: freeing with 120 capacity
+10-13 12:00:45.768 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.768   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.768 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.768   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.769 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.769   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.774 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.778   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.779   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.779 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.780   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:45.782   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.782 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.782   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.783 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.783 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.783   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.787  1269  2787 D Parcel  : Parcel 0x754df3e9e0: freeing with 108 capacity
+10-13 12:00:45.788  1269  2787 D Parcel  : Parcel 0x754df3e9e0: freeing with 438 capacity
+10-13 12:00:45.789 11791 11791 D Parcel  : Parcel 0x759461caa0: freeing with 156 capacity
+10-13 12:00:45.789  1269  2787 D Parcel  : Parcel 0x754df3e9e0: freeing with 108 capacity
+10-13 12:00:45.791 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.792 11791 11791 D Parcel  : Parcel 0x759461caa0: freeing with 156 capacity
+10-13 12:00:45.792  2481  3748 D Parcel  : Parcel 0x7b3830f1c0: freeing with 12 capacity
+10-13 12:00:45.793   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.794  1269  2787 D Parcel  : Parcel 0x754df3e9e0: freeing with 48 capacity
+10-13 12:00:45.795 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.796   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.808 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.808   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.809   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.809 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.810 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.810   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.811 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.814  1269  2780 D Parcel  : Parcel 0x754df3ea50: freeing with 108 capacity
+10-13 12:00:45.815  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:45.816 11492 11919 D Parcel  : Parcel 0x759461fa50: freeing with 102 capacity
+10-13 12:00:45.816 28558 28746 D MMListParser: +++initMMListConfigFile gInitDone 1
+10-13 12:00:45.817 28558 28746 D IAtlas  : IAtlas::init CallingPid 28558
+10-13 12:00:45.819 28558 28746 D Parcel  : Parcel 0x75699fb9d0: freeing with 96 capacity
+10-13 12:00:45.819 28558 28746 D IAtlas  : IAtlas::init this 0x754aaee670
+10-13 12:00:45.819   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.819 28558 28746 D Parcel  : Parcel 0x75699fbb30: freeing with 120 capacity
+10-13 12:00:45.819   617 17630 D Parcel  : Parcel 0x76cba071c0: freeing with 6 capacity
+10-13 12:00:45.820   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:45.821 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.821   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.825   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.825 28558 28828 D MMListParser: +++initMMListConfigFile gInitDone 1
+10-13 12:00:45.825 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.825 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.827 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.827 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.828   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.829   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.830   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.831  1269  1405 E WifiVendorHal: getWifiLinkLayerStats(l.947) failed {.code = ERROR_NOT_SUPPORTED, .description = }
+10-13 12:00:45.833 28558 28828 D IAtlas  : IAtlas::init CallingPid 28558
+10-13 12:00:45.835 28558 28828 D Parcel  : Parcel 0x7564357d30: freeing with 96 capacity
+10-13 12:00:45.835 28558 28828 D IAtlas  : IAtlas::init this 0x754aaee670
+10-13 12:00:45.835   744   744 D Parcel  : Parcel 0x7ff341c120: freeing with 24 capacity
+10-13 12:00:45.835  1269  1405 D Parcel  : Parcel 0x754df3ea50: freeing with 114 capacity
+10-13 12:00:45.837 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.837   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.839 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.839   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.840 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.840 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.840   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.840   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.841 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.845   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.846   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:45.853   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.853 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.855 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.855   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.855 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.855   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.855 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.855   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.858 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.861   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.862   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:45.864   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.864 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.866   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.866 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.866 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.867 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.867   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.867   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.871 28558 28828 D Parcel  : Parcel 0x7564357e90: freeing with 120 capacity
+10-13 12:00:45.875 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.877   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:45.877 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.877   617 17630 D Parcel  : Parcel 0x76cba071c0: freeing with 6 capacity
+10-13 12:00:45.878   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.879   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:45.881 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.881   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.882 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.882   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.882 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.883   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:45.888 28558 28828 D MMListParser: +++initMMListConfigFile gInitDone 1
+10-13 12:00:45.889 28558 28828 D IAtlas  : IAtlas::init CallingPid 28558
+10-13 12:00:45.890 28558 28828 D Parcel  : Parcel 0x7564357a00: freeing with 96 capacity
+10-13 12:00:45.890 28558 28828 D IAtlas  : IAtlas::init this 0x754aaecbc0
+10-13 12:00:45.891 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.892 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.892   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.895 28558 28828 D Parcel  : Parcel 0x7564357b60: freeing with 120 capacity
+10-13 12:00:45.895   617 17630 D Parcel  : Parcel 0x76cba071c0: freeing with 6 capacity
+10-13 12:00:45.896 28558 28828 D skia    : SkJpegCodec::onGetPixels fEnTdshp 0 fISOSpeedRatings -1!
+10-13 12:00:45.896   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.897   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:45.899 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.899   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:45.900 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.899   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.900 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.901   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.908 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.910 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.910   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.912   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.913 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.913   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.914 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.914   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.914 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.914   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.922   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.922 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.925 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.928   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.929   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:45.930   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.930 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.931 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.931   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.931 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.931   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.939 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.939   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.941 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.946   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.949 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.949   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.949 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.949   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.949 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.949   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.958 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.962   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.963   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:45.967 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.967   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.970   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.970 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.971 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.971   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.971   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.971 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.975 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.979   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.982   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.982 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.984   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.984 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.985   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.985 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.985 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.985   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.992 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:45.994 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:45.995   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:45.996   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:45.996   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:45.997 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:45.997   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:45.997   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:45.997 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:45.998 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:45.998   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.007   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.007 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.008 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.012   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.013   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 5 is dropped, handle=0xeeacb540
+10-13 12:00:46.014   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.014 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.014   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.014 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.014 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.015   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.025 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.026   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.026 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.029   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.033   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.033 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.034 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.034   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.034 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.034   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.042 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.045   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.049   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 5 is dropped, handle=0xeeacb540
+10-13 12:00:46.049   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.049 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.052 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.053 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.053   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.053 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.053   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.054   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.058 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.062   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.062   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.069 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.069   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.072 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.072   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.072   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.072 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.073 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.073   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.075 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.079   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.083 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.083   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.086   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.086 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.086 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.087 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.087   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.087   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.092 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.095   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.096   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.098   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.098 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.100 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.101   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.101   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.101 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.102   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.102 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.109 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.112   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.113 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.113   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.115   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.115 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.116 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.116   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.116 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.116   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.125 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.126   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.126 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.129   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.130   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.131   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.131 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.131 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.131   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.132 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.132   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.142   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.142 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.142 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.146   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.148   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.148 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.148 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.148   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.149 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.149   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.158 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.158   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.159 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.162   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.163   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.165   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.165 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.165   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.165 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.166 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.166   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.175 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.177 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.177   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.180   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.180   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 1 is dropped, handle=0xf0baefc0
+10-13 12:00:46.182   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.182 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.183 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.183   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.183   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.183 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.191 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.191   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.192 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.196   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.198   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.198 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.199   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.199 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.199 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.199   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.209 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.210 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.210   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.213   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.215   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.215 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.215 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.215   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.216 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.216   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.224 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.224   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.226 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.230   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.242 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.245   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.246   745 10239 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 5 is dropped, handle=0xeeacb540
+10-13 12:00:46.254  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.254 12459 12573 D Parcel  : Parcel 0x759461cc60: freeing with 192 capacity
+10-13 12:00:46.255 12459 12573 D Parcel  : Parcel 0x759461e9b0: freeing with 192 capacity
+10-13 12:00:46.255  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.256 12459 12573 D Parcel  : Parcel 0x759461cc60: freeing with 204 capacity
+10-13 12:00:46.256  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.257 12459 12573 D Parcel  : Parcel 0x759461e9b0: freeing with 204 capacity
+10-13 12:00:46.257  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.257 12459 12573 D Parcel  : Parcel 0x759461cc60: freeing with 216 capacity
+10-13 12:00:46.257  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.258  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.258 12459 12573 D Parcel  : Parcel 0x759461e9b0: freeing with 210 capacity
+10-13 12:00:46.259 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.267 11492 11914 D Parcel  : Parcel 0x759461f4a0: freeing with 102 capacity
+10-13 12:00:46.267  1269  2780 D Parcel  : Parcel 0x7544239150: freeing with 264 capacity
+10-13 12:00:46.269  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.276 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.278   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.278 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.278   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.278 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.278 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.278   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.286 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.286 28558 28558 W Choreographer: Frame time is 11.627601 ms in the future!  Check that graphics HAL is generating vsync timestamps using the correct timebase.
+10-13 12:00:46.287   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.287 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.289   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.289 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.290 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.290 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.290   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.291   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.300   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.300 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.300 12459 12573 D Parcel  : Parcel 0x759461cc60: freeing with 210 capacity
+10-13 12:00:46.307   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.308   766   787 D ApmSession: Connect
+10-13 12:00:46.316 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.319   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.320   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.320 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.321 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.321 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.324   424   424 W hwservicemanager: getTransport: Cannot find entry vendor.mediatek.hardware.apmonitor@1.0::IAPMonitorService/default in either framework or device manifest.
+10-13 12:00:46.325   766   787 D ApmSession: Connect: false
+10-13 12:00:46.325   766   787 D ApmNative: apmIsKpiEnabled2: type = 54, ret = 0
+10-13 12:00:46.326 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.328   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.328   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.334 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.334   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.336   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.336 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.337 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.337   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.337 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.337   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.343 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.346   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.346   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.346 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.349 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.349   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.349 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.349   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.349 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.350   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.358 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.358   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.359 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.363   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.364   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.365   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.365 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.365 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.366 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.366   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.367   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.373  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.375   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.375 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.376 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.379  1269  1269 I PowerWrap: PowerHal_TouchBoost
+10-13 12:00:46.380   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.381   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 1 is dropped, handle=0xf0baefc0
+10-13 12:00:46.381  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.381  1269  1428 I chatty  : uid=1000(system) OppoExService identical 2 lines
+10-13 12:00:46.381  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.381 28558 28558 D Parcel  : Parcel 0x75506a2930: freeing with 120 capacity
+10-13 12:00:46.382  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.382 28558 28558 D Parcel  : Parcel 0x75506a20e0: freeing with 138 capacity
+10-13 12:00:46.382 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.382  1269  2780 D Parcel  : Parcel 0x7544239150: freeing with 12 capacity
+10-13 12:00:46.382 19979 25415 D Parcel  : Parcel 0x756b6a3970: freeing with 96 capacity
+10-13 12:00:46.383 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.383  1269  2780 D Parcel  : Parcel 0x7544239150: freeing with 12 capacity
+10-13 12:00:46.383   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.383 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.383   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.383 19979 25415 D Parcel  : Parcel 0x756aaa93b0: freeing with 120 capacity
+10-13 12:00:46.384  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 420 capacity
+10-13 12:00:46.384   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.385  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 420 capacity
+10-13 12:00:46.385 19979 25415 D Parcel  : Parcel 0x756b6a3970: freeing with 138 capacity
+10-13 12:00:46.393 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.393 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.393   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.397   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.398   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.399   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.399 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.399 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.399   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.400 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.400   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.409 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.410 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.410   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.414   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.415   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 1 is dropped, handle=0xf0baefc0
+10-13 12:00:46.416   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.416 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.417 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.417   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.417 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.417   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.428 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.429 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.429   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.430   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.432   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.432 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.433 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.433   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.433 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.433   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.442   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.442 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.443 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.444  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.449   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.451 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.451   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.451 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.451   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.451 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.452   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.459   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.459 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.460 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.461  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.461  1269  1428 I chatty  : uid=1000(system) OppoExService identical 1 line
+10-13 12:00:46.461  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.461  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.461  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.462 19979 25415 D Parcel  : Parcel 0x756aaa93b0: freeing with 96 capacity
+10-13 12:00:46.462  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.465   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.466   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:46.467   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.467 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.467 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.467   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.467 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.467   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.477 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.477   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.477 28558 28558 D Parcel  : Parcel 0x7fe24ed490: freeing with 120 capacity
+10-13 12:00:46.479  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.480  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.480  1269  1428 I chatty  : uid=1000(system) OppoExService identical 2 lines
+10-13 12:00:46.480  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.481 19979 25415 D Parcel  : Parcel 0x756b6a3970: freeing with 96 capacity
+10-13 12:00:46.481  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.481   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.482   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:46.483   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.483 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.484 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.484   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.484 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.484   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.494  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.494  1269  1428 I chatty  : uid=1000(system) OppoExService identical 2 lines
+10-13 12:00:46.494  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.495   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.495  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.495  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.495  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.495  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.495  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.495 28558 28558 D Parcel  : Parcel 0x7fe24ed490: freeing with 120 capacity
+10-13 12:00:46.496 19979 25415 D Parcel  : Parcel 0x756aaa93b0: freeing with 96 capacity
+10-13 12:00:46.496  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.496 19979 25415 D Parcel  : Parcel 0x756b6a3970: freeing with 96 capacity
+10-13 12:00:46.496  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.496 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.497   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.498   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:46.499   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.499 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.500 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.500   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.500 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.500   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.510 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.510 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.510   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.513   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.514   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:46.516 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.516   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.516 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.517   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.518   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.518 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.518  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.518  1269  1428 I chatty  : uid=1000(system) OppoExService identical 2 lines
+10-13 12:00:46.518  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.520  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.520  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.520 19979 25415 D Parcel  : Parcel 0x756aaa93b0: freeing with 96 capacity
+10-13 12:00:46.527 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.528   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.528  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.528  1269  1428 I chatty  : uid=1000(system) OppoExService identical 6 lines
+10-13 12:00:46.529  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.530 28558 28558 D Parcel  : Parcel 0x7fe24eb2d0: freeing with 120 capacity
+10-13 12:00:46.531   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.535 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.535   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.535 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.535   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.535 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.535   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.543 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.544  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.544 19979 25415 D Parcel  : Parcel 0x756b6a3970: freeing with 96 capacity
+10-13 12:00:46.545 19979 25415 D Parcel  : Parcel 0x756aaa93b0: freeing with 96 capacity
+10-13 12:00:46.545  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.545   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 96 capacity
+10-13 12:00:46.545 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.547   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.548   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:46.556  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.558  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 150 capacity
+10-13 12:00:46.558 19979 20321 D Parcel  : Parcel 0x756b6a3970: freeing with 114 capacity
+10-13 12:00:46.560  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.560 19979 20321 D Parcel  : Parcel 0x756aaa93b0: freeing with 102 capacity
+10-13 12:00:46.561 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.562  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.563  1269  1428 I chatty  : uid=1000(system) OppoExService identical 6 lines
+10-13 12:00:46.563  1269  1428 D Parcel  : Parcel 0x754df3e9e0: freeing with 258 capacity
+10-13 12:00:46.564  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.564 19979 25415 D Parcel  : Parcel 0x756b6a3ba0: freeing with 96 capacity
+10-13 12:00:46.564   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.564  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.568 19979 25415 D Parcel  : Parcel 0x756b6a3eb0: freeing with 96 capacity
+10-13 12:00:46.568  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.571 19979 20321 D Parcel  : Parcel 0x756b6a3970: freeing with 102 capacity
+10-13 12:00:46.571  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:46.574  1269  2787 D Parcel  : Parcel 0x7543e17310: freeing with 12 capacity
+10-13 12:00:46.574   558   645 D Parcel  : Parcel 0x7a1321ec20: freeing with 222 capacity
+10-13 12:00:46.577 28558 28558 D Parcel  : Parcel 0x7fe24eae00: freeing with 120 capacity
+10-13 12:00:46.577  1269  1428 D Parcel  : Parcel 0x754df3ec10: freeing with 258 capacity
+10-13 12:00:46.578  1269  1428 I chatty  : uid=1000(system) OppoExService identical 5 lines
+10-13 12:00:46.578  1269  1428 D Parcel  : Parcel 0x754df3ec10: freeing with 258 capacity
+10-13 12:00:46.578  1269  1269 D Parcel  : Parcel 0x7fe24ed550: freeing with 120 capacity
+10-13 12:00:46.578  1269  1428 D Parcel  : Parcel 0x754df3ec10: freeing with 258 capacity
+10-13 12:00:46.578   558   645 D Parcel  : Parcel 0x7a1321f1c0: freeing with 90 capacity
+10-13 12:00:46.578  1269  2787 D Parcel  : Parcel 0x754df3e9e0: freeing with 66 capacity
+10-13 12:00:46.578  1269  2787 D Parcel  : Parcel 0x754df3ec10: freeing with 90 capacity
+10-13 12:00:46.579  1269  2780 D Parcel  : Parcel 0x7544239150: freeing with 12 capacity
+10-13 12:00:46.579  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 156 capacity
+10-13 12:00:46.580 19979 25415 D Parcel  : Parcel 0x756aaa93b0: freeing with 96 capacity
+10-13 12:00:46.581 19979 20321 D Parcel  : Parcel 0x756b6a3ba0: freeing with 126 capacity
+10-13 12:00:46.581 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.581   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 60 capacity
+10-13 12:00:46.582 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.582   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.582 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.583 19979 19979 D Parcel  : Parcel 0x7fe24ed130: freeing with 120 capacity
+10-13 12:00:46.584   647  1384 D Parcel  : Parcel 0x759b39e1c0: freeing with 12 capacity
+10-13 12:00:46.585 28558 28558 W unknown:WrappingUtils: Don't know how to round that drawable: android.graphics.drawable.RippleDrawable@bb3e4f1
+10-13 12:00:46.585 28558 28558 I chatty  : uid=10133(com.twitter.android) identical 1 line
+10-13 12:00:46.586 28558 28558 W unknown:WrappingUtils: Don't know how to round that drawable: android.graphics.drawable.RippleDrawable@bb3e4f1
+10-13 12:00:46.588 19979 22179 D Parcel  : Parcel 0x756b6a3970: freeing with 96 capacity
+10-13 12:00:46.591 12495 12656 I TestRunner: finished: testToggleChangeTheme(com.githukudenis.comlib.feature.settings.SettingsViewModelTest)

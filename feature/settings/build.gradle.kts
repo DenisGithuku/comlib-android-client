@@ -12,6 +12,7 @@ dependencies {
     implementation(project(":core:common"))
     implementation(project(":core:model"))
     implementation(project(":core:data"))
+    implementation(project(":core:testing"))
 
     implementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.navigation.compose)
@@ -28,4 +29,5 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.timber)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.webview.compose)
 }

@@ -1,0 +1,136 @@
+10-13 12:00:47.162 12495 12656 I TestRunner: started: testChangeTheme(com.githukudenis.comlib.feature.settings.SettingsViewModelTest)
+10-13 12:00:47.162 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:47.162  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6678 capacity
+10-13 12:00:47.163 13354 11633 W RcsClientLib: Unexpected error when trying to unbind com.google.android.ims.rcsservice.chatsession.IChatSession: Service not registered: dirm@229913a
+10-13 12:00:47.163 13354 11633 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: dirm@229913a
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:1715)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at android.app.ContextImpl.unbindService(ContextImpl.java:1761)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at android.content.ContextWrapper.unbindService(ContextWrapper.java:728)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at dirk.g(PG:8)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at dirk.c(PG:17)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at dirj.b(PG:38)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at dirh.run(PG:5)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at dlxw.run(PG:21)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at dsdx.run(PG:76)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at csts.run(PG:3)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at cssv.run(PG:6)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at java.lang.Thread.run(Thread.java:764)
+10-13 12:00:47.163 13354 11633 W RcsClientLib: 	at csuz.run(PG:64)
+10-13 12:00:47.163 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 240 capacity
+10-13 12:00:47.163  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.164 13354 11576 D Parcel  : Parcel 0x756d0b15e0: freeing with 252 capacity
+10-13 12:00:47.164 11777 12494 D Parcel  : Parcel 0x78d441caa0: freeing with 546 capacity
+10-13 12:00:47.164 13354 11633 E BugleRcs: com.google.android.rcs.client.chatsession.ChatSessionService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:47.164  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.164 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 222 capacity
+10-13 12:00:47.165 11777 12494 D Parcel  : Parcel 0x78cdbc5150: freeing with 6 capacity
+10-13 12:00:47.165 12495 12656 D Parcel  : Parcel 0x759461caa0: freeing with 996 capacity
+10-13 12:00:47.165  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6 capacity
+10-13 12:00:47.167 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:47.167 13354 11576 W RcsClientLib: Can't start Bugle JibeService in the background.
+10-13 12:00:47.168 13354 11576 D Parcel  : Parcel 0x756d0b15e0: freeing with 234 capacity
+10-13 12:00:47.168  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.168 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:47.170  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 420 capacity
+10-13 12:00:47.170 12660 12660 D Parcel  : Parcel 0x759461ce90: freeing with 138 capacity
+10-13 12:00:47.170  1269  2649 D Parcel  : Parcel 0x754df3eeb0: freeing with 48 capacity
+10-13 12:00:47.170  2481  3748 D Parcel  : Parcel 0x7b3830f1c0: freeing with 12 capacity
+10-13 12:00:47.170 13354 11633 W RcsClientLib: Service failed to connect with reason: NULL_BINDING
+10-13 12:00:47.171  1269  2649 D Parcel  : Parcel 0x754df3ef20: freeing with 606 capacity
+10-13 12:00:47.171  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:47.171  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.171 13354 11633 D Parcel  : Parcel 0x756d0b63c0: freeing with 120 capacity
+10-13 12:00:47.173 13354 11633 W RcsClientLib: Unexpected error when trying to unbind com.google.android.ims.rcsservice.chatsession.IChatSession: Service not registered: dirm@229913a
+10-13 12:00:47.173 13354 11633 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: dirm@229913a
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:1715)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at android.app.ContextImpl.unbindService(ContextImpl.java:1761)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at android.content.ContextWrapper.unbindService(ContextWrapper.java:728)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at dirk.g(PG:8)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at dirk.c(PG:17)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at dirj.b(PG:38)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at dirh.run(PG:5)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at dlxw.run(PG:21)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at dsdx.run(PG:76)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at csts.run(PG:3)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at cssv.run(PG:6)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at java.lang.Thread.run(Thread.java:764)
+10-13 12:00:47.173 13354 11633 W RcsClientLib: 	at csuz.run(PG:64)
+10-13 12:00:47.174 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 636 capacity
+10-13 12:00:47.174  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 120 capacity
+10-13 12:00:47.175 12660 12660 D Parcel  : Parcel 0x759461ce90: freeing with 120 capacity
+10-13 12:00:47.175 13354 11633 E BugleRcs: com.google.android.rcs.client.chatsession.ChatSessionService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:47.176 13354 11576 I RcsClientLib: Connecting RcsProfileService
+10-13 12:00:47.177  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:47.177 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 384 capacity
+10-13 12:00:47.177  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 4122 capacity
+10-13 12:00:47.177 12660 12660 D Parcel  : Parcel 0x759461cf70: freeing with 228 capacity
+10-13 12:00:47.178 13354 11576 W RcsClientLib: No CS.apk RCS service found. Is RCS running in Bugle?
+10-13 12:00:47.179  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.179 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 198 capacity
+10-13 12:00:47.181 13354 11576 I RcsClientLib: shouldUseCarrierServicesJibeService: false, CarrierServices rcs service found: false
+10-13 12:00:47.182  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6558 capacity
+10-13 12:00:47.182 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 252 capacity
+10-13 12:00:47.183  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 8646 capacity
+10-13 12:00:47.184 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 402 capacity
+10-13 12:00:47.185  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6114 capacity
+10-13 12:00:47.185 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 390 capacity
+10-13 12:00:47.188  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 9276 capacity
+10-13 12:00:47.188 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 336 capacity
+10-13 12:00:47.191 12660 12660 I MultiDex: Installing application
+10-13 12:00:47.191 12660 12660 I MultiDex: VM with version 2.1.0 has multidex support
+10-13 12:00:47.192 12660 12660 I MultiDex: VM has multidex support, MultiDex support library is disabled.
+10-13 12:00:47.195  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6372 capacity
+10-13 12:00:47.195 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 288 capacity
+10-13 12:00:47.195 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:47.196 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:47.196  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6342 capacity
+10-13 12:00:47.196 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 282 capacity
+10-13 12:00:47.197  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6678 capacity
+10-13 12:00:47.198 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 240 capacity
+10-13 12:00:47.198 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 252 capacity
+10-13 12:00:47.198  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.199  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.199 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 222 capacity
+10-13 12:00:47.201  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.201 12660 12660 D Parcel  : Parcel 0x759461ce90: freeing with 102 capacity
+10-13 12:00:47.201 13354 11576 W RcsClientLib: Can't start Bugle JibeService in the background.
+10-13 12:00:47.202  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.202 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 234 capacity
+10-13 12:00:47.204  1269  2649 D Parcel  : Parcel 0x754df3eeb0: freeing with 48 capacity
+10-13 12:00:47.204  2481  3748 D Parcel  : Parcel 0x7b3830f1c0: freeing with 12 capacity
+10-13 12:00:47.205  1269  2649 D Parcel  : Parcel 0x754df3eb30: freeing with 588 capacity
+10-13 12:00:47.205  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.205 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 930 capacity
+10-13 12:00:47.206 13354 11576 I RcsClientLib: Connecting RcsMessagingService
+10-13 12:00:47.207 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 384 capacity
+10-13 12:00:47.207  1269  2787 D Parcel  : Parcel 0x7543e19150: freeing with 12 capacity
+10-13 12:00:47.207  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6 capacity
+10-13 12:00:47.208 12660 12660 D Parcel  : Parcel 0x759461ce90: freeing with 6288 capacity
+10-13 12:00:47.208 13354 11576 W RcsClientLib: No CS.apk RCS service found. Is RCS running in Bugle?
+10-13 12:00:47.209  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.209 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 198 capacity
+10-13 12:00:47.211 13354 11576 I RcsClientLib: shouldUseCarrierServicesJibeService: false, CarrierServices rcs service found: false
+10-13 12:00:47.212 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:47.212  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6558 capacity
+10-13 12:00:47.212 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 252 capacity
+10-13 12:00:47.214  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 8646 capacity
+10-13 12:00:47.214 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 402 capacity
+10-13 12:00:47.215  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6114 capacity
+10-13 12:00:47.215 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 390 capacity
+10-13 12:00:47.218  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 9276 capacity
+10-13 12:00:47.218 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 336 capacity
+10-13 12:00:47.219  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6372 capacity
+10-13 12:00:47.219 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 288 capacity
+10-13 12:00:47.220  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6342 capacity
+10-13 12:00:47.220 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 282 capacity
+10-13 12:00:47.222  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 6678 capacity
+10-13 12:00:47.222 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 240 capacity
+10-13 12:00:47.223 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 252 capacity
+10-13 12:00:47.223  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.223  1269  2649 D Parcel  : Parcel 0x75461a8150: freeing with 12 capacity
+10-13 12:00:47.223 13354 11576 D Parcel  : Parcel 0x756d0b63c0: freeing with 222 capacity
+10-13 12:00:47.224 12495 12656 I TestRunner: finished: testChangeTheme(com.githukudenis.comlib.feature.settings.SettingsViewModelTest)

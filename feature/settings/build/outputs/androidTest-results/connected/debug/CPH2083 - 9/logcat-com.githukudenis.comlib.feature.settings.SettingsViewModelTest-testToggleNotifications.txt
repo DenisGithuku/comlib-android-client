@@ -1,0 +1,254 @@
+10-13 12:00:46.774 12495 12656 I TestRunner: started: testToggleNotifications(com.githukudenis.comlib.feature.settings.SettingsViewModelTest)
+10-13 12:00:46.775 13354 11633 W RcsClientLib: com.google.android.rcs.client.events.EventService disconnected
+10-13 12:00:46.775 11777 12494 D Parcel  : Parcel 0x78d441caa0: freeing with 570 capacity
+10-13 12:00:46.776 13354 11633 E BugleRcs: com.google.android.rcs.client.events.EventService RCS service disconnected [Will reconnect in 1000ms]
+10-13 12:00:46.777 11777 12494 D Parcel  : Parcel 0x78cdbc5150: freeing with 6 capacity
+10-13 12:00:46.777  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 6 capacity
+10-13 12:00:46.777 12495 12656 D Parcel  : Parcel 0x759461caa0: freeing with 996 capacity
+10-13 12:00:46.777 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.780   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.780 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.781   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.782  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.783 13354 11400 D Parcel  : Parcel 0x756d0b6f90: freeing with 234 capacity
+10-13 12:00:46.784 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.784   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.784 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.784   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.784 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.784   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.786 13354 11633 W RcsClientLib: com.google.android.rcs.client.locationsharing.LocationSharingService disconnected
+10-13 12:00:46.787 13354 11633 E BugleRcs: com.google.android.rcs.client.locationsharing.LocationSharingService RCS service disconnected [Will reconnect in 2000ms]
+10-13 12:00:46.788 13354 11633 W RcsClientLib: com.google.android.rcs.client.messaging.RcsMessagingService disconnected
+10-13 12:00:46.789 13354 11633 E BugleRcs: com.google.android.rcs.client.messaging.RcsMessagingService RCS service disconnected [Will reconnect in 2000ms]
+10-13 12:00:46.790 13354 11633 W RcsClientLib: com.google.android.rcs.client.profile.RcsProfileService disconnected
+10-13 12:00:46.791 13354 11633 E BugleRcs: com.google.android.rcs.client.profile.RcsProfileService RCS service disconnected [Will reconnect in 2000ms]
+10-13 12:00:46.792 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.793   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.793 13354 11633 W RcsClientLib: com.google.android.rcs.client.ims.ImsConnectionTrackerService disconnected
+10-13 12:00:46.794 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.797   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.798   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:46.799  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 24 capacity
+10-13 12:00:46.799 27812 27812 D Parcel  : Parcel 0xdde97268: freeing with 114 capacity
+10-13 12:00:46.799   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.799 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.800 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.800   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.800 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.800   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.800  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 78 capacity
+10-13 12:00:46.800 27812 27812 D Parcel  : Parcel 0xe55addd0: freeing with 114 capacity
+10-13 12:00:46.800 27812 27812 I cr_OfflineIndicator: Reported by system: [ Transports: WIFI Capabilities: NOT_METERED&INTERNET&NOT_RESTRICTED&TRUSTED&NOT_VPN&NOT_ROAMING&FOREGROUND&NOT_CONGESTED&NOT_SUSPENDED Unwanted:  LinkUpBandwidth>=1048576Kbps LinkDnBandwidth>=1048576Kbps SignalStrength: -64]
+10-13 12:00:46.800 27812 27812 I cr_OfflineIndicator: setConnectionState connectionState=2
+10-13 12:00:46.800 27812 27812 I cr_OfflineIndicator: processConnectivityCheckResult mConnectionState=2 mConnectivityCheckingStage=1
+10-13 12:00:46.800 27812 27812 I cr_OfflineIndicator: scheduleNextConnectivityCheck
+10-13 12:00:46.800 27812 27812 I cr_OfflineIndicator: Retry after 5000ms
+10-13 12:00:46.802 13354 11633 E BugleRcs: com.google.android.rcs.client.ims.ImsConnectionTrackerService RCS service disconnected [Will reconnect in 2000ms]
+10-13 12:00:46.803 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:46.804 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:46.805 13354 11633 W RcsClientLib: Service failed to connect with reason: NULL_BINDING
+10-13 12:00:46.806  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.807 13354 11633 D Parcel  : Parcel 0x756d0b1650: freeing with 120 capacity
+10-13 12:00:46.807 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.808   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 96 capacity
+10-13 12:00:46.809  2481  3748 D Parcel  : Parcel 0x7b3830f1c0: freeing with 12 capacity
+10-13 12:00:46.809  1269  1741 D Parcel  : Parcel 0x754df3e9e0: freeing with 48 capacity
+10-13 12:00:46.810  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.811 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.811 13354 11633 D Parcel  : Parcel 0x756d0b6f90: freeing with 102 capacity
+10-13 12:00:46.813 13354 11633 E BugleRcs: com.google.android.rcs.client.ims.ImsConnectionTrackerService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:46.814   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.815   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 0 is dropped, handle=0xf0baed80
+10-13 12:00:46.816 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.816   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 60 capacity
+10-13 12:00:46.816 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:46.817 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.817   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.817 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.817   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.817 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:46.819 13354 11400 I BugleRcsEngine: [SR]: Single Registration is disabled. Skipping Single Registration capability check for subId: 1, OS.isAtLeastS:[false], enableSingleRegistrationProvisioning:[false] [CONTEXT thread_id=6973 ]
+10-13 12:00:46.823 13354 11633 W RcsClientLib: Service failed to connect with reason: NULL_BINDING
+10-13 12:00:46.824  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.825 13354 11400 I BugleRcsProvisioning: RcsAvailability configuration availability and enabled status: simId: redacted-pii:sim_id[chars:20,last3:403], SipConnectionType: DUAL_REG, isConfigurationAvailableAndEnabled: true
+10-13 12:00:46.825   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.825 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.827 13354 11633 D Parcel  : Parcel 0x756d0b1650: freeing with 120 capacity
+10-13 12:00:46.827 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.829 13354 11633 W RcsClientLib: Unexpected error when trying to unbind com.google.android.ims.rcsservice.ims.IImsConnectionTracker: Service not registered: dirm@487b84e
+10-13 12:00:46.829 13354 11633 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: dirm@487b84e
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:1715)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at android.app.ContextImpl.unbindService(ContextImpl.java:1761)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at android.content.ContextWrapper.unbindService(ContextWrapper.java:728)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at dirk.g(PG:8)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at dirk.c(PG:17)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at dirj.b(PG:38)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at dirh.run(PG:5)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at dlxw.run(PG:21)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at dsdx.run(PG:76)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at csts.run(PG:3)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at cssv.run(PG:6)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at java.lang.Thread.run(Thread.java:764)
+10-13 12:00:46.829 13354 11633 W RcsClientLib: 	at csuz.run(PG:64)
+10-13 12:00:46.831 13354 11633 E BugleRcs: com.google.android.rcs.client.ims.ImsConnectionTrackerService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:46.831   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.832   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 4 is dropped, handle=0xeeacb300
+10-13 12:00:46.834   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.834 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.835 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.835   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.835   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.835 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.837 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:46.838 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:46.839 13354 11633 W RcsClientLib: Service failed to connect with reason: NULL_BINDING
+10-13 12:00:46.842 13354 11400 I BugleRcsProvisioning: RcsAvailability: Subscription Id: 1, simId: redacted-pii:sim_id[chars:20,last3:403], sipConnectionType: DUAL_REG, isRcsAvailable: true
+10-13 12:00:46.842 13354 11400 I BugleRcsProvisioning: updateRcsAvailability: currentAvailability: 7, newAvailability: 7, hint: NO_HINT
+10-13 12:00:46.844  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.844 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.845 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.845   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.846 13354 11633 D Parcel  : Parcel 0x756d0b6f90: freeing with 120 capacity
+10-13 12:00:46.848   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.850 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.850   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.851 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.851   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.851 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.851   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.853  1269  1741 D Parcel  : Parcel 0x754df3ea50: freeing with 48 capacity
+10-13 12:00:46.853  2481  3748 D Parcel  : Parcel 0x7b3830f1c0: freeing with 12 capacity
+10-13 12:00:46.854  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.854 13354 11633 D Parcel  : Parcel 0x756d0b1650: freeing with 102 capacity
+10-13 12:00:46.856 13354 11633 E BugleRcs: com.google.android.rcs.client.profile.RcsProfileService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:46.857 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:46.858 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:46.859 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.859   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.862 13354 11576 I RcsClientLib: Connecting ChatSessionService
+10-13 12:00:46.862 13354 11633 W RcsClientLib: Service failed to connect with reason: NULL_BINDING
+10-13 12:00:46.862 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.863  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.863  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 12 capacity
+10-13 12:00:46.863 13354 11633 D Parcel  : Parcel 0x756d0b6f90: freeing with 120 capacity
+10-13 12:00:46.863 13354 11576 D Parcel  : Parcel 0x756d0b15e0: freeing with 384 capacity
+10-13 12:00:46.864 13354 11576 W RcsClientLib: No CS.apk RCS service found. Is RCS running in Bugle?
+10-13 12:00:46.865   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.868 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.868   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.868 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.869 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.869   647  2460 D Parcel  : Parcel 0x75996231c0: freeing with 12 capacity
+10-13 12:00:46.869   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.871  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 12 capacity
+10-13 12:00:46.871 13354 12560 I BugleRcsProvisioning: RcsProvisioningTrigger: onRcsAvailabilityUpdate : availability is updated to RCS is setup, lastAvailabilityLocal is RCS is setup, simId hash = -7721570763657226310, simId = redacted-pii:sim_id[chars:20,last3:403], isPev3Enabled = true
+10-13 12:00:46.872 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 198 capacity
+10-13 12:00:46.873 13354 11576 I RcsClientLib: shouldUseCarrierServicesJibeService: false, CarrierServices rcs service found: false
+10-13 12:00:46.874  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 6558 capacity
+10-13 12:00:46.875 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 252 capacity
+10-13 12:00:46.876  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 8646 capacity
+10-13 12:00:46.876 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 402 capacity
+10-13 12:00:46.877 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.877   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.877  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 6114 capacity
+10-13 12:00:46.878 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.879 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 390 capacity
+10-13 12:00:46.881   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.882   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 3 is dropped, handle=0xf0bb0ac0
+10-13 12:00:46.884   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.884 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.884 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.884   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.884 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.884   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.884  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 9276 capacity
+10-13 12:00:46.886 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 336 capacity
+10-13 12:00:46.887  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 6372 capacity
+10-13 12:00:46.887 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 288 capacity
+10-13 12:00:46.888  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 6342 capacity
+10-13 12:00:46.888 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 282 capacity
+10-13 12:00:46.889  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 6678 capacity
+10-13 12:00:46.892 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.893   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.894 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.871 13354 11633 W RcsClientLib: Unexpected error when trying to unbind com.google.android.ims.rcsservice.profile.IRcsProfile: Service not registered: dirm@1bfabb2
+10-13 12:00:46.871 13354 11633 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: dirm@1bfabb2
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:1715)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at android.app.ContextImpl.unbindService(ContextImpl.java:1761)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at android.content.ContextWrapper.unbindService(ContextWrapper.java:728)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at dirk.g(PG:8)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at dirk.c(PG:17)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at dirj.b(PG:38)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at dirh.run(PG:5)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at dlxw.run(PG:21)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at dsdx.run(PG:76)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at csts.run(PG:3)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at cssv.run(PG:6)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at java.lang.Thread.run(Thread.java:764)
+10-13 12:00:46.871 13354 11633 W RcsClientLib: 	at csuz.run(PG:64)
+10-13 12:00:46.896 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 240 capacity
+10-13 12:00:46.898  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 12 capacity
+10-13 12:00:46.898 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 252 capacity
+10-13 12:00:46.898   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.899   745  1726 I BufferQueueProducer: [GraphicBufferSource](this:0xeeaf5000,id:79,api:1,p:745,c:745) queueBuffer: slot 2 is dropped, handle=0xf0bafec0
+10-13 12:00:46.899 13354 11633 E BugleRcs: com.google.android.rcs.client.profile.RcsProfileService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:46.900  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 12 capacity
+10-13 12:00:46.900 13354 11576 D Parcel  : Parcel 0x756d0b6f90: freeing with 222 capacity
+10-13 12:00:46.900   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.900 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.901 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:46.901 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.901   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.901   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.902 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.902 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:46.902 13354 11576 W RcsClientLib: Can't start Bugle JibeService in the background.
+10-13 12:00:46.903  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 12 capacity
+10-13 12:00:46.903 13354 11576 D Parcel  : Parcel 0x756d0b1650: freeing with 234 capacity
+10-13 12:00:46.903 13354 11633 W RcsClientLib: Service failed to connect with reason: NULL_BINDING
+10-13 12:00:46.904  1269  1741 D Parcel  : Parcel 0x755727c150: freeing with 12 capacity
+10-13 12:00:46.904 13354 11633 D Parcel  : Parcel 0x756d0b63c0: freeing with 120 capacity
+10-13 12:00:46.905  2481  3748 D Parcel  : Parcel 0x7b3830f1c0: freeing with 12 capacity
+10-13 12:00:46.905  1269  2786 D Parcel  : Parcel 0x754df3ea50: freeing with 48 capacity
+10-13 12:00:46.907 13354 11633 W RcsClientLib: Unexpected error when trying to unbind com.google.android.ims.rcsservice.profile.IRcsProfile: Service not registered: dirm@1bfabb2
+10-13 12:00:46.907 13354 11633 W RcsClientLib: java.lang.IllegalArgumentException: Service not registered: dirm@1bfabb2
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at android.app.LoadedApk.forgetServiceDispatcher(LoadedApk.java:1715)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at android.app.ContextImpl.unbindService(ContextImpl.java:1761)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at android.content.ContextWrapper.unbindService(ContextWrapper.java:728)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at dirk.g(PG:8)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at dirk.c(PG:17)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at dirj.b(PG:38)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at dirh.run(PG:5)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at dlxw.run(PG:21)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at dsdx.run(PG:76)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at csts.run(PG:3)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1167)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:641)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at cssv.run(PG:6)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at java.lang.Thread.run(Thread.java:764)
+10-13 12:00:46.907 13354 11633 W RcsClientLib: 	at csuz.run(PG:64)
+10-13 12:00:46.910  1269  2786 D Parcel  : Parcel 0x7543f21150: freeing with 12 capacity
+10-13 12:00:46.911 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.912   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.912 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.915   586   586 W hwcomposer: [JOB] (2) copyvds is ture but vir buffer format is not HAL_PIXEL_FORMAT_YV12
+10-13 12:00:46.917   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 60 capacity
+10-13 12:00:46.917 28558 29212 D Parcel  : Parcel 0x755a464b60: freeing with 120 capacity
+10-13 12:00:46.917 28558 29212 D Parcel  : Parcel 0x755a464f50: freeing with 120 capacity
+10-13 12:00:46.917   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.917 28558 29212 D Parcel  : Parcel 0x755a464ea0: freeing with 120 capacity
+10-13 12:00:46.917   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 12 capacity
+10-13 12:00:46.922 13354 11633 E BugleRcs: com.google.android.rcs.client.profile.RcsProfileService RCS service failed to connect: NULL_BINDING [Will retry in 2000ms]
+10-13 12:00:46.923 13354 11633 W RcsClientLib: com.google.android.rcs.client.contacts.ContactsService disconnected
+10-13 12:00:46.923 13354 11633 E BugleRcs: com.google.android.rcs.client.contacts.ContactsService RCS service disconnected [Will reconnect in 2000ms]
+10-13 12:00:46.924 13354 11633 W RcsClientLib: Binding to com.google.android.ims.service.JibeService has died.
+10-13 12:00:46.926 28558 29212 D Parcel  : Parcel 0x755a464b50: freeing with 258 capacity
+10-13 12:00:46.926   647   686 D Parcel  : Parcel 0x759dcd31c0: freeing with 96 capacity
+10-13 12:00:46.928 28558 28558 D Parcel  : Parcel 0x7fe24ed470: freeing with 120 capacity
+10-13 12:00:46.924 13354 11633 W RcsClientLib: Null IBinder returned for com.google.android.ims.service.JibeService
+10-13 12:00:46.930 12495 12656 I TestRunner: finished: testToggleNotifications(com.githukudenis.comlib.feature.settings.SettingsViewModelTest)
