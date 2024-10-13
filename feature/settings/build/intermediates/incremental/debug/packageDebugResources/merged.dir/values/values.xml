@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="account_desc">Edit,Logout</string>
+    <string name="account_desc">Account info, Edit profile</string>
     <string name="account_title">Account</string>
     <string name="app_management_desc">Clear cache(Helps free up storage)</string>
     <string name="app_management_title">App management</string>
     <string name="change_image">Change image</string>
+    <string name="clear_cache_dialog_text">Clearing the app cache will free up storage and may improve performance. Proceed with clearing cache?</string>
+    <string name="clear_cache_dialog_title">Clear app cache</string>
     <string name="fetching_profile_indicator">Fetching profile...</string>
     <string name="general_desc">Display, Notifications</string>
     <string name="general_title">Appearance</string>
     <string name="library_desc">Owned, Read, Favourites</string>
     <string name="library_title">My books</string>
+    <string name="notifications">Notifications</string>
+    <string name="select_theme_dialog_title">Select theme</string>
     <string name="settings_title">Settings</string>
     <string name="support_desc">Privacy policy</string>
     <string name="support_title"><![CDATA[Support & Privacy]]></string>
+    <string name="theme_title">App theme</string>
 </resources>

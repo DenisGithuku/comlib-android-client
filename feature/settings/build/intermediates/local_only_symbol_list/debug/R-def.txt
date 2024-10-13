@@ -6,6 +6,7 @@ drawable ic_books
 drawable ic_camera
 drawable ic_library
 drawable ic_management
+drawable ic_notifications
 drawable ic_person
 drawable ic_profile_placeholder
 drawable ic_settings
@@ -15,11 +16,16 @@ string account_title
 string app_management_desc
 string app_management_title
 string change_image
+string clear_cache_dialog_text
+string clear_cache_dialog_title
 string fetching_profile_indicator
 string general_desc
 string general_title
 string library_desc
 string library_title
+string notifications
+string select_theme_dialog_title
 string settings_title
 string support_desc
 string support_title
+string theme_title

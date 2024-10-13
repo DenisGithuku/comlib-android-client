@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.comlib.android.library.compose)
     alias(libs.plugins.comlib.android.feature)
     alias(libs.plugins.comlib.android.hilt)
+    alias(libs.plugins.kotlinx.serialization)
 }
 
 android { namespace = "com.githukudenis.comlib.feature.settings" }
@@ -26,4 +27,5 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.timber)
+    implementation(libs.kotlinx.serialization.json)
 }

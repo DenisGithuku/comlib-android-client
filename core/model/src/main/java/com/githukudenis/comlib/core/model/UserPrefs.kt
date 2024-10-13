@@ -23,7 +23,8 @@ data class UserPrefs(
     val readBooks: Set<String> = emptySet(),
     val bookmarkedBooks: Set<String> = emptySet(),
     val isSetup: Boolean = false,
-    val preferredGenres: Set<String> = emptySet()
+    val preferredGenres: Set<String> = emptySet(),
+    val isNotificationsEnabled: Boolean = false
 )
 
 enum class ThemeConfig {
