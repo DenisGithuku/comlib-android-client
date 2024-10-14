@@ -6,7 +6,7 @@
     <string name="owned">Owned</string>
     <string name="read">Read</string>
     <string name="favourites">Favourites</string>
-    <string name="empty_favourites">You have no favourite books. When you add a book to the favourites, it\'ll show up here.</string>
-    <string name="empty_read">You have no read books. When you add a book to the read, it\'ll show up here.</string>
-    <string name="empty_owned">You haven\'t read any book. When you read a book, it\'ll show up here.</string>
+    <string name="empty_favourites">You have no favourite books. When you add a book to favourites, it\'ll show up here.</string>
+    <string name="empty_read">You haven\'t read any book. When you read a book, it\'ll show up here.</string>
+    <string name="empty_owned">You haven\'t added any book. When you add a book, it\'ll show up here.</string>
 </resources>

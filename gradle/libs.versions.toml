@@ -50,6 +50,7 @@ timber = "5.0.1"
 turbine = "1.0.0"
 webview-compose = "0.33.6"
 work = "2.8.1"
+activityKtx = "1.8.0"
 
 [libraries]
 android-desugarJdkLibs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "androidDesugarJdkLibs" }
@@ -143,6 +144,7 @@ room-gradlePlugin = { group = "androidx.room", name = "room-gradle-plugin", vers
 firebase-crashlytics-gradlePlugin = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebaseCrashlyticsPlugin" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber"}
+androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }

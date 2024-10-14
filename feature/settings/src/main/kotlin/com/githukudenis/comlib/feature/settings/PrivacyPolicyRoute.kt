@@ -81,7 +81,7 @@ fun PrivacyPolicyRoute(onNavigateUp: () -> Unit) {
                     .padding(innerPadding)
                     .padding(horizontal = LocalDimens.current.sixteen)
         ) {
-            WebView(state = state, modifier = Modifier.padding(innerPadding))
+            WebView(state = state)
         }
     }
 }

@@ -51,9 +51,9 @@ constructor(
     val state =
         combine(_pagingData, userPrefsRepository.userPrefs) { pagingData, userPrefs ->
                 userPrefs.userId?.let { userId ->
-                    val booksResult = booksRepository.getAllBooks(pagingData.first, pagingData.second)
                     val readBooksIds = userPrefsRepository.userPrefs.first().readBooks
                     val favouriteBooksIds = userPrefsRepository.userPrefs.first().bookmarkedBooks
+                    val booksResult = booksRepository.getAllBooks(pagingData.first, pagingData.second)
                     when (booksResult) {
                         is ResponseResult.Failure -> {
                             MyBooksUiState(error = booksResult.error.message)
@@ -61,27 +61,24 @@ constructor(
                         is ResponseResult.Success -> {
                             MyBooksUiState(
                                 owned =
-                                    booksResult.data.data.books
-                                        .asSequence()
-                                        .filter { it.owner == userId }
-                                        .sortedBy { it.title }
-                                        .toList(),
+                                    booksResult.data.data.books.filter { it.owner == userId }.sortedBy { it.title },
                                 favourite =
                                     booksResult.data.data.books
-                                        .asSequence()
                                         .filter { favouriteBooksIds.contains(it.id) }
-                                        .sortedBy { it.title }
-                                        .toList(),
+                                        .sortedBy { it.title },
                                 read =
                                     booksResult.data.data.books
-                                        .asSequence()
                                         .filter { readBooksIds.contains(it.id) }
-                                        .sortedBy { it.title }
-                                        .toList()
+                                        .sortedBy { it.title },
+                                isLoading = false
                             )
                         }
                     }
                 } ?: MyBooksUiState()
             }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), MyBooksUiState())
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                MyBooksUiState(isLoading = true)
+            )
 }

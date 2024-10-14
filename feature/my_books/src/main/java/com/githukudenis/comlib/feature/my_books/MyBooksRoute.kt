@@ -32,6 +32,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -48,9 +50,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -65,6 +65,7 @@ import coil.compose.AsyncImage
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.core.model.book.Book
+import kotlinx.coroutines.launch
 
 @Composable
 fun MyBooksRoute(
@@ -88,19 +89,18 @@ fun MyBooksRoute(
 @Composable
 private fun MyBooksContent(
     state: MyBooksUiState,
-    //    onRetry: () -> Unit,
     onNavigateUp: () -> Unit,
     onOpenBookDetails: (String) -> Unit,
     onNavigateToAddBook: () -> Unit
 ) {
-    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
-
+    val scope = rememberCoroutineScope()
     val titles =
         listOf(
             stringResource(R.string.owned),
             stringResource(R.string.read),
             stringResource(R.string.favourites)
         )
+    val pagerState = rememberPagerState(pageCount = { titles.size })
 
     Scaffold(
         topBar = {
@@ -123,7 +123,7 @@ private fun MyBooksContent(
         },
         floatingActionButton = {
             AnimatedVisibility(
-                visible = selectedTabIndex == 0,
+                visible = pagerState.currentPage == 0,
                 enter =
                     slideInVertically(
                         initialOffsetY = { fullHeight -> fullHeight } // Slide in from bottom
@@ -150,105 +150,88 @@ private fun MyBooksContent(
             return@Scaffold
         }
 
-        //        if (state.error?.isNotEmpty() == true) {
-        //            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        //                Text(text = state.error, style = MaterialTheme.typography.bodyMedium)
-        //                return@Scaffold
-        //            }
-        //        }
-        //
-        //        if (state.books.isEmpty()) {
-        //            EmptyBooks()
-        //        }
-
-        //
-
-        LazyColumn(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-            item {
-                BooksTabRow(
-                    selectedTabIndex = selectedTabIndex,
-                    titles = titles,
-                    onSelectTabIndex = { selectedTabIndex = it }
-                )
-            }
+        Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
+            BooksTabRow(
+                selectedTabIndex = pagerState.currentPage,
+                titles = titles,
+                onSelectTabIndex = { scope.launch { pagerState.animateScrollToPage(it) } }
+            )
 
             if (state.error?.isNotEmpty() == true) {
-                item {
-                    Box(
-                        modifier =
-                            Modifier.fillParentMaxSize().padding(horizontal = LocalDimens.current.sixteen),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = state.error, style = MaterialTheme.typography.bodyMedium)
-                    }
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(horizontal = LocalDimens.current.sixteen),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = state.error,
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
                 }
-                return@LazyColumn
+
+                return@Column
             }
 
-            when (selectedTabIndex) {
-                0 -> {
-                    if (state.owned.isEmpty()) {
-                        item {
-                            Box(
-                                modifier =
-                                    Modifier.fillParentMaxSize().padding(horizontal = LocalDimens.current.sixteen),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    textAlign = TextAlign.Center,
-                                    text = stringResource(id = R.string.empty_owned),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-                        return@LazyColumn
+            if (state.isLoading) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CLibCircularProgressBar()
+                }
+                return@Column
+            }
+
+            HorizontalPager(
+                state = pagerState,
+                modifier = Modifier.fillMaxSize().padding(horizontal = LocalDimens.current.sixteen)
+            ) { page ->
+                when (page) {
+                    0 -> { // Owned books
+                        BookListScrollableContent(
+                            books = state.owned,
+                            emptyMessage = stringResource(id = R.string.empty_owned),
+                            onOpenBookDetails = onOpenBookDetails
+                        )
                     }
-                    items(state.owned, key = { it.id }) { book ->
-                        BookComponent(book = book, onOpenBookDetails = onOpenBookDetails)
+                    1 -> { // Read books
+                        BookListScrollableContent(
+                            books = state.read,
+                            emptyMessage = stringResource(id = R.string.empty_read),
+                            onOpenBookDetails = onOpenBookDetails
+                        )
+                    }
+                    2 -> { // Favourite books
+                        BookListScrollableContent(
+                            books = state.favourite,
+                            emptyMessage = stringResource(id = R.string.empty_favourites),
+                            onOpenBookDetails = onOpenBookDetails
+                        )
                     }
                 }
-                1 -> {
-                    if (state.read.isEmpty()) {
-                        item {
-                            Box(
-                                modifier =
-                                    Modifier.fillParentMaxSize().padding(horizontal = LocalDimens.current.sixteen),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    textAlign = TextAlign.Center,
-                                    text = stringResource(id = R.string.empty_read),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-                        return@LazyColumn
-                    }
-                    items(state.read, key = { it.id }) { book ->
-                        BookComponent(book = book, onOpenBookDetails = onOpenBookDetails)
-                    }
-                }
-                2 -> {
-                    if (state.favourite.isEmpty()) {
-                        item {
-                            Box(
-                                modifier =
-                                    Modifier.fillParentMaxSize().padding(horizontal = LocalDimens.current.sixteen),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    textAlign = TextAlign.Center,
-                                    text = stringResource(id = R.string.empty_favourites),
-                                    style = MaterialTheme.typography.bodyMedium
-                                )
-                            }
-                        }
-                    }
-                    items(state.favourite, key = { it.id }) { book ->
-                        BookComponent(book = book, onOpenBookDetails = onOpenBookDetails)
-                    }
-                }
-                else -> Unit
+            }
+        }
+    }
+}
+
+@Composable
+fun BookListScrollableContent(
+    books: List<Book>, // List of books to display
+    emptyMessage: String, // Empty state message
+    onOpenBookDetails: (String) -> Unit // Function to handle book click
+) {
+    if (books.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                textAlign = TextAlign.Center,
+                text = emptyMessage,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        }
+    } else {
+        LazyColumn(modifier = Modifier.fillMaxSize()) {
+            items(books, key = { it.id }) { book ->
+                BookComponent(book = book, onOpenBookDetails = onOpenBookDetails)
             }
         }
     }
@@ -286,21 +269,6 @@ fun BookComponent(book: Book, onOpenBookDetails: (String) -> Unit) {
                 contentDescription = "Open book details"
             )
         }
-    }
-}
-
-@Composable
-fun EmptyBooks() {
-    Box(
-        modifier = Modifier.fillMaxSize().padding(LocalDimens.current.extraLarge),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(R.string.empty_books_label),
-            style = MaterialTheme.typography.bodyLarge,
-            textAlign = TextAlign.Center,
-            color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
-        )
     }
 }
 
