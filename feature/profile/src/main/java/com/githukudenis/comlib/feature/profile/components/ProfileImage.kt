@@ -53,6 +53,7 @@ fun ProfileImage(imageUrl: String?, size: Dp = 100.dp, onChangeImage: () -> Unit
         Box(
             modifier =
                 Modifier.align(alignment = Alignment.BottomEnd)
+                    .padding(bottom = 8.dp, end = 8.dp)
                     .clip(CircleShape)
                     .background(color = MaterialTheme.colorScheme.background, shape = CircleShape)
                     .border(
@@ -66,7 +67,7 @@ fun ProfileImage(imageUrl: String?, size: Dp = 100.dp, onChangeImage: () -> Unit
         ) {
             Icon(
                 modifier = Modifier.padding(4.dp),
-                imageVector = Icons.Outlined.CameraAlt,
+                painter = painterResource(R.drawable.ic_camera),
                 contentDescription = stringResource(R.string.change_image),
                 tint = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.6f)
             )
