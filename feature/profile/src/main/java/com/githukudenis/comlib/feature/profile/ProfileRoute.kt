@@ -49,12 +49,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -169,9 +173,19 @@ fun ProfileScreen(
             )
         }
     ) { innerPadding ->
+        val focusRequester = remember { FocusRequester() }
+        val keyboardController = LocalSoftwareKeyboardController.current
+
         if (state.isLoading) {
             LoadingContent()
             return@Scaffold
+        }
+
+        LaunchedEffect(sheetIsOpen) {
+            if (sheetIsOpen) {
+                focusRequester.requestFocus()
+                keyboardController?.show()
+            }
         }
 
         if (sheetIsOpen) {
@@ -184,43 +198,40 @@ fun ProfileScreen(
                         Unit
                     }
                     ProfileItem.FIRSTNAME -> {
-                        state.user.firstname?.let {
-                            EditableProfileItem(
-                                value = it,
-                                onValueChange = onChangeFirstname,
-                                onSaveChanges = {
-                                    onSaveChanges()
-                                    sheetIsOpen = false
-                                },
-                                onCancel = { sheetIsOpen = false }
-                            )
-                        }
+                        EditableProfileItem(
+                            focusRequester = focusRequester,
+                            value = state.user.firstname ?: "",
+                            onValueChange = onChangeFirstname,
+                            onSaveChanges = {
+                                onSaveChanges()
+                                sheetIsOpen = false
+                            },
+                            onCancel = { sheetIsOpen = false }
+                        )
                     }
                     ProfileItem.LASTNAME -> {
-                        state.user.lastname?.let {
-                            EditableProfileItem(
-                                value = it,
-                                onValueChange = onChangeLastname,
-                                onSaveChanges = {
-                                    onSaveChanges()
-                                    sheetIsOpen = false
-                                },
-                                onCancel = { sheetIsOpen = false }
-                            )
-                        }
+                        EditableProfileItem(
+                            focusRequester = focusRequester,
+                            value = state.user.lastname ?: "",
+                            onValueChange = onChangeLastname,
+                            onSaveChanges = {
+                                onSaveChanges()
+                                sheetIsOpen = false
+                            },
+                            onCancel = { sheetIsOpen = false }
+                        )
                     }
                     ProfileItem.USERNAME -> {
-                        state.user.username?.let {
-                            EditableProfileItem(
-                                value = it,
-                                onValueChange = onChangeUsername,
-                                onSaveChanges = {
-                                    onSaveChanges()
-                                    sheetIsOpen = false
-                                },
-                                onCancel = { sheetIsOpen = false }
-                            )
-                        }
+                        EditableProfileItem(
+                            focusRequester = focusRequester,
+                            value = state.user.lastname ?: "",
+                            onValueChange = onChangeUsername,
+                            onSaveChanges = {
+                                onSaveChanges()
+                                sheetIsOpen = false
+                            },
+                            onCancel = { sheetIsOpen = false }
+                        )
                     }
                 }
             }
@@ -242,45 +253,39 @@ fun ProfileScreen(
                 )
             }
             item {
-                state.user.username?.let {
-                    EditProfileItem(
-                        title = stringResource(id = R.string.username_label),
-                        value = state.user.username ?: "",
-                        icon = R.drawable.ic_person,
-                        profileItem = ProfileItem.USERNAME
-                    ) {
+                EditProfileItem(
+                    title = stringResource(id = R.string.username_label),
+                    value = state.user.username ?: "",
+                    icon = R.drawable.ic_person,
+                    profileItem = ProfileItem.USERNAME
+                ) {
+                    selectedProfileItem = it
+                    sheetIsOpen = true
+                }
+            }
+            item {
+                EditProfileItem(
+                    title = stringResource(id = R.string.firstname_label),
+                    value = state.user.firstname ?: "",
+                    icon = R.drawable.ic_person,
+                    profileItem = ProfileItem.FIRSTNAME,
+                    onClick = {
                         selectedProfileItem = it
                         sheetIsOpen = true
                     }
-                }
+                )
             }
             item {
-                state.user.firstname?.let {
-                    EditProfileItem(
-                        title = stringResource(id = R.string.firstname_label),
-                        value = state.user.firstname ?: "",
-                        icon = R.drawable.ic_person,
-                        profileItem = ProfileItem.FIRSTNAME,
-                        onClick = {
-                            selectedProfileItem = it
-                            sheetIsOpen = true
-                        }
-                    )
-                }
-            }
-            item {
-                state.user.lastname?.let {
-                    EditProfileItem(
-                        title = stringResource(id = R.string.lastname_label),
-                        value = state.user.lastname ?: "",
-                        icon = R.drawable.ic_person,
-                        profileItem = ProfileItem.LASTNAME,
-                        onClick = {
-                            selectedProfileItem = it
-                            sheetIsOpen = true
-                        }
-                    )
-                }
+                EditProfileItem(
+                    title = stringResource(id = R.string.lastname_label),
+                    value = state.user.lastname ?: "",
+                    icon = R.drawable.ic_person,
+                    profileItem = ProfileItem.LASTNAME,
+                    onClick = {
+                        selectedProfileItem = it
+                        sheetIsOpen = true
+                    }
+                )
             }
 
             item {
@@ -406,6 +411,7 @@ private fun LoadingContent() {
 
 @Composable
 fun EditableProfileItem(
+    focusRequester: FocusRequester,
     value: String,
     onValueChange: (String) -> Unit,
     onSaveChanges: () -> Unit,
@@ -416,7 +422,7 @@ fun EditableProfileItem(
         verticalArrangement = Arrangement.spacedBy(LocalDimens.current.large)
     ) {
         CLibOutlinedTextField(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().focusRequester(focusRequester),
             value = value,
             onValueChange = onValueChange
         )
@@ -431,7 +437,7 @@ fun EditableProfileItem(
                     style = MaterialTheme.typography.labelSmall
                 )
             }
-            CLibTextButton(onClick = onSaveChanges) {
+            CLibTextButton(onClick = onSaveChanges, enabled = value.length >= 2) {
                 Text(
                     text = stringResource(id = R.string.save_label),
                     style = MaterialTheme.typography.labelSmall

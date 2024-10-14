@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-10-13T09:12:39" hostname="githukudenis" time="2.318">
+<testsuite name="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-10-14T18:49:52" hostname="githukudenis" time="1.439">
   <properties/>
-  <testcase name="testToggleChangeTheme" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="1.723"/>
-  <testcase name="testToggleAppearance" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.025"/>
-  <testcase name="testToggleNotifications" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.02"/>
-  <testcase name="testToggleClearCache" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.02"/>
-  <testcase name="testInitialization" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.049"/>
-  <testcase name="testChangeTheme" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.48"/>
+  <testcase name="testToggleChangeTheme" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="1.338"/>
+  <testcase name="testToggleAppearance" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.019"/>
+  <testcase name="testToggleNotifications" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.018"/>
+  <testcase name="testToggleClearCache" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.015"/>
+  <testcase name="testInitialization" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.03"/>
+  <testcase name="testChangeTheme" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.018"/>
   <system-out><![CDATA[]]></system-out>
   <system-err><![CDATA[]]></system-err>
 </testsuite>

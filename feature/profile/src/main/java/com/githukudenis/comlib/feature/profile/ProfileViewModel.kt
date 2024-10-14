@@ -94,15 +94,15 @@ constructor(
     }
 
     fun onChangeFirstname(value: String) {
-        _state.update { it.copy(user = it.user.copy(firstname = value)) }
+        _state.update { it.copy(user = it.user.copy(firstname = value.trim())) }
     }
 
     fun onChangeLastname(value: String) {
-        _state.update { it.copy(user = it.user.copy(lastname = value)) }
+        _state.update { it.copy(user = it.user.copy(lastname = value.trim())) }
     }
 
     fun onChangeUsername(value: String) {
-        _state.update { it.copy(user = it.user.copy(username = value)) }
+        _state.update { it.copy(user = it.user.copy(username = value.trim())) }
     }
 
     fun onChangePhoto(value: Uri) {
