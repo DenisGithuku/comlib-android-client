@@ -17,6 +17,7 @@
 package com.githukudenis.comlib.feature.home
 
 import androidx.test.filters.MediumTest
+import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeMilestoneRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
@@ -39,11 +40,11 @@ class HomeViewModelTest {
 
     @get:Rule val mainCoroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
-    lateinit var homeViewModel: HomeViewModel
-    lateinit var userPrefsRepository: FakeUserPrefsRepository
-    lateinit var userRepository: FakeUserRepository
-    lateinit var booksRepository: FakeBooksRepository
-    lateinit var bookMilestoneRepository: FakeMilestoneRepository
+    private lateinit var homeViewModel: HomeViewModel
+    private lateinit var userPrefsRepository: FakeUserPrefsRepository
+    private lateinit var userRepository: FakeUserRepository
+    private lateinit var booksRepository: FakeBooksRepository
+    private lateinit var bookMilestoneRepository: FakeMilestoneRepository
 
     @Before
     fun setup() {
@@ -69,7 +70,12 @@ class HomeViewModelTest {
             homeViewModel.state.collect()
         }
         advanceUntilIdle()
-        assertEquals(homeViewModel.state.value.bookmarks.containsAll(setOf("1", "2", "3")), true)
+        assertEquals(
+            (homeViewModel.state.value.availableState as FetchItemState.Success).data.count {
+                it.isFavourite
+            },
+            3
+        )
     }
 
     @Test
@@ -79,6 +85,9 @@ class HomeViewModelTest {
         }
         homeViewModel.onToggleFavourite("4")
         advanceUntilIdle()
-        assertContains(homeViewModel.state.value.bookmarks, "4")
+        assertContains(
+            (homeViewModel.state.value.availableState as FetchItemState.Success).data.map { it.book.id },
+            "4"
+        )
     }
 }

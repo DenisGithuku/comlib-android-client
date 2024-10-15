@@ -40,7 +40,8 @@ class FakeUserRepository : UserRepository {
                     preferredGenres = listOf(),
                     firstname = "$it.firstname",
                     id = "owner@$it",
-                    lastname = "$it.lastname"
+                    lastname = "$it.lastname",
+                    image = "$it.png"
                 )
             }
             .toMutableList()

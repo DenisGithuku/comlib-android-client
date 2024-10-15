@@ -19,12 +19,17 @@ package com.githukudenis.comlib.feature.auth.presentation.login
 import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.common.MessageType
 import com.githukudenis.comlib.core.common.UserMessage
+import com.githukudenis.comlib.core.data.repository.AuthRepository
+import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -37,14 +42,21 @@ import org.junit.Test
 class LoginViewModelTest {
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
-    lateinit var viewModel: LoginViewModel
+    private lateinit var viewModel: LoginViewModel
+    private lateinit var authRepository: AuthRepository
+    private lateinit var userRepository: UserRepository
+    private lateinit var userPrefsRepository: UserPrefsRepository
 
     @Before
     fun setUp() {
+        authRepository = FakeAuthRepository()
+        userRepository = FakeUserRepository()
+        userPrefsRepository = FakeUserPrefsRepository()
         viewModel =
             LoginViewModel(
-                authRepository = FakeAuthRepository(),
-                userPrefsRepository = FakeUserPrefsRepository()
+                authRepository = authRepository,
+                userPrefsRepository = userPrefsRepository,
+                userRepository = userRepository
             )
     }
 
@@ -105,6 +117,8 @@ class LoginViewModelTest {
         viewModel.onEvent(LoginUiEvent.SubmitData)
         advanceUntilIdle()
         assertTrue(viewModel.state.value.loginSuccess)
+        println(userPrefsRepository.userPrefs.first().isSetup)
+        assertTrue(userPrefsRepository.userPrefs.first().isSetup)
     }
 
     @Test

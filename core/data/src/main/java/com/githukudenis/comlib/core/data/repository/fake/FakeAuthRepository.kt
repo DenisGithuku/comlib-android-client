@@ -76,7 +76,7 @@ class FakeAuthRepository : AuthRepository {
             val userExists =
                 users.any { it.email == userLogInDTO.email && it.password == userLogInDTO.password }
             if (userExists) {
-                onSuccess(UserLoginResponse(token = "token", status = "success", id = "id"))
+                onSuccess(UserLoginResponse(token = "token", status = "success", id = "owner@5"))
             } else {
                 onError("Could not find user with those details")
             }

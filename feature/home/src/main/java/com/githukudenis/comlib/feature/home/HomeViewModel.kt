@@ -48,8 +48,6 @@ enum class TimePeriod {
 data class HomeScreenState(
     val pagerState: Triple<PaginationState, Int, Int> = Triple(PaginationState.NotLoading, 1, 10),
     val user: FetchItemState<User?> = FetchItemState.Loading,
-    val reads: List<String> = emptyList(),
-    val bookmarks: List<String> = emptyList(),
     val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
     val timePeriod: TimePeriod = TimePeriod.MORNING
@@ -108,38 +106,39 @@ constructor(
         }
 
     private val _books: Flow<FetchItemState<List<BookUiModel>>> =
-        _pagingData.mapLatest { data ->
-            val (_, page, limit) = data
-            _pagingData.value = _pagingData.value.copy(first = PaginationState.Paginating)
-            when (val result = booksRepository.getAllBooks(page = page, limit = limit)) {
-                is ResponseResult.Failure -> {
-                    _pagingData.value = _pagingData.value.copy(first = PaginationState.NotLoading)
-                    FetchItemState.Error(message = result.error.message)
-                }
-                is ResponseResult.Success -> {
-                    val books = result.data.data.books.map { BookUiModel(book = it) }
-                    if (books.isEmpty()) {
-                        _pagingData.value = _pagingData.value.copy(first = PaginationState.Exhausted)
+        combine(_pagingData, userPrefsRepository.userPrefs) { (_, page, limit), prefs ->
+            if (_booksCache.isNotEmpty()) {
+                val updatedCache =
+                    _booksCache.map { bookUiModel ->
+                        bookUiModel.copy(isFavourite = bookUiModel.book._id in prefs.bookmarkedBooks)
                     }
-                    _booksCache.addAll(books)
-                    FetchItemState.Success(_booksCache)
+                FetchItemState.Success(updatedCache)
+            } else {
+                when (val result = booksRepository.getAllBooks(page = page, limit = limit)) {
+                    is ResponseResult.Failure -> {
+                        FetchItemState.Error(message = result.error.message)
+                    }
+                    is ResponseResult.Success -> {
+                        val books =
+                            result.data.data.books.map {
+                                BookUiModel(book = it, isFavourite = it._id in prefs.bookmarkedBooks)
+                            }
+
+                        // update cache to prevent unnecessary re-fetching
+                        _booksCache.addAll(books)
+                        FetchItemState.Success(_booksCache)
+                    }
                 }
             }
         }
 
     val state: StateFlow<HomeScreenState> =
-        combine(
-                userPrefsRepository.userPrefs.mapLatest { prefs ->
-                    prefs.bookmarkedBooks to prefs.readBooks
-                },
-                bookMilestoneRepository.bookMilestone,
-                _books,
-                _userProfile,
-                _pagingData
-            ) { (bookmarks, read), milestone, allBooks, profile, pagingData ->
+        combine(bookMilestoneRepository.bookMilestone, _books, _userProfile, _pagingData) {
+                milestone,
+                allBooks,
+                profile,
+                pagingData ->
                 HomeScreenState(
-                    bookmarks = bookmarks.toList(),
-                    reads = read.toList(),
                     streakState = StreakState(bookMilestone = milestone),
                     availableState = allBooks,
                     user = profile,
