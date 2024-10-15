@@ -124,7 +124,7 @@ constructor(
                                 BookUiModel(book = it, isFavourite = it._id in prefs.bookmarkedBooks)
                             }
 
-                        // update only the items that changed their favourite status
+                        // update cache to prevent unnecessary re-fetching
                         _booksCache.addAll(books)
                         FetchItemState.Success(_booksCache)
                     }
