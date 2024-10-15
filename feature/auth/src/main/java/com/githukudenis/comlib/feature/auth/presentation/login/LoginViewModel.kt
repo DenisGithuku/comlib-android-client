@@ -36,6 +36,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -151,9 +152,11 @@ constructor(
             authRepository.login(
                 userLogInDTO = UserLoginDTO(email = email.trim(), password = password.trim()),
                 onSuccess = { response ->
+                    val userData = userPrefsRepository.userPrefs.first().userProfileData
                     userPrefsRepository.setToken(response.token)
                     userPrefsRepository.setUserId(response.id)
                     userPrefsRepository.setSetupStatus(isSetup(response.id))
+                    userPrefsRepository.setUserProfileData(userData.copy(email = email.trim()))
                     _state.update { prevState -> prevState.copy(isLoading = false, loginSuccess = true) }
                 },
                 onError = { error ->

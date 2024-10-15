@@ -30,6 +30,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -153,8 +154,16 @@ constructor(
                     }
                 }
                 is ResponseResult.Success -> {
+                    val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
                     userPrefsRepository.setToken(response.data.token)
                     userPrefsRepository.setUserId(response.data.id)
+                    userPrefsRepository.setUserProfileData(
+                        userProfileData.copy(
+                            email = _state.value.formState.email.trim(),
+                            firstname = _state.value.formState.firstname.trim(),
+                            lastname = _state.value.formState.lastname.trim()
+                        )
+                    )
                     _state.update { prevState -> prevState.copy(isLoading = false, signUpSuccess = true) }
                 }
             }

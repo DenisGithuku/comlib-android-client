@@ -24,8 +24,8 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.ThemeConfigConverter
-import com.githukudenis.comlib.core.model.UserProfileData
 import com.githukudenis.comlib.core.model.UserPrefs
+import com.githukudenis.comlib.core.model.UserProfileData
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -45,12 +45,14 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
                 preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet(),
                 userId = prefs[PreferenceKeys.userIdPrefsKey],
                 isNotificationsEnabled = prefs[PreferenceKeys.isNotificationsEnabled] ?: false,
-                userProfileData = UserProfileData(
-                    firstname = prefs[PreferenceKeys.userDataFirstnameKey],
-                    lastname = prefs[PreferenceKeys.userDataLastnameKey],
-                    email = prefs[PreferenceKeys.userDataEmailKey],
-                    profilePicturePath = prefs[PreferenceKeys.userDataProfilePictureKey]
-                )
+                userProfileData =
+                    UserProfileData(
+                        username = prefs[PreferenceKeys.userDataUsernameKey],
+                        firstname = prefs[PreferenceKeys.userDataFirstnameKey],
+                        lastname = prefs[PreferenceKeys.userDataLastnameKey],
+                        email = prefs[PreferenceKeys.userDataEmailKey],
+                        profilePicturePath = prefs[PreferenceKeys.userDataProfilePictureKey]
+                    )
             )
         }
 
@@ -89,6 +91,7 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
             prefs.remove(PreferenceKeys.readBooks)
             prefs.remove(PreferenceKeys.bookmarkedBooks)
             prefs.remove(PreferenceKeys.preferredGenres)
+            prefs.remove(PreferenceKeys.userDataUsernameKey)
             prefs.remove(PreferenceKeys.userDataFirstnameKey)
             prefs.remove(PreferenceKeys.userDataLastnameKey)
             prefs.remove(PreferenceKeys.userDataEmailKey)
@@ -106,6 +109,7 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
 
     suspend fun updateUserData(userData: UserProfileData) {
         prefsDataStore.edit { prefs ->
+            prefs[PreferenceKeys.userDataUsernameKey] = userData.username ?: ""
             prefs[PreferenceKeys.userDataFirstnameKey] = userData.firstname ?: ""
             prefs[PreferenceKeys.userDataLastnameKey] = userData.lastname ?: ""
             prefs[PreferenceKeys.userDataEmailKey] = userData.email ?: ""
@@ -123,6 +127,7 @@ object PreferenceKeys {
     val preferredGenres = stringSetPreferencesKey("preferredGenres")
     val userIdPrefsKey = stringPreferencesKey("userId")
     val isNotificationsEnabled = booleanPreferencesKey("isNotificationsEnabled")
+    val userDataUsernameKey = stringPreferencesKey("userDataUsername")
     val userDataFirstnameKey = stringPreferencesKey("userDataFirstname")
     val userDataLastnameKey = stringPreferencesKey("userDataLastname")
     val userDataEmailKey = stringPreferencesKey("userDataEmail")

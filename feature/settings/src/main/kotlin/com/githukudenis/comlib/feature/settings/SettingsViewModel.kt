@@ -75,6 +75,7 @@ constructor(
                 SettingsUiState(
                     profileItemState = profile,
                     selectedTheme = prefs.themeConfig,
+                    userProfileData = prefs.userProfileData,
                     isNotificationsToggled = prefs.isNotificationsEnabled,
                     uiComponentsState = componentState
                 )

@@ -24,6 +24,7 @@ import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -127,6 +128,19 @@ constructor(
                                             }
                                         }
                                         is ResponseResult.Success -> {
+                                            val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
+
+                                            // Await profile path
+                                            val profilePathDeferred = async {
+                                                userPrefsRepository.setProfilePicturePath(selectedImageUri)
+                                            }
+
+                                            userPrefsRepository.setUserProfileData(
+                                                userProfileData.copy(
+                                                    username = userName,
+                                                    profilePicturePath = profilePathDeferred.await()
+                                                )
+                                            )
                                             _state.update { prevState ->
                                                 prevState.copy(
                                                     isSuccess = true,
@@ -144,5 +158,9 @@ constructor(
                     }
                 } ?: return@launch
         }
+    }
+
+    private fun setProfilePicturePath(imageUri: Uri) {
+        viewModelScope.launch {}
     }
 }

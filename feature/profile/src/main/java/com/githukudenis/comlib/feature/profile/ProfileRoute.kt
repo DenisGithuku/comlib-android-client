@@ -243,7 +243,7 @@ fun ProfileScreen(
         ) {
             item {
                 ProfileImage(
-                    imageUrl = state.user.image,
+                    imagePath = state.user.image,
                     size = 200.dp,
                     onChangeImage = {
                         imagePickLauncher.launch(

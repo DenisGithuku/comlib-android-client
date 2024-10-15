@@ -17,6 +17,7 @@
 package com.githukudenis.comlib.feature.settings
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -54,13 +55,14 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertContentDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.core.model.ThemeConfig
+import com.githukudenis.comlib.core.model.UserProfileData
 import com.githukudenis.comlib.feature.settings.components.AppearanceItem
 import com.githukudenis.comlib.feature.settings.components.SettingListItem
 import com.githukudenis.comlib.feature.settings.components.ToggleAbleAppearanceItem
@@ -194,7 +196,7 @@ fun SettingsScreen(
         }
 
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-            ProfileSection(profileItemState = state.profileItemState, onChangeImage = onChangeImage)
+            ProfileSection(userProfileData = state.userProfileData, onChangeImage = onChangeImage)
             SettingListItem(
                 icon = R.drawable.ic_person,
                 onClick = onEditProfile,
@@ -230,14 +232,35 @@ fun SettingsScreen(
 }
 
 @Composable
-fun ProfileSection(profileItemState: ProfileItemState, onChangeImage: () -> Unit) {
-    when (profileItemState) {
-        is ProfileItemState.Error -> Text(text = profileItemState.message)
-        ProfileItemState.Loading -> ProfileLoader()
-        is ProfileItemState.Success ->
-            ProfileLoaded(profile = profileItemState.profile, onChangeImage = onChangeImage)
+fun ProfileSection(userProfileData: UserProfileData, onChangeImage: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.sixteen),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        ProfileImage(imagePath = userProfileData.profilePicturePath, onChangeImage = onChangeImage)
+        Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
+        Column(modifier = Modifier) {
+            Text(
+                text =
+                    "${userProfileData.firstname?.capitalize()} ${userProfileData.lastname?.capitalize()}",
+                style = MaterialTheme.typography.titleSmall
+            )
+            userProfileData.email?.let { email ->
+                Text(text = email, style = MaterialTheme.typography.bodyMedium)
+            }
+        }
     }
 }
+
+// @Composable
+// fun ProfileSection(profileItemState: ProfileItemState, onChangeImage: () -> Unit) {
+//    when (profileItemState) {
+//        is ProfileItemState.Error -> Text(text = profileItemState.message)
+//        ProfileItemState.Loading -> ProfileLoader()
+//        is ProfileItemState.Success ->
+//            ProfileLoaded(profile = profileItemState.profile, onChangeImage = onChangeImage)
+//    }
+// }
 
 @Composable
 fun ProfileLoader() {
@@ -258,7 +281,7 @@ fun ProfileLoaded(profile: Profile, onChangeImage: () -> Unit) {
         modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.sixteen),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        ProfileImage(imageUrl = profile.imageUrl, onChangeImage = onChangeImage)
+        ProfileImage(imagePath = profile.imageUrl, onChangeImage = onChangeImage)
         Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
         Column(modifier = Modifier) {
             Text(
@@ -271,14 +294,21 @@ fun ProfileLoaded(profile: Profile, onChangeImage: () -> Unit) {
 }
 
 @Composable
-fun ProfileImage(imageUrl: String?, size: Dp = 80.dp, onChangeImage: () -> Unit) {
+fun ProfileImage(imagePath: String?, size: Dp = 80.dp, onChangeImage: () -> Unit) {
     Box(modifier = Modifier) {
-        AsyncImage(
-            model = imageUrl,
+        //        AsyncImage(
+        //            model = imageUrl,
+        //            modifier = Modifier.size(size).clip(CircleShape),
+        //            contentScale = ContentScale.Crop,
+        //            contentDescription = null,
+        //            placeholder = painterResource(id = R.drawable.ic_profile_placeholder)
+        //        )
+
+        Image(
             modifier = Modifier.size(size).clip(CircleShape),
             contentScale = ContentScale.Crop,
-            contentDescription = null,
-            placeholder = painterResource(id = R.drawable.ic_profile_placeholder)
+            painter = rememberAsyncImagePainter(imagePath),
+            contentDescription = "User profile"
         )
         Box(
             modifier =

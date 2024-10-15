@@ -24,7 +24,7 @@ import com.githukudenis.comlib.core.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.UserRepository
-import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.core.model.UserProfileData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
 import java.time.ZoneId
@@ -47,7 +47,7 @@ enum class TimePeriod {
 
 data class HomeScreenState(
     val pagerState: Triple<PaginationState, Int, Int> = Triple(PaginationState.NotLoading, 1, 10),
-    val user: FetchItemState<User?> = FetchItemState.Loading,
+    val userProfileData: UserProfileData = UserProfileData(),
     val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
     val timePeriod: TimePeriod = TimePeriod.MORNING
@@ -88,22 +88,22 @@ constructor(
             return time
         }
 
-    private val _userProfile: Flow<FetchItemState<User?>> =
-        userPrefsRepository.userPrefs.mapLatest { prefs ->
-            prefs.userId?.let { id ->
-                when (val profile = userRepository.getUserById(id)) {
-                    is ResponseResult.Failure -> {
-                        FetchItemState.Error(message = profile.error.message)
-                    }
-                    is ResponseResult.Success -> {
-                        FetchItemState.Success(data = profile.data.data.user)
-                    }
-                }
-            }
-                ?: FetchItemState.Error(
-                    message = "You are not logged in. Please log in to access the application"
-                )
-        }
+    //    private val _userProfile: Flow<FetchItemState<User?>> =
+    //        userPrefsRepository.userPrefs.mapLatest { prefs ->
+    //            prefs.userId?.let { id ->
+    //                when (val profile = userRepository.getUserById(id)) {
+    //                    is ResponseResult.Failure -> {
+    //                        FetchItemState.Error(message = profile.error.message)
+    //                    }
+    //                    is ResponseResult.Success -> {
+    //                        FetchItemState.Success(data = profile.data.data.user)
+    //                    }
+    //                }
+    //            }
+    //                ?: FetchItemState.Error(
+    //                    message = "You are not logged in. Please log in to access the application"
+    //                )
+    //        }
 
     private val _books: Flow<FetchItemState<List<BookUiModel>>> =
         combine(_pagingData, userPrefsRepository.userPrefs) { (_, page, limit), prefs ->
@@ -133,15 +133,16 @@ constructor(
         }
 
     val state: StateFlow<HomeScreenState> =
-        combine(bookMilestoneRepository.bookMilestone, _books, _userProfile, _pagingData) {
-                milestone,
-                allBooks,
-                profile,
-                pagingData ->
+        combine(
+                bookMilestoneRepository.bookMilestone,
+                _books,
+                _pagingData,
+                userPrefsRepository.userPrefs
+            ) { milestone, allBooks, pagingData, userPrefs ->
                 HomeScreenState(
                     streakState = StreakState(bookMilestone = milestone),
                     availableState = allBooks,
-                    user = profile,
+                    userProfileData = userPrefs.userProfileData,
                     timePeriod = _timePeriod,
                     pagerState = pagingData
                 )

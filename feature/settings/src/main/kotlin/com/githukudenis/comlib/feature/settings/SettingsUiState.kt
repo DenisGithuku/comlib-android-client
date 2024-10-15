@@ -17,11 +17,13 @@
 package com.githukudenis.comlib.feature.settings
 
 import com.githukudenis.comlib.core.model.ThemeConfig
+import com.githukudenis.comlib.core.model.UserProfileData
 
 data class SettingsUiState(
     val profileItemState: ProfileItemState = ProfileItemState.Loading,
     val availableThemes: List<ThemeConfig> =
         listOf(ThemeConfig.SYSTEM, ThemeConfig.LIGHT, ThemeConfig.DARK),
+    val userProfileData: UserProfileData = UserProfileData(),
     val selectedTheme: ThemeConfig = ThemeConfig.SYSTEM,
     val isNotificationsToggled: Boolean = false,
     val uiComponentsState: UiComponentsState = UiComponentsState()

@@ -29,6 +29,7 @@ data class UserPrefs(
 )
 
 data class UserProfileData(
+    val username: String? = null,
     val firstname: String? = null,
     val lastname: String? = null,
     val email: String? = null,
