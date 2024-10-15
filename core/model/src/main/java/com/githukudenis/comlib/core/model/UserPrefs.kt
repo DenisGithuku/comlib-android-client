@@ -25,10 +25,10 @@ data class UserPrefs(
     val isSetup: Boolean = false,
     val preferredGenres: Set<String> = emptySet(),
     val isNotificationsEnabled: Boolean = false,
-    val userData: UserData = UserData()
+    val userProfileData: UserProfileData = UserProfileData()
 )
 
-data class UserData(
+data class UserProfileData(
     val firstname: String? = null,
     val lastname: String? = null,
     val email: String? = null,

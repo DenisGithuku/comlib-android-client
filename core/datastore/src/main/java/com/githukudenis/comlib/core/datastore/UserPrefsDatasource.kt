@@ -24,6 +24,7 @@ import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.core.stringSetPreferencesKey
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.ThemeConfigConverter
+import com.githukudenis.comlib.core.model.UserProfileData
 import com.githukudenis.comlib.core.model.UserPrefs
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
@@ -43,7 +44,13 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
                 isSetup = prefs[PreferenceKeys.isSetup] ?: false,
                 preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet(),
                 userId = prefs[PreferenceKeys.userIdPrefsKey],
-                isNotificationsEnabled = prefs[PreferenceKeys.isNotificationsEnabled] ?: false
+                isNotificationsEnabled = prefs[PreferenceKeys.isNotificationsEnabled] ?: false,
+                userProfileData = UserProfileData(
+                    firstname = prefs[PreferenceKeys.userDataFirstnameKey],
+                    lastname = prefs[PreferenceKeys.userDataLastnameKey],
+                    email = prefs[PreferenceKeys.userDataEmailKey],
+                    profilePicturePath = prefs[PreferenceKeys.userDataProfilePictureKey]
+                )
             )
         }
 
@@ -79,6 +86,13 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
             prefs.remove(PreferenceKeys.tokenPreferenceKey)
             prefs.remove(PreferenceKeys.userIdPrefsKey)
             prefs.remove(PreferenceKeys.themeConfigPreferenceKey)
+            prefs.remove(PreferenceKeys.readBooks)
+            prefs.remove(PreferenceKeys.bookmarkedBooks)
+            prefs.remove(PreferenceKeys.preferredGenres)
+            prefs.remove(PreferenceKeys.userDataFirstnameKey)
+            prefs.remove(PreferenceKeys.userDataLastnameKey)
+            prefs.remove(PreferenceKeys.userDataEmailKey)
+            prefs.remove(PreferenceKeys.userDataProfilePictureKey)
         }
     }
 
@@ -88,6 +102,15 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
 
     suspend fun toggleNotifications(isToggled: Boolean) {
         prefsDataStore.edit { prefs -> prefs[PreferenceKeys.isNotificationsEnabled] = isToggled }
+    }
+
+    suspend fun updateUserData(userData: UserProfileData) {
+        prefsDataStore.edit { prefs ->
+            prefs[PreferenceKeys.userDataFirstnameKey] = userData.firstname ?: ""
+            prefs[PreferenceKeys.userDataLastnameKey] = userData.lastname ?: ""
+            prefs[PreferenceKeys.userDataEmailKey] = userData.email ?: ""
+            prefs[PreferenceKeys.userDataProfilePictureKey] = userData.profilePicturePath ?: ""
+        }
     }
 }
 
@@ -100,4 +123,8 @@ object PreferenceKeys {
     val preferredGenres = stringSetPreferencesKey("preferredGenres")
     val userIdPrefsKey = stringPreferencesKey("userId")
     val isNotificationsEnabled = booleanPreferencesKey("isNotificationsEnabled")
+    val userDataFirstnameKey = stringPreferencesKey("userDataFirstname")
+    val userDataLastnameKey = stringPreferencesKey("userDataLastname")
+    val userDataEmailKey = stringPreferencesKey("userDataEmail")
+    val userDataProfilePictureKey = stringPreferencesKey("userDataProfilePicture")
 }
