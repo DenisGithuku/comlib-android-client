@@ -218,9 +218,7 @@ fun HomeRouteContent(
                     }
                     is FetchItemState.Success -> {
                         val books =
-                            state.availableState.data.map { model ->
-                                model.copy(isFavourite = model.isFavourite == model.book.id in state.bookmarks)
-                            }
+                            state.availableState.data
 
                         if (books.isNotEmpty()) {
                             val bookListState = rememberLazyListState()

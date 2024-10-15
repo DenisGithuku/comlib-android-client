@@ -69,8 +69,8 @@ constructor(
                     is ResponseResult.Success -> {
                         val bookUiModel =
                             result.data.data.book.toBookUiModel(
-                                isRead = read.contains(bookId),
-                                isFavourite = bookmarked.contains(bookId),
+                                isRead = bookId in read,
+                                isFavourite = bookId in bookmarked,
                                 getGenre = { genreId ->
                                     fetchGenreById(genreId) ?: Genre(_id = genreId, id = genreId, name = "Unknown")
                                 }
