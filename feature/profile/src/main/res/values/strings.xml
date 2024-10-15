@@ -13,7 +13,7 @@
     <string name="profile_title">Profile</string>
     <string name="sign_out_dialog_title">Sign out</string>
     <string name="sign_out_dialog_text">You are about to be signed out.</string>
-    <string name="screen_title">Edit Profile</string>
+    <string name="screen_title">Profile</string>
     <string name="back">Back</string>
     <string name="check">Check</string>
     <string name="edit">Edit</string>
@@ -26,4 +26,5 @@
     <string name="username_label">Username</string>
     <string name="no_media_selected">No media selected!</string>
     <string name="fetching_profile_indicator">Fetching profile...</string>
+    <string name="update_success">Profile updated successfully.</string>
 </resources>

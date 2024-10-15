@@ -16,21 +16,25 @@
 */
 package com.githukudenis.comlib.feature.my_books
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
-import com.githukudenis.comlib.core.common.StatefulViewModel
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.book.Book
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.stateIn
 
 data class MyBooksUiState(
     val isLoading: Boolean = false,
-    val books: List<Book> = emptyList(),
+    val owned: List<Book> = emptyList(),
+    val read: List<Book> = emptyList(),
+    val favourite: List<Book> = emptyList(),
     val error: String? = null
 )
 
@@ -40,36 +44,41 @@ class MyBooksViewModel
 constructor(
     private val userPrefsRepository: UserPrefsRepository,
     private val booksRepository: BooksRepository
-) : StatefulViewModel<MyBooksUiState>(MyBooksUiState()) {
+) : ViewModel() {
 
     private val _pagingData: MutableStateFlow<Pair<Int, Int>> = MutableStateFlow(Pair(1, 10))
 
-    init {
-        getBooks()
-    }
-
-    private fun getBooks() {
-        viewModelScope.launch {
-            update { copy(isLoading = true) }
-            val books = booksRepository.getAllBooks(_pagingData.value.first, _pagingData.value.second)
-            val userId = userPrefsRepository.userPrefs.first().userId
-            when (books) {
-                is ResponseResult.Failure -> {
-                    update { copy(isLoading = false, error = books.error.message) }
-                }
-                is ResponseResult.Success -> {
-                    update {
-                        copy(
-                            isLoading = false,
-                            books = books.data.data.books.filter { it.owner == userId }.sortedBy { it.title }
-                        )
+    val state =
+        combine(_pagingData, userPrefsRepository.userPrefs) { pagingData, userPrefs ->
+                userPrefs.userId?.let { userId ->
+                    val readBooksIds = userPrefsRepository.userPrefs.first().readBooks
+                    val favouriteBooksIds = userPrefsRepository.userPrefs.first().bookmarkedBooks
+                    val booksResult = booksRepository.getAllBooks(pagingData.first, pagingData.second)
+                    when (booksResult) {
+                        is ResponseResult.Failure -> {
+                            MyBooksUiState(error = booksResult.error.message)
+                        }
+                        is ResponseResult.Success -> {
+                            MyBooksUiState(
+                                owned =
+                                    booksResult.data.data.books.filter { it.owner == userId }.sortedBy { it.title },
+                                favourite =
+                                    booksResult.data.data.books
+                                        .filter { favouriteBooksIds.contains(it.id) }
+                                        .sortedBy { it.title },
+                                read =
+                                    booksResult.data.data.books
+                                        .filter { readBooksIds.contains(it.id) }
+                                        .sortedBy { it.title },
+                                isLoading = false
+                            )
+                        }
                     }
-                }
+                } ?: MyBooksUiState()
             }
-        }
-    }
-
-    fun onRetry() {
-        getBooks()
-    }
+            .stateIn(
+                viewModelScope,
+                SharingStarted.WhileSubscribed(5000),
+                MyBooksUiState(isLoading = true)
+            )
 }

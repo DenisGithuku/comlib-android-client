@@ -24,14 +24,13 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.githukudenis.comlib.BuildConfig
 import com.githukudenis.comlib.app.AppState
 import com.githukudenis.comlib.feature.add_book.AddBookRoute
 import com.githukudenis.comlib.feature.book_detail.BookDetailRoute
-import com.githukudenis.comlib.feature.edit.EditProfileScreen
 import com.githukudenis.comlib.feature.genre_setup.GenreSetupScreen
 import com.githukudenis.comlib.feature.my_books.MyBooksRoute
 import com.githukudenis.comlib.feature.profile.ProfileRoute
+import com.githukudenis.comlib.feature.settings.PrivacyPolicyRoute
 import com.githukudenis.comlib.feature.streak.StreakScreen
 import com.githukudenis.comlib.onboarding.OnBoardingScreen
 import com.githukudenis.comlib.splashScreen
@@ -117,15 +116,6 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
             route = ComlibDestination.Profile.route
         ) {
             ProfileRoute(
-                versionName = BuildConfig.VERSION_NAME,
-                onBackPressed = { appState.popBackStack() },
-                onOpenMyBooks = {
-                    appState.navigate(
-                        route = ComlibDestination.MyBooks.route,
-                        popUpTo = ComlibDestination.MyBooks.route,
-                        inclusive = true
-                    )
-                },
                 onSignOut = {
                     appState.navigate(
                         route = ComlibDestination.AuthGraph.route,
@@ -133,13 +123,7 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
                         inclusive = true
                     )
                 },
-                onEditProfile = {
-                    appState.navigate(
-                        route = ComlibDestination.EditProfile.route,
-                        popUpTo = ComlibDestination.EditProfile.route,
-                        inclusive = true
-                    )
-                }
+                onNavigateUp = { appState.popBackStack() }
             )
         }
         composable(
@@ -219,8 +203,16 @@ fun ComlibNavGraph(appState: AppState, startDestination: String, isSetupComplete
         ) {
             StreakScreen(onNavigateUp = { appState.popBackStack() })
         }
-        composable(route = ComlibDestination.EditProfile.route) {
-            EditProfileScreen(onNavigateUp = { appState.popBackStack() })
+        composable(
+            enterTransition = {
+                slideIntoContainer(towards = AnimatedContentTransitionScope.SlideDirection.Left)
+            },
+            exitTransition = {
+                slideOutOfContainer(towards = AnimatedContentTransitionScope.SlideDirection.Right)
+            },
+            route = ComlibDestination.PrivacyPolicy.route
+        ) {
+            PrivacyPolicyRoute(onNavigateUp = { appState.popBackStack() })
         }
     }
 }
@@ -236,8 +228,6 @@ sealed class ComlibDestination(val route: String) {
 
     data object Profile : ComlibDestination(route = "profile")
 
-    data object EditProfile : ComlibDestination(route = "edit_profile")
-
     data object MyBooks : ComlibDestination(route = "my_books")
 
     data object AddBook : ComlibDestination(route = "add_book")
@@ -245,4 +235,6 @@ sealed class ComlibDestination(val route: String) {
     data object GenreSetup : ComlibDestination(route = "genre_setup")
 
     data object Streak : ComlibDestination(route = "streak")
+
+    data object PrivacyPolicy : ComlibDestination(route = "privacy_policy")
 }

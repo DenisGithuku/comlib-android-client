@@ -23,18 +23,26 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.data.repository.AuthRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.UserRepository
-import com.githukudenis.comlib.core.model.ThemeConfig
+import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+
+data class ProfileUiState(
+    val isLoading: Boolean = false,
+    val isSignOutActivated: Boolean = false,
+    val isSignOutComplete: Boolean = false,
+    val user: User = User(),
+    val isUpdating: Boolean = false,
+    val isUpdateComplete: Boolean = false,
+    val fetchError: String? = null,
+    val updateError: String? = null
+)
 
 @HiltViewModel
 class ProfileViewModel
@@ -45,128 +53,103 @@ constructor(
     private val authRepository: AuthRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProfileUiState())
-    private val _userPrefs = userPrefsRepository.userPrefs
+    private val _state = MutableStateFlow(ProfileUiState())
+    val state: StateFlow<ProfileUiState> = _state.asStateFlow()
 
-    val uiState: StateFlow<ProfileUiState> =
-        combine(_uiState, _userPrefs) { uiState, prefs ->
-                prefs.userId?.let { id ->
-                    val profile =
-                        when (val result = userRepository.getUserById(id)) {
-                            is ResponseResult.Failure -> ProfileItemState.Error(result.error.message)
-                            is ResponseResult.Success ->
-                                ProfileItemState.Success(result.data.data.user.toProfile())
+    init {
+        getUserDetails()
+    }
+
+    private fun getUserDetails() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            val userId = userPrefsRepository.userPrefs.first().userId ?: return@launch
+            when (val result = userRepository.getUserById(userId)) {
+                is ResponseResult.Failure -> {
+                    _state.update { it.copy(isLoading = false, fetchError = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    _state.update { it.copy(user = result.data.data.user, isLoading = false) }
+                }
+            }
+        }
+    }
+
+    fun updateUser() {
+        viewModelScope.launch {
+            _state.update { it.copy(isUpdating = true) }
+            when (val result = userRepository.updateUser(_state.value.user)) {
+                is ResponseResult.Failure -> {
+                    _state.update { it.copy(isUpdating = false, updateError = result.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    _state.update { it.copy(isUpdating = false, isUpdateComplete = true) }
+                }
+            }
+        }
+    }
+
+    fun onResetUpdateStatus() {
+        _state.update { it.copy(isUpdateComplete = false) }
+    }
+
+    fun onChangeFirstname(value: String) {
+        _state.update { it.copy(user = it.user.copy(firstname = value.trim())) }
+    }
+
+    fun onChangeLastname(value: String) {
+        _state.update { it.copy(user = it.user.copy(lastname = value.trim())) }
+    }
+
+    fun onChangeUsername(value: String) {
+        _state.update { it.copy(user = it.user.copy(username = value.trim())) }
+    }
+
+    fun onChangePhoto(value: Uri) {
+        viewModelScope.launch {
+            _state.update { it.copy(isUpdating = true) }
+
+            // Upload image to store first
+            val uploadImageRes =
+                value.let {
+                    userRepository.uploadUserImage(
+                        imageUri = value,
+                        userId = _state.value.user.id ?: return@launch,
+                        isNewUser = false
+                    )
+                }
+
+            when (uploadImageRes) {
+                is ResponseResult.Failure -> {
+                    _state.update { it.copy(updateError = uploadImageRes.error.message) }
+                }
+                is ResponseResult.Success -> {
+                    val updatedUser = _state.value.user.copy(image = uploadImageRes.data)
+
+                    // Update user with new image
+                    when (val updateUserResult = userRepository.updateUser(updatedUser)) {
+                        is ResponseResult.Failure -> {
+                            _state.update { it.copy(updateError = updateUserResult.error.message) }
+                            _state.update { it.copy(isUpdating = false) }
                         }
-                    uiState.copy(profileItemState = profile, selectedTheme = prefs.themeConfig)
-                } ?: ProfileUiState()
-            }
-            .stateIn(
-                scope = viewModelScope,
-                started = SharingStarted.WhileSubscribed(5_000),
-                initialValue = ProfileUiState()
-            )
-
-    fun onEvent(profileUiEvent: ProfileUiEvent) {
-        when (profileUiEvent) {
-            is ProfileUiEvent.ChangeTheme -> {
-                toggleTheme(profileUiEvent.theme)
-            }
-            is ProfileUiEvent.ChangeUserImage -> {
-                onChangeUserImage(profileUiEvent.imageUri)
-            }
-            ProfileUiEvent.SignOut -> {
-                onSignOut()
-            }
-            is ProfileUiEvent.ToggleCache -> {
-                onToggleCache(profileUiEvent.isVisible)
-            }
-            is ProfileUiEvent.ToggleSignOut -> {
-                onToggleSignOut(profileUiEvent.isSignOut)
-            }
-            is ProfileUiEvent.ToggleThemeDialog -> {
-                toggleThemeDialog(profileUiEvent.isVisible)
-            }
-        }
-    }
-
-    private fun toggleThemeDialog(isVisible: Boolean) {
-        _uiState.update { it.copy(isThemeDialogOpen = isVisible) }
-    }
-
-    private fun onSignOut() {
-        viewModelScope.launch {
-            _uiState.update { ProfileUiState(isLoading = true) }
-            authRepository.signOut()
-            _uiState.update { it.copy(isLoading = false, isSignedOut = true) }
-        }
-    }
-
-    private fun onToggleCache(isVisible: Boolean) {
-        _uiState.update { it.copy(isClearCache = isVisible) }
-    }
-
-    private fun onToggleSignOut(isSignOut: Boolean) {
-        _uiState.update { it.copy(isSignout = isSignOut) }
-    }
-
-    private fun onChangeUserImage(imageUri: Uri) {
-        viewModelScope.launch {
-            val userId = _userPrefs.mapLatest { it.userId }.first()
-            checkNotNull(userId).run { uploadUserImage(imageUri = imageUri, userId = this) }
-        }
-    }
-
-    private fun toggleTheme(theme: ThemeConfig) {
-        viewModelScope.launch { userPrefsRepository.setThemeConfig(theme) }
-    }
-
-    private suspend fun uploadUserImage(imageUri: Uri, userId: String) {
-        when (val result = userRepository.getUserById(userId)) {
-            is ResponseResult.Failure -> {
-                _uiState.update { it.copy(error = result.error.message) }
-            }
-            is ResponseResult.Success -> {
-                // Upload image to store first
-                val uploadImageRes =
-                    userId.let {
-                        userRepository.uploadUserImage(imageUri = imageUri, userId = userId, isNewUser = false)
-                    }
-
-                when (uploadImageRes) {
-                    is ResponseResult.Failure -> {
-                        _uiState.update { it.copy(error = uploadImageRes.error.message, isLoading = false) }
-                    }
-                    is ResponseResult.Success -> {
-                        val updatedUser = result.data.data.user.copy(image = uploadImageRes.data)
-
-                        // Update user with new image
-                        when (val updateUserResult = userRepository.updateUser(updatedUser)) {
-                            is ResponseResult.Failure -> {
-                                _uiState.update {
-                                    it.copy(error = updateUserResult.error.message, isLoading = false)
-                                }
-                            }
-                            is ResponseResult.Success -> {
-                                _uiState.update { it.copy(isLoading = false) }
-                            }
+                        is ResponseResult.Success -> {
+                            _state.update { it.copy(isUpdating = false, isUpdateComplete = true) }
                         }
                     }
                 }
             }
         }
     }
-}
 
-sealed interface ProfileUiEvent {
-    data class ToggleCache(val isVisible: Boolean) : ProfileUiEvent
+    fun onToggleSignOut(value: Boolean) {
+        _state.update { it.copy(isSignOutActivated = value) }
+    }
 
-    data class ToggleSignOut(val isSignOut: Boolean) : ProfileUiEvent
-
-    data class ChangeTheme(val theme: ThemeConfig) : ProfileUiEvent
-
-    data class ChangeUserImage(val imageUri: Uri) : ProfileUiEvent
-
-    data class ToggleThemeDialog(val isVisible: Boolean) : ProfileUiEvent
-
-    data object SignOut : ProfileUiEvent
+    fun onSignOut() {
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true) }
+            authRepository.signOut()
+            _state.update { it.copy(isLoading = false, isSignOutComplete = true) }
+        }
+    }
 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2024-10-14T18:49:56" hostname="githukudenis" time="1.468">
+  <properties/>
+  <testcase name="testToggleChangeTheme" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="1.343"/>
+  <testcase name="testToggleAppearance" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.022"/>
+  <testcase name="testToggleNotifications" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.021"/>
+  <testcase name="testToggleClearCache" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.017"/>
+  <testcase name="testInitialization" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.039"/>
+  <testcase name="testChangeTheme" classname="com.githukudenis.comlib.feature.settings.SettingsViewModelTest" time="0.024"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

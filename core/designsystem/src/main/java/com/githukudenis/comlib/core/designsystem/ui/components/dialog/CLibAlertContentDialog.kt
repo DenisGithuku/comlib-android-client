@@ -24,7 +24,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -69,9 +68,10 @@ fun CLibAlertContentDialog(
                     Modifier.fillMaxWidth(fraction = 0.8f)
                         .wrapContentHeight()
                         .background(
-                            color = AlertDialogDefaults.containerColor,
+                            color = MaterialTheme.colorScheme.surfaceContainerHigh,
                             shape = MaterialTheme.shapes.large
-                        )
+                        ),
+                contentAlignment = Alignment.Center
             ) {
                 Column(
                     modifier = Modifier.padding(LocalDimens.current.extraLarge),

@@ -3,4 +3,10 @@
     <string name="my_books_title">My Books</string>
     <string name="empty_books_label">You don\'t have any books available. Whenever you add your books they will appear here</string>
     <string name="add_book">Add book</string>
+    <string name="owned">Owned</string>
+    <string name="read">Read</string>
+    <string name="favourites">Favourites</string>
+    <string name="empty_favourites">You have no favourite books. When you add a book to favourites, it\'ll show up here.</string>
+    <string name="empty_read">You haven\'t read any book. When you read a book, it\'ll show up here.</string>
+    <string name="empty_owned">You haven\'t added any book. When you add a book, it\'ll show up here.</string>
 </resources>

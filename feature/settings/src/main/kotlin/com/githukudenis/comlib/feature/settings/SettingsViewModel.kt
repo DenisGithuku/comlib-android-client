@@ -21,13 +21,17 @@ import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.UserRepository
+import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.mapLatest
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
 data class Profile(
     val firstname: String? = null,
@@ -56,22 +60,58 @@ constructor(
     private val userRepository: UserRepository
 ) : ViewModel() {
 
+    private val _uiComponentState = MutableStateFlow(UiComponentsState())
+
     val state: StateFlow<SettingsUiState> =
-        userPrefsRepository.userPrefs
-            .mapLatest { prefs ->
-                prefs.userId?.let { id ->
-                    val profile =
+        combine(_uiComponentState, userPrefsRepository.userPrefs) { componentState, prefs ->
+                val profile =
+                    prefs.userId?.let { id ->
                         when (val result = userRepository.getUserById(id)) {
                             is ResponseResult.Failure -> ProfileItemState.Error(result.error.message)
                             is ResponseResult.Success ->
                                 ProfileItemState.Success(result.data.data.user.toProfile())
                         }
-                    SettingsUiState(profileItemState = profile)
-                } ?: SettingsUiState()
+                    } ?: ProfileItemState.Error("User not found")
+                SettingsUiState(
+                    profileItemState = profile,
+                    selectedTheme = prefs.themeConfig,
+                    isNotificationsToggled = prefs.isNotificationsEnabled,
+                    uiComponentsState = componentState
+                )
             }
             .stateIn(
                 scope = viewModelScope,
                 started = SharingStarted.WhileSubscribed(5_000),
                 initialValue = SettingsUiState()
             )
+
+    fun onEvent(event: SettingsUiEvent) {
+        when (event) {
+            is SettingsUiEvent.ChangeTheme -> changeTheme(event.themeConfig)
+            is SettingsUiEvent.ToggleNotifications -> toggleNotifications(event.isToggled)
+            is SettingsUiEvent.ToggleAppearance -> toggleAppearance(event.isToggled)
+            is SettingsUiEvent.ToggleClearCache -> toggleClearCache(event.isToggled)
+            is SettingsUiEvent.ToggleThemeDialog -> toggleThemeDialog(event.isToggled)
+        }
+    }
+
+    private fun changeTheme(themeConfig: ThemeConfig) {
+        viewModelScope.launch { userPrefsRepository.setThemeConfig(themeConfig) }
+    }
+
+    private fun toggleNotifications(isToggled: Boolean) {
+        viewModelScope.launch { userPrefsRepository.toggleNotifications(isToggled) }
+    }
+
+    private fun toggleAppearance(isToggled: Boolean) {
+        _uiComponentState.update { state -> state.copy(isAppearanceSheetVisible = isToggled) }
+    }
+
+    private fun toggleClearCache(isToggled: Boolean) {
+        _uiComponentState.update { state -> state.copy(isCacheDialogVisible = isToggled) }
+    }
+
+    private fun toggleThemeDialog(isToggled: Boolean) {
+        _uiComponentState.update { state -> state.copy(isThemeDialogVisible = isToggled) }
+    }
 }

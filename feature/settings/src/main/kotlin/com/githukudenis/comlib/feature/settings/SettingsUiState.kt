@@ -16,4 +16,19 @@
 */
 package com.githukudenis.comlib.feature.settings
 
-data class SettingsUiState(val profileItemState: ProfileItemState = ProfileItemState.Loading)
+import com.githukudenis.comlib.core.model.ThemeConfig
+
+data class SettingsUiState(
+    val profileItemState: ProfileItemState = ProfileItemState.Loading,
+    val availableThemes: List<ThemeConfig> =
+        listOf(ThemeConfig.SYSTEM, ThemeConfig.LIGHT, ThemeConfig.DARK),
+    val selectedTheme: ThemeConfig = ThemeConfig.SYSTEM,
+    val isNotificationsToggled: Boolean = false,
+    val uiComponentsState: UiComponentsState = UiComponentsState()
+)
+
+data class UiComponentsState(
+    val isCacheDialogVisible: Boolean = false,
+    val isAppearanceSheetVisible: Boolean = false,
+    val isThemeDialogVisible: Boolean = false
+)

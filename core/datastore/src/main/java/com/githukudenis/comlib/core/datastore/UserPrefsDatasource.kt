@@ -42,7 +42,8 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
                 bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
                 isSetup = prefs[PreferenceKeys.isSetup] ?: false,
                 preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet(),
-                userId = prefs[PreferenceKeys.userIdPrefsKey]
+                userId = prefs[PreferenceKeys.userIdPrefsKey],
+                isNotificationsEnabled = prefs[PreferenceKeys.isNotificationsEnabled] ?: false
             )
         }
 
@@ -84,6 +85,10 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
     suspend fun setUserId(userId: String) {
         prefsDataStore.edit { prefs -> prefs[PreferenceKeys.userIdPrefsKey] = userId }
     }
+
+    suspend fun toggleNotifications(isToggled: Boolean) {
+        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.isNotificationsEnabled] = isToggled }
+    }
 }
 
 object PreferenceKeys {
@@ -94,4 +99,5 @@ object PreferenceKeys {
     val isSetup = booleanPreferencesKey("issetup")
     val preferredGenres = stringSetPreferencesKey("preferredGenres")
     val userIdPrefsKey = stringPreferencesKey("userId")
+    val isNotificationsEnabled = booleanPreferencesKey("isNotificationsEnabled")
 }

@@ -17,12 +17,13 @@
 package com.githukudenis.comlib.feature.profile
 
 import androidx.test.filters.MediumTest
-import com.githukudenis.comlib.core.data.repository.UserRepository
+import com.githukudenis.comlib.core.data.repository.AuthRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeAuthRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import junit.framework.TestCase.assertTrue
+import kotlin.test.assertEquals
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -34,19 +35,19 @@ import org.junit.Test
 
 @MediumTest
 class ProfileViewModelTest {
+
     @get:Rule val coroutineRule: MainCoroutineRule by lazy { MainCoroutineRule() }
 
-    lateinit var viewModel: ProfileViewModel
-    lateinit var userRepository: UserRepository
-    lateinit var userPrefsRepository: FakeUserPrefsRepository
-    lateinit var authRepository: FakeAuthRepository
+    private lateinit var userRepository: FakeUserRepository
+    private lateinit var userPrefsRepository: FakeUserPrefsRepository
+    private lateinit var viewModel: ProfileViewModel
+    private lateinit var authRepository: AuthRepository
 
     @Before
-    fun setup() {
+    fun setUp() {
         userRepository = FakeUserRepository()
         userPrefsRepository = FakeUserPrefsRepository()
         authRepository = FakeAuthRepository()
-
         viewModel =
             ProfileViewModel(
                 userPrefsRepository = userPrefsRepository,
@@ -57,43 +58,49 @@ class ProfileViewModelTest {
 
     @Test
     fun testStateInitialization() = runTest {
-        // Create an empty collector for the StateFlow
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
-
-        val state = viewModel.uiState.value
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         advanceUntilIdle()
-        assert((state.profileItemState as ProfileItemState.Success).profile.email == "5@gmail.com")
+        assertEquals(viewModel.state.value.user.firstname, "5.firstname")
     }
 
     @Test
-    fun onSignOut() = runTest {
-        // Create an empty collector for the StateFlow
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
-        viewModel.onEvent(ProfileUiEvent.SignOut)
-        assertTrue(viewModel.uiState.value.isSignedOut)
+    fun testUpdateUser() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
+        viewModel.onChangeFirstname("test.firstname")
+        viewModel.onChangeLastname("test.lastname")
+        viewModel.updateUser()
+        advanceUntilIdle()
+        assertTrue(
+            userRepository.users.any {
+                it.firstname == "test.firstname" && it.lastname == "test.lastname"
+            }
+        )
     }
 
     @Test
-    fun onToggleCache() = runTest {
-        // Create an empty collector for the StateFlow
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
-        viewModel.onEvent(ProfileUiEvent.ToggleCache(true))
-        assertTrue(viewModel.uiState.value.isClearCache)
+    fun testOChangeFirstname() = runTest {
+        viewModel.onChangeFirstname("test.firstname")
+        assertEquals(viewModel.state.value.user.firstname, "test.firstname")
     }
 
     @Test
-    fun onToggleSignOut() = runTest {
-        // Create an empty collector for the StateFlow
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
-        viewModel.onEvent(ProfileUiEvent.ToggleSignOut(true))
-        assertTrue(viewModel.uiState.value.isSignout)
+    fun testOnChangeLastname() = runTest {
+        viewModel.onChangeLastname("test.lastname")
+        println(viewModel.state.value.user.id)
+        assertEquals(viewModel.state.value.user.lastname, "test.lastname")
     }
 
     @Test
-    fun onToggleThemeDialog() = runTest {
-        // Create an empty collector for the StateFlow
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.uiState.collect() }
-        viewModel.onEvent(ProfileUiEvent.ToggleThemeDialog(true))
-        assertTrue(viewModel.uiState.value.isThemeDialogOpen)
+    fun testOnChangeUsername() = runTest {
+        viewModel.onChangeUsername("test.username")
+        assertEquals(viewModel.state.value.user.username, "test.username")
+    }
+
+    @Test
+    fun testResetUpdateStatus() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
+        viewModel.updateUser()
+        viewModel.onResetUpdateStatus()
+        assertEquals(viewModel.state.value.isUpdateComplete, false)
     }
 }

@@ -33,7 +33,8 @@ class FakeUserPrefsRepository : UserPrefsRepository {
                 isSetup = false,
                 preferredGenres = setOf("genre1", "genre2"),
                 token = "token",
-                userId = "owner@5"
+                userId = "owner@5",
+                isNotificationsEnabled = true
             )
         )
 
@@ -66,5 +67,9 @@ class FakeUserPrefsRepository : UserPrefsRepository {
 
     override suspend fun setUserId(userId: String) {
         _prefs.value = _prefs.value.copy(userId = userId)
+    }
+
+    override suspend fun toggleNotifications(isToggled: Boolean) {
+        _prefs.value = _prefs.value.copy(isNotificationsEnabled = isToggled)
     }
 }

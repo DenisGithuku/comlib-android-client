@@ -22,6 +22,9 @@ import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
@@ -46,8 +49,10 @@ class MyBooksViewModelTest {
 
     @Test
     fun testStateInitialization() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         advanceUntilIdle()
         val state = viewModel.state.value
-        assertEquals(state.books.size, 1)
+        assertEquals(state.owned.size, 1)
+        assertEquals(state.read.size, 3)
     }
 }

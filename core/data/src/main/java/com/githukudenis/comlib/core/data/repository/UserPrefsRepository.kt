@@ -36,5 +36,7 @@ interface UserPrefsRepository {
 
     suspend fun setPreferredGenres(genres: Set<String>)
 
+    suspend fun toggleNotifications(isToggled: Boolean)
+
     suspend fun clearSession()
 }

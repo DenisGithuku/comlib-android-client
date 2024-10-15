@@ -110,6 +110,20 @@ fun NavGraphBuilder.homeNavGraph(
                         popUpTo = ComlibDestination.Profile.route,
                         inclusive = true
                     )
+                },
+                onOpenMyBooks = {
+                    appState.navigate(
+                        route = ComlibDestination.MyBooks.route,
+                        popUpTo = ComlibDestination.MyBooks.route,
+                        inclusive = true
+                    )
+                },
+                onOpenPrivacyPolicy = {
+                    appState.navigate(
+                        route = ComlibDestination.PrivacyPolicy.route,
+                        popUpTo = ComlibDestination.PrivacyPolicy.route,
+                        inclusive = true
+                    )
                 }
             )
         }

@@ -54,4 +54,8 @@ constructor(private val userPrefsDataSource: UserPrefsDatasource) : UserPrefsRep
     override suspend fun setUserId(userId: String) {
         userPrefsDataSource.setUserId(userId)
     }
+
+    override suspend fun toggleNotifications(isToggled: Boolean) {
+        userPrefsDataSource.toggleNotifications(isToggled)
+    }
 }
