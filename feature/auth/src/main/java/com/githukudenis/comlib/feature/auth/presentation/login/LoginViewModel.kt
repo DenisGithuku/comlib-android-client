@@ -20,9 +20,11 @@ import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.MessageType
+import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.data.repository.AuthRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
+import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.UserLoginDTO
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.CapitalLetter
@@ -42,7 +44,8 @@ class LoginViewModel
 @Inject
 constructor(
     private val authRepository: AuthRepository,
-    private val userPrefsRepository: UserPrefsRepository
+    private val userPrefsRepository: UserPrefsRepository,
+    private val userRepository: UserRepository
 ) : ViewModel() {
 
     private var _state: MutableStateFlow<LoginUiState> = MutableStateFlow(LoginUiState())
@@ -129,40 +132,6 @@ constructor(
         }
     }
 
-    //    private fun onSignInResult(signInResult: SignInResult) {
-    //        viewModelScope.launch {
-    //            _state.complete_profile { prevState -> prevState.copy(isLoading = true) }
-    //            if (signInResult.errorMessage != null) {
-    //                _state.complete_profile { prevState ->
-    //                    val userMessages = prevState.userMessages.toMutableList()
-    //                    userMessages.add(UserMessage(message = signInResult.errorMessage))
-    //                    prevState.copy(isLoading = false, loginSuccess = true, userMessages =
-    // userMessages)
-    //                }
-    //                return@launch
-    //            }
-    //            val user =
-    //                signInResult.userData?.run {
-    //                    User(email = email, username = username, image = profilePictureUrl, authId =
-    // authId)
-    //                }
-    //            val result = authRepository.signUp(user = user ?: return@launch)
-    //            when (result) {
-    //                is ResponseResult.Failure -> Unit
-    //                is ResponseResult.Success -> {
-    //                    user.authId?.let { userPrefsRepository.setAuthId(it) }
-    //                }
-    //            }
-    //
-    //            _state.complete_profile { prevState ->
-    //                val userMessages = prevState.userMessages.toMutableList()
-    //                userMessages.add(UserMessage(message = "Signed in successfully"))
-    //                prevState.copy(isLoading = false, loginSuccess = true, userMessages =
-    // userMessages)
-    //            }
-    //        }
-    //    }
-
     private fun login() {
         viewModelScope.launch {
             val (email, password) = _state.value.formState
@@ -184,6 +153,7 @@ constructor(
                 onSuccess = { response ->
                     userPrefsRepository.setToken(response.token)
                     userPrefsRepository.setUserId(response.id)
+                    userPrefsRepository.setSetupStatus(isSetup(response.id))
                     _state.update { prevState -> prevState.copy(isLoading = false, loginSuccess = true) }
                 },
                 onError = { error ->
@@ -199,5 +169,12 @@ constructor(
 
     private fun resetState() {
         _state.update { LoginUiState() }
+    }
+
+    private suspend fun isSetup(userId: String): Boolean {
+        return when (val result = userRepository.getUserById(userId)) {
+            is ResponseResult.Failure -> false
+            is ResponseResult.Success -> !result.data.data.user.image.isNullOrEmpty()
+        }
     }
 }
