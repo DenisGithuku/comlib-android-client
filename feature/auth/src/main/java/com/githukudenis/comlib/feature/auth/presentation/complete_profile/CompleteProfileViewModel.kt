@@ -24,8 +24,8 @@ import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.UserRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.async
 import javax.inject.Inject
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -132,7 +132,7 @@ constructor(
 
                                             // Await profile path
                                             val profilePathDeferred = async {
-                                                userPrefsRepository.setProfilePicturePath(selectedImageUri)
+                                                userPrefsRepository.setProfilePicturePath(uploadImageRes.data)
                                             }
 
                                             userPrefsRepository.setUserProfileData(

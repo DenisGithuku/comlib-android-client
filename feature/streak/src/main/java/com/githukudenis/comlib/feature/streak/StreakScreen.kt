@@ -59,6 +59,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
@@ -173,6 +174,7 @@ private fun StreakContent(
 
     if (showDatePicker) {
         DatePickerDialog(
+            properties = DialogProperties(usePlatformDefaultWidth = false),
             modifier = Modifier.padding(LocalDimens.current.extraLarge),
             shape = MaterialTheme.shapes.extraLarge,
             onDismissRequest = { showDatePicker = false },
@@ -206,7 +208,7 @@ private fun StreakContent(
                         text = dateRangePickerState.displayMode.toString()
                     )
                 },
-                modifier = Modifier.padding(LocalDimens.current.extraLarge),
+                modifier = Modifier.padding(LocalDimens.current.extraLarge).fillMaxWidth(0.8f),
                 state = dateRangePickerState
                 //                dateValidator = { timestamp -> timestamp >=
                 // Clock.System.now().toEpochMilliseconds() }
@@ -350,7 +352,7 @@ private fun DateRow(startDate: LocalDate, endDate: LocalDate, onChangeDates: () 
         DateComponent(date = startDate, title = stringResource(id = R.string.start_label))
         DateComponent(date = endDate, title = stringResource(R.string.end_label))
         CLibOutlinedButton(onClick = onChangeDates) {
-            Text(text = stringResource(id = R.string.update_label))
+            Text(text = stringResource(id = R.string.streak_update_label))
         }
     }
 }

@@ -137,7 +137,7 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
-        if (state.uiComponentsState.isCacheDialogVisible) {
+        if (state.isCacheDialogVisible) {
             CLibAlertDialog(
                 title = stringResource(id = R.string.clear_cache_dialog_title),
                 text = stringResource(id = R.string.clear_cache_dialog_text),
@@ -146,7 +146,7 @@ fun SettingsScreen(
             )
         }
 
-        if (state.uiComponentsState.isAppearanceSheetVisible) {
+        if (state.isAppearanceSheetVisible) {
             ModalBottomSheet(onDismissRequest = { onToggleAppearanceSheet(false) }) {
                 AppearanceItem(
                     title = stringResource(R.string.theme_title),
@@ -163,7 +163,7 @@ fun SettingsScreen(
             }
         }
 
-        if (state.uiComponentsState.isThemeDialogVisible) {
+        if (state.isThemeDialogVisible) {
             CLibAlertContentDialog(
                 title = {
                     Text(
@@ -276,34 +276,8 @@ fun ProfileLoader() {
 }
 
 @Composable
-fun ProfileLoaded(profile: Profile, onChangeImage: () -> Unit) {
-    Row(
-        modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.sixteen),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        ProfileImage(imagePath = profile.imageUrl, onChangeImage = onChangeImage)
-        Spacer(modifier = Modifier.width(LocalDimens.current.extraLarge))
-        Column(modifier = Modifier) {
-            Text(
-                text = "${profile.firstname?.capitalize()} ${profile.lastname?.capitalize()}",
-                style = MaterialTheme.typography.titleSmall
-            )
-            profile.email?.let { Text(text = profile.email, style = MaterialTheme.typography.bodyMedium) }
-        }
-    }
-}
-
-@Composable
 fun ProfileImage(imagePath: String?, size: Dp = 80.dp, onChangeImage: () -> Unit) {
     Box(modifier = Modifier) {
-        //        AsyncImage(
-        //            model = imageUrl,
-        //            modifier = Modifier.size(size).clip(CircleShape),
-        //            contentScale = ContentScale.Crop,
-        //            contentDescription = null,
-        //            placeholder = painterResource(id = R.drawable.ic_profile_placeholder)
-        //        )
-
         Image(
             modifier = Modifier.size(size).clip(CircleShape),
             contentScale = ContentScale.Crop,

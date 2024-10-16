@@ -26,6 +26,7 @@ import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -78,19 +79,6 @@ constructor(
                     )
                 }
             }
-
-            //            _state.update { it.copy(isLoading = true) }
-            //            val userId = userPrefsRepository.userPrefs.first().userId ?: return@launch
-            //            when (val result = userRepository.getUserById(userId)) {
-            //                is ResponseResult.Failure -> {
-            //                    _state.update { it.copy(isLoading = false, fetchError =
-            // result.error.message) }
-            //                }
-            //                is ResponseResult.Success -> {
-            //                    _state.update { it.copy(user = result.data.data.user, isLoading = false)
-            // }
-            //                }
-            //            }
         }
     }
 
@@ -114,6 +102,7 @@ constructor(
                 }
             }
         }
+        getUserDetails()
     }
 
     fun onResetUpdateStatus() {
@@ -163,11 +152,13 @@ constructor(
                             // Update local user with new image
                             val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
 
+                            // Wait for user image to be updated
+                            val imagePathDeferred = async {
+                                userPrefsRepository.setProfilePicturePath(uploadImageRes.data)
+                            }
+
                             userPrefsRepository.setUserProfileData(
-                                userProfileData.copy(
-                                    profilePicturePath =
-                                        userPrefsRepository.setProfilePicturePath(value)
-                                )
+                                userProfileData.copy(profilePicturePath = imagePathDeferred.await())
                             )
                             _state.update { it.copy(isUpdating = false, isUpdateComplete = true) }
                         }
@@ -175,6 +166,7 @@ constructor(
                 }
             }
         }
+        getUserDetails()
     }
 
     fun onToggleSignOut(value: Boolean) {

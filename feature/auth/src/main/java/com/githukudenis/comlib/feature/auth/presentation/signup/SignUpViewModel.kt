@@ -170,46 +170,6 @@ constructor(
         }
     }
 
-    //    private fun onSignInResult(signInResult: SignInResult) {
-    //        viewModelScope.launch {
-    //            _state.complete_profile { prevState ->
-    //                prevState.copy(isLoading = true)
-    //            }
-    //            if (signInResult.errorMessage != null) {
-    //                _state.complete_profile { prevState ->
-    //                    val userMessages = prevState.userMessages.toMutableList()
-    //                    userMessages.add(UserMessage(message = signInResult.errorMessage))
-    //                    prevState.copy(
-    //                        isLoading = false,
-    //                        signUpSuccess = true,
-    //                        userMessages = userMessages
-    //                    )
-    //                }
-    //                return@launch
-    //            }
-    //            val user = signInResult.userData?.run {
-    //                User(
-    //                    email = email,
-    //                    username = username,
-    //                    image = profilePictureUrl,
-    //                    authId = authId
-    //                )
-    //            }
-    //            userRepository.addNewUser(
-    //                user = user ?: return@launch
-    //            )
-    //            _state.complete_profile { prevState ->
-    //                val userMessages = prevState.userMessages.toMutableList()
-    //                userMessages.add(UserMessage(message = "Signed in successfully"))
-    //                prevState.copy(
-    //                    isLoading = false,
-    //                    signUpSuccess = true,
-    //                    userMessages = userMessages
-    //                )
-    //            }
-    //        }
-    //    }
-
     fun onDismissNetworkDialog() {
         _showNetworkDialog.update { false }
     }

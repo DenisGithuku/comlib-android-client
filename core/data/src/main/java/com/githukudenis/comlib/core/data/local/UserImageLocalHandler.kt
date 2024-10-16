@@ -17,15 +17,21 @@
 package com.githukudenis.comlib.core.data.local
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.net.Uri
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.core.graphics.drawable.toBitmap
+import coil.ImageLoader
+import coil.request.ImageRequest
+import coil.request.SuccessResult
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import javax.inject.Inject
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class UserImageLocalHandler @Inject constructor(private val context: Context) {
-    suspend fun saveImage(imageUri: Uri): String? {
+    suspend fun saveImage(imageUrl: String): String? {
         return withContext(Dispatchers.IO) {
             try {
                 // Create a file name
@@ -45,14 +51,29 @@ class UserImageLocalHandler @Inject constructor(private val context: Context) {
                     imageFile.delete()
                 }
 
-                // Open input stream from the image URI
-                val inputStream = context.contentResolver.openInputStream(imageUri)
+                // Create request to download image
+                val request = ImageRequest.Builder(context).data(imageUrl).build()
 
-                // Write input stream to the file
-                imageFile.outputStream().use { outputStream -> inputStream?.copyTo(outputStream) }
+                // Use coil to execute request and save image to file
+                val imageLoader = ImageLoader(context)
+                val result = imageLoader.execute(request)
 
-                // Return the absolute path of the saved/updated file
-                imageFile.absolutePath
+                // Check if result is successful and save image to file
+                if (result is SuccessResult) {
+                    // Get bitmap from request
+                    val bitmap = result.drawable.toBitmap()
+
+                    // Save the bitmap to the file
+                    FileOutputStream(imageFile).use { outputStream ->
+                        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream)
+                    }
+
+                    // Return URI from saved file
+                    Uri.fromFile(imageFile).toString()
+                } else {
+                    // Handle error
+                    null
+                }
             } catch (e: IOException) {
                 e.printStackTrace()
                 null

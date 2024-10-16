@@ -24,4 +24,5 @@ dependencies {
     implementation(libs.timber)
     implementation(libs.firebase.storage)
     implementation(libs.bundles.ktor)
+    implementation(libs.coil.kt)
 }

@@ -5,7 +5,7 @@
     <string name="delete_book_icon_label">Delete book</string>
     <string name="close">Close</string>
     <string name="save_streak_label">Save streak</string>
-    <string name="update_label">Update</string>
+    <string name="streak_update_label">Update</string>
     <string name="start_label">Start</string>
     <string name="end_label">End</string>
     <string name="confirm_btn_label">Confirm</string>

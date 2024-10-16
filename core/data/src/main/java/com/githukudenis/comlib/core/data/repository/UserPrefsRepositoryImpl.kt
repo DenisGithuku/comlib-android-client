@@ -16,7 +16,6 @@
 */
 package com.githukudenis.comlib.core.data.repository
 
-import android.net.Uri
 import com.githukudenis.comlib.core.data.local.UserImageLocalHandler
 import com.githukudenis.comlib.core.datastore.UserPrefsDatasource
 import com.githukudenis.comlib.core.model.ThemeConfig
@@ -69,7 +68,7 @@ constructor(
         userPrefsDataSource.updateUserData(userProfileData)
     }
 
-    override suspend fun setProfilePicturePath(imageUri: Uri): String? {
-        return userImageLocalHandler.saveImage(imageUri)
+    override suspend fun setProfilePicturePath(imageUrl: String): String? {
+        return userImageLocalHandler.saveImage(imageUrl)
     }
 }

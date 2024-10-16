@@ -16,7 +16,6 @@
 */
 package com.githukudenis.comlib.core.data.repository
 
-import android.net.Uri
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
 import com.githukudenis.comlib.core.model.UserProfileData
@@ -44,5 +43,5 @@ interface UserPrefsRepository {
 
     suspend fun setUserProfileData(userData: UserProfileData)
 
-    suspend fun setProfilePicturePath(imageUri: Uri): String?
+    suspend fun setProfilePicturePath(imageUrl: String): String?
 }

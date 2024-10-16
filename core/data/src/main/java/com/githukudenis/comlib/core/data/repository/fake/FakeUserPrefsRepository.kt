@@ -16,7 +16,6 @@
 */
 package com.githukudenis.comlib.core.data.repository.fake
 
-import android.net.Uri
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
@@ -37,7 +36,14 @@ class FakeUserPrefsRepository : UserPrefsRepository {
                 token = "token",
                 userId = "owner@5",
                 isNotificationsEnabled = true,
-                userProfileData = UserProfileData()
+                userProfileData =
+                    UserProfileData(
+                        username = "5.username",
+                        firstname = "5.firstname",
+                        lastname = "5.lastname",
+                        email = "5.email",
+                        profilePicturePath = null
+                    )
             )
         )
 
@@ -80,7 +86,7 @@ class FakeUserPrefsRepository : UserPrefsRepository {
         _prefs.value = _prefs.value.copy(userProfileData = userProfileData)
     }
 
-    override suspend fun setProfilePicturePath(imageUri: Uri): String? {
+    override suspend fun setProfilePicturePath(imageUrl: String): String? {
         return null
     }
 }
