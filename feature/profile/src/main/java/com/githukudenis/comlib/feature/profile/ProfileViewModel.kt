@@ -102,7 +102,6 @@ constructor(
                 }
             }
         }
-        getUserDetails()
     }
 
     fun onResetUpdateStatus() {
@@ -157,16 +156,23 @@ constructor(
                                 userPrefsRepository.setProfilePicturePath(uploadImageRes.data)
                             }
 
+                            // Update local user with new image
+                            val imagePath = imagePathDeferred.await()
                             userPrefsRepository.setUserProfileData(
-                                userProfileData.copy(profilePicturePath = imagePathDeferred.await())
+                                userProfileData.copy(profilePicturePath = imagePath)
                             )
-                            _state.update { it.copy(isUpdating = false, isUpdateComplete = true) }
+                            _state.update {
+                                it.copy(
+                                    isUpdating = false,
+                                    isUpdateComplete = true,
+                                    user = it.user.copy(image = imagePath)
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-        getUserDetails()
     }
 
     fun onToggleSignOut(value: Boolean) {

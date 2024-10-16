@@ -16,7 +16,6 @@
 */
 package com.githukudenis.comlib.feature.auth.presentation.login
 
-import android.util.Log
 import androidx.core.util.PatternsCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -170,6 +169,7 @@ constructor(
                         is ResponseResult.Success -> {
                             userPrefsRepository.setSetupStatus(result.data.data.user.image != null)
 
+                            // If coming back to the app after logout, refresh user image
                             // Await profile path
                             val userImageUrl = result.data.data.user.image
                             userImageUrl?.run {
@@ -190,16 +190,6 @@ constructor(
                                     )
                                 )
                             }
-                                ?: _state.update { prevState ->
-                                    Log.d("ProfileViewModel", "Profile path is null")
-                                    val userMessages = _state.value.userMessages.toMutableList()
-                                    userMessages.add(UserMessage(message = "An error occurred!"))
-                                    prevState.copy(
-                                        isLoading = false,
-                                        loginSuccess = false,
-                                        userMessages = userMessages
-                                    )
-                                }
                         }
                     }
                     _state.update { prevState -> prevState.copy(isLoading = false, loginSuccess = true) }

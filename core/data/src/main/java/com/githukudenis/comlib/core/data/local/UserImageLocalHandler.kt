@@ -34,22 +34,21 @@ class UserImageLocalHandler @Inject constructor(private val context: Context) {
     suspend fun saveImage(imageUrl: String): String? {
         return withContext(Dispatchers.IO) {
             try {
-                // Create a file name
-                val fileName = "profile_image.jpg"
-
                 // Create a directory if not exists in internal storage
                 val directory = File(context.filesDir, "images")
                 if (!directory.exists()) {
                     directory.mkdirs()
                 }
 
+                // Delete current directory contents if exists
+                directory.listFiles()?.forEach { it.delete() }
+
+                // Create a unique file name
+                val timestamp = System.currentTimeMillis()
+                val fileName = "profile_$timestamp.jpg"
+
                 // Create a file in the directory
                 val imageFile = File(directory, fileName)
-
-                // Check if file exists and delete it
-                if (imageFile.exists()) {
-                    imageFile.delete()
-                }
 
                 // Create request to download image
                 val request = ImageRequest.Builder(context).data(imageUrl).build()

@@ -13,7 +13,15 @@
             file="${:feature:settings*debug*sourceProvider*0*resDir*0}/drawable/ic_profile_placeholder.jpg"/>
         <entry
             name="model"
-            string="drawable[ic_person(U),ic_camera(U),ic_arrow_back(U),ic_management(U),ic_appearance(U),ic_notifications(U),ic_settings(D),ic_shield(U),ic_profile_placeholder(D),ic_library(U),ic_books(D)],string[account_desc(U),library_desc(U),clear_cache_dialog_title(U),general_title(U),support_desc(U),app_management_desc(U),account_title(U),settings_title(U),clear_cache_dialog_text(U),library_title(U),change_image(U),general_desc(U),fetching_profile_indicator(U),support_title(U),privacy_title(U),app_management_title(U),theme_title(U),notifications(U),select_theme_dialog_title(U)];;;;"/>
+            string="drawable[ic_person(U),ic_camera(U),ic_arrow_back(U),ic_management(U),ic_appearance(U),ic_notifications(U),ic_settings(D),ic_shield(U),ic_profile_placeholder(D),ic_library(U),ic_books(D)],string[account_desc(U),library_desc(U),clear_cache_dialog_title(U),general_title(U),support_desc(U),app_management_desc(U),account_title(U),settings_title(U),clear_cache_dialog_text(U),profile_image_updated_successfully(U),library_title(U),no_media_selected(U),change_image(U),general_desc(U),fetching_profile_indicator(D),support_title(U),privacy_title(U),app_management_title(U),theme_title(U),notifications(U),select_theme_dialog_title(U)];;;;"/>
+        <location id="R.string.fetching_profile_indicator"
+            file="${:feature:settings*debug*sourceProvider*0*resDir*0}/values/strings.xml"
+            line="4"
+            column="13"
+            startOffset="115"
+            endLine="4"
+            endColumn="46"
+            endOffset="148"/>
         <location id="R.drawable.ic_books"
             file="${:feature:settings*debug*sourceProvider*0*resDir*0}/drawable/ic_books.xml"
             line="1"

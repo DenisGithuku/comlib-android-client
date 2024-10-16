@@ -19,4 +19,6 @@
     <string name="notifications">Notifications</string>
     <string name="select_theme_dialog_title">Select theme</string>
     <string name="privacy_title">Privacy policy</string>
+    <string name="no_media_selected">No image selected!</string>
+    <string name="profile_image_updated_successfully">Profile image updated successfully</string>
 </resources>

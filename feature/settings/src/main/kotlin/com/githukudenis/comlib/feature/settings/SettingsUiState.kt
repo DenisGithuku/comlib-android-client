@@ -27,5 +27,8 @@ data class SettingsUiState(
     val isNotificationsToggled: Boolean = false,
     val isCacheDialogVisible: Boolean = false,
     val isAppearanceSheetVisible: Boolean = false,
-    val isThemeDialogVisible: Boolean = false
+    val isThemeDialogVisible: Boolean = false,
+    val isUpdating: Boolean = false,
+    val isUpdateComplete: Boolean = false,
+    val updateError: String? = null
 )

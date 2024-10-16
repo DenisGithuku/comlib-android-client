@@ -16,7 +16,11 @@
 */
 package com.githukudenis.comlib.feature.settings
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -28,7 +32,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -43,6 +46,7 @@ import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -59,13 +63,14 @@ import coil.compose.rememberAsyncImagePainter
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertContentDialog
 import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibAlertDialog
-import com.githukudenis.comlib.core.designsystem.ui.components.loading_indicators.CLibCircularProgressBar
+import com.githukudenis.comlib.core.designsystem.ui.components.dialog.CLibLoadingDialog
 import com.githukudenis.comlib.core.designsystem.ui.theme.LocalDimens
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserProfileData
 import com.githukudenis.comlib.feature.settings.components.AppearanceItem
 import com.githukudenis.comlib.feature.settings.components.SettingListItem
 import com.githukudenis.comlib.feature.settings.components.ToggleAbleAppearanceItem
+import kotlinx.coroutines.delay
 
 @Composable
 fun SettingsRoute(
@@ -81,7 +86,7 @@ fun SettingsRoute(
     SettingsScreen(
         state = state,
         onNavigateUp = onNavigateUp,
-        onChangeImage = {},
+        onChangeImage = { viewModel.onEvent(SettingsUiEvent.ChangeImage(it)) },
         onEditProfile = onOpenEditProfile,
         onToggleAppearanceSheet = { viewModel.onEvent(SettingsUiEvent.ToggleAppearance(it)) },
         onToggleClearCache = { viewModel.onEvent(SettingsUiEvent.ToggleClearCache(it)) },
@@ -97,7 +102,8 @@ fun SettingsRoute(
         },
         onChangeTheme = { viewModel.onEvent(SettingsUiEvent.ChangeTheme(it)) },
         onToggleThemeDialog = { viewModel.onEvent(SettingsUiEvent.ToggleThemeDialog(it)) },
-        onToggleNotifications = { viewModel.onEvent(SettingsUiEvent.ToggleNotifications(it)) }
+        onToggleNotifications = { viewModel.onEvent(SettingsUiEvent.ToggleNotifications(it)) },
+        onResetUpdateError = { viewModel.onEvent(SettingsUiEvent.ResetUpdateError) }
     )
 }
 
@@ -106,7 +112,7 @@ fun SettingsRoute(
 fun SettingsScreen(
     state: SettingsUiState,
     onNavigateUp: () -> Unit,
-    onChangeImage: () -> Unit,
+    onChangeImage: (Uri) -> Unit,
     onEditProfile: () -> Unit,
     onOpenMyBooks: () -> Unit,
     onOpenPrivacyPolicy: () -> Unit,
@@ -115,8 +121,21 @@ fun SettingsScreen(
     onToggleThemeDialog: (Boolean) -> Unit,
     onToggleClearCache: (Boolean) -> Unit,
     onChangeTheme: (ThemeConfig) -> Unit,
-    onToggleNotifications: (Boolean) -> Unit
+    onToggleNotifications: (Boolean) -> Unit,
+    onResetUpdateError: () -> Unit = {}
 ) {
+    val context = LocalContext.current
+
+    val imagePickLauncher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.PickVisualMedia()) { uri ->
+            if (uri != null) {
+                onChangeImage(uri)
+            } else {
+                Toast.makeText(context, context.getString(R.string.no_media_selected), Toast.LENGTH_SHORT)
+                    .show()
+            }
+        }
+
     Scaffold(
         topBar = {
             CenterAlignedTopAppBar(
@@ -137,6 +156,29 @@ fun SettingsScreen(
             )
         }
     ) { innerPadding ->
+        LaunchedEffect(state.updateError) {
+            if (state.updateError.isNullOrBlank().not()) {
+                Toast.makeText(context, state.updateError, Toast.LENGTH_SHORT).show()
+                delay(1000L)
+                onResetUpdateError()
+            }
+        }
+
+        LaunchedEffect(state.isUpdateComplete) {
+            if (state.isUpdateComplete) {
+                Toast.makeText(
+                        context,
+                        context.getString(R.string.profile_image_updated_successfully),
+                        Toast.LENGTH_SHORT
+                    )
+                    .show()
+            }
+        }
+
+        if (state.isUpdating) {
+            CLibLoadingDialog {}
+        }
+
         if (state.isCacheDialogVisible) {
             CLibAlertDialog(
                 title = stringResource(id = R.string.clear_cache_dialog_title),
@@ -196,7 +238,14 @@ fun SettingsScreen(
         }
 
         Column(modifier = Modifier.fillMaxSize().padding(innerPadding)) {
-            ProfileSection(userProfileData = state.userProfileData, onChangeImage = onChangeImage)
+            ProfileSection(
+                userProfileData = state.userProfileData,
+                onChangeImage = {
+                    imagePickLauncher.launch(
+                        PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly)
+                    )
+                }
+            )
             SettingListItem(
                 icon = R.drawable.ic_person,
                 onClick = onEditProfile,
@@ -249,29 +298,6 @@ fun ProfileSection(userProfileData: UserProfileData, onChangeImage: () -> Unit) 
                 Text(text = email, style = MaterialTheme.typography.bodyMedium)
             }
         }
-    }
-}
-
-// @Composable
-// fun ProfileSection(profileItemState: ProfileItemState, onChangeImage: () -> Unit) {
-//    when (profileItemState) {
-//        is ProfileItemState.Error -> Text(text = profileItemState.message)
-//        ProfileItemState.Loading -> ProfileLoader()
-//        is ProfileItemState.Success ->
-//            ProfileLoaded(profile = profileItemState.profile, onChangeImage = onChangeImage)
-//    }
-// }
-
-@Composable
-fun ProfileLoader() {
-    Column(
-        modifier = Modifier.fillMaxWidth().padding(LocalDimens.current.sixteen),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        CLibCircularProgressBar()
-        Spacer(modifier = Modifier.height(LocalDimens.current.extraLarge))
-        Text(text = stringResource(R.string.fetching_profile_indicator))
     }
 }
 
