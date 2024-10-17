@@ -19,7 +19,9 @@ package com.githukudenis.comlib.feature.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.MessageType
 import com.githukudenis.comlib.core.common.ResponseResult
+import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
@@ -48,7 +50,8 @@ data class HomeScreenState(
     val userProfileData: UserProfileData = UserProfileData(),
     val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
-    val timePeriod: TimePeriod = TimePeriod.MORNING
+    val timePeriod: TimePeriod = TimePeriod.MORNING,
+    val userMessages: List<UserMessage> = emptyList()
 )
 
 enum class PaginationState {
@@ -65,9 +68,6 @@ constructor(
     private val booksRepository: BooksRepository,
     private val bookMilestoneRepository: BookMilestoneRepository
 ) : ViewModel() {
-
-    private val _pagingData: MutableStateFlow<Triple<PaginationState, Int, Int>> =
-        MutableStateFlow(Triple(PaginationState.NotLoading, 1, 10))
 
     private val _booksCache: MutableList<BookUiModel> = mutableListOf()
 
@@ -125,8 +125,8 @@ constructor(
                     when (
                         val result =
                             booksRepository.getAllBooks(
-                                page = _pagingData.value.second,
-                                limit = _pagingData.value.second
+                                page = _state.value.pagerState.second,
+                                limit = _state.value.pagerState.third
                             )
                     ) {
                         is ResponseResult.Failure -> {
@@ -165,14 +165,58 @@ constructor(
     }
 
     fun onRefreshPage() {
-        _pagingData.value = _pagingData.value.copy(second = _pagingData.value.second + 1)
+        _state.update { it.copy(pagerState = it.pagerState.copy(second = it.pagerState.second + 1)) }
         fetchBooks()
+    }
+
+    fun reserveBook(bookId: String) {
+        viewModelScope.launch {
+            val userId = userPrefsRepository.userPrefs.mapLatest { it.userId }.first()
+            if (userId.isNullOrEmpty()) {
+                onShowUserMessage(
+                    UserMessage(
+                        id = 1,
+                        message = "You must be logged in to reserve a book",
+                        messageType = MessageType.ERROR
+                    )
+                )
+                return@launch
+            }
+            when (val reserveResult = booksRepository.reserveBook(bookId, userId)) {
+                is ResponseResult.Failure -> {
+                    onShowUserMessage(
+                        UserMessage(
+                            id = 1,
+                            message = reserveResult.error.message,
+                            messageType = MessageType.ERROR
+                        )
+                    )
+                }
+                is ResponseResult.Success -> {
+                    onShowUserMessage(
+                        UserMessage(
+                            id = 1,
+                            message = reserveResult.data.message,
+                            messageType = MessageType.INFO
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    fun onShowUserMessage(message: UserMessage) {
+        _state.update { it.copy(userMessages = it.userMessages + message) }
+    }
+
+    fun onUserMessageShown(messageId: Int) {
+        _state.update { state ->
+            state.copy(userMessages = state.userMessages.filterNot { it.id == messageId })
+        }
     }
 
     override fun onCleared() {
         _booksCache.clear()
-        _pagingData.value = Triple(PaginationState.NotLoading, 1, 10)
-        _pagingData.value = _pagingData.value.copy(first = PaginationState.NotLoading)
         super.onCleared()
     }
 }
