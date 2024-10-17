@@ -33,6 +33,8 @@ interface UserPrefsRepository {
 
     suspend fun setBookMarks(bookMarks: Set<String>)
 
+    suspend fun setReservedBooks(reservedBooks: Set<String>)
+
     suspend fun setSetupStatus(isComplete: Boolean)
 
     suspend fun setPreferredGenres(genres: Set<String>)

@@ -89,4 +89,8 @@ class FakeUserPrefsRepository : UserPrefsRepository {
     override suspend fun setProfilePicturePath(imageUrl: String): String? {
         return null
     }
+
+    override suspend fun setReservedBooks(reservedBooks: Set<String>) {
+        _prefs.value = _prefs.value.copy(reservedBooks = reservedBooks)
+    }
 }

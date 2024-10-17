@@ -27,7 +27,9 @@ import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.BooksByUserResponse
 import com.githukudenis.comlib.core.model.book.BooksData
 import com.githukudenis.comlib.core.model.book.Data
+import com.githukudenis.comlib.core.model.book.ReserveBookResponse
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
+import com.githukudenis.comlib.core.model.book.UnReserveBookResponse
 import com.githukudenis.comlib.core.model.book.toBook
 import kotlinx.coroutines.delay
 
@@ -99,6 +101,58 @@ class FakeBooksRepository : BooksRepository {
                     results = books.filter { it.owner == userId }.size,
                     data = BooksData(books.filter { it.owner == userId })
                 )
+            )
+        }
+    }
+
+    override suspend fun reserveBook(
+        bookId: String,
+        userId: String
+    ): ResponseResult<ReserveBookResponse> {
+        return if (books.none { it.id == bookId }) {
+            ResponseResult.Failure(ErrorResponse(status = "fail", message = "Book not found"))
+        } else {
+            val updatedBooks =
+                books.map {
+                    if (it.id == bookId) {
+                        it.copy(reserved = it.reserved + userId)
+                    } else {
+                        it
+                    }
+                }
+            val book = updatedBooks.first { it.id == bookId }
+            books.clear()
+            books.addAll(updatedBooks)
+            ResponseResult.Success(
+                ReserveBookResponse(
+                    status = "Ok",
+                    message = "Book reserved successfully",
+                    data = Data(book = book)
+                )
+            )
+        }
+    }
+
+    override suspend fun unReserveBook(
+        bookId: String,
+        userId: String
+    ): ResponseResult<UnReserveBookResponse> {
+        return if (books.none { it.id == bookId }) {
+            ResponseResult.Failure(ErrorResponse(status = "fail", message = "Book not found"))
+        } else {
+            val updatedBooks =
+                books.map {
+                    if (it.id == bookId) {
+                        it.copy(reserved = it.reserved - userId)
+                    } else {
+                        it
+                    }
+                }
+            updatedBooks.first { it.id == bookId }
+            books.clear()
+            books.addAll(updatedBooks)
+            ResponseResult.Success(
+                UnReserveBookResponse(status = "Ok", message = "Book reserved successfully")
             )
         }
     }

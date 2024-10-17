@@ -57,4 +57,8 @@ sealed interface BooksState {
     data object Empty : BooksState
 }
 
-data class BookUiModel(val isFavourite: Boolean = false, val book: Book)
+data class BookUiModel(
+    val isFavourite: Boolean = false,
+    val book: Book,
+    val isReserved: Boolean = false
+)

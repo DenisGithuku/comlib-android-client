@@ -57,6 +57,7 @@ fun BookCard(
     bookUiModel: BookUiModel,
     onClick: (String) -> Unit,
     onReserve: (String) -> Unit,
+    onUnReserve: (String) -> Unit,
     onToggleFavourite: (String) -> Unit
 ) {
     Card(
@@ -143,12 +144,21 @@ fun BookCard(
                 CLibButton(
                     shape = MaterialTheme.shapes.small,
                     modifier = Modifier.fillMaxWidth(),
-                    onClick = { onReserve(bookUiModel.book.id) }
+                    onClick = {
+                        if (!bookUiModel.isReserved) {
+                            onReserve(bookUiModel.book.id)
+                        } else {
+                            onUnReserve(bookUiModel.book.id)
+                        }
+                    }
                 ) {
                     Text(
                         color = MaterialTheme.colorScheme.onPrimary,
-                        text = stringResource(R.string.reserve),
-                        style = MaterialTheme.typography.labelMedium
+                        text =
+                            stringResource(
+                                id = if (!bookUiModel.isReserved) R.string.reserve else R.string.unreserve
+                            ),
+                        style = MaterialTheme.typography.bodyMedium
                     )
                 }
             }

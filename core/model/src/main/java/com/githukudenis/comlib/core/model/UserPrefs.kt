@@ -22,6 +22,7 @@ data class UserPrefs(
     val userId: String? = null,
     val readBooks: Set<String> = emptySet(),
     val bookmarkedBooks: Set<String> = emptySet(),
+    val reservedBooks: Set<String> = emptySet(),
     val isSetup: Boolean = false,
     val preferredGenres: Set<String> = emptySet(),
     val isNotificationsEnabled: Boolean = false,

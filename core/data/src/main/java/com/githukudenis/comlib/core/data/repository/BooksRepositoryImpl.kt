@@ -24,7 +24,9 @@ import com.githukudenis.comlib.core.model.book.AddBookResponse
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.BooksByUserResponse
+import com.githukudenis.comlib.core.model.book.ReserveBookResponse
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
+import com.githukudenis.comlib.core.model.book.UnReserveBookResponse
 import com.githukudenis.comlib.core.model.book.asBooksByUserResponse
 import com.githukudenis.comlib.core.network.BooksApi
 import com.githukudenis.comlib.core.network.ImagesRemoteDataSource
@@ -86,5 +88,19 @@ constructor(
                 }
             }
         }
+    }
+
+    override suspend fun reserveBook(
+        bookId: String,
+        userId: String
+    ): ResponseResult<ReserveBookResponse> {
+        return withContext(dispatchers.io) { booksApi.reserveBook(bookId, userId) }
+    }
+
+    override suspend fun unReserveBook(
+        bookId: String,
+        userId: String
+    ): ResponseResult<UnReserveBookResponse> {
+        return withContext(dispatchers.io) { booksApi.unReserveBook(bookId, userId) }
     }
 }
