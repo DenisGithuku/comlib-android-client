@@ -57,7 +57,6 @@ class HomeViewModelTest {
             HomeViewModel(
                 userPrefsRepository = userPrefsRepository,
                 booksRepository = booksRepository,
-                userRepository = userRepository,
                 bookMilestoneRepository = bookMilestoneRepository
             )
     }

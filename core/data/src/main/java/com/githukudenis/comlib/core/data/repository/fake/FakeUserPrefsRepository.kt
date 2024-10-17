@@ -19,6 +19,7 @@ package com.githukudenis.comlib.core.data.repository.fake
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
+import com.githukudenis.comlib.core.model.UserProfileData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
@@ -34,7 +35,15 @@ class FakeUserPrefsRepository : UserPrefsRepository {
                 preferredGenres = setOf("genre1", "genre2"),
                 token = "token",
                 userId = "owner@5",
-                isNotificationsEnabled = true
+                isNotificationsEnabled = true,
+                userProfileData =
+                    UserProfileData(
+                        username = "5.username",
+                        firstname = "5.firstname",
+                        lastname = "5.lastname",
+                        email = "5.email",
+                        profilePicturePath = null
+                    )
             )
         )
 
@@ -71,5 +80,13 @@ class FakeUserPrefsRepository : UserPrefsRepository {
 
     override suspend fun toggleNotifications(isToggled: Boolean) {
         _prefs.value = _prefs.value.copy(isNotificationsEnabled = isToggled)
+    }
+
+    override suspend fun setUserProfileData(userProfileData: UserProfileData) {
+        _prefs.value = _prefs.value.copy(userProfileData = userProfileData)
+    }
+
+    override suspend fun setProfilePicturePath(imageUrl: String): String? {
+        return null
     }
 }

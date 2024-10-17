@@ -26,9 +26,11 @@ import com.githukudenis.comlib.core.data.repository.UserRepository
 import com.githukudenis.comlib.core.model.user.User
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -62,14 +64,19 @@ constructor(
 
     private fun getUserDetails() {
         viewModelScope.launch {
-            _state.update { it.copy(isLoading = true) }
-            val userId = userPrefsRepository.userPrefs.first().userId ?: return@launch
-            when (val result = userRepository.getUserById(userId)) {
-                is ResponseResult.Failure -> {
-                    _state.update { it.copy(isLoading = false, fetchError = result.error.message) }
-                }
-                is ResponseResult.Success -> {
-                    _state.update { it.copy(user = result.data.data.user, isLoading = false) }
+            userPrefsRepository.userPrefs.collectLatest { prefs ->
+                _state.update { state ->
+                    state.copy(
+                        user =
+                            User(
+                                id = prefs.userId,
+                                firstname = prefs.userProfileData.firstname,
+                                lastname = prefs.userProfileData.lastname,
+                                username = prefs.userProfileData.username,
+                                email = prefs.userProfileData.email,
+                                image = prefs.userProfileData.profilePicturePath
+                            )
+                    )
                 }
             }
         }
@@ -83,6 +90,14 @@ constructor(
                     _state.update { it.copy(isUpdating = false, updateError = result.error.message) }
                 }
                 is ResponseResult.Success -> {
+                    val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
+                    userPrefsRepository.setUserProfileData(
+                        userProfileData.copy(
+                            firstname = _state.value.user.firstname,
+                            lastname = _state.value.user.lastname,
+                            username = _state.value.user.username
+                        )
+                    )
                     _state.update { it.copy(isUpdating = false, isUpdateComplete = true) }
                 }
             }
@@ -126,14 +141,33 @@ constructor(
                 is ResponseResult.Success -> {
                     val updatedUser = _state.value.user.copy(image = uploadImageRes.data)
 
-                    // Update user with new image
+                    // Update remote user with new image
                     when (val updateUserResult = userRepository.updateUser(updatedUser)) {
                         is ResponseResult.Failure -> {
                             _state.update { it.copy(updateError = updateUserResult.error.message) }
                             _state.update { it.copy(isUpdating = false) }
                         }
                         is ResponseResult.Success -> {
-                            _state.update { it.copy(isUpdating = false, isUpdateComplete = true) }
+                            // Update local user with new image
+                            val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
+
+                            // Wait for user image to be updated
+                            val imagePathDeferred = async {
+                                userPrefsRepository.setProfilePicturePath(uploadImageRes.data)
+                            }
+
+                            // Update local user with new image
+                            val imagePath = imagePathDeferred.await()
+                            userPrefsRepository.setUserProfileData(
+                                userProfileData.copy(profilePicturePath = imagePath)
+                            )
+                            _state.update {
+                                it.copy(
+                                    isUpdating = false,
+                                    isUpdateComplete = true,
+                                    user = it.user.copy(image = imagePath)
+                                )
+                            }
                         }
                     }
                 }

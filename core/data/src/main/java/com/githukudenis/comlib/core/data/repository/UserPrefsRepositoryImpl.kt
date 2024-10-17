@@ -16,15 +16,20 @@
 */
 package com.githukudenis.comlib.core.data.repository
 
+import com.githukudenis.comlib.core.data.local.UserImageLocalHandler
 import com.githukudenis.comlib.core.datastore.UserPrefsDatasource
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
+import com.githukudenis.comlib.core.model.UserProfileData
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
 
 class UserPrefsRepositoryImpl
 @Inject
-constructor(private val userPrefsDataSource: UserPrefsDatasource) : UserPrefsRepository {
+constructor(
+    private val userPrefsDataSource: UserPrefsDatasource,
+    private val userImageLocalHandler: UserImageLocalHandler
+) : UserPrefsRepository {
     override val userPrefs: Flow<UserPrefs> = userPrefsDataSource.userPrefs
 
     override suspend fun setToken(token: String) {
@@ -57,5 +62,13 @@ constructor(private val userPrefsDataSource: UserPrefsDatasource) : UserPrefsRep
 
     override suspend fun toggleNotifications(isToggled: Boolean) {
         userPrefsDataSource.toggleNotifications(isToggled)
+    }
+
+    override suspend fun setUserProfileData(userProfileData: UserProfileData) {
+        userPrefsDataSource.updateUserData(userProfileData)
+    }
+
+    override suspend fun setProfilePicturePath(imageUrl: String): String? {
+        return userImageLocalHandler.saveImage(imageUrl)
     }
 }

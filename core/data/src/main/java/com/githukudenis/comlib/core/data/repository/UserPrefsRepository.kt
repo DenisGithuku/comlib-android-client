@@ -18,6 +18,7 @@ package com.githukudenis.comlib.core.data.repository
 
 import com.githukudenis.comlib.core.model.ThemeConfig
 import com.githukudenis.comlib.core.model.UserPrefs
+import com.githukudenis.comlib.core.model.UserProfileData
 import kotlinx.coroutines.flow.Flow
 
 interface UserPrefsRepository {
@@ -39,4 +40,8 @@ interface UserPrefsRepository {
     suspend fun toggleNotifications(isToggled: Boolean)
 
     suspend fun clearSession()
+
+    suspend fun setUserProfileData(userData: UserProfileData)
+
+    suspend fun setProfilePicturePath(imageUrl: String): String?
 }

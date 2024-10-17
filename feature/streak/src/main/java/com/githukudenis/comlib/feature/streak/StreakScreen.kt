@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -59,6 +60,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.buttons.CLibOutlinedButton
@@ -173,7 +176,9 @@ private fun StreakContent(
 
     if (showDatePicker) {
         DatePickerDialog(
-            modifier = Modifier.padding(LocalDimens.current.extraLarge),
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            modifier =
+                Modifier.padding(LocalDimens.current.extraLarge).widthIn(min = 300.dp, max = 500.dp),
             shape = MaterialTheme.shapes.extraLarge,
             onDismissRequest = { showDatePicker = false },
             confirmButton = {
@@ -206,7 +211,6 @@ private fun StreakContent(
                         text = dateRangePickerState.displayMode.toString()
                     )
                 },
-                modifier = Modifier.padding(LocalDimens.current.extraLarge),
                 state = dateRangePickerState
                 //                dateValidator = { timestamp -> timestamp >=
                 // Clock.System.now().toEpochMilliseconds() }
@@ -350,7 +354,7 @@ private fun DateRow(startDate: LocalDate, endDate: LocalDate, onChangeDates: () 
         DateComponent(date = startDate, title = stringResource(id = R.string.start_label))
         DateComponent(date = endDate, title = stringResource(R.string.end_label))
         CLibOutlinedButton(onClick = onChangeDates) {
-            Text(text = stringResource(id = R.string.update_label))
+            Text(text = stringResource(id = R.string.streak_update_label))
         }
     }
 }

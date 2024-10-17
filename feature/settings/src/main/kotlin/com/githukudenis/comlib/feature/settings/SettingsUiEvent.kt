@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib.feature.settings
 
+import android.net.Uri
 import com.githukudenis.comlib.core.model.ThemeConfig
 
 sealed interface SettingsUiEvent {
@@ -28,4 +29,8 @@ sealed interface SettingsUiEvent {
     data class ToggleClearCache(val isToggled: Boolean) : SettingsUiEvent
 
     data class ToggleThemeDialog(val isToggled: Boolean) : SettingsUiEvent
+
+    data class ChangeImage(val imageUri: Uri) : SettingsUiEvent
+
+    data object ResetUpdateError : SettingsUiEvent
 }

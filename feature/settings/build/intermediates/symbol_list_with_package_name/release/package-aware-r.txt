@@ -22,8 +22,10 @@ string general_desc
 string general_title
 string library_desc
 string library_title
+string no_media_selected
 string notifications
 string privacy_title
+string profile_image_updated_successfully
 string select_theme_dialog_title
 string settings_title
 string support_desc

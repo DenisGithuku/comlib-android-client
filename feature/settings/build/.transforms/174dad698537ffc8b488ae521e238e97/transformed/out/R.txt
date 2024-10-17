@@ -21,8 +21,10 @@ int string general_desc 0x0
 int string general_title 0x0
 int string library_desc 0x0
 int string library_title 0x0
+int string no_media_selected 0x0
 int string notifications 0x0
 int string privacy_title 0x0
+int string profile_image_updated_successfully 0x0
 int string select_theme_dialog_title 0x0
 int string settings_title 0x0
 int string support_desc 0x0

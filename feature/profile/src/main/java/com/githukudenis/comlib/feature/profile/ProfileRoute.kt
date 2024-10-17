@@ -137,7 +137,12 @@ fun ProfileScreen(
 
     LaunchedEffect(state.isUpdateComplete) {
         if (state.isUpdateComplete) {
-            Toast.makeText(context, context.getString(R.string.update_success), Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                    context,
+                    context.getString(R.string.profile_update_success),
+                    Toast.LENGTH_SHORT
+                )
+                .show()
             delay(1000)
             onResetUpdateStatus()
         }
@@ -224,7 +229,7 @@ fun ProfileScreen(
                     ProfileItem.USERNAME -> {
                         EditableProfileItem(
                             focusRequester = focusRequester,
-                            value = state.user.lastname ?: "",
+                            value = state.user.username ?: "",
                             onValueChange = onChangeUsername,
                             onSaveChanges = {
                                 onSaveChanges()
@@ -243,7 +248,7 @@ fun ProfileScreen(
         ) {
             item {
                 ProfileImage(
-                    imageUrl = state.user.image,
+                    imagePath = state.user.image,
                     size = 200.dp,
                     onChangeImage = {
                         imagePickLauncher.launch(

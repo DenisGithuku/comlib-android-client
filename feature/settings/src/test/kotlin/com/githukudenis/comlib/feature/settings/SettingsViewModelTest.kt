@@ -56,7 +56,6 @@ class SettingsViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
         advanceUntilIdle()
 
-        assertEquals(viewModel.state.value.uiComponentsState, UiComponentsState())
         assertEquals(viewModel.state.value.selectedTheme, ThemeConfig.SYSTEM)
     }
 
@@ -83,7 +82,7 @@ class SettingsViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
 
         viewModel.onEvent(SettingsUiEvent.ToggleAppearance(true))
-        assertTrue(viewModel.state.value.uiComponentsState.isAppearanceSheetVisible)
+        assertTrue(viewModel.state.value.isAppearanceSheetVisible)
     }
 
     @Test
@@ -91,7 +90,7 @@ class SettingsViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
 
         viewModel.onEvent(SettingsUiEvent.ToggleClearCache(true))
-        assertTrue(viewModel.state.value.uiComponentsState.isCacheDialogVisible)
+        assertTrue(viewModel.state.value.isCacheDialogVisible)
     }
 
     @Test
@@ -99,6 +98,6 @@ class SettingsViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { viewModel.state.collect() }
 
         viewModel.onEvent(SettingsUiEvent.ToggleThemeDialog(true))
-        assertTrue(viewModel.state.value.uiComponentsState.isThemeDialogVisible)
+        assertTrue(viewModel.state.value.isThemeDialogVisible)
     }
 }

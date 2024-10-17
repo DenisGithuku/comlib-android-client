@@ -30,6 +30,7 @@ import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -153,53 +154,21 @@ constructor(
                     }
                 }
                 is ResponseResult.Success -> {
+                    val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
                     userPrefsRepository.setToken(response.data.token)
                     userPrefsRepository.setUserId(response.data.id)
+                    userPrefsRepository.setUserProfileData(
+                        userProfileData.copy(
+                            email = _state.value.formState.email.trim(),
+                            firstname = _state.value.formState.firstname.trim(),
+                            lastname = _state.value.formState.lastname.trim()
+                        )
+                    )
                     _state.update { prevState -> prevState.copy(isLoading = false, signUpSuccess = true) }
                 }
             }
         }
     }
-
-    //    private fun onSignInResult(signInResult: SignInResult) {
-    //        viewModelScope.launch {
-    //            _state.complete_profile { prevState ->
-    //                prevState.copy(isLoading = true)
-    //            }
-    //            if (signInResult.errorMessage != null) {
-    //                _state.complete_profile { prevState ->
-    //                    val userMessages = prevState.userMessages.toMutableList()
-    //                    userMessages.add(UserMessage(message = signInResult.errorMessage))
-    //                    prevState.copy(
-    //                        isLoading = false,
-    //                        signUpSuccess = true,
-    //                        userMessages = userMessages
-    //                    )
-    //                }
-    //                return@launch
-    //            }
-    //            val user = signInResult.userData?.run {
-    //                User(
-    //                    email = email,
-    //                    username = username,
-    //                    image = profilePictureUrl,
-    //                    authId = authId
-    //                )
-    //            }
-    //            userRepository.addNewUser(
-    //                user = user ?: return@launch
-    //            )
-    //            _state.complete_profile { prevState ->
-    //                val userMessages = prevState.userMessages.toMutableList()
-    //                userMessages.add(UserMessage(message = "Signed in successfully"))
-    //                prevState.copy(
-    //                    isLoading = false,
-    //                    signUpSuccess = true,
-    //                    userMessages = userMessages
-    //                )
-    //            }
-    //        }
-    //    }
 
     fun onDismissNetworkDialog() {
         _showNetworkDialog.update { false }

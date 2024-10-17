@@ -17,6 +17,7 @@
 package com.githukudenis.comlib.feature.home
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -48,7 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.githukudenis.comlib.core.common.FetchItemState
 import com.githukudenis.comlib.core.common.capitalize
 import com.githukudenis.comlib.core.designsystem.ui.components.SectionSeparator
@@ -119,13 +120,6 @@ fun HomeRouteContent(
             verticalArrangement = Arrangement.spacedBy(LocalDimens.current.extraLarge)
         ) {
             item {
-                val username =
-                    when (state.user) {
-                        is FetchItemState.Error -> "Stranger"
-                        FetchItemState.Loading -> "Stranger"
-                        is FetchItemState.Success -> state.user.data?.firstname?.capitalize()
-                    }
-
                 val time = state.timePeriod.name.lowercase().capitalize()
                 HomeHeader(
                     modifier = Modifier.padding(horizontal = LocalDimens.current.extraLarge),
@@ -137,7 +131,7 @@ fun HomeRouteContent(
                                     append(" ")
                                     append(time)
                                     append(" ")
-                                    append(username)
+                                    append(state.userProfileData.username)
                                 },
                             style = MaterialTheme.typography.titleMedium
                         )
@@ -150,17 +144,29 @@ fun HomeRouteContent(
                         )
                     },
                     profileImage = {
-                        AsyncImage(
+                        //                        val imagePath = File(context.filesDir,
+                        // "images/profile_image.jpg").absolutePath
+                        Image(
                             modifier = Modifier.size(32.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
                             contentScale = ContentScale.Crop,
-                            model =
-                                when (val user = state.user) {
-                                    is FetchItemState.Error -> context.getDrawable(R.drawable.placeholder_no_text)
-                                    FetchItemState.Loading -> context.getDrawable(R.drawable.placeholder_no_text)
-                                    is FetchItemState.Success -> user.data?.image
-                                },
+                            painter = rememberAsyncImagePainter(state.userProfileData.profilePicturePath),
                             contentDescription = "User profile"
                         )
+
+                        //                        AsyncImage(
+                        //                            modifier =
+                        // Modifier.size(32.dp).clip(CircleShape).clickable(onClick = onOpenProfile),
+                        //                            contentScale = ContentScale.Crop,
+                        //                            model = state.userProfileData.profilePicturePath,
+                        // //                                when (val user = state.user) {
+                        // //                                    is FetchItemState.Error ->
+                        // context.getDrawable(R.drawable.placeholder_no_text)
+                        // //                                    FetchItemState.Loading ->
+                        // context.getDrawable(R.drawable.placeholder_no_text)
+                        // //                                    is FetchItemState.Success -> user.data?.image
+                        // //                                },
+                        //                            contentDescription = "User profile"
+                        //                        )
                     }
                 )
             }

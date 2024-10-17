@@ -23,20 +23,18 @@ import com.githukudenis.comlib.core.common.ResponseResult
 import com.githukudenis.comlib.core.data.repository.BookMilestoneRepository
 import com.githukudenis.comlib.core.data.repository.BooksRepository
 import com.githukudenis.comlib.core.data.repository.UserPrefsRepository
-import com.githukudenis.comlib.core.data.repository.UserRepository
-import com.githukudenis.comlib.core.model.user.User
+import com.githukudenis.comlib.core.model.UserProfileData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.Instant
 import java.time.ZoneId
 import javax.inject.Inject
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.mapLatest
-import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 enum class TimePeriod {
@@ -47,7 +45,7 @@ enum class TimePeriod {
 
 data class HomeScreenState(
     val pagerState: Triple<PaginationState, Int, Int> = Triple(PaginationState.NotLoading, 1, 10),
-    val user: FetchItemState<User?> = FetchItemState.Loading,
+    val userProfileData: UserProfileData = UserProfileData(),
     val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
     val timePeriod: TimePeriod = TimePeriod.MORNING
@@ -65,7 +63,6 @@ class HomeViewModel
 constructor(
     private val userPrefsRepository: UserPrefsRepository,
     private val booksRepository: BooksRepository,
-    private val userRepository: UserRepository,
     private val bookMilestoneRepository: BookMilestoneRepository
 ) : ViewModel() {
 
@@ -88,65 +85,70 @@ constructor(
             return time
         }
 
-    private val _userProfile: Flow<FetchItemState<User?>> =
-        userPrefsRepository.userPrefs.mapLatest { prefs ->
-            prefs.userId?.let { id ->
-                when (val profile = userRepository.getUserById(id)) {
-                    is ResponseResult.Failure -> {
-                        FetchItemState.Error(message = profile.error.message)
-                    }
-                    is ResponseResult.Success -> {
-                        FetchItemState.Success(data = profile.data.data.user)
-                    }
+    private val _state: MutableStateFlow<HomeScreenState> = MutableStateFlow(HomeScreenState())
+    val state: StateFlow<HomeScreenState> = _state.asStateFlow()
+
+    init {
+        getUserData()
+        fetchMilestone()
+        fetchBooks()
+    }
+
+    private fun getUserData() {
+        viewModelScope.launch {
+            userPrefsRepository.userPrefs.collectLatest {
+                _state.update { state ->
+                    state.copy(timePeriod = _timePeriod, userProfileData = it.userProfileData)
                 }
             }
-                ?: FetchItemState.Error(
-                    message = "You are not logged in. Please log in to access the application"
-                )
         }
+    }
 
-    private val _books: Flow<FetchItemState<List<BookUiModel>>> =
-        combine(_pagingData, userPrefsRepository.userPrefs) { (_, page, limit), prefs ->
-            if (_booksCache.isNotEmpty()) {
-                val updatedCache =
-                    _booksCache.map { bookUiModel ->
-                        bookUiModel.copy(isFavourite = bookUiModel.book._id in prefs.bookmarkedBooks)
-                    }
-                FetchItemState.Success(updatedCache)
-            } else {
-                when (val result = booksRepository.getAllBooks(page = page, limit = limit)) {
-                    is ResponseResult.Failure -> {
-                        FetchItemState.Error(message = result.error.message)
-                    }
-                    is ResponseResult.Success -> {
-                        val books =
-                            result.data.data.books.map {
-                                BookUiModel(book = it, isFavourite = it._id in prefs.bookmarkedBooks)
+    private fun fetchMilestone() {
+        viewModelScope.launch {
+            bookMilestoneRepository.bookMilestone.collectLatest {
+                _state.update { state -> state.copy(streakState = StreakState(bookMilestone = it)) }
+            }
+        }
+    }
+
+    private fun fetchBooks() {
+        viewModelScope.launch {
+            userPrefsRepository.userPrefs.collectLatest { prefs ->
+                if (_booksCache.isNotEmpty()) {
+                    val updatedCache =
+                        _booksCache.map { bookUiModel ->
+                            bookUiModel.copy(isFavourite = bookUiModel.book._id in prefs.bookmarkedBooks)
+                        }
+                    _state.update { it.copy(availableState = FetchItemState.Success(updatedCache)) }
+                } else {
+                    when (
+                        val result =
+                            booksRepository.getAllBooks(
+                                page = _pagingData.value.second,
+                                limit = _pagingData.value.second
+                            )
+                    ) {
+                        is ResponseResult.Failure -> {
+                            _state.update {
+                                it.copy(availableState = FetchItemState.Error(message = result.error.message))
                             }
+                        }
+                        is ResponseResult.Success -> {
+                            val books =
+                                result.data.data.books.map {
+                                    BookUiModel(book = it, isFavourite = it._id in prefs.bookmarkedBooks)
+                                }
 
-                        // update cache to prevent unnecessary re-fetching
-                        _booksCache.addAll(books)
-                        FetchItemState.Success(_booksCache)
+                            // update cache to prevent unnecessary re-fetching
+                            _booksCache.addAll(books)
+                            _state.update { it.copy(availableState = FetchItemState.Success(_booksCache)) }
+                        }
                     }
                 }
             }
         }
-
-    val state: StateFlow<HomeScreenState> =
-        combine(bookMilestoneRepository.bookMilestone, _books, _userProfile, _pagingData) {
-                milestone,
-                allBooks,
-                profile,
-                pagingData ->
-                HomeScreenState(
-                    streakState = StreakState(bookMilestone = milestone),
-                    availableState = allBooks,
-                    user = profile,
-                    timePeriod = _timePeriod,
-                    pagerState = pagingData
-                )
-            }
-            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), HomeScreenState())
+    }
 
     fun onToggleFavourite(id: String) {
         viewModelScope.launch {
@@ -158,11 +160,13 @@ constructor(
                     bookMarks.plus(id)
                 }
             userPrefsRepository.setBookMarks(updatedBookMarkSet)
+            fetchBooks()
         }
     }
 
     fun onRefreshPage() {
         _pagingData.value = _pagingData.value.copy(second = _pagingData.value.second + 1)
+        fetchBooks()
     }
 
     override fun onCleared() {

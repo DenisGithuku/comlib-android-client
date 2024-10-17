@@ -70,6 +70,7 @@ class CompleteProfileViewModelTest {
         viewModel.onSelectImage(mockUri)
         viewModel.onSubmit()
         advanceUntilIdle()
+        println(viewModel.state.value)
         assertTrue(viewModel.state.value.isSuccess)
     }
 }

@@ -33,9 +33,11 @@ import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirem
 import com.githukudenis.comlib.feature.auth.presentation.common.PasswordRequirements.SpecialCharacter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -151,9 +153,45 @@ constructor(
             authRepository.login(
                 userLogInDTO = UserLoginDTO(email = email.trim(), password = password.trim()),
                 onSuccess = { response ->
+                    // Store token and id
                     userPrefsRepository.setToken(response.token)
                     userPrefsRepository.setUserId(response.id)
-                    userPrefsRepository.setSetupStatus(isSetup(response.id))
+
+                    // Get user details
+                    when (val result = userRepository.getUserById(response.id)) {
+                        is ResponseResult.Failure -> {
+                            val userMessages = _state.value.userMessages.toMutableList()
+                            userMessages.add(UserMessage(message = result.error.message))
+                            _state.update { prevState ->
+                                prevState.copy(isLoading = false, loginSuccess = false, userMessages = userMessages)
+                            }
+                        }
+                        is ResponseResult.Success -> {
+                            userPrefsRepository.setSetupStatus(result.data.data.user.image != null)
+
+                            // If coming back to the app after logout, refresh user image
+                            // Await profile path
+                            val userImageUrl = result.data.data.user.image
+                            userImageUrl?.run {
+                                val profilePathDeferred = async {
+                                    userPrefsRepository.setProfilePicturePath(userImageUrl)
+                                }
+
+                                // Get reference to user data
+                                val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
+
+                                userPrefsRepository.setUserProfileData(
+                                    userProfileData.copy(
+                                        email = result.data.data.user.email,
+                                        username = result.data.data.user.username,
+                                        profilePicturePath = profilePathDeferred.await(),
+                                        firstname = result.data.data.user.firstname,
+                                        lastname = result.data.data.user.lastname
+                                    )
+                                )
+                            }
+                        }
+                    }
                     _state.update { prevState -> prevState.copy(isLoading = false, loginSuccess = true) }
                 },
                 onError = { error ->
@@ -171,10 +209,18 @@ constructor(
         _state.update { LoginUiState() }
     }
 
-    private suspend fun isSetup(userId: String): Boolean {
-        return when (val result = userRepository.getUserById(userId)) {
-            is ResponseResult.Failure -> false
-            is ResponseResult.Success -> !result.data.data.user.image.isNullOrEmpty()
+    private fun storeUserProfileData(id: String, onFail: (String) -> Unit, onSuccess: () -> Unit) {
+        viewModelScope.launch {
+            when (val result = userRepository.getUserById(id)) {
+                is ResponseResult.Failure -> {
+                    onFail(result.error.message)
+                }
+                is ResponseResult.Success -> {
+                    val userProfileData = userPrefsRepository.userPrefs.first().userProfileData
+
+                    onSuccess()
+                }
+            }
         }
     }
 }

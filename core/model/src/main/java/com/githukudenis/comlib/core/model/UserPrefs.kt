@@ -24,7 +24,16 @@ data class UserPrefs(
     val bookmarkedBooks: Set<String> = emptySet(),
     val isSetup: Boolean = false,
     val preferredGenres: Set<String> = emptySet(),
-    val isNotificationsEnabled: Boolean = false
+    val isNotificationsEnabled: Boolean = false,
+    val userProfileData: UserProfileData = UserProfileData()
+)
+
+data class UserProfileData(
+    val username: String? = null,
+    val firstname: String? = null,
+    val lastname: String? = null,
+    val email: String? = null,
+    val profilePicturePath: String? = null
 )
 
 enum class ThemeConfig {

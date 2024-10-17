@@ -16,6 +16,7 @@
 */
 package com.githukudenis.comlib.feature.profile.components
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -35,18 +36,24 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.githukudenis.comlib.feature.profile.R
 
 @Composable
-fun ProfileImage(imageUrl: String?, size: Dp = 100.dp, onChangeImage: () -> Unit) {
+fun ProfileImage(imagePath: String?, size: Dp = 100.dp, onChangeImage: () -> Unit) {
     Box(modifier = Modifier) {
-        AsyncImage(
-            model = imageUrl,
-            modifier = Modifier.size(size).clip(CircleShape),
+        //        AsyncImage(
+        //            model = imageUrl,
+        //            modifier = Modifier.size(size).clip(CircleShape),
+        //            contentScale = ContentScale.Crop,
+        //            contentDescription = null,
+        //            placeholder = painterResource(id = R.drawable.ic_profile_placeholder)
+        //        )
+        Image(
+            modifier = Modifier.size(size).clip(CircleShape).clickable { onChangeImage() },
             contentScale = ContentScale.Crop,
-            contentDescription = null,
-            placeholder = painterResource(id = R.drawable.ic_profile_placeholder)
+            painter = rememberAsyncImagePainter(imagePath),
+            contentDescription = "User profile"
         )
         Box(
             modifier =
@@ -76,5 +83,5 @@ fun ProfileImage(imageUrl: String?, size: Dp = 100.dp, onChangeImage: () -> Unit
 @Preview
 @Composable
 private fun ProfileImagePrev() {
-    ProfileImage(imageUrl = "") {}
+    ProfileImage(imagePath = "") {}
 }
