@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="reserve_now">Reserve</string>
+    <string name="reserve_now">Reserve Book</string>
+    <string name="unreserve_now">Unreserve Book</string>
 </resources>

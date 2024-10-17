@@ -18,13 +18,17 @@ package com.githukudenis.comlib.feature.home
 
 import androidx.test.filters.MediumTest
 import com.githukudenis.comlib.core.common.FetchItemState
+import com.githukudenis.comlib.core.common.MessageType
+import com.githukudenis.comlib.core.common.UserMessage
 import com.githukudenis.comlib.core.data.repository.fake.FakeBooksRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeMilestoneRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserPrefsRepository
 import com.githukudenis.comlib.core.data.repository.fake.FakeUserRepository
 import com.githukudenis.comlib.core.testing.util.MainCoroutineRule
+import junit.framework.TestCase.assertTrue
 import kotlin.test.assertContains
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -105,7 +109,7 @@ class HomeViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             homeViewModel.state.collect()
         }
-        homeViewModel.reserveBook("1000")
+        homeViewModel.onReserveBook("1000")
         advanceUntilIdle()
         assertEquals(homeViewModel.state.value.userMessages.first().message, "Book not found")
     }
@@ -115,11 +119,69 @@ class HomeViewModelTest {
         backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
             homeViewModel.state.collect()
         }
-        homeViewModel.reserveBook("1")
+        homeViewModel.onReserveBook("1")
         advanceUntilIdle()
         assertEquals(
             homeViewModel.state.value.userMessages.first().message,
             "Book reserved successfully"
         )
+    }
+
+    @Test
+    fun `test unreserve book that does not exist returns error`() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            homeViewModel.state.collect()
+        }
+        homeViewModel.onUnReserveBook("1000")
+        advanceUntilIdle()
+        assertEquals(homeViewModel.state.value.userMessages.first().message, "Book not found")
+    }
+
+    @Test
+    fun `test unreserve book returns success`() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            homeViewModel.state.collect()
+        }
+        homeViewModel.onReserveBook("1")
+        advanceUntilIdle()
+        assertTrue(
+            (homeViewModel.state.value.availableState as FetchItemState.Success)
+                .data
+                .first { it.book.id == "1" }
+                .isReserved
+        )
+        homeViewModel.onUnReserveBook("1")
+        advanceUntilIdle()
+        assertFalse(
+            (homeViewModel.state.value.availableState as FetchItemState.Success)
+                .data
+                .first { it.book.id == "1" }
+                .isReserved
+        )
+    }
+
+    @Test
+    fun `test add user message`() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            homeViewModel.state.collect()
+        }
+        homeViewModel.onShowUserMessage(
+            UserMessage(id = 1, message = "Test", messageType = MessageType.INFO)
+        )
+        advanceUntilIdle()
+        assertEquals(homeViewModel.state.value.userMessages.first().message, "Test")
+        assertEquals(homeViewModel.state.value.userMessages.first().messageType, MessageType.INFO)
+    }
+
+    @Test
+    fun `test remove user message`() = runTest {
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) {
+            homeViewModel.state.collect()
+        }
+        homeViewModel.onShowUserMessage(
+            UserMessage(id = 1, message = "Test", messageType = MessageType.INFO)
+        )
+        homeViewModel.onUserMessageShown(1)
+        assertEquals(homeViewModel.state.value.userMessages.count(), 0)
     }
 }

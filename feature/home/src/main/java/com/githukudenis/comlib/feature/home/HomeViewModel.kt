@@ -51,7 +51,8 @@ data class HomeScreenState(
     val streakState: StreakState = StreakState(),
     val availableState: FetchItemState<List<BookUiModel>> = FetchItemState.Loading,
     val timePeriod: TimePeriod = TimePeriod.MORNING,
-    val userMessages: List<UserMessage> = emptyList()
+    val userMessages: List<UserMessage> = emptyList(),
+    val isReserving: Boolean = false
 )
 
 enum class PaginationState {
@@ -114,11 +115,15 @@ constructor(
 
     private fun fetchBooks() {
         viewModelScope.launch {
+            _state.update { it.copy(availableState = FetchItemState.Loading) }
             userPrefsRepository.userPrefs.collectLatest { prefs ->
                 if (_booksCache.isNotEmpty()) {
                     val updatedCache =
                         _booksCache.map { bookUiModel ->
-                            bookUiModel.copy(isFavourite = bookUiModel.book._id in prefs.bookmarkedBooks)
+                            bookUiModel.copy(
+                                isFavourite = bookUiModel.book._id in prefs.bookmarkedBooks,
+                                isReserved = bookUiModel.book._id in prefs.reservedBooks
+                            )
                         }
                     _state.update { it.copy(availableState = FetchItemState.Success(updatedCache)) }
                 } else {
@@ -137,7 +142,11 @@ constructor(
                         is ResponseResult.Success -> {
                             val books =
                                 result.data.data.books.map {
-                                    BookUiModel(book = it, isFavourite = it._id in prefs.bookmarkedBooks)
+                                    BookUiModel(
+                                        book = it,
+                                        isFavourite = it._id in prefs.bookmarkedBooks,
+                                        isReserved = it._id in prefs.reservedBooks
+                                    )
                                 }
 
                             // update cache to prevent unnecessary re-fetching
@@ -169,10 +178,13 @@ constructor(
         fetchBooks()
     }
 
-    fun reserveBook(bookId: String) {
+    fun onReserveBook(bookId: String) {
         viewModelScope.launch {
-            val userId = userPrefsRepository.userPrefs.mapLatest { it.userId }.first()
+            _state.update { it.copy(isReserving = true) }
+            val (userId, reservedBooks) =
+                userPrefsRepository.userPrefs.mapLatest { Pair(it.userId, it.reservedBooks) }.first()
             if (userId.isNullOrEmpty()) {
+                _state.update { it.copy(isReserving = false) }
                 onShowUserMessage(
                     UserMessage(
                         id = 1,
@@ -182,8 +194,10 @@ constructor(
                 )
                 return@launch
             }
+
             when (val reserveResult = booksRepository.reserveBook(bookId, userId)) {
                 is ResponseResult.Failure -> {
+                    _state.update { it.copy(isReserving = false) }
                     onShowUserMessage(
                         UserMessage(
                             id = 1,
@@ -193,6 +207,8 @@ constructor(
                     )
                 }
                 is ResponseResult.Success -> {
+                    userPrefsRepository.setReservedBooks(reservedBooks.plus(bookId))
+                    _state.update { it.copy(isReserving = false) }
                     onShowUserMessage(
                         UserMessage(
                             id = 1,
@@ -203,6 +219,55 @@ constructor(
                 }
             }
         }
+        onRefreshAvailableBooks()
+    }
+
+    fun onUnReserveBook(bookId: String) {
+        viewModelScope.launch {
+            _state.update { it.copy(isReserving = true) }
+            val (userId, reservedBooks) =
+                userPrefsRepository.userPrefs.mapLatest { Pair(it.userId, it.reservedBooks) }.first()
+            if (userId.isNullOrEmpty()) {
+                _state.update { it.copy(isReserving = false) }
+                onShowUserMessage(
+                    UserMessage(
+                        id = 1,
+                        message = "You must be logged in to reserve a book",
+                        messageType = MessageType.ERROR
+                    )
+                )
+                return@launch
+            }
+
+            when (val reserveResult = booksRepository.unReserveBook(bookId, userId)) {
+                is ResponseResult.Failure -> {
+                    _state.update { it.copy(isReserving = false) }
+                    onShowUserMessage(
+                        UserMessage(
+                            id = 1,
+                            message = reserveResult.error.message,
+                            messageType = MessageType.ERROR
+                        )
+                    )
+                }
+                is ResponseResult.Success -> {
+                    userPrefsRepository.setReservedBooks(reservedBooks.minus(bookId))
+                    _state.update { it.copy(isReserving = false) }
+                    onShowUserMessage(
+                        UserMessage(
+                            id = 1,
+                            message = reserveResult.data.message,
+                            messageType = MessageType.INFO
+                        )
+                    )
+                }
+            }
+        }
+        onRefreshAvailableBooks()
+    }
+
+    fun onRefreshAvailableBooks() {
+        fetchBooks()
     }
 
     fun onShowUserMessage(message: UserMessage) {

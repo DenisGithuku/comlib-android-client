@@ -64,7 +64,26 @@ sealed class Endpoints(private val path: String) {
         data class GetById(private val bookId: String) : Books(param = bookId)
 
         data class Reserve(private val bookId: String, private val userId: String) :
-            Books(param = bookId)
+            Books(param = bookId) {
+            override val url: String
+                get() {
+                    return buildString {
+                        append(super.url)
+                        append("/reserve")
+                    }
+                }
+        }
+
+        data class UnReserve(private val bookId: String, private val userId: String) :
+            Books(param = bookId) {
+            override val url: String
+                get() {
+                    return buildString {
+                        append(super.url)
+                        append("/unreserve")
+                    }
+                }
+        }
     }
 
     sealed class Users(
