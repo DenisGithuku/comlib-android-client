@@ -71,4 +71,8 @@ constructor(
     override suspend fun setProfilePicturePath(imageUrl: String): String? {
         return userImageLocalHandler.saveImage(imageUrl)
     }
+
+    override suspend fun setReservedBooks(reservedBooks: Set<String>) {
+        userPrefsDataSource.setReservedBooks(reservedBooks)
+    }
 }

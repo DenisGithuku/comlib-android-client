@@ -41,6 +41,7 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
                 token = prefs[PreferenceKeys.tokenPreferenceKey],
                 readBooks = prefs[PreferenceKeys.readBooks]?.toSet() ?: emptySet(),
                 bookmarkedBooks = prefs[PreferenceKeys.bookmarkedBooks]?.toSet() ?: emptySet(),
+                reservedBooks = prefs[PreferenceKeys.reservedBooks]?.toSet() ?: emptySet(),
                 isSetup = prefs[PreferenceKeys.isSetup] ?: false,
                 preferredGenres = prefs[PreferenceKeys.preferredGenres] ?: emptySet(),
                 userId = prefs[PreferenceKeys.userIdPrefsKey],
@@ -75,6 +76,10 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
         prefsDataStore.edit { prefs -> prefs[PreferenceKeys.bookmarkedBooks] = bookmarkedBooks }
     }
 
+    suspend fun setReservedBooks(reservedBooks: Set<String>) {
+        prefsDataStore.edit { prefs -> prefs[PreferenceKeys.reservedBooks] = reservedBooks }
+    }
+
     suspend fun setSetupState(isComplete: Boolean) {
         prefsDataStore.edit { prefs -> prefs[PreferenceKeys.isSetup] = isComplete }
     }
@@ -90,6 +95,7 @@ class UserPrefsDatasource @Inject constructor(private val prefsDataStore: DataSt
             prefs.remove(PreferenceKeys.themeConfigPreferenceKey)
             prefs.remove(PreferenceKeys.readBooks)
             prefs.remove(PreferenceKeys.bookmarkedBooks)
+            prefs.remove(PreferenceKeys.reservedBooks)
             prefs.remove(PreferenceKeys.preferredGenres)
             prefs.remove(PreferenceKeys.userDataUsernameKey)
             prefs.remove(PreferenceKeys.userDataFirstnameKey)
@@ -123,6 +129,7 @@ object PreferenceKeys {
     val tokenPreferenceKey = stringPreferencesKey("token")
     val readBooks = stringSetPreferencesKey("readBooks")
     val bookmarkedBooks = stringSetPreferencesKey("bookmarkedBooks")
+    val reservedBooks = stringSetPreferencesKey("reservedBooks")
     val isSetup = booleanPreferencesKey("issetup")
     val preferredGenres = stringSetPreferencesKey("preferredGenres")
     val userIdPrefsKey = stringPreferencesKey("userId")

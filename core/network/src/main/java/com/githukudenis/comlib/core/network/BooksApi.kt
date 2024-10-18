@@ -21,10 +21,15 @@ import com.githukudenis.comlib.core.common.safeApiCall
 import com.githukudenis.comlib.core.model.book.AddBookResponse
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.BookDTO
+import com.githukudenis.comlib.core.model.book.ReserveBookResponse
+import com.githukudenis.comlib.core.model.book.ReserveRequestDTO
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
+import com.githukudenis.comlib.core.model.book.UnReserveBookResponse
+import com.githukudenis.comlib.core.model.book.UnReserveRequestDTO
 import com.githukudenis.comlib.core.network.common.Endpoints
 import io.ktor.client.HttpClient
 import io.ktor.client.request.get
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import javax.inject.Inject
@@ -42,4 +47,18 @@ class BooksApi @Inject constructor(private val httpClient: HttpClient) {
     suspend fun addNewBook(book: BookDTO): ResponseResult<AddBookResponse> = safeApiCall {
         httpClient.post(Endpoints.Books.Add.url) { setBody(book) }
     }
+
+    suspend fun reserveBook(bookId: String, userId: String): ResponseResult<ReserveBookResponse> =
+        safeApiCall {
+            httpClient.patch(Endpoints.Books.Reserve(bookId, userId).url) {
+                setBody(ReserveRequestDTO(userId))
+            }
+        }
+
+    suspend fun unReserveBook(bookId: String, userId: String): ResponseResult<UnReserveBookResponse> =
+        safeApiCall {
+            httpClient.patch(Endpoints.Books.UnReserve(bookId, userId).url) {
+                setBody(UnReserveRequestDTO(userId))
+            }
+        }
 }

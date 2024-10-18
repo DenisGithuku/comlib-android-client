@@ -5,7 +5,7 @@
     <string name="already_read_separator">Already read</string>
     <string name="retry">Retry</string>
     <string name="available_books_separator" tools:ignore="ExtraTranslation">Available</string>
-    <string name="reserve">Reserve</string>
+    <string name="reserve">Reserve Book</string>
     <string name="no_network_title">Not connected</string>
     <string name="no_network_desc">For a smooth experience on Comlib, you need to be online.</string>
     <string name="streak_save_success">Streak saved</string>
@@ -16,4 +16,6 @@
     <string name="add_to_favourites">Added to favourites</string>
     <string name="book_image">Book image</string>
     <string name="no_streak_label">Discover the joy of reading and build a lasting habit with daily streaks. Start now and watch your progress grow!</string>
+    <string name="unreserve">Unreserve Book</string>
+    <string name="reserving_indicator">Looking for your slot...</string>
 </resources>

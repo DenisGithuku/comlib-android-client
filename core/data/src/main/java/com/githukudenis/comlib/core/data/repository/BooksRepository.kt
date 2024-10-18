@@ -22,7 +22,9 @@ import com.githukudenis.comlib.core.model.book.AddBookResponse
 import com.githukudenis.comlib.core.model.book.AllBooksResponse
 import com.githukudenis.comlib.core.model.book.BookDTO
 import com.githukudenis.comlib.core.model.book.BooksByUserResponse
+import com.githukudenis.comlib.core.model.book.ReserveBookResponse
 import com.githukudenis.comlib.core.model.book.SingleBookResponse
+import com.githukudenis.comlib.core.model.book.UnReserveBookResponse
 
 interface BooksRepository {
     suspend fun getAllBooks(page: Int, limit: Int): ResponseResult<AllBooksResponse>
@@ -36,4 +38,8 @@ interface BooksRepository {
         page: Int,
         limit: Int
     ): ResponseResult<BooksByUserResponse>
+
+    suspend fun reserveBook(bookId: String, userId: String): ResponseResult<ReserveBookResponse>
+
+    suspend fun unReserveBook(bookId: String, userId: String): ResponseResult<UnReserveBookResponse>
 }
